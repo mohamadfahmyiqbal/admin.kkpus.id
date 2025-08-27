@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#13547A" />
+  <meta name="description" content="Aplikasi PUS — dashboard dan manajemen internal" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="%PUBLIC_URL%/assets/icons/pus.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/assets/icons/pus.png" sizes="192x192" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" crossorigin="use-credentials" />
+
+  <!-- Preload CSS utama untuk percepatan render -->
+  <link rel="preload" href="%PUBLIC_URL%/dist/css/style.css" as="style" />
+  <link rel="preload" href="%PUBLIC_URL%/dist/css/colors/blue-dark.css" as="style" />
+
+  <!-- Styles utama -->
+  <link href="%PUBLIC_URL%/dist/css/style.css" rel="stylesheet" />
+  <link href="%PUBLIC_URL%/dist/css/colors/blue-dark.css" id="theme" rel="stylesheet" />
+
+  <title>PUS</title>
+
+  <!-- Open Graph dasar -->
+  <meta property="og:title" content="PUS" />
+  <meta property="og:description" content="Aplikasi PUS — dashboard dan manajemen internal" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="%PUBLIC_URL%/assets/icons/pus.png" />
+  <meta property="og:locale" content="id_ID" />
+</head>
+
+<body class="fix-header card-no-border fix-sidebar mini-sidebar">
+  <div id="root" role="main" aria-label="Aplikasi PUS" tabindex="-1"></div>
+  <!-- Catatan: bundle JS akan di-inject otomatis oleh CRA -->
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+:root {
+  /* === Colors === */
+  --color-bg: #282c34;
+  --color-text: #ffffff;
+  --color-link: #61dafb;
+  --color-gray-600: #6c757d;
+  --color-success: #198754;
+
+  /* === Sizes === */
+  --size-logo: 40vmin;
+  --size-btn: 40px;
+  --size-icon: 60px;
+  --font-base: clamp(1rem, 2vmin + 0.625rem, 2rem);
+
+  /* === Gradients === */
+  --grad-topbar: linear-gradient(to right, #0178bc 0%, #00bdda 100%);
+  --grad-yellow: linear-gradient(180deg, #F46B45 0%, #EEA849 100%);
+}
+
+/* === Layout === */
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: var(--color-bg);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-base);
+  color: var(--color-text);
+}
+
+/* === Logo === */
+.App-logo {
+  height: var(--size-logo);
+  pointer-events: none;
+}
+
+@keyframes app-logo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: app-logo-spin 20s linear infinite;
+  }
+}
+
+/* === Links === */
+.App-link {
+  color: var(--color-link);
+}
+
+/* === Buttons === */
+.btn-circle {
+  width: var(--size-btn);
+  height: var(--size-btn);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+  aspect-ratio: 1 / 1;
+}
+
+/* === Gradients === */
+.bg-topbar {
+  background: var(--grad-topbar);
+}
+
+.bg-yellow-grad {
+  background: var(--grad-yellow);
+}
+
+/* === Icons === */
+.circle-icon {
+  width: var(--size-icon);
+  height: var(--size-icon);
+  background-color: var(--color-gray-600);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  font-size: 28px;
+  margin: 0 auto 10px;
+}
+
+.circle-icon--success {
+  background-color: var(--color-success);
+}

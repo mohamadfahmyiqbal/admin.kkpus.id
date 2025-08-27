@@ -1,0 +1,6 @@
+# Node modules
+node_modules/
+
+# Optional (biar lebih bersih)
+.env
+build/
