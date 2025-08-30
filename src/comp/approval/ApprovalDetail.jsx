@@ -1,8 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Modal, Button, Row, Col, Image, Form, Spinner } from "react-bootstrap";
 import UApproval from "../../utils/UApproval";
+import ApprovalStatus from "./ApprovalStatus"; // ⬅️ Import modular
+import moment from "moment";
+import { showNotifikasi } from "../../pages/global/Notikasi";
 
-// Komponen InfoRow untuk menampilkan label dan value/children
 function InfoRow({ label, value, children, xs = 6 }) {
   return (
     <Col xs={xs} className="mb-2">
@@ -12,11 +14,10 @@ function InfoRow({ label, value, children, xs = 6 }) {
   );
 }
 
-export default function ApprovalDetail({ show, onHide, data }) {
+export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Ambil detail approval jika data berubah dan ada id/token
   const getDetailRequest = useCallback(async () => {
     if (!data?.token && !data?.id) {
       setDetail(null);
@@ -24,17 +25,13 @@ export default function ApprovalDetail({ show, onHide, data }) {
     }
     setLoading(true);
     try {
-      // Gunakan token atau id untuk ambil detail
       const res = await UApproval.getApprovalDetail({
-        type: data.type,
-        nik: data.requester.nik,
+        type: data?.type,
+        nik: data?.requester?.nik,
       });
-
       setDetail(res?.data || null);
     } catch (error) {
       setDetail(null);
-      // Bisa tambahkan notifikasi error di sini jika perlu
-      // showNotifikasi("error", "Gagal mengambil detail approval");
     } finally {
       setLoading(false);
     }
@@ -46,12 +43,10 @@ export default function ApprovalDetail({ show, onHide, data }) {
     } else {
       setDetail(null);
     }
-    // eslint-disable-next-line
   }, [show, data, getDetailRequest]);
 
-  console.log(detail);
+  const detailData = useMemo(() => detail || data, [detail, data]);
 
-  // Jika tidak ada data sama sekali
   if (!data) {
     return (
       <Modal show={show} onHide={onHide} centered>
@@ -63,7 +58,6 @@ export default function ApprovalDetail({ show, onHide, data }) {
     );
   }
 
-  // Loading spinner saat ambil detail
   if (loading) {
     return (
       <Modal show={show} onHide={onHide} centered>
@@ -78,14 +72,66 @@ export default function ApprovalDetail({ show, onHide, data }) {
     );
   }
 
-  // Gunakan detail jika ada, fallback ke data (untuk backward compatibility)
-  const detailData = detail || data;
   const requester = detailData?.requester || {};
-  const transaksi = detailData?.transaksi || {};
   const akun = detailData?.akun || {};
   const job = detailData?.job || {};
   const bank = detailData?.bank || {};
-  const approval = detailData?.approval || {};
+  const approval = detailData?.approval || [];
+
+  // Fungsi handleClick dioptimasi untuk handle approve & reject, serta validasi lebih baik
+  const handleClick = async (action) => {
+    // Import showNotifikasi dari notifikasi.jsx
+    // Pastikan sudah di-import di atas: import { showNotifikasi } from "src/pages/global/Notikasi";
+    if (!user?.nik) {
+      showNotifikasi("error", "User tidak valid.");
+      return;
+    }
+
+    // Cari approval yang sesuai dengan user
+    const approvalUser = Array.isArray(approval)
+      ? approval.find(
+          (appr) => String(appr?.approval?.nik) === String(user?.nik)
+        )
+      : null;
+
+    if (!approvalUser?.id) {
+      showNotifikasi("error", "Approval untuk user ini tidak ditemukan.");
+      return;
+    }
+
+    if (action !== "approved" && action !== "rejected") {
+      showNotifikasi("error", "Aksi tidak dikenali.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await UApproval.manageApproval({
+        btn: action,
+        id: approvalUser.id,
+      });
+      feedBack(res);
+
+      // Tampilkan notifikasi sukses/gagal
+      if (res?.status === 200) {
+        showNotifikasi(
+          "success",
+          `Berhasil melakukan ${action === "approved" ? "Approve" : "Reject"}.`
+        );
+      } else {
+        showNotifikasi("error", res?.data?.message || "Terjadi kesalahan.");
+      }
+      // Refresh detail setelah aksi
+      if (typeof getDetailRequest === "function") {
+        await getDetailRequest();
+      }
+    } catch (error) {
+      showNotifikasi("error", "Gagal melakukan aksi approval.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Modal show={show} onHide={onHide} centered size="xl">
@@ -93,26 +139,21 @@ export default function ApprovalDetail({ show, onHide, data }) {
         <Modal.Title>Detail Approval</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body
-        style={{
-          overflow: "auto",
-          maxHeight: "70vh",
-        }}
-      >
+      <Modal.Body style={{ overflow: "auto", maxHeight: "70vh" }}>
         {/* Informasi Registrasi */}
         <Row className="mb-3">
           <Col xs={12} className="border-bottom fw-bold mb-2">
             Informasi Registrasi
           </Col>
-          <InfoRow label="Nama" value={requester.nama} />
-          <InfoRow label="Jenis Kelamin" value={requester.jenis_kelamin} />
+          <InfoRow label="Nama" value={requester?.nama} />
+          <InfoRow label="Jenis Kelamin" value={requester?.jenis_kelamin} />
           <Col xs={12} className="mb-2">
             <div className="fw-bold">Alamat</div>
-            <div>{requester.alamat || "-"}</div>
+            <div>{requester?.alamat || "-"}</div>
           </Col>
           <InfoRow label="Foto KTP">
             <Image
-              src={requester.fotoKtp || "https://placehold.co/479x250"}
+              src={requester?.ktp || "https://placehold.co/479x250"}
               fluid
               rounded
               alt="Foto KTP"
@@ -120,35 +161,10 @@ export default function ApprovalDetail({ show, onHide, data }) {
           </InfoRow>
           <InfoRow label="Swafoto">
             <Image
-              src={requester.swafoto || "https://placehold.co/479x250"}
+              src={requester?.foto || "https://placehold.co/479x250"}
               fluid
               rounded
               alt="Swafoto"
-            />
-          </InfoRow>
-        </Row>
-
-        {/* Informasi Transaksi */}
-        <Row className="mb-3">
-          <Col xs={12} className="border-top border-bottom fw-bold mb-2">
-            Informasi Transaksi
-          </Col>
-          <InfoRow label="Tanggal" value={transaksi.tgl_daftar} />
-          <InfoRow label="Transaksi" value={transaksi.transaksi} />
-          <InfoRow label="Invoice Simpanan Pokok">
-            <Image
-              src={transaksi.invoicePokok || "https://placehold.co/479x250"}
-              fluid
-              rounded
-              alt="Invoice Simpanan Pokok"
-            />
-          </InfoRow>
-          <InfoRow label="Invoice Simpanan Wajib">
-            <Image
-              src={transaksi.invoiceWajib || "https://placehold.co/479x250"}
-              fluid
-              rounded
-              alt="Invoice Simpanan Wajib"
             />
           </InfoRow>
         </Row>
@@ -158,20 +174,24 @@ export default function ApprovalDetail({ show, onHide, data }) {
           <Col xs={12} className="border-top border-bottom fw-bold mb-2">
             Informasi Akun
           </Col>
-          <InfoRow label="Waktu Pendaftaran" value={akun.waktu_daftar} />
-          <InfoRow label="Tipe Anggota" value={akun.tipe_anggota} />
+          <InfoRow label="Waktu Pendaftaran" value={akun?.waktu_daftar} />
+          <InfoRow label="Tipe Anggota" value={akun?.tipe_anggota} />
           <InfoRow label="Role">
-            <Form.Select value={akun.roles || ""} disabled>
+            <Form.Select value={akun?.roles?.value || ""} disabled>
               <option value="">Pilih Role</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-              <option value="member">Member</option>
+              <option value={1}>Calon Anggota</option>
+              <option value={2}>Anggota Biasa</option>
+              <option value={3}>Anggota Luar Biasa</option>
+              <option value={4}>Admin</option>
             </Form.Select>
           </InfoRow>
-          <InfoRow label="No Telepon" value={akun.no_tlp} />
-          <InfoRow label="No Telepon (Darurat)" value={akun.telepon_darurat} />
-          <InfoRow label="Hubungan" value={akun.hubungan} />
-          <InfoRow label="Email" value={akun.email} />
+          <InfoRow label="No Telepon" value={requester?.no_tlp} />
+          <InfoRow
+            label="No Telepon (Darurat)"
+            value={requester?.tlp_darurat}
+          />
+          <InfoRow label="Hubungan" value={requester?.hubungan} />
+          <InfoRow label="Email" value={akun?.email} />
         </Row>
 
         {/* Informasi Pekerjaan */}
@@ -179,11 +199,11 @@ export default function ApprovalDetail({ show, onHide, data }) {
           <Col xs={12} className="border-top border-bottom fw-bold mb-2">
             Informasi Pekerjaan
           </Col>
-          <InfoRow label="Pekerjaan" value={job.pekerjaan} />
-          <InfoRow label="Tempat Kerja" value={job.tempat_kerja} />
+          <InfoRow label="Pekerjaan" value={job?.pekerjaan} />
+          <InfoRow label="Tempat Kerja" value={job?.tempat_kerja} />
           <Col xs={12}>
             <div className="fw-bold">Alamat Tempat Kerja</div>
-            <div>{job.alamat_kerja || "-"}</div>
+            <div>{job?.alamat_kerja || "-"}</div>
           </Col>
         </Row>
 
@@ -192,9 +212,9 @@ export default function ApprovalDetail({ show, onHide, data }) {
           <Col xs={12} className="border-top border-bottom fw-bold mb-2">
             Informasi Bank
           </Col>
-          <InfoRow label="Nama Bank" value={bank.bank} />
-          <InfoRow label="No Rekening" value={bank.no_rekening} />
-          <InfoRow label="Nama Nasabah" value={bank.nama_nasabah} />
+          <InfoRow label="Nama Bank" value={bank?.bank} />
+          <InfoRow label="No Rekening" value={bank?.no_rekening} />
+          <InfoRow label="Nama Nasabah" value={bank?.nama_nasabah} />
         </Row>
 
         {/* Informasi Approval */}
@@ -202,9 +222,7 @@ export default function ApprovalDetail({ show, onHide, data }) {
           <Col xs={12} className="border-top border-bottom fw-bold mb-2">
             Informasi Approval
           </Col>
-          <InfoRow label="Pengawas" value={approval.approvalPengawas} />
-          <InfoRow label="Ketua" value={approval.approvalKetua} />
-          <InfoRow label="Bendahara" value={approval.approvalBendahara} />
+          <ApprovalStatus approvalList={approval} user={user} />
         </Row>
       </Modal.Body>
 
@@ -215,10 +233,10 @@ export default function ApprovalDetail({ show, onHide, data }) {
         >
           Print
         </Button>
-        <Button variant="success" onClick={onHide}>
+        <Button variant="success" onClick={(e) => handleClick("approved")}>
           Approve
         </Button>
-        <Button variant="danger" onClick={onHide}>
+        <Button variant="danger" onClick={(e) => handleClick("rejected")}>
           Reject
         </Button>
       </Modal.Footer>

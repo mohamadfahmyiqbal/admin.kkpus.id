@@ -30,6 +30,9 @@ class UApproval {
   getApprovalDetail(fields) {
     return this.postJSON("/getApprovalDetail", fields);
   }
+  manageApproval(fields) {
+    return this.postJSON("/manageApproval", fields);
+  }
 }
 
 export default new UApproval();

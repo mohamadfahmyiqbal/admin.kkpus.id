@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { jwtEncode } from "../../routes/helpers";
 
 // Data menu untuk menghindari duplikasi dan memudahkan penambahan menu baru
 const menuData = [
@@ -107,6 +108,25 @@ const menuData = [
   },
 ];
 
+function encodeHref(href) {
+  // Jika href adalah "#" atau kosong, tidak perlu encode
+  if (!href || href === "#") return "#";
+  // Ambil nama page dari href, misal "/anggotaList" => "anggotaList"
+  // Atau bisa juga lebih kompleks jika perlu
+  let page = href.startsWith("/") ? href.slice(1) : href;
+  // Untuk case seperti "/pinjamanTrans", page = "pinjamanTrans"
+  // Untuk case seperti "/dashboard", page = "dashboard"
+  // Untuk case seperti "/article", page = "article"
+  // Untuk case seperti "/anggotaList", page = "anggotaList"
+  // Untuk case seperti "/pinjamanReport", page = "pinjamanReport"
+  // dst.
+  // Jika ada query string, buang
+  page = page.split("?")[0];
+  // Encode ke jwt
+  const token = jwtEncode({ page });
+  return `/page/${token}`;
+}
+
 export default function Sidebar() {
   const [openDropdown, setOpenDropdown] = useState({});
 
@@ -150,9 +170,11 @@ export default function Sidebar() {
       }
       // Generate a unique key for leaf items
       const leafKey = `${parentKey}-${item.label}-${idx}`;
+      // Gunakan encodeHref untuk href yang bukan "#"
+      const encodedHref = encodeHref(item.href);
       return (
         <li key={leafKey}>
-          <a href={item.href} aria-expanded="false">
+          <a href={encodedHref} aria-expanded="false">
             <span className="hide-menu">{item.label}</span>
           </a>
         </li>

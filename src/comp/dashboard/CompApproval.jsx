@@ -78,6 +78,9 @@ export default function CompApproval({ user }) {
     return "-";
   };
 
+  const handleFeedback = async () => {
+    getApproval();
+  };
   return (
     <>
       <Card className="shadow mb-4">
@@ -108,7 +111,7 @@ export default function CompApproval({ user }) {
                 </tr>
               ) : data.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center">
+                  <td colSpan={6} className="text-center">
                     Tidak ada data approval.
                   </td>
                 </tr>
@@ -138,7 +141,9 @@ export default function CompApproval({ user }) {
                             ? "badge bg-success"
                             : row.status === "rejected"
                             ? "badge bg-danger"
-                            : "badge bg-warninghea"
+                            : row.status === "pending"
+                            ? "badge bg-secondary"
+                            : "badge bg-secondary"
                         }
                       >
                         {row.status || "-"}
@@ -158,6 +163,8 @@ export default function CompApproval({ user }) {
         onHide={handleCloseModal}
         data={selectedRow}
         renderRequester={renderRequester}
+        user={user}
+        feedBack={handleFeedback}
       />
     </>
   );
