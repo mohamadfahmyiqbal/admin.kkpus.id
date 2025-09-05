@@ -98,6 +98,7 @@ export default function CompApproval({ user }) {
                 <th>Waktu</th>
                 <th>Deskripsi</th>
                 <th>Requester</th>
+                <th>Approver</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -133,7 +134,8 @@ export default function CompApproval({ user }) {
                         : "-"}
                     </td>
                     <td>{row.type || "-"}</td>
-                    <td>{renderRequester(row.requester)}</td>
+                    <td>{renderRequester(row.requesterAnggota.nama)}</td>
+                    <td>{renderRequester(row.approverAnggota.nama)}</td>
                     <td>
                       <span
                         className={

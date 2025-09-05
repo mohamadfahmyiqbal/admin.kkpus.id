@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Modal, Button, Row, Col, Image, Form, Spinner } from "react-bootstrap";
 import UApproval from "../../utils/UApproval";
-import ApprovalStatus from "./ApprovalStatus"; // ⬅️ Import modular
+import ApprovalStatus from "./ApprovalStatus";
 import moment from "moment";
 import { showNotifikasi } from "../../pages/global/Notikasi";
 
@@ -27,7 +27,7 @@ export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
     try {
       const res = await UApproval.getApprovalDetail({
         type: data?.type,
-        nik: data?.requester?.nik,
+        nik: data?.requester_id,
       });
       setDetail(res?.data || null);
     } catch (error) {
@@ -72,25 +72,43 @@ export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
     );
   }
 
-  const requester = detailData?.requester || {};
-  const akun = detailData?.akun || {};
-  const job = detailData?.job || {};
-  const bank = detailData?.bank || {};
-  const approval = detailData?.approval || [];
+  // 🔧 Mapping data sesuai struktur baru
+  const anggota = detailData?.anggota || {};
+  const requester = {
+    ...anggota,
+    ...anggota.detail,
+    ktp: anggota?.ktpImg || anggota?.detail?.ktp,
+    foto: anggota?.fotoImg || anggota?.detail?.foto,
+  };
+  const akun = {
+    email: anggota?.email,
+    roles: anggota?.roles,
+    waktu_daftar: moment(anggota?.createdAt).format("YYYY-MM-DD HH:mm"),
+    tipe_anggota: detailData?.tipe_anggota,
+  };
+  const job = Array.isArray(anggota?.job) ? anggota.job[0] : {};
+  const bank = Array.isArray(anggota?.bank) ? anggota.bank[0] : {};
+  const approval = detailData?.RequestApproval || [];
 
-  // Fungsi handleClick dioptimasi untuk handle approve & reject, serta validasi lebih baik
+  // Cari data approval yang approver = user.nik
+  const approvalUser = Array.isArray(approval)
+    ? approval.find(
+        (appr) =>
+          (String(appr?.approver) === String(user?.nik) ||
+            String(appr?.approverAnggota?.nik) === String(user?.nik)) &&
+          appr.status !== "done"
+      )
+    : null;
+
   const handleClick = async (action) => {
-    // Import showNotifikasi dari notifikasi.jsx
-    // Pastikan sudah di-import di atas: import { showNotifikasi } from "src/pages/global/Notikasi";
     if (!user?.nik) {
       showNotifikasi("error", "User tidak valid.");
       return;
     }
 
-    // Cari approval yang sesuai dengan user
     const approvalUser = Array.isArray(approval)
       ? approval.find(
-          (appr) => String(appr?.approval?.nik) === String(user?.nik)
+          (appr) => String(appr?.approverAnggota?.nik) === String(user?.nik)
         )
       : null;
 
@@ -112,7 +130,6 @@ export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
       });
       feedBack(res);
 
-      // Tampilkan notifikasi sukses/gagal
       if (res?.status === 200) {
         showNotifikasi(
           "success",
@@ -121,7 +138,7 @@ export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
       } else {
         showNotifikasi("error", res?.data?.message || "Terjadi kesalahan.");
       }
-      // Refresh detail setelah aksi
+
       if (typeof getDetailRequest === "function") {
         await getDetailRequest();
       }
@@ -177,7 +194,7 @@ export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
           <InfoRow label="Waktu Pendaftaran" value={akun?.waktu_daftar} />
           <InfoRow label="Tipe Anggota" value={akun?.tipe_anggota} />
           <InfoRow label="Role">
-            <Form.Select value={akun?.roles?.value || ""} disabled>
+            <Form.Select value={akun?.roles || ""} disabled>
               <option value="">Pilih Role</option>
               <option value={1}>Calon Anggota</option>
               <option value={2}>Anggota Biasa</option>
@@ -225,7 +242,7 @@ export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
           <ApprovalStatus approvalList={approval} user={user} />
         </Row>
       </Modal.Body>
-
+      {console.log(approvalUser)}
       <Modal.Footer>
         <Button
           className="bg-blue700 text-white"
@@ -233,12 +250,16 @@ export default function ApprovalDetail({ show, onHide, data, user, feedBack }) {
         >
           Print
         </Button>
-        <Button variant="success" onClick={(e) => handleClick("approved")}>
-          Approve
-        </Button>
-        <Button variant="danger" onClick={(e) => handleClick("rejected")}>
-          Reject
-        </Button>
+        {approvalUser && (
+          <>
+            <Button variant="success" onClick={() => handleClick("approved")}>
+              Approve
+            </Button>
+            <Button variant="danger" onClick={() => handleClick("rejected")}>
+              Reject
+            </Button>
+          </>
+        )}
       </Modal.Footer>
     </Modal>
   );
