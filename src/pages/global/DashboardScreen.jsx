@@ -32,14 +32,15 @@ export default function DashboardScreen() {
               </div>
             </Col>
           </Row>
-          <Row className="g-3 mb-3">
-            <Col lg="6" md="12">
-              <CompApproval user={user} />
-            </Col>
-            <Col lg="6" md="12">
+          <Row className="g-4 align-items-stretch">
+            <Col md={6}>
               <CompNotif />
             </Col>
+            <Col md={6}>
+              <CompApproval user={user} />
+            </Col>
           </Row>
+
           <Row className="g-3">
             <CompInfo />
           </Row>

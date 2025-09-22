@@ -7,23 +7,29 @@ import {
   Table,
   Spinner,
   Button,
+  Form,
+  Row,
+  Col,
+  Pagination,
 } from "react-bootstrap";
 import UApproval from "../../utils/UApproval";
 import { showNotifikasi } from "../../pages/global/Notikasi";
 import { FaEye } from "react-icons/fa";
 import ApprovalDetail from "../approval/ApprovalDetail";
 
-// Komponen menerima props user dari parent (DashboardScreen)
 export default function CompApproval({ user }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const isMounted = useRef(true);
 
-  // State untuk modal
   const [showModal, setShowModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
-  // Fungsi handleClick untuk menampilkan modal detail
+  // state pencarian & pagination
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   const handleClick = (row) => {
     setSelectedRow(row);
     setShowModal(true);
@@ -34,7 +40,6 @@ export default function CompApproval({ user }) {
     setSelectedRow(null);
   };
 
-  // Optimasi: gunakan useCallback dengan dependensi user?.nik
   const getApproval = useCallback(async () => {
     if (!user?.nik) {
       setData([]);
@@ -42,11 +47,9 @@ export default function CompApproval({ user }) {
     }
     setLoading(true);
     try {
-      // Asumsi response dari API adalah { data: [...] }
       const res = await UApproval.getApprovalRequestByNik({ nik: user.nik });
       if (isMounted.current) {
         setData(Array.isArray(res?.data?.data) ? res.data.data : []);
-        // showNotifikasi("success", "Berhasil mengambil approval");
       }
     } catch (error) {
       console.error("Gagal mengambil approval:", error);
@@ -67,12 +70,10 @@ export default function CompApproval({ user }) {
     };
   }, [getApproval]);
 
-  // Fungsi untuk menampilkan nama requester jika requester adalah objek
   const renderRequester = (requester) => {
     if (!requester) return "-";
     if (typeof requester === "string") return requester;
     if (typeof requester === "object" && requester !== null) {
-      // Coba ambil nama, jika tidak ada fallback ke nik/email
       return requester.nama || requester.nik || requester.email || "-";
     }
     return "-";
@@ -81,15 +82,47 @@ export default function CompApproval({ user }) {
   const handleFeedback = async () => {
     getApproval();
   };
+
+  // filter data berdasarkan search
+  const filteredData = data.filter((row) => {
+    const text = search.toLowerCase();
+    return (
+      row?.type?.toLowerCase().includes(text) ||
+      row?.status?.toLowerCase().includes(text) ||
+      renderRequester(row.requesterAnggota)?.toLowerCase().includes(text) ||
+      renderRequester(row.approverAnggota)?.toLowerCase().includes(text)
+    );
+  });
+
+  // pagination
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <>
-      <Card className="shadow mb-4">
+      <Card className="shadow mb-4 h-100">
         <CardHeader className="bg-topbar text-white">
           <CardTitle as="h5" className="mb-0">
             Approval
           </CardTitle>
         </CardHeader>
-        <CardBody>
+        <CardBody style={{ minHeight: "350px" }}>
+          {/* Input Pencarian */}
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Control
+                type="text"
+                placeholder="Cari approval..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1); // reset halaman saat search
+                }}
+              />
+            </Col>
+          </Row>
+
           <Table striped bordered hover responsive className="mb-0">
             <thead>
               <tr>
@@ -105,19 +138,19 @@ export default function CompApproval({ user }) {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="text-center">
+                  <td colSpan={7} className="text-center">
                     <Spinner animation="border" size="sm" className="me-2" />
                     Memuat data...
                   </td>
                 </tr>
-              ) : data.length === 0 ? (
+              ) : filteredData.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center">
+                  <td colSpan={7} className="text-center">
                     Tidak ada data approval.
                   </td>
                 </tr>
               ) : (
-                data.map((row, idx) => (
+                currentData.map((row, idx) => (
                   <tr key={row.no ?? idx}>
                     <td>
                       <Button
@@ -127,39 +160,74 @@ export default function CompApproval({ user }) {
                         <FaEye />
                       </Button>
                     </td>
-                    <td>{row.no ?? idx + 1}</td>
+                    <td>{startIndex + idx + 1}</td>
                     <td>
                       {row.created_at
                         ? new Date(row.created_at).toLocaleString("id-ID")
                         : "-"}
                     </td>
                     <td>{row.type || "-"}</td>
-                    <td>{renderRequester(row.requesterAnggota.nama)}</td>
-                    <td>{renderRequester(row.approverAnggota.nama)}</td>
+                    <td>{renderRequester(row.requesterAnggota)}</td>
+                    <td>{renderRequester(row.approverAnggota)}</td>
                     <td>
-                      <span
-                        className={
-                          row.status === "approved"
-                            ? "badge bg-success"
-                            : row.status === "rejected"
-                            ? "badge bg-danger"
-                            : row.status === "pending"
-                            ? "badge bg-secondary"
-                            : "badge bg-secondary"
-                        }
-                      >
-                        {row.status || "-"}
-                      </span>
+                      {row.status === "approved" && (
+                        <span className="badge bg-success">Disetujui</span>
+                      )}
+                      {row.status === "rejected" && (
+                        <span className="badge bg-danger">Ditolak</span>
+                      )}
+                      {row.status === "pending" && (
+                        <span className="badge bg-warning text-white">
+                          Pending
+                          {row.flow === 1 && row.approverAnggota?.nama
+                            ? ` - ${row.approverAnggota.nama}`
+                            : ""}
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))
               )}
             </tbody>
           </Table>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-3 d-flex justify-content-center">
+              <Pagination>
+                <Pagination.First
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(1)}
+                />
+                <Pagination.Prev
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                />
+                {[...Array(totalPages)].map((_, i) => (
+                  <Pagination.Item
+                    key={i + 1}
+                    active={i + 1 === currentPage}
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  disabled={currentPage === totalPages}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(p + 1, totalPages))
+                  }
+                />
+                <Pagination.Last
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(totalPages)}
+                />
+              </Pagination>
+            </div>
+          )}
         </CardBody>
       </Card>
 
-      {/* Modal Detail Approval dipindahkan ke ApprovalDetail */}
       <ApprovalDetail
         show={showModal}
         onHide={handleCloseModal}
