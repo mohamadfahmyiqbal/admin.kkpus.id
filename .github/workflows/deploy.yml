@@ -2,46 +2,36 @@ name: CI/CD Vite React to VPS
 
 on:
   push:
-    branches: [ "main", "master" ] # Sesuaikan jika branch utama Anda master
+    branches: [ "master", "main" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # 1. Setup Node.js
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18' # Sesuaikan versi Node.js yang Anda gunakan
-        cache: 'npm'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-    # 2. Install dependencies & build project di server GitHub
-    - name: Install dependencies and build
-      run: |
-        npm ci
-        npm run build
+      - name: Install dependencies
+        run: npm ci
 
-    # 3. Setup SSH Key untuk akses VPS
-    - name: Setup SSH Key
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Build project
+        run: npm run build
 
-    # 4. Tambahkan VPS ke known_hosts agar aman dari prompt SSH
-    - name: Add remote host to known_hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
-
-    # 5. Kirim isi folder 'dist' ke VPS menggunakan rsync
-    - name: Deploy build files to VPS
-      run: |
-        # Buat direktori tujuan di VPS jika belum ada
-        ssh -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "mkdir -p /var/www/admin.kkpus.id"
-        
-        # Kirim file hasil build (folder dist/) ke folder web root di VPS
-        rsync -avz --delete -e "ssh -p ${{ secrets.VPS_PORT }}" ./dist/ ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/var/www/admin.kkpus.id/
+      - name: Copy files to VPS via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}   # Menggunakan password VPS
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 2222                    # <-- WAJIB: Mengarah ke port 2222, bukan 22
+          source: "dist/*"
+          target: "/var/www/admin.kkpus.id"
+          strip_components: 1
