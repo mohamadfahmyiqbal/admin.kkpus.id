@@ -1,0 +1,21 @@
+{
+  "short_name": "BO Koperasi",
+  "name": "Koperasi Backoffice",
+  "icons": [
+    {
+      "src": "/assets/icons/PUSlogo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/PUSlogo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#02113d",
+  "theme_color": "#02113d",
+  "display": "standalone",
+  "orientation": "portrait"
+}

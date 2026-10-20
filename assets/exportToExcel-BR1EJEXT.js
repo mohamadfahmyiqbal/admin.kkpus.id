@@ -1,0 +1,1 @@
+import{_ as e,g as t,y as n}from"./vendor-react-Bj-GI7jC.js";var r=t(),i=(t,i=`report`)=>{let a=e.json_to_sheet(t),o=e.book_new();e.book_append_sheet(o,a,`Report`);let s=n(o,{bookType:`xlsx`,type:`array`});(0,r.saveAs)(new Blob([s],{type:`application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8`}),`${i}.xlsx`)};export{i as t};

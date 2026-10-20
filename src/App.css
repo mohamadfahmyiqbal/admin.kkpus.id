@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.leading-none {
+  line-height: 1;
+}
+
+.extra-small {
+  font-size: 0.75rem;
+}

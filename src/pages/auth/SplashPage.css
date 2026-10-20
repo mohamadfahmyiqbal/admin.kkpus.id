@@ -1,0 +1,163 @@
+.splashx-screen {
+  z-index: 9999;
+  background: radial-gradient(circle, #0a2566 0%, #031238 60%, #020b24 100%);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.splashx-stars {
+  pointer-events: none;
+  background-image: radial-gradient(2px 2px at 20px 30px, #ffffff40, #0000),
+    radial-gradient(2px 2px at 40px 70px, #ffffff26, #0000),
+    radial-gradient(1px 1px at 90px 40px, #ffffff4d, #0000);
+  background-size: 450px 150px;
+  width: 100%;
+  height: 100%;
+  animation: 4s ease-in-out infinite twinkle;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.splashx-orb {
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.splashx-orb-left {
+  background: radial-gradient(circle, #3b82f666 0%, #0000 70%);
+  width: 350px;
+  height: 350px;
+  top: -80px;
+  left: -80px;
+}
+
+.splashx-orb-right {
+  background: radial-gradient(circle, #00d9a640 0%, #0000 70%);
+  width: 450px;
+  height: 450px;
+  bottom: -100px;
+  right: -100px;
+}
+
+.splashx-wrap {
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+
+.splashx-content {
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem;
+}
+
+.splashx-title {
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+.splashx-title-white {
+  color: #fff;
+}
+
+.splashx-title-green {
+  color: #00d9a6;
+  background: linear-gradient(135deg, #00d9a6 0%, #2dd4bf 100%);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.splashx-subtitle {
+  color: #ffffffb8;
+  font-size: clamp(0.9rem, 3vw, 1.05rem);
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+.splashx-mosque-illustration {
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  display: flex;
+}
+
+.splashx-mosque-image {
+  max-width: 280px;
+  height: auto;
+}
+
+.splashx-loading-container {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto 2rem auto;
+}
+
+.splashx-loading-bar {
+  background: #ffffff14;
+  border-radius: 99px;
+  width: 100%;
+  height: 7px;
+  margin-bottom: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.splashx-loading-progress {
+  background: linear-gradient(90deg, #00c896, #2563eb);
+  border-radius: 99px;
+  height: 100%;
+  animation: 3.5s ease-in-out infinite loadingProgress;
+}
+
+@keyframes loadingProgress {
+  0% { width: 0%; transform: translateX(-100%); }
+  50% { width: 75%; transform: translateX(0%); }
+  100% { width: 100%; transform: translateX(0%); }
+}
+
+.splashx-loading-text {
+  color: #fff9;
+  font-size: 13px;
+  margin: 0;
+}
+
+.splashx-skip-btn {
+  color: #fff9;
+  font-size: 13px;
+  background: #ffffff0f;
+  border: 1px solid #ffffff26;
+  border-radius: 20px;
+  padding: 6px 20px;
+  transition: all 0.3s;
+}
+
+.splashx-skip-btn:hover {
+  color: #fff;
+  background: #ffffff26;
+}
+
+.splashx-copyright {
+  color: #ffffff59;
+  margin-top: 3.5rem;
+  font-size: 12px;
+}

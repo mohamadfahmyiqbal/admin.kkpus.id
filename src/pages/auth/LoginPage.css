@@ -1,0 +1,181 @@
+.pbs-login-v2 {
+  color: #fff;
+  background: linear-gradient(135deg, #02113d 0%, #031b5a 50%, #05246f 100%);
+  flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+  position: relative;
+}
+
+.pbs-login-left-v2 {
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  padding: 30px 40px;
+  display: flex;
+  position: relative;
+}
+
+.mosque-overlay {
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 1;
+  background: url(/assets/masjid-CP23IKHJ.png) bottom/cover no-repeat;
+  width: 100%;
+  height: 280px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.pbs-login-card-v2 {
+  color: #334155;
+  border: none;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px #00000059;
+  background: #fff !important;
+}
+
+.pbs-login-card-body {
+  padding: 30px 56px;
+}
+
+@media (max-width: 576px) {
+  .pbs-login-card-body {
+    padding: 30px 20px;
+  }
+}
+
+.pbs-login-v2 .form-label {
+  color: #475569;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.pbs-login-v2 .form-control {
+  font-size: 15px;
+  color: #1e293b;
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  min-height: 48px;
+  padding: 12px 16px;
+  transition: all 0.2s;
+}
+
+.pbs-login-v2 .form-control:focus {
+  background-color: #fff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px #2563eb1a;
+}
+
+.pbs-login-v2 .input-group-text {
+  color: #94a3b8;
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px 0 0 12px;
+  padding: 0 16px;
+}
+
+.pbs-login-v2 .input-group .form-control {
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+}
+
+.pbs-login-v2 .input-group:focus-within .input-group-text {
+  color: #2563eb;
+  background-color: #fff;
+  border-color: #2563eb;
+}
+
+.pbs-login-v2 .input-group:focus-within .form-control {
+  border-color: #2563eb;
+}
+
+.pbs-submit-v2 {
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  border: none;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 16px 28px;
+  transition: all 0.3s;
+  display: flex;
+}
+
+.pbs-submit-v2:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px #2563eb4d;
+}
+
+.pbs-brand-logo {
+  width: 42px;
+  height: auto;
+}
+
+.pbs-brand-title {
+  letter-spacing: 0.5px;
+}
+
+.pbs-login-info-wrap {
+  z-index: 5;
+  position: relative;
+}
+
+.pbs-login-title {
+  line-height: 1.2;
+}
+
+.pbs-text-highlight {
+  color: #00d9a6;
+}
+
+.pbs-login-desc {
+  font-size: 15px;
+  max-width: 400px;
+}
+
+.pbs-benefit-icon-container {
+  color: #00d9a6;
+  background-color: #00d9a61a;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.pbs-support-icon-container {
+  width: 42px;
+  height: 42px;
+}
+
+.pbs-support-icon {
+  color: #00d9a6;
+}
+
+.pbs-card-icon-container {
+  color: #2563eb;
+  background-color: #2563eb14;
+  width: 68px;
+  height: 68px;
+}
+
+.pbs-login-error-alert {
+  color: #e11d48;
+  background-color: #fff1f2;
+}
+
+.pbs-login-error-icon-wrap {
+  width: 32px;
+  height: 32px;
+}
+
+.pbs-password-eye-btn {
+  border-radius: 0 12px 12px 0 !important;
+}
