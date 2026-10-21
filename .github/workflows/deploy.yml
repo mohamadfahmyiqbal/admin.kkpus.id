@@ -36,4 +36,4 @@ jobs:
 
       - name: Deploy dist to VPS
         run: |
-          rsync -avz --delete -e "ssh -p 2222" dist/ ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/var/www/admin.kkpus.id/
+          rsync -avz --delete -e "ssh -p 2222" dist/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/admin.kkpus.id/
