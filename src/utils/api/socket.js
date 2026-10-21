@@ -1,6 +1,8 @@
 import io from "socket.io-client";
 
-const SOCKET_URL = "https://localhost:3445";
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL ||
+  (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445");
 let socket = null;
 
 export const initSocket = (token) => {

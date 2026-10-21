@@ -45,7 +45,10 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://localhost:3445/api/auth/accountLogin", {
+      const apiBase =
+        import.meta.env.VITE_API_BASE_URL ||
+        (import.meta.env.PROD ? "https://api.kkpus.id/api" : "https://localhost:3445/api");
+      const response = await fetch(`${apiBase}/auth/accountLogin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ emailHp: cleanEmail, password: cleanPass }),

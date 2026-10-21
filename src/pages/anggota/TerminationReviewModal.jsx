@@ -47,7 +47,10 @@ function TerminationReviewModal({
     if (!path) return "";
     const cleanPath = path.replace(/\\/g, "/");
     if (cleanPath.startsWith("http") || cleanPath.startsWith("data:")) return cleanPath;
-    const base = "https://localhost:3445".replace(/\/$/, "");
+    const base = (
+      import.meta.env.VITE_API_ORIGIN ||
+      (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
+    ).replace(/\/$/, "");
     return `${base}${cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`}`;
   };
 

@@ -86,7 +86,11 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
       return cleanPath;
     }
     const normalized = cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
-    return `https://localhost:3445${normalized}`;
+    const base = (
+      import.meta.env.VITE_API_ORIGIN ||
+      (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
+    ).replace(/\/$/, "");
+    return `${base}${normalized}`;
   };
 
   const proofUrl = getFullUrl(rawProof);
