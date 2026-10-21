@@ -24,14 +24,16 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Copy files to VPS via SCP
-        uses: appleboy/scp-action@master
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}   # Menggunakan password VPS
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: 2222                    # <-- WAJIB: Mengarah ke port 2222, bukan 22
-          source: "dist/*"
-          target: "/var/www/admin.kkpus.id"
-          strip_components: 1
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Add remote host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 2222 ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy dist to VPS
+        run: |
+          rsync -avz --delete -e "ssh -p 2222" dist/ ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/var/www/admin.kkpus.id/
