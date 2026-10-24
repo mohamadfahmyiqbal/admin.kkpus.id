@@ -14,9 +14,13 @@ import {
   Cake,
   Calendar,
   House,
+  UploadSimple,
+  DownloadSimple,
 } from "phosphor-react";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
+import exportToExcel from "../../utils/helpers/exportToExcel";
+import ImportAnggotaModal from "./components/ImportAnggotaModal";
 
 const MembersPage = () => {
   const [activeTab, setActiveTab] = useState("list");
@@ -24,6 +28,7 @@ const MembersPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMember, setSelectedMember] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [search, setSearch] = useState({ id: "", name: "", type: "", status: "" });
 
   const fetchMembers = async () => {
@@ -64,6 +69,43 @@ const MembersPage = () => {
     return idMatch && nameMatch && typeMatch;
   });
 
+  const handleExportMembers = () => {
+    if (!filteredMembers || filteredMembers.length === 0) {
+      Swal.fire("Peringatan", "Tidak ada data anggota untuk diekspor", "warning");
+      return;
+    }
+
+    const dataToExport = filteredMembers.map((m, idx) => ({
+      "No.": idx + 1,
+      "No. Anggota": m.member_no || "-",
+      "Nama Lengkap": m.full_name || "-",
+      "NIK KTP": m.nik_ktp || "-",
+      "No. HP / Telepon": m.phone_number || "-",
+      "Email": m.email || "-",
+      "Jenis Kelamin":
+        m.gender === "L" ? "Laki-laki" : m.gender === "P" ? "Perempuan" : m.gender || "-",
+      "Tanggal Lahir": m.date_of_brith ? formatDate(m.date_of_brith) : "-",
+      "Jenis Anggota": m.member_type || "Reguler",
+      "Tanggal Bergabung": formatDate(m.join_date),
+      "Status": m.status?.status_name || "Aktif",
+      "Alamat": m.address || "-",
+      "RT": m.rt || "-",
+      "RW": m.rw || "-",
+      "Pekerjaan": m.employment?.occupation || "-",
+      "Nama Perusahaan / Tempat Bekerja": m.employment?.employer_name || "-",
+      "Nama Usaha": m.business?.business_name || "-",
+      "Omzet Bulanan": m.business?.monthly_revenue || "-",
+      "Nama Kontak Darurat": m.emergencyContact?.contact_name || "-",
+      "No HP Darurat": m.emergencyContact?.phone_number || "-",
+      "Hubungan": m.emergencyContact?.relation || "-",
+      "Nama Bank": m.bankAccount?.bank_name || "-",
+      "Nomor Rekening": m.bankAccount?.bank_account_no || "-",
+      "Nama Pemilik Rekening": m.bankAccount?.account_holder || "-",
+    }));
+
+    exportToExcel(dataToExport, `Data_Anggota_Koperasi_${new Date().toISOString().split("T")[0]}`);
+  };
+
   const handleDeleteMember = async (memberId) => {
     const confirm = await Swal.fire({
       title: "Apakah Anda yakin?",
@@ -93,11 +135,30 @@ const MembersPage = () => {
   return (
     <div className="pb-5">
       <Row className="mb-4 align-items-center">
-        <Col>
+        <Col md={7}>
           <h3 className="fw-bold mb-1">Daftar Anggota Koperasi</h3>
           <p className="text-muted mb-0">
             Kelola data akun seluruh anggota terdaftar di Paguyuban Usaha Sukses.
           </p>
+        </Col>
+        <Col md={5} className="text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+          <Button
+            variant="outline-primary"
+            className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm"
+            onClick={() => setShowImportModal(true)}
+          >
+            <UploadSimple size={18} weight="bold" />
+            Import Excel
+          </Button>
+          <Button
+            variant="success"
+            className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm text-white"
+            onClick={handleExportMembers}
+            disabled={loading || filteredMembers.length === 0}
+          >
+            <DownloadSimple size={18} weight="bold" />
+            Export Excel
+          </Button>
         </Col>
       </Row>
 
@@ -295,6 +356,13 @@ const MembersPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Modal Import Anggota */}
+      <ImportAnggotaModal
+        show={showImportModal}
+        onHide={() => setShowImportModal(false)}
+        onSuccess={fetchMembers}
+      />
     </div>
   );
 };
