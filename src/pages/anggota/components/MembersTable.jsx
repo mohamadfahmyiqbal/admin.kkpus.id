@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, Spinner, Badge, Button, Pagination, Form } from "react-bootstrap";
-import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X } from "phosphor-react";
+import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear } from "phosphor-react";
 
 const MembersTable = ({
   loading = false,
@@ -18,6 +18,7 @@ const MembersTable = ({
   selectedMemberIds = [],
   onToggleSelectAll,
   onToggleSelectMember,
+  onEditRole,
 }) => {
   const totalItems = members?.length || 0;
   const totalPages = Math.ceil(totalItems / pageSize) || 1;
@@ -244,15 +245,26 @@ const MembersTable = ({
                       />
                     </td>
                     <td className="text-center">
-                      <Button
-                        variant="light"
-                        size="sm"
-                        className="rounded-circle p-2 text-primary border shadow-none"
-                        onClick={() => onSelectMember(m)}
-                        title="Lihat Detail Profil Lengkap"
-                      >
-                        <Eye size={16} />
-                      </Button>
+                      <div className="d-flex align-items-center justify-content-center gap-1">
+                        <Button
+                          variant="light"
+                          size="sm"
+                          className="rounded-circle p-2 text-primary border shadow-none"
+                          onClick={() => onSelectMember(m)}
+                          title="Lihat Detail Profil Lengkap"
+                        >
+                          <Eye size={15} />
+                        </Button>
+                        <Button
+                          variant="light"
+                          size="sm"
+                          className="rounded-circle p-2 text-warning border shadow-none"
+                          onClick={() => onEditRole?.(m)}
+                          title="Ubah Role / Peran Anggota"
+                        >
+                          <UserGear size={15} />
+                        </Button>
+                      </div>
                     </td>
                     <td>
                       <div className="fw-bold text-primary font-monospace">

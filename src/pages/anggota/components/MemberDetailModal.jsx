@@ -48,7 +48,7 @@ const InfoCard = ({ icon: Icon, label, value, subValue, colProps = { md: 6 } }) 
   </Col>
 );
 
-const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate }) => {
+const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditRole }) => {
   const [activeTab, setActiveTab] = useState("semua");
 
   if (!member) return null;
@@ -152,6 +152,17 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate }) => {
                   <Badge bg="light" text="muted" className="border rounded-pill px-2.5 py-1">
                     Anggota
                   </Badge>
+                )}
+                {onEditRole && (
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="p-0 text-primary text-decoration-none small fw-semibold"
+                    onClick={() => onEditRole(member)}
+                    title="Ubah Role Anggota"
+                  >
+                    (Ubah Role)
+                  </Button>
                 )}
               </div>
             </div>

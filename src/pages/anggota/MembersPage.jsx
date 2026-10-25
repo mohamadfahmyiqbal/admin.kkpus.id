@@ -8,13 +8,16 @@ import MembersHeader from "./components/MembersHeader";
 import MembersStats from "./components/MembersStats";
 import MembersTable from "./components/MembersTable";
 import MemberDetailModal from "./components/MemberDetailModal";
+import EditRoleModal from "./components/EditRoleModal";
 
 const MembersPage = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [memberToEditRole, setMemberToEditRole] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedMemberIds, setSelectedMemberIds] = useState([]);
   const pageSize = 10;
@@ -339,6 +342,10 @@ const MembersPage = () => {
             selectedMemberIds={selectedMemberIds}
             onToggleSelectAll={handleToggleSelectAll}
             onToggleSelectMember={handleToggleSelectMember}
+            onEditRole={(member) => {
+              setMemberToEditRole(member);
+              setShowRoleModal(true);
+            }}
           />
         </Card.Body>
       </Card>
@@ -349,6 +356,23 @@ const MembersPage = () => {
         member={selectedMember}
         onDelete={handleDeleteMember}
         formatDate={formatDate}
+        onEditRole={(member) => {
+          setMemberToEditRole(member);
+          setShowRoleModal(true);
+        }}
+      />
+
+      <EditRoleModal
+        show={showRoleModal}
+        onHide={() => {
+          setShowRoleModal(false);
+          setMemberToEditRole(null);
+        }}
+        member={memberToEditRole}
+        onSuccess={() => {
+          fetchMembers();
+          setShowDetailModal(false);
+        }}
       />
 
       <ImportAnggotaModal
