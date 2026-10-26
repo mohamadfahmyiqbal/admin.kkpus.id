@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Row, Col, Card, Button, Form, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Wallet, Money, ArrowDownLeft, ArrowUpRight, ArrowClockwise } from "phosphor-react";
+import { Wallet, Money, ArrowDownLeft, ArrowUpRight, ArrowClockwise, UploadSimple } from "phosphor-react";
 import savingsService from "../../utils/api/USavings";
 import TransactionTable from "../../components/ui/TransactionTable";
 import TransactionDetailModal from "../../components/modals/TransactionDetailModal";
 import WithdrawalApprovalModal from "../../components/modals/WithdrawalApprovalModal";
 import ManualPaymentApprovalModal from "../../components/modals/ManualPaymentApprovalModal";
+import GenericImportModal from "../../components/modals/GenericImportModal";
 import { formatRupiah, jwtEncode } from "../../utils/helpers";
 
 const SummaryCard = ({ summary = {} }) => {
@@ -62,6 +63,7 @@ const SimpananDashboard = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [showManualApprovalModal, setShowManualApprovalModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   const fetchSummary = async () => {
     try {
@@ -177,6 +179,13 @@ const SimpananDashboard = () => {
           >
             <ArrowClockwise size={18} /> Refresh
           </Button>
+          <Button
+            variant="success"
+            className="d-flex align-items-center gap-2 text-white shadow-sm"
+            onClick={() => setShowImportModal(true)}
+          >
+            <UploadSimple size={18} weight="bold" /> Import Excel
+          </Button>
         </div>
       </div>
 
@@ -284,6 +293,24 @@ const SimpananDashboard = () => {
           fetchSummary();
           fetchTransactions();
         }}
+      />
+
+      {/* Modal Import Data Simpanan */}
+      <GenericImportModal
+        show={showImportModal}
+        onHide={() => setShowImportModal(false)}
+        onSuccess={() => {
+          fetchSummary();
+          fetchTransactions();
+        }}
+        title="Import Data Simpanan Pokok & Wajib"
+        templateEndpoint="/savings/template-import"
+        importEndpoint="/savings/import"
+        templateFileName="Template_Import_Simpanan.xlsx"
+        instructionNotes={[
+          "Kolom Jenis Simpanan: POKOK, WAJIB, atau SUKARELA.",
+          "Nominal diisi angka tanpa titik/koma (contoh: 50000).",
+        ]}
       />
     </div>
   );

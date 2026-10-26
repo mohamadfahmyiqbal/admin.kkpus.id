@@ -102,8 +102,10 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
               size="sm"
               className="mt-3 d-flex align-items-center gap-2 fw-semibold"
               onClick={() => {
-                window.location.href =
-                  "https://api.kkpus.id/api/tabungan/admin/template-import";
+                const apiOrigin =
+                  import.meta.env.VITE_API_ORIGIN ||
+                  (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445");
+                window.location.href = `${apiOrigin}/api/tabungan/admin/template-import`;
               }}
             >
               <DownloadSimple size={16} weight="bold" />

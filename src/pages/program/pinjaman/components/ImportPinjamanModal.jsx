@@ -99,8 +99,12 @@ const ImportPinjamanModal = ({ show, onHide, onSuccess }) => {
               size="sm"
               className="mt-3 d-flex align-items-center gap-2 fw-semibold"
               onClick={() => {
-                window.location.href =
-                  "https://api.kkpus.id/api/program/pinjaman/template-import";
+                const apiOrigin =
+                  import.meta.env.VITE_API_ORIGIN ||
+                  (import.meta.env.VITE_API_URL
+                    ? new URL(import.meta.env.VITE_API_URL).origin
+                    : window.location.origin);
+                window.location.href = `${apiOrigin}/api/program/pinjaman/template-import`;
               }}
             >
               <DownloadSimple size={16} weight="bold" />
