@@ -213,7 +213,7 @@ const PinjamanList = () => {
                 />
                 <PinjamanTable
                   loading={loading}
-                  filteredTransactions={filteredTransactions}
+                  filteredTransactions={transactions}
                   filters={filters}
                   setFilters={setFilters}
                   formatCurrency={formatCurrency}

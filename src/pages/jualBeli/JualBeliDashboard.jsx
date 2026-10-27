@@ -89,7 +89,13 @@ const JualBeliDashboard = () => {
 
     transactions.forEach((tx) => {
       if (tx.status === "PENDING") pendingCount++;
-      if (tx.status === "APPROVED" || tx.status === "ACTIVE") {
+      if (
+        tx.status === "APPROVED" ||
+        tx.status === "ACTIVE" ||
+        tx.status === "COMPLETED" ||
+        tx.status === "PAID" ||
+        tx.status === "LUNAS"
+      ) {
         const totalReq =
           Number(tx.item_price || tx.amount_requested || 0) +
           Number(tx.operational_cost || 0);

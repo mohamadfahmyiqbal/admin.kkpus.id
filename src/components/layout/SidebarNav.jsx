@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo } from "react";
+import React, { memo, useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaChartPie,
@@ -74,6 +74,24 @@ const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNaviga
 export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpen }) => {
   const navigate = useNavigate();
   const [openKeys, setOpenKeys] = useState({});
+  const asideRef = useRef(null);
+
+  // Otomatis tutup semua dropdown saat halaman aktif berubah
+  useEffect(() => {
+    setOpenKeys({});
+  }, [currentPage]);
+
+  // Tutup dropdown saat user mengklik di luar area navigasi (khusus desktop)
+  useEffect(() => {
+    if (!isDesktop) return;
+    const handleClickOutside = (e) => {
+      if (asideRef.current && !asideRef.current.contains(e.target)) {
+        setOpenKeys({});
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isDesktop]);
 
   const menuItems = useMemo(
     () => [
@@ -185,12 +203,14 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
 
   const handleNavigate = (page) => {
     if (!page) return;
+    setOpenKeys({});
     navigate(`/${jwtEncode({ page })}`);
     if (!isDesktop) onClose();
   };
 
   return (
     <aside
+      ref={asideRef}
       className={`app-sidebar ${
         isDesktop ? "sidebar-horizontal" : `sidebar-vertical ${isSidebarOpen ? "open" : ""}`
       }`}
