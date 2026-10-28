@@ -168,23 +168,30 @@ const SimpananDashboard = () => {
             Pantau dan kelola seluruh transaksi simpanan anggota koperasi.
           </p>
         </div>
-        <div className="d-flex gap-2">
+        <div className="d-flex flex-wrap gap-2 align-items-center">
           <Button
-            variant="outline-secondary"
-            className="d-flex align-items-center gap-2"
+            variant="white"
+            size="sm"
+            className="border shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium text-muted bg-white px-2 px-sm-3"
             onClick={() => {
               fetchSummary();
               fetchTransactions();
             }}
+            disabled={loading}
+            title="Refresh Data"
           >
-            <ArrowClockwise size={18} /> Refresh
+            <ArrowClockwise size={16} weight="bold" className={loading ? "animate-spin" : ""} />
+            <span className="d-none d-sm-inline">{loading ? "Refreshing..." : "Refresh"}</span>
           </Button>
           <Button
             variant="success"
-            className="d-flex align-items-center gap-2 text-white shadow-sm"
+            size="sm"
+            className="shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium text-white px-2 px-sm-3"
             onClick={() => setShowImportModal(true)}
+            title="Import Data Simpanan Excel"
           >
-            <UploadSimple size={18} weight="bold" /> Import Excel
+            <UploadSimple size={16} weight="bold" />
+            <span>Import<span className="d-none d-sm-inline"> Excel</span></span>
           </Button>
         </div>
       </div>
@@ -306,13 +313,16 @@ const SimpananDashboard = () => {
           fetchSummary();
           fetchTransactions();
         }}
-        title="Import Data Simpanan Pokok & Wajib"
+        title="Import Data Transaksi Simpanan Anggota"
         templateEndpoint="/savings/template-import"
         importEndpoint="/savings/import"
         templateFileName="Template_Import_Simpanan.xlsx"
         instructionNotes={[
-          "Kolom Jenis Simpanan: POKOK, WAJIB, atau SUKARELA.",
-          "Nominal diisi angka tanpa titik/koma (contoh: 50000).",
+          "Gunakan template resmi yang telah diunduh dari tombol 'Unduh Template' di atas.",
+          "Pastikan kolom 'No. Anggota' sesuai dengan nomor anggota yang terdaftar di sistem.",
+          "Pilihan Jenis Simpanan: POKOK, WAJIB, atau SUKARELA.",
+          "Nominal diisi nominal transaksi tanpa titik/koma (misal: 100000). Baris dengan nominal kosong atau 0 akan otomatis dilewati.",
+          "Format Tanggal Transaksi: YYYY-MM-DD (contoh: 2026-10-29).",
         ]}
       />
     </div>
