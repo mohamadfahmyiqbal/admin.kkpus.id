@@ -2,7 +2,7 @@ import React, { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import SidebarToggleButton from "./SidebarToggleButton";
 import { jwtEncode } from "../../utils/helpers";
-import { FaUserCircle, FaBell, FaSignOutAlt } from "react-icons/fa";
+import { Bell, UserCircle, SignOut } from "phosphor-react";
 
 export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown, isDesktop }) => {
   const navigate = useNavigate();
@@ -59,13 +59,24 @@ export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown,
           <ul className="d-flex align-items-center flex-row list-unstyled mb-0 gap-2 gap-sm-3">
             <li className="nav-item">
               <button
-                className="btn btn-topbar-action btn-link p-2 text-white position-relative shadow-none rounded-circle d-flex align-items-center justify-content-center"
+                type="button"
+                className="btn btn-topbar-action btn-link text-white position-relative shadow-none rounded-circle d-flex align-items-center justify-content-center border-0"
+                style={{ width: "38px", height: "38px", minWidth: "38px", minHeight: "38px", padding: 0 }}
                 onClick={() => handleNav("notificationPage")}
                 title="Notifikasi"
                 aria-label="Buka Notifikasi"
               >
-                <FaBell size={18} />
-                <span className="topbar-bell-badge position-absolute p-1 bg-danger border border-light rounded-circle" />
+                <Bell size={20} weight="bold" />
+                <span
+                  className="position-absolute bg-danger border border-white rounded-circle"
+                  style={{
+                    top: "6px",
+                    right: "6px",
+                    width: "9px",
+                    height: "9px",
+                    display: "inline-block",
+                  }}
+                />
               </button>
             </li>
 
@@ -78,7 +89,7 @@ export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown,
                 className="topbar-avatar rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0"
                 style={{ width: "36px", height: "36px" }}
               >
-                <FaUserCircle size={22} />
+                <UserCircle size={22} weight="bold" />
               </div>
               <div className="d-none d-md-flex flex-column text-start" style={{ maxWidth: "160px" }}>
                 <span className="small fw-bold text-white text-truncate leading-none">
@@ -92,12 +103,13 @@ export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown,
 
             <li>
               <button
+                type="button"
                 className="btn btn-outline-light btn-topbar-logout rounded-pill d-flex align-items-center gap-1 shadow-sm"
                 onClick={logout}
                 title="Keluar"
                 aria-label="Keluar dari akun"
               >
-                <FaSignOutAlt size={13} />
+                <SignOut size={16} weight="bold" />
                 <span className="d-none d-sm-inline fw-semibold">Keluar</span>
               </button>
             </li>
