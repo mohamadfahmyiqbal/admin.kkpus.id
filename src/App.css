@@ -21,3 +21,114 @@
   pointer-events: none !important;
   transform: translateY(10px) !important;
 }
+
+/* ==========================================================================
+   Header / Topbar Enhancements & Responsive Optimization
+   ========================================================================== */
+.fixed-header {
+  height: 64px;
+}
+
+.header-brand-img {
+  height: 38px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.header-brand-btn:hover .header-brand-img {
+  transform: scale(1.05);
+}
+
+.header-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.header-subtitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #00e5b3;
+  letter-spacing: 0.3px;
+}
+
+.header-divider {
+  background: rgba(255, 255, 255, 0.2);
+  width: 1px;
+  height: 24px;
+}
+
+.btn-topbar-action {
+  transition: all 0.2s ease;
+  width: 38px;
+  height: 38px;
+}
+
+.btn-topbar-action:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px);
+}
+
+.topbar-bell-badge {
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  animation: pulse 2s infinite;
+}
+
+.topbar-avatar {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.topbar-avatar:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(1.05);
+}
+
+.btn-topbar-logout {
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.btn-topbar-logout:hover {
+  background-color: rgba(239, 68, 68, 0.85) !important;
+  border-color: rgba(239, 68, 68, 0.9) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+@media (max-width: 575.98px) {
+  .fixed-header {
+    height: 58px;
+  }
+  .header-brand-img {
+    height: 32px;
+  }
+  .header-logo-wrap {
+    display: none !important;
+  }
+  .btn-topbar-logout {
+    padding: 6px 10px;
+    min-width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+  .header-masjid-bg {
+    width: 50%;
+    opacity: 0.05;
+  }
+}

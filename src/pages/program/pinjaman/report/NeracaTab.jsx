@@ -19,6 +19,7 @@ export const NeracaTab = ({ jurnal, formatRupiah }) => {
         <div className="col-12">
           <div className="card shadow-sm border-0">
             <div className="card-body p-0">
+            <div className="table-responsive">
               <Table bordered className="mb-0 compact-table">
                 <thead className="table-light align-middle">
                   <tr>
@@ -126,6 +127,7 @@ export const NeracaTab = ({ jurnal, formatRupiah }) => {
                   </tr>
                 </tbody>
               </Table>
+            </div>
             </div>
           </div>
         </div>

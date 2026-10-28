@@ -209,8 +209,9 @@ const SimpananDashboard = () => {
         <Card.Body className="p-0">
           <div className="px-4 pt-3 mb-0">
             <Tab.Container activeKey={activeType} onSelect={handleTypeSelect}>
-              <Nav variant="pills" className="global-tabs border-0 mb-3">
-                <Nav.Item>
+              <div className="global-tabs-wrapper mb-3">
+                <Nav variant="pills" className="global-tabs border-0 flex-nowrap">
+                  <Nav.Item>
                   <Nav.Link eventKey="POKOK">Simpanan Pokok</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
@@ -220,10 +221,11 @@ const SimpananDashboard = () => {
                   <Nav.Link eventKey="SUKARELA">Simpanan Sukarela</Nav.Link>
                 </Nav.Item>
               </Nav>
+              </div>
 
               {activeType === "SUKARELA" && (
                 <div className="px-2 pb-3">
-                  <div className="nav nav-pills sub-tabs gap-2">
+                  <div className="global-tabs-wrapper"><div className="nav nav-pills sub-tabs gap-2 flex-nowrap">
                     <button
                       type="button"
                       className={`nav-link ${activeSukarelaCategory === "SETORAN" ? "active" : ""}`}
@@ -244,6 +246,7 @@ const SimpananDashboard = () => {
                     >
                       Pencairan
                     </button>
+                  </div>
                   </div>
                 </div>
               )}

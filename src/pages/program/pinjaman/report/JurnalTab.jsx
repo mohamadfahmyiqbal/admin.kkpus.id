@@ -11,7 +11,8 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
             <h6 className="mb-0 fw-bold text-primary">1. Kas Pinjaman Lunak</h6>
           </div>
           <div className="card-body p-0">
-            <Table bordered striped className="mb-0 text-nowrap compact-table">
+            <div className="table-responsive">
+              <Table bordered striped className="mb-0 text-nowrap compact-table">
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>
@@ -92,6 +93,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
                 </tr>
               </tfoot>
             </Table>
+            </div>
           </div>
         </div>
       </div>
@@ -103,7 +105,8 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
             <h6 className="mb-0 fw-bold text-primary">2. Piutang Pinjaman Anggota</h6>
           </div>
           <div className="card-body p-0">
-            <Table bordered striped className="mb-0 text-nowrap compact-table">
+            <div className="table-responsive">
+              <Table bordered striped className="mb-0 text-nowrap compact-table">
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>
@@ -177,6 +180,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
                 </tr>
               </tfoot>
             </Table>
+            </div>
           </div>
         </div>
       </div>
@@ -188,7 +192,8 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
             <h6 className="mb-0 fw-bold text-primary">3. Hibah dari SHU (CSR Modal)</h6>
           </div>
           <div className="card-body p-0">
-            <Table bordered striped className="mb-0 text-nowrap compact-table">
+            <div className="table-responsive">
+              <Table bordered striped className="mb-0 text-nowrap compact-table">
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>
@@ -242,6 +247,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
                 </tr>
               </tfoot>
             </Table>
+            </div>
           </div>
         </div>
       </div>
@@ -255,7 +261,8 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
             </h6>
           </div>
           <div className="card-body p-0">
-            <Table bordered striped className="mb-0 text-nowrap compact-table">
+            <div className="table-responsive">
+              <Table bordered striped className="mb-0 text-nowrap compact-table">
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>
@@ -309,6 +316,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
                 </tr>
               </tfoot>
             </Table>
+            </div>
           </div>
         </div>
       </div>
