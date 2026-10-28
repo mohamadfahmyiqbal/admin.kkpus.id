@@ -1,8 +1,8 @@
 import api from "./common";
 
 class JualBeliService {
-  createJualBeli(payload) {
-    return api.post("/jualbeli/create", payload);
+  createJualBeli(data) {
+    return api.post("/jualbeli/create", data);
   }
 
   getJualBeliHistory(params) {
@@ -25,12 +25,12 @@ class JualBeliService {
     return api.get("/financial/report/pinjaman");
   }
 
-  createPinjamanHutang(payload) {
-    return api.post("/financial/hutang/create", payload);
+  createPinjamanHutang(data) {
+    return api.post("/financial/hutang/create", data);
   }
 
-  createPinjamanAktivaTetap(payload) {
-    return api.post("/financial/aktiva-tetap/create", payload);
+  createPinjamanAktivaTetap(data) {
+    return api.post("/financial/aktiva-tetap/create", data);
   }
 
   getGeneralJualBeliHistory(params) {
@@ -45,8 +45,8 @@ class JualBeliService {
     return api.get("/financial/report/arisan", { params });
   }
 
-  submitPengajuan(payload) {
-    return api.post("/financial/apply", payload);
+  submitPengajuan(data) {
+    return api.post("/financial/apply", data);
   }
 
   getFinancingDetail(id) {
@@ -67,6 +67,12 @@ class JualBeliService {
 
   importJualBeli(formData) {
     return api.post("/jualbeli/import", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  }
+
+  importCicilanJualBeli(formData) {
+    return api.post("/jualbeli/import-cicilan", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
   }

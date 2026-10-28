@@ -1,13 +1,20 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
-import { UploadSimple, DownloadSimple } from "phosphor-react";
+import { Modal, Button, Form, Alert, Spinner, Nav } from "react-bootstrap";
+import { UploadSimple, DownloadSimple, Receipt, ShoppingCart } from "phosphor-react";
 import Swal from "sweetalert2";
 import jualBeliService from "../../../utils/api/UJualBeli";
 
 const ImportExcelModal = ({ show, onHide, onSuccess }) => {
+  const [activeTab, setActiveTab] = useState("kontrak"); // "kontrak" atau "cicilan"
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setFile(null);
+    setErrorMsg("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,9 +26,16 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
     setErrorMsg("");
     const formData = new FormData();
     formData.append("file", file);
+
     try {
-      const res = await jualBeliService.importJualBeli(formData);
-      if (res.data.success) {
+      let res;
+      if (activeTab === "kontrak") {
+        res = await jualBeliService.importJualBeli(formData);
+      } else {
+        res = await jualBeliService.importCicilanJualBeli(formData);
+      }
+
+      if (res.data?.success) {
         Swal.fire({
           icon: "success",
           title: "Import Berhasil",
@@ -65,8 +79,20 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
     }
   };
 
+  const getTemplateDownloadUrl = () => {
+    const apiOrigin =
+      import.meta.env.VITE_API_ORIGIN ||
+      (import.meta.env.VITE_API_URL
+        ? new URL(import.meta.env.VITE_API_URL).origin
+        : window.location.origin);
+
+    return activeTab === "kontrak"
+      ? `${apiOrigin}/api/jualbeli/template-import`
+      : `${apiOrigin}/api/jualbeli/template-import-cicilan`;
+  };
+
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered size="lg">
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="fs-5 fw-bold text-dark">
           <div className="d-flex align-items-center gap-2">
@@ -78,20 +104,54 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="pt-3 pb-4 px-4">
+        {/* Nav Tabs Pemilihan Tipe Import */}
+        <Nav
+          variant="pills"
+          activeKey={activeTab}
+          onSelect={handleTabChange}
+          className="mb-3 bg-light p-1 rounded-pill"
+        >
+          <Nav.Item className="flex-fill text-center">
+            <Nav.Link
+              eventKey="kontrak"
+              className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
+            >
+              <ShoppingCart size={18} />
+              1. Import Kontrak Jual Beli
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item className="flex-fill text-center">
+            <Nav.Link
+              eventKey="cicilan"
+              className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
+            >
+              <Receipt size={18} />
+              2. Import Riwayat Cicilan / Setoran
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+
         <Alert
           variant="info"
           className="d-flex gap-3 align-items-start border-0 bg-primary bg-opacity-10 text-primary"
         >
           <div>
-            <strong>Langkah-langkah:</strong>
+            <strong>Langkah-langkah {activeTab === "kontrak" ? "Import Kontrak" : "Import Cicilan"}:</strong>
             <ol className="mb-0 mt-2 ps-3 small">
-              <li>Unduh template Excel yang telah disediakan.</li>
-              <li>
-                Isi data transaksi jual beli sesuai dengan format kolom yang ada.
-              </li>
-              <li>
-                Pastikan kolom <strong>Status</strong>: <code>APPROVED</code> (transaksi aktif/berjalan) atau <code>PENDING</code> (menunggu persetujuan).
-              </li>
+              <li>Unduh template Excel yang telah disediakan di bawah.</li>
+              {activeTab === "kontrak" ? (
+                <>
+                  <li>Isi data transaksi jual beli sesuai dengan format kolom yang ada.</li>
+                  <li>
+                    Gunakan kolom <strong>Status</strong>: <code>APPROVED</code> (transaksi aktif) atau <code>PENDING</code>.
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>Isi nomor anggota, nama transaksi jual beli, nomor cicilan ke-berapa, nominal, dan tanggal pembayarannya.</li>
+                  <li>Pilih status cicilan: <code>PAID</code> (sudah lunas) atau <code>UNPAID</code>.</li>
+                </>
+              )}
               <li>Unggah file Excel yang sudah diisi ke form di bawah.</li>
             </ol>
             <Button
@@ -99,16 +159,11 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
               size="sm"
               className="mt-3 d-flex align-items-center gap-2 fw-semibold"
               onClick={() => {
-                const apiOrigin =
-                  import.meta.env.VITE_API_ORIGIN ||
-                  (import.meta.env.VITE_API_URL
-                    ? new URL(import.meta.env.VITE_API_URL).origin
-                    : window.location.origin);
-                window.location.href = `${apiOrigin}/api/jualbeli/template-import`;
+                window.location.href = getTemplateDownloadUrl();
               }}
             >
               <DownloadSimple size={16} weight="bold" />
-              Unduh Template
+              Unduh Template {activeTab === "kontrak" ? "Kontrak Jual Beli" : "Riwayat Cicilan"}
             </Button>
           </div>
         </Alert>
@@ -116,7 +171,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
         <Form onSubmit={handleSubmit} className="mt-4">
           <Form.Group>
             <Form.Label className="fw-semibold small mb-2 text-dark">
-              Unggah File Excel
+              Unggah File Excel ({activeTab === "kontrak" ? "Kontrak Jual Beli" : "Riwayat Cicilan"})
             </Form.Label>
             <div className="position-relative">
               <Form.Control
@@ -162,7 +217,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
                   Memproses...
                 </>
               ) : (
-                "Import Data"
+                `Import ${activeTab === "kontrak" ? "Kontrak" : "Cicilan"}`
               )}
             </Button>
           </div>
