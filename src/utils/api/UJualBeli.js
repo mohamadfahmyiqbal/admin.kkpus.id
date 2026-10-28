@@ -1,4 +1,4 @@
-import api from "./common";
+﻿import api from "./common";
 
 class JualBeliService {
   createJualBeli(data) {
@@ -75,6 +75,14 @@ class JualBeliService {
     return api.post("/jualbeli/import-cicilan", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+  }
+
+  deleteJualBeli(id) {
+    return api.delete(`/jualbeli/${id}`);
+  }
+
+  deleteBatchJualBeli(ids) {
+    return api.post("/jualbeli/batch-delete", { ids });
   }
 }
 

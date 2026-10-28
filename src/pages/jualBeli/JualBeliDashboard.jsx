@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+﻿import React, { useState, useEffect, useMemo } from "react";
 import { Card, Tab, Nav, Spinner, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { MagnifyingGlass } from "phosphor-react";
@@ -7,6 +7,7 @@ import jualBeliService from "../../utils/api/UJualBeli";
 import JualBeliApprovalModal from "../../components/modals/JualBeliApprovalModal";
 import JualBeliSetoranModal from "../../components/modals/JualBeliSetoranModal";
 import { jwtEncode } from "../../utils/helpers";
+import Swal from "sweetalert2";
 
 import JualBeliHeader from "./components/JualBeliHeader";
 import JualBeliSummaryCards from "./components/JualBeliSummaryCards";
@@ -23,6 +24,7 @@ const JualBeliDashboard = () => {
   const [showImport, setShowImport] = useState(false);
   const [selectedTx, setSelectedTx] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const fetchTransactions = async () => {
     setLoading(true);
@@ -136,6 +138,79 @@ const JualBeliDashboard = () => {
     setShowApproval(true);
   };
 
+  const handleToggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleToggleSelectAll = (pageIds) => {
+    setSelectedIds((prev) => {
+      const allSelected = pageIds.every((id) => prev.includes(id));
+      if (allSelected) {
+        return prev.filter((id) => !pageIds.includes(id));
+      } else {
+        return [...new Set([...prev, ...pageIds])];
+      }
+    });
+  };
+
+  const handleDeleteSingle = async (tx) => {
+    const id = tx.id || tx.financing_id;
+    const name = tx.item_name || tx.purpose || "transaksi ini";
+    const confirm = await Swal.fire({
+      title: "Hapus Transaksi?",
+      text: `Apakah Anda yakin ingin menghapus data ${name}? Semua riwayat cicilan terkait juga akan terhapus.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Ya, Hapus!",
+      cancelButtonText: "Batal",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const res = await jualBeliService.deleteJualBeli(id);
+        if (res.data?.success) {
+          Swal.fire("Berhasil", "Data transaksi berhasil dihapus.", "success");
+          setSelectedIds((prev) => prev.filter((item) => item !== id));
+          fetchTransactions();
+        }
+      } catch (err) {
+        Swal.fire("Gagal", err.response?.data?.message || "Gagal menghapus transaksi", "error");
+      }
+    }
+  };
+
+  const handleDeleteBatch = async () => {
+    if (selectedIds.length === 0) return;
+
+    const confirm = await Swal.fire({
+      title: "Hapus Data Terpilih?",
+      text: `Apakah Anda yakin ingin menghapus ${selectedIds.length} data transaksi yang dipilih? Data yang sudah dihapus tidak dapat dikembalikan.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: `Ya, Hapus ${selectedIds.length} Data!`,
+      cancelButtonText: "Batal",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const res = await jualBeliService.deleteBatchJualBeli(selectedIds);
+        if (res.data?.success) {
+          Swal.fire("Berhasil", res.data.message || "Data transaksi berhasil dihapus.", "success");
+          setSelectedIds([]);
+          fetchTransactions();
+        }
+      } catch (err) {
+        Swal.fire("Gagal", err.response?.data?.message || "Gagal menghapus data transaksi", "error");
+      }
+    }
+  };
+
   return (
     <div className="simpanan-dashboard py-4 px-3 px-md-4">
       {/* Breadcrumb */}
@@ -165,6 +240,8 @@ const JualBeliDashboard = () => {
         onRefresh={fetchTransactions}
         onExport={handleExport}
         onOpenImport={() => setShowImport(true)}
+        selectedCount={selectedIds.length}
+        onDeleteSelected={handleDeleteBatch}
       />
 
       {loading ? (
@@ -228,6 +305,10 @@ const JualBeliDashboard = () => {
                       onViewDetail={handleViewDetail}
                       onViewSetoran={handleViewSetoran}
                       onApprove={handleApprove}
+                      onDelete={handleDeleteSingle}
+                      selectedIds={selectedIds}
+                      onToggleSelect={handleToggleSelect}
+                      onToggleSelectAll={handleToggleSelectAll}
                     />
                   </Tab.Pane>
                   <Tab.Pane eventKey="approval">
@@ -240,6 +321,10 @@ const JualBeliDashboard = () => {
                       onViewDetail={handleViewDetail}
                       onViewSetoran={handleViewSetoran}
                       onApprove={handleApprove}
+                      onDelete={handleDeleteSingle}
+                      selectedIds={selectedIds}
+                      onToggleSelect={handleToggleSelect}
+                      onToggleSelectAll={handleToggleSelectAll}
                     />
                   </Tab.Pane>
                 </Tab.Content>

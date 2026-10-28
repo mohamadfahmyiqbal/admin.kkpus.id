@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from "react";
+﻿import React, { useState, useMemo } from "react";
 import { Table, Badge, Form, Pagination, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, Coins, CheckCircle, X, ArrowsDownUp, CaretUp, CaretDown, ArrowsClockwise } from "phosphor-react";
+import { Eye, Coins, CheckCircle, X, ArrowsDownUp, CaretUp, CaretDown, ArrowsClockwise, Trash } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";
 
 const JualBeliTable = ({
@@ -10,6 +10,10 @@ const JualBeliTable = ({
   onViewDetail,
   onViewSetoran,
   onApprove,
+  onDelete,
+  selectedIds = [],
+  onToggleSelect,
+  onToggleSelectAll,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -258,6 +262,14 @@ const JualBeliTable = ({
           <thead className="table-light">
             {/* Baris 1: Header Nama Kolom & Sort */}
             <tr>
+              <th className="px-3 py-3 text-center" style={{ width: "45px" }}>
+                <Form.Check
+                  type="checkbox"
+                  checked={paginatedList.length > 0 && paginatedList.every((tx) => selectedIds.includes(tx.id || tx.financing_id))}
+                  onChange={() => onToggleSelectAll && onToggleSelectAll(paginatedList.map((tx) => tx.id || tx.financing_id))}
+                  title="Pilih Semua di Halaman Ini"
+                />
+              </th>
               <th className="px-3 py-3 text-muted fw-bold text-center" style={{ width: "120px" }}>
                 Action
               </th>
@@ -325,6 +337,7 @@ const JualBeliTable = ({
 
             {/* Baris 2: Input Pencarian di SEMUA kolom kecuali Action */}
             <tr className="bg-light bg-opacity-75">
+              <th className="py-2 px-2 text-center"></th>
               <th className="py-2 px-2 text-center">
                 {hasAnyFilter ? (
                   <Button
@@ -484,7 +497,7 @@ const JualBeliTable = ({
           <tbody>
             {paginatedList.length === 0 ? (
               <tr>
-                <td colSpan="13" className="p-0 border-0">
+                <td colSpan="14" className="p-0 border-0">
                   <EmptyState
                     title="Tidak ada transaksi"
                     message="Belum ada data transaksi yang cocok dengan kriteria pencarian."
@@ -533,7 +546,14 @@ const JualBeliTable = ({
                   tx.status === "ACTIVE";
 
                 return (
-                  <tr key={tx.id || tx.financing_id} className="hover-shadow-sm transition-all">
+                  <tr key={tx.id || tx.financing_id} className={`hover-shadow-sm transition-all ${selectedIds.includes(tx.id || tx.financing_id) ? "table-active bg-primary bg-opacity-10" : ""}`}>
+                    <td className="px-3 text-center py-3">
+                      <Form.Check
+                        type="checkbox"
+                        checked={selectedIds.includes(tx.id || tx.financing_id)}
+                        onChange={() => onToggleSelect && onToggleSelect(tx.id || tx.financing_id)}
+                      />
+                    </td>
                     {/* Action Buttons Optimized with Tooltips and Modern Micro-styles */}
                     <td className="px-3 text-center py-3">
                       <div className="d-flex justify-content-center align-items-center gap-2">
@@ -580,6 +600,23 @@ const JualBeliTable = ({
                               onClick={() => onApprove(tx)}
                             >
                               <CheckCircle size={17} weight="bold" />
+                            </Button>
+                          </OverlayTrigger>
+                        )}
+
+                        {onDelete && (
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip id={`tt-del-${tx.id || tx.financing_id}`}>Hapus Transaksi</Tooltip>}
+                          >
+                            <Button
+                              variant="light"
+                              size="sm"
+                              className="btn-icon p-1 rounded-circle border-0 text-danger bg-danger bg-opacity-10 hover-bg-danger"
+                              style={{ width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                              onClick={() => onDelete(tx)}
+                            >
+                              <Trash size={17} weight="bold" />
                             </Button>
                           </OverlayTrigger>
                         )}
