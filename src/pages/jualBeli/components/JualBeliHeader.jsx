@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { Button } from "react-bootstrap";
 import { ArrowClockwise, FileArrowDown, UploadSimple, Trash } from "phosphor-react";
 
@@ -22,37 +22,44 @@ const JualBeliHeader = ({
         {selectedCount > 0 && (
           <Button
             variant="danger"
-            className="shadow-sm d-flex align-items-center gap-2 fw-medium animate-fade-in"
+            size="sm"
+            className="shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium px-2 px-sm-3 animate-fade-in"
             onClick={onDeleteSelected}
           >
-            <Trash size={18} weight="bold" />
-            Hapus Terpilih ({selectedCount})
+            <Trash size={16} weight="bold" />
+            <span>Hapus ({selectedCount})</span>
           </Button>
         )}
         <Button
           variant="white"
-          className="border shadow-sm d-flex align-items-center gap-2 fw-medium text-muted bg-white"
+          size="sm"
+          className="border shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium text-muted bg-white px-2 px-sm-3"
           onClick={onRefresh}
           disabled={loading}
+          title="Refresh Data"
         >
-          <ArrowClockwise size={18} className={loading ? "animate-spin" : ""} />
-          {loading ? "Refreshing..." : "Refresh"}
+          <ArrowClockwise size={16} weight="bold" className={loading ? "animate-spin" : ""} />
+          <span className="d-none d-sm-inline">{loading ? "Refreshing..." : "Refresh"}</span>
         </Button>
         <Button
           variant="primary"
-          className="shadow-sm d-flex align-items-center gap-2 fw-medium"
+          size="sm"
+          className="shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium px-2 px-sm-3"
           onClick={onExport}
+          title="Export Laporan Excel"
         >
-          <FileArrowDown size={18} />
-          Export Laporan
+          <FileArrowDown size={16} weight="bold" />
+          <span>Export<span className="d-none d-sm-inline"> Laporan</span></span>
         </Button>
         <Button
           variant="success"
-          className="shadow-sm d-flex align-items-center gap-2 fw-medium"
+          size="sm"
+          className="shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium px-2 px-sm-3"
           onClick={onOpenImport}
+          title="Import Data Excel"
         >
-          <UploadSimple size={18} />
-          Import Excel
+          <UploadSimple size={16} weight="bold" />
+          <span>Import<span className="d-none d-sm-inline"> Excel</span></span>
         </Button>
       </div>
     </div>
