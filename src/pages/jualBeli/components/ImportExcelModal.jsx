@@ -104,32 +104,35 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="pt-3 pb-4 px-4">
-        {/* Nav Tabs Pemilihan Tipe Import */}
-        <Nav
-          variant="pills"
-          activeKey={activeTab}
-          onSelect={handleTabChange}
-          className="mb-3 bg-light p-1 rounded-pill"
-        >
-          <Nav.Item className="flex-fill text-center">
-            <Nav.Link
-              eventKey="kontrak"
-              className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
-            >
-              <ShoppingCart size={18} />
-              1. Import Kontrak Jual Beli
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item className="flex-fill text-center">
-            <Nav.Link
-              eventKey="cicilan"
-              className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
-            >
-              <Receipt size={18} />
-              2. Import Riwayat Cicilan / Setoran
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
+        {/* Nav Tabs Pemilihan Tipe Import dengan horizontal scroll jika sempit */}
+        <div className="global-tabs-wrapper mb-3" style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+          <Nav
+            variant="pills"
+            activeKey={activeTab}
+            onSelect={handleTabChange}
+            className="bg-light p-1 rounded-pill flex-nowrap"
+            style={{ minWidth: "max-content", width: "100%" }}
+          >
+            <Nav.Item className="flex-fill text-center">
+              <Nav.Link
+                eventKey="kontrak"
+                className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-nowrap"
+              >
+                <ShoppingCart size={18} />
+                1. Import Kontrak Jual Beli
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item className="flex-fill text-center">
+              <Nav.Link
+                eventKey="cicilan"
+                className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-nowrap"
+              >
+                <Receipt size={18} />
+                2. Import Riwayat Cicilan / Setoran
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </div>
 
         <Alert
           variant="info"

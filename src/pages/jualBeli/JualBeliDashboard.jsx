@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, Tab, Nav, Spinner, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { MagnifyingGlass } from "phosphor-react";
@@ -261,23 +261,25 @@ const JualBeliDashboard = () => {
           >
             <Card.Body className="p-0">
               <Tab.Container defaultActiveKey="transaksi">
-                <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center px-4 pt-3 mb-3 border-bottom pb-2">
-                  <Nav
-                    variant="pills"
-                    className="global-tabs border-0 flex-nowrap mb-3 mb-md-0"
-                  >
-                    <Nav.Item>
-                      <Nav.Link eventKey="transaksi">Daftar Transaksi</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="approval">
-                        Approval Pengajuan
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
+                <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center px-3 px-md-4 pt-3 mb-3 border-bottom pb-2 gap-3">
+                  <div className="global-tabs-wrapper mb-0 w-100 w-md-auto" style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+                    <Nav
+                      variant="pills"
+                      className="global-tabs border-0 flex-nowrap"
+                    >
+                      <Nav.Item>
+                        <Nav.Link eventKey="transaksi" className="text-nowrap">Daftar Transaksi</Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="approval" className="text-nowrap">
+                          Approval Pengajuan
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </div>
                   <div
-                    className="search-box position-relative"
-                    style={{ maxWidth: "300px", width: "100%" }}
+                    className="search-box position-relative w-100"
+                    style={{ maxWidth: "300px" }}
                   >
                     <MagnifyingGlass
                       size={18}
