@@ -89,6 +89,9 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
               <li>
                 Isi data transaksi jual beli sesuai dengan format kolom yang ada.
               </li>
+              <li>
+                Pastikan kolom <strong>Status</strong>: <code>APPROVED</code> (transaksi aktif/berjalan) atau <code>PENDING</code> (menunggu persetujuan).
+              </li>
               <li>Unggah file Excel yang sudah diisi ke form di bawah.</li>
             </ol>
             <Button

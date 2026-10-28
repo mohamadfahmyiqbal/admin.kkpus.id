@@ -132,3 +132,49 @@
     opacity: 0.05;
   }
 }
+
+/* ==========================================================================
+   Jual Beli Admin Dashboard Enhancements
+   ========================================================================== */
+.summary-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+}
+
+.hover-bg-primary:hover {
+  background-color: var(--bs-primary) !important;
+  color: #fff !important;
+}
+
+.hover-bg-success:hover {
+  background-color: var(--bs-success) !important;
+  color: #fff !important;
+}
+
+.hover-bg-warning:hover {
+  background-color: var(--bs-warning) !important;
+  color: #fff !important;
+}
+
+.custom-table-admin thead th {
+  font-size: 0.78rem;
+  letter-spacing: 0.3px;
+  background-color: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.custom-table-admin tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.custom-table-admin tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.jb-table-wrapper {
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
