@@ -2,7 +2,8 @@ import React, { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import SidebarToggleButton from "./SidebarToggleButton";
 import { jwtEncode } from "../../utils/helpers";
-import { Bell, UserCircle, SignOut } from "phosphor-react";
+import { UserCircle, SignOut } from "phosphor-react";
+import NotificationDropdown from "./NotificationDropdown";
 
 export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown, isDesktop }) => {
   const navigate = useNavigate();
@@ -58,26 +59,7 @@ export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown,
         >
           <ul className="d-flex align-items-center flex-row list-unstyled mb-0 gap-2 gap-sm-3">
             <li className="nav-item">
-              <button
-                type="button"
-                className="btn btn-topbar-action btn-link text-white position-relative shadow-none rounded-circle d-flex align-items-center justify-content-center border-0"
-                style={{ width: "38px", height: "38px", minWidth: "38px", minHeight: "38px", padding: 0 }}
-                onClick={() => handleNav("notificationPage")}
-                title="Notifikasi"
-                aria-label="Buka Notifikasi"
-              >
-                <Bell size={20} weight="bold" />
-                <span
-                  className="position-absolute bg-danger border border-white rounded-circle"
-                  style={{
-                    top: "6px",
-                    right: "6px",
-                    width: "9px",
-                    height: "9px",
-                    display: "inline-block",
-                  }}
-                />
-              </button>
+              <NotificationDropdown user={user} />
             </li>
 
             <li>
