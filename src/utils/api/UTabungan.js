@@ -13,6 +13,9 @@ const TabunganService = {
   importTabungan: (formData) => api.post("/tabungan/admin/import", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   }),
+  importTransaksiTabungan: (formData) => api.post("/tabungan/admin/import-transaksi", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  }),
 };
 
 export default TabunganService;

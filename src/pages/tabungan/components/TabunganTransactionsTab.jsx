@@ -77,9 +77,9 @@ const TabunganTransactionsTab = () => {
 
   return (
     <Card className="border-0 shadow-sm rounded-4 overflow-hidden mt-3">
-      <div className="table-filter-bar px-4 py-3">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-          <div className="search-input-group d-flex align-items-center bg-light px-3 py-2 rounded-3" style={{ minWidth: "260px" }}>
+      <div className="table-filter-bar px-3 px-md-4 py-3">
+        <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 gap-sm-3">
+          <div className="search-input-group d-flex align-items-center bg-light px-3 py-2 rounded-3 flex-grow-1" style={{ maxWidth: "360px" }}>
             <MagnifyingGlass className="search-icon text-muted me-2" size={18} />
             <Form.Control
               type="text"
@@ -92,18 +92,18 @@ const TabunganTransactionsTab = () => {
           <div className="d-flex gap-2">
             <Button
               variant="light"
-              className="rounded-3 border-0 bg-light d-flex align-items-center gap-2 text-muted fw-medium small"
+              className="rounded-3 border-0 bg-light d-inline-flex align-items-center gap-1 gap-sm-2 text-muted fw-medium small px-3 py-2"
               onClick={fetchTransactions}
             >
-              <ArrowClockwise size={18} /> Refresh
+              <ArrowClockwise size={16} /> <span>Refresh</span>
             </Button>
           </div>
         </div>
       </div>
 
       <Card.Body className="p-0">
-        <div className="global-tabs-wrapper px-4 pt-3 mb-0">
-          <h5 className="mb-3 text-dark fw-bold">
+        <div className="px-3 px-md-4 pt-3 mb-0">
+          <h5 className="mb-3 text-dark fw-bold fs-6 fs-md-5">
             Persetujuan & Riwayat Pencairan
           </h5>
           <TransactionTable

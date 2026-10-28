@@ -131,9 +131,9 @@ const TabunganPage = () => {
   };
 
   return (
-    <div className="py-4 px-3 px-md-4" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+    <div className="py-3 py-md-4 px-2 px-sm-3 px-md-4" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
       {/* Breadcrumb Header */}
-      <div className="mb-3">
+      <div className="mb-2 mb-md-3">
         <Breadcrumb className="small mb-1">
           <Breadcrumb.Item onClick={() => navigate(`/${jwtEncode("dashboard")}`)}>
             Dashboard
@@ -143,22 +143,23 @@ const TabunganPage = () => {
         </Breadcrumb>
       </div>
 
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 animate-fade-in">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 mb-md-4 gap-3 animate-fade-in">
         <div>
-          <h4 className="fw-bold text-dark mb-0">Manajemen Tabungan</h4>
+          <h4 className="fw-bold text-dark mb-1 fs-5 fs-sm-4">Manajemen Tabungan</h4>
           <p className="text-muted small mb-0">
             Kelola progress simpanan target/tabungan mudharabah anggota.
           </p>
         </div>
-        <div className="d-flex gap-2">
+        <div className="d-flex flex-wrap gap-2">
           {activeTab === "peserta" && (
             <Button
               variant="success"
               onClick={() => setShowImportModal(true)}
-              className="fw-medium d-flex align-items-center gap-2 px-3 shadow-sm rounded-3"
+              className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
+              size="sm"
             >
               <FileArrowDown size={18} weight="bold" />
-              Import Excel
+              <span>Import Excel</span>
             </Button>
           )}
           {activeTab === "program" && (
@@ -168,46 +169,50 @@ const TabunganPage = () => {
                 setSelectedProgram(null);
                 setShowProgramModal(true);
               }}
-              className="fw-medium d-flex align-items-center gap-2 px-3 shadow-sm rounded-3"
+              className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
+              size="sm"
             >
               <Plus size={18} weight="bold" />
-              Buat Program Tabungan
+              <span>Buat Program</span>
             </Button>
           )}
         </div>
       </div>
 
       <Tab.Container activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-        <Nav
-          variant="pills"
-          className="global-tabs tabs-md flex-nowrap mb-4 bg-white p-1 rounded-4 shadow-sm"
-          style={{ width: "fit-content" }}
-        >
-          <Nav.Item>
-            <Nav.Link
-              eventKey="peserta"
-              className="px-4 py-2 rounded-pill fw-medium transition-all"
-            >
-              Daftar Peserta
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              eventKey="transaksi"
-              className="px-4 py-2 rounded-pill fw-medium transition-all"
-            >
-              Transaksi & Persetujuan
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              eventKey="program"
-              className="px-4 py-2 rounded-pill fw-medium transition-all"
-            >
-              Master Program
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
+        {/* Scrollable Tabs Wrapper for Mobile */}
+        <div className="global-tabs-wrapper mb-3 mb-md-4 pb-2" style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+          <Nav
+            variant="pills"
+            className="global-tabs tabs-md flex-nowrap bg-white p-1 rounded-4 shadow-sm"
+            style={{ width: "fit-content" }}
+          >
+            <Nav.Item>
+              <Nav.Link
+                eventKey="peserta"
+                className="px-3 px-md-4 py-2 rounded-pill fw-medium transition-all text-nowrap"
+              >
+                Daftar Peserta
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                eventKey="transaksi"
+                className="px-3 px-md-4 py-2 rounded-pill fw-medium transition-all text-nowrap"
+              >
+                Transaksi & Persetujuan
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                eventKey="program"
+                className="px-3 px-md-4 py-2 rounded-pill fw-medium transition-all text-nowrap"
+              >
+                Master Program
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </div>
 
         <Tab.Content>
           {/* Tab 1: Daftar Peserta & Cards */}
@@ -222,25 +227,25 @@ const TabunganPage = () => {
             ) : (
               <>
                 {/* Summary Cards */}
-                <Row className="mb-4 g-3">
+                <Row className="mb-3 mb-md-4 g-2 g-sm-3">
                   {summaryCards.map((c) => (
-                    <Col xs={12} md={6} lg={3} key={c.id}>
+                    <Col xs={12} sm={6} lg={3} key={c.id}>
                       <Card
                         className="shadow-sm border-0 h-100"
                         style={{ borderRadius: "12px" }}
                       >
-                        <Card.Body className="p-4 d-flex align-items-center">
+                        <Card.Body className="p-3 p-md-4 d-flex align-items-center">
                           <div
-                            className="me-3 bg-light rounded-circle d-flex align-items-center justify-content-center text-primary"
-                            style={{ width: "52px", height: "52px", flexShrink: 0 }}
+                            className="me-3 bg-light rounded-circle d-flex align-items-center justify-content-center text-primary flex-shrink-0"
+                            style={{ width: "46px", height: "46px" }}
                           >
-                            <Coins size={24} weight="bold" />
+                            <Coins size={22} weight="bold" />
                           </div>
-                          <div>
-                            <h6 className="text-muted fw-semibold mb-1 small text-uppercase">
+                          <div className="overflow-hidden">
+                            <h6 className="text-muted fw-semibold mb-1 extra-small text-uppercase text-truncate">
                               {c.title}
                             </h6>
-                            <h4 className="fw-bold text-dark mb-0">{c.total}</h4>
+                            <h5 className="fw-bold text-dark mb-0 fs-6 fs-md-5 text-truncate">{c.total}</h5>
                           </div>
                         </Card.Body>
                       </Card>
@@ -273,13 +278,13 @@ const TabunganPage = () => {
             ) : (
               <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div className="table-responsive">
-                  <Table hover className="mb-0 align-middle custom-table-admin">
+                  <Table hover className="mb-0 align-middle custom-table-admin text-nowrap">
                     <thead className="bg-light">
                       <tr>
-                        <th className="px-4 py-3 font-medium text-muted small">No</th>
-                        <th className="px-4 py-3 font-medium text-muted small">Nama Program</th>
-                        <th className="px-4 py-3 font-medium text-muted small">Kategori</th>
-                        <th className="px-4 py-3 font-medium text-muted small text-center">Aksi</th>
+                        <th className="px-3 px-md-4 py-3 font-medium text-muted small">No</th>
+                        <th className="px-3 px-md-4 py-3 font-medium text-muted small">Nama Program</th>
+                        <th className="px-3 px-md-4 py-3 font-medium text-muted small">Kategori</th>
+                        <th className="px-3 px-md-4 py-3 font-medium text-muted small text-center">Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -300,11 +305,11 @@ const TabunganPage = () => {
                             className="border-bottom"
                             style={{ borderColor: "#f8fafc" }}
                           >
-                            <td className="px-4 py-3 text-muted small">{idx + 1}</td>
-                            <td className="px-4 py-3 fw-medium text-dark">
+                            <td className="px-3 px-md-4 py-3 text-muted small">{idx + 1}</td>
+                            <td className="px-3 px-md-4 py-3 fw-medium text-dark">
                               {p.target_name || "-"}
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-3 px-md-4 py-3">
                               <Badge
                                 bg="info"
                                 className="bg-opacity-10 text-info px-2 py-1 rounded-pill fw-medium border-0"
@@ -312,12 +317,13 @@ const TabunganPage = () => {
                                 {p.category || "-"}
                               </Badge>
                             </td>
-                            <td className="px-4 py-3 text-center">
+                            <td className="px-3 px-md-4 py-3 text-center">
                               <div className="d-flex justify-content-center gap-2">
                                 <Button
                                   variant="light"
                                   size="sm"
-                                  className="btn-icon text-primary rounded-circle border shadow-sm p-1"
+                                  className="btn-icon text-primary rounded-circle border shadow-sm p-1 d-inline-flex align-items-center justify-content-center"
+                                  style={{ width: "32px", height: "32px" }}
                                   onClick={() => {
                                     setSelectedProgram(p);
                                     setShowProgramModal(true);
@@ -329,7 +335,8 @@ const TabunganPage = () => {
                                 <Button
                                   variant="light"
                                   size="sm"
-                                  className="btn-icon text-danger rounded-circle border shadow-sm p-1"
+                                  className="btn-icon text-danger rounded-circle border shadow-sm p-1 d-inline-flex align-items-center justify-content-center"
+                                  style={{ width: "32px", height: "32px" }}
                                   onClick={() => handleDeleteProgram(p.saving_target_id)}
                                   title="Hapus Program"
                                 >
