@@ -159,6 +159,36 @@
   color: #fff !important;
 }
 
+.hover-bg-danger:hover {
+  background-color: var(--bs-danger) !important;
+  color: #fff !important;
+}
+
+/* Tombol Aksi di Tabel Admin */
+.btn-action-table {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  transition: all 0.2s ease-in-out !important;
+  line-height: 1 !important;
+}
+
+.btn-action-table svg {
+  display: block !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-action-table:hover {
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
 .custom-table-admin thead th {
   font-size: 0.78rem;
   letter-spacing: 0.3px;

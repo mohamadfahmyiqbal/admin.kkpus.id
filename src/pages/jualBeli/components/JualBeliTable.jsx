@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Table, Badge, Form, Pagination, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Eye, Coins, CheckCircle, X, ArrowsDownUp, CaretUp, CaretDown, ArrowsClockwise, Trash } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";
@@ -270,7 +270,7 @@ const JualBeliTable = ({
                   title="Pilih Semua di Halaman Ini"
                 />
               </th>
-              <th className="px-3 py-3 text-muted fw-bold text-center" style={{ width: "120px" }}>
+              <th className="px-3 py-3 text-muted fw-bold text-center" style={{ width: "150px" }}>
                 Action
               </th>
               <th
@@ -554,52 +554,49 @@ const JualBeliTable = ({
                         onChange={() => onToggleSelect && onToggleSelect(tx.id || tx.financing_id)}
                       />
                     </td>
-                    {/* Action Buttons Optimized with Tooltips and Modern Micro-styles */}
+                    {/* Action Buttons */}
                     <td className="px-3 text-center py-3">
-                      <div className="d-flex justify-content-center align-items-center gap-2">
+                      <div className="d-flex justify-content-center align-items-center gap-1">
                         <OverlayTrigger
                           placement="top"
-                          overlay={<Tooltip id={`tt-detail-${tx.id || tx.financing_id}`}>Lihat Detail Pengajuan</Tooltip>}
+                          overlay={<Tooltip id={`tt-detail-${tx.id || tx.financing_id}`}>Lihat Detail</Tooltip>}
                         >
                           <Button
                             variant="light"
                             size="sm"
-                            className="btn-icon p-1 rounded-circle border-0 text-primary bg-primary bg-opacity-10 hover-bg-primary"
-                            style={{ width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                            className="btn-action-table text-primary bg-primary bg-opacity-10 hover-bg-primary border-0"
                             onClick={() => onViewDetail(tx)}
                           >
-                            <Eye size={17} weight="bold" />
+                            <Eye size={16} weight="bold" />
                           </Button>
                         </OverlayTrigger>
 
                         <OverlayTrigger
                           placement="top"
-                          overlay={<Tooltip id={`tt-setoran-${tx.id || tx.financing_id}`}>Kartu Riwayat Setoran</Tooltip>}
+                          overlay={<Tooltip id={`tt-setoran-${tx.id || tx.financing_id}`}>Kartu Setoran</Tooltip>}
                         >
                           <Button
                             variant="light"
                             size="sm"
-                            className="btn-icon p-1 rounded-circle border-0 text-success bg-success bg-opacity-10 hover-bg-success"
-                            style={{ width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                            className="btn-action-table text-success bg-success bg-opacity-10 hover-bg-success border-0"
                             onClick={() => onViewSetoran(tx)}
                           >
-                            <Coins size={17} weight="bold" />
+                            <Coins size={16} weight="bold" />
                           </Button>
                         </OverlayTrigger>
 
                         {isApprovalTab && tx.status === "PENDING" && (
                           <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip id={`tt-approve-${tx.id || tx.financing_id}`}>Proses Persetujuan</Tooltip>}
+                            overlay={<Tooltip id={`tt-approve-${tx.id || tx.financing_id}`}>Approval</Tooltip>}
                           >
                             <Button
                               variant="light"
                               size="sm"
-                              className="btn-icon p-1 rounded-circle border-0 text-warning bg-warning bg-opacity-15 hover-bg-warning"
-                              style={{ width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                              className="btn-action-table text-warning bg-warning bg-opacity-15 hover-bg-warning border-0"
                               onClick={() => onApprove(tx)}
                             >
-                              <CheckCircle size={17} weight="bold" />
+                              <CheckCircle size={16} weight="bold" />
                             </Button>
                           </OverlayTrigger>
                         )}
@@ -612,11 +609,10 @@ const JualBeliTable = ({
                             <Button
                               variant="light"
                               size="sm"
-                              className="btn-icon p-1 rounded-circle border-0 text-danger bg-danger bg-opacity-10 hover-bg-danger"
-                              style={{ width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                              className="btn-action-table text-danger bg-danger bg-opacity-10 hover-bg-danger border-0"
                               onClick={() => onDelete(tx)}
                             >
-                              <Trash size={17} weight="bold" />
+                              <Trash size={16} weight="bold" />
                             </Button>
                           </OverlayTrigger>
                         )}
