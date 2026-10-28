@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { List, X } from "phosphor-react";
 
 export const SidebarToggleButton = memo(({ sidebarShown, onClick }) => {
   return (
@@ -10,8 +10,18 @@ export const SidebarToggleButton = memo(({ sidebarShown, onClick }) => {
       type="button"
       onClick={onClick}
       aria-label="Toggle sidebar"
+      style={{
+        width: "36px",
+        height: "36px",
+        minWidth: "36px",
+        minHeight: "36px",
+        padding: "0 !important",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
     >
-      {sidebarShown ? <FaTimes size={20} /> : <FaBars size={20} />}
+      {sidebarShown ? <X size={22} weight="bold" /> : <List size={22} weight="bold" />}
     </button>
   );
 });

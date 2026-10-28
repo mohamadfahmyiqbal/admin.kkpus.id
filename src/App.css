@@ -27,6 +27,23 @@
    ========================================================================== */
 .fixed-header {
   height: 64px;
+  overflow: visible !important;
+  z-index: 1050 !important;
+}
+
+.topbar,
+.navbar.top-navbar {
+  overflow: visible !important;
+}
+
+/* Memastikan semua icon SVG di topbar dan action button selalu tampil proporsional */
+.btn-topbar-action svg,
+.btn-topbar-logout svg,
+.sidebar-toggle-btn svg,
+.topbar-avatar svg {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
 }
 
 .header-brand-img {

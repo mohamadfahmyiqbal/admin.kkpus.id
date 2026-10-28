@@ -153,13 +153,20 @@ export const NotificationDropdown = memo(({ user }) => {
       <button
         type="button"
         className="btn btn-topbar-action btn-link text-white position-relative shadow-none rounded-circle d-flex align-items-center justify-content-center border-0"
-        style={{ width: "38px", height: "38px", minWidth: "38px", minHeight: "38px", padding: 0 }}
+        style={{
+          width: "38px",
+          height: "38px",
+          minWidth: "38px",
+          minHeight: "38px",
+          padding: 0,
+          color: "#ffffff",
+        }}
         onClick={toggleDropdown}
         title="Notifikasi"
         aria-label="Buka Notifikasi"
         aria-expanded={isOpen}
       >
-        <Bell size={20} weight="bold" />
+        <Bell size={20} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} />
         {unreadCount > 0 && (
           <span
             className="position-absolute bg-danger border border-white rounded-circle d-flex align-items-center justify-content-center text-white"

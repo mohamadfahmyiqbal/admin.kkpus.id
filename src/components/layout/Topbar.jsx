@@ -16,14 +16,14 @@ export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown,
   );
 
   return (
-    <header className="topbar fixed-header" role="banner">
-      <div className="topbar-stars" aria-hidden="true" />
+    <header className="topbar fixed-header" role="banner" style={{ overflow: "visible" }}>
+      <div className="topbar-stars" aria-hidden="true" style={{ overflow: "hidden" }} />
       <div className="header-masjid-bg" aria-hidden="true" />
       <nav
         className="navbar top-navbar navbar-expand-md navbar-dark px-2 px-sm-3 px-md-4 h-100"
         role="navigation"
         aria-label="Main navigation"
-        style={{ position: "relative", zIndex: 5 }}
+        style={{ position: "relative", zIndex: 10, overflow: "visible" }}
       >
         <div className="navbar-header d-flex align-items-center gap-2 gap-sm-3">
           {!isDesktop && (
@@ -71,7 +71,7 @@ export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown,
                 className="topbar-avatar rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0"
                 style={{ width: "36px", height: "36px" }}
               >
-                <UserCircle size={22} weight="bold" />
+                <UserCircle size={22} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} />
               </div>
               <div className="d-none d-md-flex flex-column text-start" style={{ maxWidth: "160px" }}>
                 <span className="small fw-bold text-white text-truncate leading-none">
@@ -91,7 +91,7 @@ export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown,
                 title="Keluar"
                 aria-label="Keluar dari akun"
               >
-                <SignOut size={16} weight="bold" />
+                <SignOut size={16} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} />
                 <span className="d-none d-sm-inline fw-semibold">Keluar</span>
               </button>
             </li>
