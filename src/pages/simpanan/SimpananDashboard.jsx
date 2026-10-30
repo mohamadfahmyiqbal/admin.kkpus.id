@@ -1,8 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Row, Col, Card, Button, Form, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Wallet, Money, ArrowDownLeft, ArrowUpRight, ArrowClockwise, UploadSimple } from "phosphor-react";
+import {
+  Wallet,
+  Money,
+  ArrowDownLeft,
+  ArrowUpRight,
+  ArrowClockwise,
+  UploadSimple,
+  FileXls,
+} from "phosphor-react";
 import savingsService from "../../utils/api/USavings";
+import { exportToExcel } from "../../utils/helpers/exportToExcel";
 import TransactionTable from "../../components/ui/TransactionTable";
 import TransactionDetailModal from "../../components/modals/TransactionDetailModal";
 import WithdrawalApprovalModal from "../../components/modals/WithdrawalApprovalModal";
@@ -123,6 +132,71 @@ const SimpananDashboard = () => {
     setPage(1);
   };
 
+  const [exporting, setExporting] = useState(false);
+
+  const handleExportTransactions = async () => {
+    setExporting(true);
+    try {
+      // Ambil seluruh data sesuai filter aktif tanpa pembatasan pagination
+      const params = {
+        type: activeType,
+        tx_category: activeType === "SUKARELA" ? activeSukarelaCategory : "SETORAN",
+        page: 1,
+        limit: 10000,
+        search: filters.member || "",
+      };
+
+      const res = await savingsService.getAdminSavingsTransactions(params);
+      const dataToProcess =
+        res.data?.data?.transactions && res.data.data.transactions.length > 0
+          ? res.data.data.transactions
+          : transactions;
+
+      if (!dataToProcess || dataToProcess.length === 0) {
+        alert("Tidak ada data transaksi simpanan untuk diexport.");
+        return;
+      }
+
+      const formattedData = dataToProcess.map((tx, idx) => {
+        const dateObj = tx.date || tx.created_at ? new Date(tx.date || tx.created_at) : null;
+        const dateStr = dateObj
+          ? dateObj.toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            }) +
+            " " +
+            dateObj.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })
+          : "-";
+
+        const isCompleted =
+          tx.status === "Selesai" ||
+          tx.status === "COMPLETED" ||
+          tx.status === "APPROVED";
+
+        return {
+          No: idx + 1,
+          "Waktu Transaksi": dateStr,
+          "No. Anggota": tx.member_id || "-",
+          "Nama Anggota": tx.member || tx.full_name || "-",
+          "Jenis Simpanan": tx.product_name || activeType,
+          "Tipe Transaksi": tx.type || (activeSukarelaCategory === "PENCAIRAN" ? "Pencairan" : "Setoran"),
+          Nominal: parseFloat(tx.amount) || 0,
+          Status: isCompleted ? "Selesai" : tx.status || "Pending",
+        };
+      });
+
+      const typeLabel = activeType === "SUKARELA" ? `Sukarela_${activeSukarelaCategory}` : activeType;
+      const today = new Date().toISOString().split("T")[0];
+      exportToExcel(formattedData, `Transaksi_Simpanan_${typeLabel}_${today}`);
+    } catch (err) {
+      console.error("Gagal export transaksi simpanan:", err);
+      alert("Terjadi kesalahan saat mengekspor data simpanan.");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleViewDetail = (tx) => {
     setSelectedTx(tx);
     if (tx.type === "Pencairan" || tx.type === "Pencairan Tabungan" || activeSukarelaCategory === "PENCAIRAN") {
@@ -182,6 +256,17 @@ const SimpananDashboard = () => {
           >
             <ArrowClockwise size={16} weight="bold" className={loading ? "animate-spin" : ""} />
             <span className="d-none d-sm-inline">{loading ? "Refreshing..." : "Refresh"}</span>
+          </Button>
+          <Button
+            variant="outline-success"
+            size="sm"
+            className="shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium px-2 px-sm-3 bg-white"
+            onClick={handleExportTransactions}
+            disabled={exporting || loading}
+            title="Export Data Transaksi Simpanan ke Excel"
+          >
+            <FileXls size={16} weight="bold" className="text-success" />
+            <span>{exporting ? "Mengekspor..." : "Export Excel"}</span>
           </Button>
           <Button
             variant="success"
