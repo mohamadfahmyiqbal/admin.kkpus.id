@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { Funnel, FileArrowDown } from "phosphor-react";
+import { Funnel, FileArrowDown, FileXls } from "phosphor-react";
 import { FaHandHoldingUsd } from "react-icons/fa";
 
-const PinjamanListHeader = ({ onOpenImport }) => {
+const PinjamanListHeader = ({ onOpenImport, onExport, hasData }) => {
   return (
     <div className="p-3 border-bottom d-flex justify-content-between align-items-center bg-light bg-opacity-50">
       <h6 className="mb-0 fw-semibold text-dark d-flex align-items-center gap-2">
@@ -12,11 +12,15 @@ const PinjamanListHeader = ({ onOpenImport }) => {
       </h6>
       <div className="d-flex gap-2">
         <Button
-          variant="outline-secondary"
+          variant="outline-success"
           size="sm"
-          className="d-flex align-items-center gap-2"
+          className="d-flex align-items-center gap-1 bg-white"
+          onClick={onExport}
+          disabled={!hasData}
+          title="Export Data Pinjaman ke Excel"
         >
-          <Funnel size={14} /> Filter
+          <FileXls size={15} weight="bold" className="text-success" />
+          <span>Export Excel</span>
         </Button>
         <Button
           variant="success"

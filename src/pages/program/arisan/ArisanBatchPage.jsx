@@ -5,6 +5,8 @@ import { FileArrowDown, Plus } from "phosphor-react";
 import Swal from "sweetalert2";
 import programService from "../../../utils/api/UProgram";
 import { jwtEncode } from "../../../utils/helpers";
+import exportToExcel from "../../../utils/helpers/exportToExcel";
+import { FileXls } from "phosphor-react";
 import ArisanBatchTable from "./components/ArisanBatchTable";
 import ArisanBatchModal from "./components/ArisanBatchModal";
 import ArisanParticipantsModal from "./components/ArisanParticipantsModal";
@@ -139,6 +141,31 @@ const ArisanBatchPage = () => {
     }
   };
 
+  const handleExportBatches = () => {
+    if (!batches || batches.length === 0) {
+      Swal.fire("Info", "Tidak ada data batch arisan untuk diexport.", "info");
+      return;
+    }
+
+    const exportRows = batches.map((b, idx) => ({
+      No: idx + 1,
+      "Program Arisan": b.program_name || "-",
+      "Nama Batch": b.batch_name || "-",
+      Kategori: b.category || "Arisan",
+      "Kuota Peserta": b.participants_quota || 0,
+      "Total Terdaftar": b.total_participants || b.participants_count || 0,
+      "Target Nominal": parseFloat(b.target_amount) || 0,
+      "Iuran Bulanan": parseFloat(b.monthly_installment) || 0,
+      "Jumlah Keberangkatan": b.jumlah_keberangkatan || 0,
+      "Tenor (Bulan)": b.term_months || 0,
+      "Periode Mulai": (b.period_start_month || "-") + "/" + (b.period_start_year || "-"),
+      Status: b.status || "-",
+    }));
+
+    const today = new Date().toISOString().split("T")[0];
+    exportToExcel(exportRows, "Data_Batch_Arisan_" + today);
+  };
+
   const handleOpenNewBatch = () => {
     setEditingId(null);
     setFormData({
@@ -204,6 +231,15 @@ const ArisanBatchPage = () => {
             </p>
           </div>
           <div className="d-flex gap-2">
+            <Button
+              variant="outline-success"
+              className="d-flex align-items-center gap-2 bg-white"
+              onClick={handleExportBatches}
+              disabled={loading || batches.length === 0}
+              title="Export Batch Arisan ke Excel"
+            >
+              <FileXls size={20} className="text-success" /> Export Excel
+            </Button>
             <Button
               variant="success"
               className="d-flex align-items-center gap-2"

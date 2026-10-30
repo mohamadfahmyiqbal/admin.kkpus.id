@@ -8,11 +8,13 @@ import {
   PencilSimple,
   Trash,
   FolderOpen,
+  FileXls,
 } from "phosphor-react";
 import Swal from "sweetalert2";
 import tabunganService from "../../utils/api/UTabungan";
 import commonApi from "../../utils/api/common";
 import { jwtEncode } from "../../utils/helpers";
+import exportToExcel from "../../utils/helpers/exportToExcel";
 import TabunganProgressTable from "./components/TabunganProgressTable";
 import TabunganTransactionsTab from "./components/TabunganTransactionsTab";
 import MasterProgramModal from "./components/MasterProgramModal";
@@ -103,6 +105,70 @@ const TabunganPage = () => {
     fetchMasterPrograms();
   }, []);
 
+  const handleExportTabungan = () => {
+    if (!tableData || tableData.length === 0) {
+      Swal.fire("Info", "Tidak ada data tabungan untuk diexport.", "info");
+      return;
+    }
+
+    const exportRows = [];
+    tableData.forEach((program, pIdx) => {
+      if (program.members && program.members.length > 0) {
+        program.members.forEach((m, mIdx) => {
+          exportRows.push({
+            No: exportRows.length + 1,
+            "Program Tabungan": program.nama || "-",
+            Kategori: program.kategori || "-",
+            "No. Anggota": m.no_anggota || m.member_id || "-",
+            "Nama Anggota": m.nama || m.nama_anggota || "-",
+            "Target Nominal": parseFloat(m.target || program.target) || 0,
+            "Total Setoran": parseFloat(m.setoran) || 0,
+            "Saldo Akhir": parseFloat(m.saldo) || 0,
+            "Tenor (Bulan)": m.term || program.term || "-",
+            Status: m.status || program.status || "Aktif",
+          });
+        });
+      } else {
+        exportRows.push({
+          No: exportRows.length + 1,
+          "Program Tabungan": program.nama || "-",
+          Kategori: program.kategori || "-",
+          "No. Anggota": "-",
+          "Nama Anggota": "-",
+          "Target Nominal": parseFloat(program.target) || 0,
+          "Total Setoran": parseFloat(program.setoran) || 0,
+          "Saldo Akhir": parseFloat(program.saldo) || 0,
+          "Tenor (Bulan)": program.term || "-",
+          Status: program.status || "Aktif",
+        });
+      }
+    });
+
+    const today = new Date().toISOString().split("T")[0];
+    exportToExcel(exportRows, `Data_Peserta_Tabungan_${today}`);
+  };
+
+  const handleExportPrograms = () => {
+    if (!masterPrograms || masterPrograms.length === 0) {
+      Swal.fire("Info", "Tidak ada master program tabungan untuk diexport.", "info");
+      return;
+    }
+
+    const exportRows = masterPrograms.map((prog, idx) => ({
+      No: idx + 1,
+      "Nama Program": prog.nama || "-",
+      Kategori: prog.kategori || "-",
+      "Target Nominal": parseFloat(prog.target) || 0,
+      "Setoran Rutin": parseFloat(prog.setoran) || 0,
+      "Tenor (Bulan)": prog.term || 0,
+      Deskripsi: prog.deskripsi || "-",
+      Status: prog.status || "Aktif",
+    }));
+
+    const today = new Date().toISOString().split("T")[0];
+    exportToExcel(exportRows, `Master_Program_Tabungan_${today}`);
+  };
+
   const handleDeleteProgram = (id) => {
     Swal.fire({
       title: "Hapus Program Tabungan?",
@@ -152,29 +218,55 @@ const TabunganPage = () => {
         </div>
         <div className="d-flex flex-wrap gap-2">
           {activeTab === "peserta" && (
-            <Button
-              variant="success"
-              onClick={() => setShowImportModal(true)}
-              className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
-              size="sm"
-            >
-              <FileArrowDown size={18} weight="bold" />
-              <span>Import Excel</span>
-            </Button>
+            <>
+              <Button
+                variant="outline-success"
+                onClick={handleExportTabungan}
+                className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center bg-white"
+                size="sm"
+                disabled={loadingSummary || tableData.length === 0}
+                title="Export Data Peserta Tabungan ke Excel"
+              >
+                <FileXls size={18} weight="bold" className="text-success" />
+                <span>Export Excel</span>
+              </Button>
+              <Button
+                variant="success"
+                onClick={() => setShowImportModal(true)}
+                className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
+                size="sm"
+              >
+                <FileArrowDown size={18} weight="bold" />
+                <span>Import Excel</span>
+              </Button>
+            </>
           )}
           {activeTab === "program" && (
-            <Button
-              variant="primary"
-              onClick={() => {
-                setSelectedProgram(null);
-                setShowProgramModal(true);
-              }}
-              className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
-              size="sm"
-            >
-              <Plus size={18} weight="bold" />
-              <span>Buat Program</span>
-            </Button>
+            <>
+              <Button
+                variant="outline-success"
+                onClick={handleExportPrograms}
+                className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center bg-white"
+                size="sm"
+                disabled={loadingPrograms || masterPrograms.length === 0}
+                title="Export Master Program Tabungan ke Excel"
+              >
+                <FileXls size={18} weight="bold" className="text-success" />
+                <span>Export Excel</span>
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setSelectedProgram(null);
+                  setShowProgramModal(true);
+                }}
+                className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
+                size="sm"
+              >
+                <Plus size={18} weight="bold" />
+                <span>Buat Program</span>
+              </Button>
+            </>
           )}
         </div>
       </div>

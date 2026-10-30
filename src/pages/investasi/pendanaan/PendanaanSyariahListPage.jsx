@@ -7,6 +7,8 @@ import ImportPendanaanModal from "./components/ImportPendanaanModal";
 import PendanaanHeader from "./components/PendanaanHeader";
 import PendanaanSummaryCards from "./components/PendanaanSummaryCards";
 import PendanaanTabs from "./components/PendanaanTabs";
+import { exportToExcel } from "../../../utils/helpers/exportToExcel";
+import Swal from "sweetalert2";
 
 const PendanaanSyariahListPage = () => {
   const [loading, setLoading] = useState(false);
@@ -45,6 +47,41 @@ const PendanaanSyariahListPage = () => {
       minimumFractionDigits: 0,
     }).format(val || 0);
 
+  const handleExportPendanaan = () => {
+    if (!transactions.length) {
+      Swal.fire("Info", "Tidak ada data pendanaan syariah untuk diexport", "info");
+      return;
+    }
+
+    const exportRows = transactions.map((item, idx) => {
+      const member = item.user || item.member || {};
+      const totalPembiayaan = Number(item.item_price || item.amount_requested || 0);
+      const dp = Number(item.down_payment || 0);
+      const margin = Number(item.margin_amount || 0);
+      const sisaCicilan = Number(item.remaining_installments ?? item.remaining_months ?? "-");
+      const piutang = Number(item.remaining_amount || item.remaining_balance || 0);
+
+      return {
+        No: idx + 1,
+        "No Transaksi": item.transaction_no || item.id || "-",
+        Anggota: member.name || item.member_name || item.user_name || "-",
+        "Email / No Anggota": member.email || member.member_no || "-",
+        "Nama Usaha (Item)": item.business_name || item.item_name || item.description || "-",
+        "Total Pembiayaan": totalPembiayaan,
+        "Uang Muka (DP)": dp,
+        "Bagi Hasil / Margin": margin,
+        "Tenor (Bulan)": item.cooperation_months || item.tenure || "-",
+        "Cicilan / Bulan": Number(item.monthly_installment || 0),
+        "Sisa Piutang": piutang,
+        "Sisa Cicilan": sisaCicilan,
+        Status: item.status || "-",
+        "Tanggal Pengajuan": item.created_at ? new Date(item.created_at).toLocaleDateString("id-ID") : "-",
+      };
+    });
+
+    exportToExcel(exportRows, `Data_Pendanaan_Syariah_${new Date().toISOString().split("T")[0]}`);
+  };
+
   const summary = useMemo(() => {
     let pembiayaanAktif = 0;
     let labaBerjalan = 0;
@@ -80,8 +117,10 @@ const PendanaanSyariahListPage = () => {
     <div className="simpanan-dashboard py-4 px-3 px-md-4">
       <PendanaanHeader
         onImport={() => setShowImport(true)}
+        onExport={handleExportPendanaan}
         onRefresh={fetchTransactions}
         loading={loading}
+        hasData={transactions.length > 0}
       />
 
       {loading ? (

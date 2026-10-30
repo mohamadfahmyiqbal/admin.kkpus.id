@@ -11,6 +11,7 @@ import PinjamanListHeader from "./components/PinjamanListHeader";
 import PinjamanTable from "./components/PinjamanTable";
 import PinjamanApprovalTable from "./components/PinjamanApprovalTable";
 import { jwtEncode } from "../../../utils/helpers";
+import exportToExcel from "../../../utils/helpers/exportToExcel";
 
 const PinjamanList = () => {
   const navigate = useNavigate();
@@ -210,6 +211,8 @@ const PinjamanList = () => {
               <Tab.Pane eventKey="list">
                 <PinjamanListHeader
                   onOpenImport={() => setShowImportModal(true)}
+                  onExport={handleExportPinjaman}
+                  hasData={transactions && transactions.length > 0}
                 />
                 <PinjamanTable
                   loading={loading}
