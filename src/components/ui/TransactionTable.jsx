@@ -7,6 +7,7 @@ import {
   OverlayTrigger,
   Tooltip,
   Spinner,
+  Button,
 } from "react-bootstrap";
 import {
   Eye,
@@ -57,7 +58,7 @@ export const TransactionTable = ({
   onSort,
   pageSize,
   onPageSizeChange,
-  showSearchRow = false,
+  showSearchRow = true,
   onResetFilter,
 }) => {
   if (loading) {
@@ -195,42 +196,80 @@ export const TransactionTable = ({
             </tr>
 
             {showSearchRow && (
-              <tr className="table-search-row bg-light">
-                <th className="px-4">
+              <tr className="table-search-row bg-light bg-opacity-75">
+                <th className="py-2 px-3">
                   <Form.Control
                     type="text"
-                    placeholder="Cari tanggal..."
+                    placeholder="Cari waktu..."
                     size="sm"
-                    className="rounded-3 shadow-none"
+                    className="bg-white border-1 rounded-3 shadow-none"
+                    style={{ fontSize: "0.82rem" }}
                     value={searchFilters.date || ""}
                     onChange={(e) => onSearchChange?.("date", e.target.value)}
                   />
                 </th>
-                <th className="px-4">
+                <th className="py-2 px-3">
                   <Form.Control
                     type="text"
-                    placeholder="Cari nama anggota..."
+                    placeholder="Cari nama / no..."
                     size="sm"
-                    className="rounded-3 shadow-none"
+                    className="bg-white border-1 rounded-3 shadow-none"
+                    style={{ fontSize: "0.82rem" }}
                     value={searchFilters.member || ""}
                     onChange={(e) => onSearchChange?.("member", e.target.value)}
                   />
                 </th>
-                <th className="px-4">
-                  <Form.Select
+                <th className="py-2 px-3">
+                  <Form.Control
+                    type="text"
+                    placeholder="Cari jenis simpanan..."
                     size="sm"
-                    className="rounded-3 shadow-none"
+                    className="bg-white border-1 rounded-3 shadow-none"
+                    style={{ fontSize: "0.82rem" }}
                     value={searchFilters.type || ""}
                     onChange={(e) => onSearchChange?.("type", e.target.value)}
+                  />
+                </th>
+                <th className="py-2 px-3">
+                  <Form.Control
+                    type="text"
+                    placeholder="Cari nominal..."
+                    size="sm"
+                    className="bg-white border-1 rounded-3 shadow-none text-end"
+                    style={{ fontSize: "0.82rem" }}
+                    value={searchFilters.amount || ""}
+                    onChange={(e) => onSearchChange?.("amount", e.target.value)}
+                  />
+                </th>
+                <th className="py-2 px-3">
+                  <Form.Select
+                    size="sm"
+                    className="bg-white border-1 rounded-3 shadow-none text-center"
+                    style={{ fontSize: "0.82rem" }}
+                    value={searchFilters.status || ""}
+                    onChange={(e) => onSearchChange?.("status", e.target.value)}
                   >
-                    <option value="">Semua Tipe</option>
-                    <option value="Setoran">Setoran</option>
-                    <option value="Pencairan">Pencairan</option>
+                    <option value="">Semua Status</option>
+                    <option value="Selesai">Selesai</option>
+                    <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Ditolak">Ditolak</option>
                   </Form.Select>
                 </th>
-                <th className="px-4" />
-                <th className="px-4" />
-                <th className="px-4" />
+                <th className="py-2 px-2 text-center">
+                  {Object.values(searchFilters || {}).some((v) => Boolean(v)) && (
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      className="d-inline-flex align-items-center gap-1 py-1 px-2 border-0 extra-small fw-semibold"
+                      onClick={onResetFilter}
+                      title="Reset Semua Pencarian Kolom"
+                    >
+                      <X size={14} weight="bold" />
+                      <span>Reset</span>
+                    </Button>
+                  )}
+                </th>
               </tr>
             )}
           </thead>

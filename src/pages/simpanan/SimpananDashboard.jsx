@@ -9,7 +9,6 @@ import {
   ArrowClockwise,
   UploadSimple,
   FileXls,
-  MagnifyingGlass,
   X,
 } from "phosphor-react";
 import savingsService from "../../utils/api/USavings";
@@ -80,7 +79,15 @@ const SimpananDashboard = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  // Filter & Search states with debounce
+  // Column filter state for inputs in thead
+  const [columnFilters, setColumnFilters] = useState({
+    date: "",
+    member: "",
+    type: "",
+    amount: "",
+    status: "",
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -93,7 +100,7 @@ const SimpananDashboard = () => {
   const [showImportModal, setShowImportModal] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  // Debounce search input
+  // Debounce search input for member query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm.trim());
@@ -101,6 +108,29 @@ const SimpananDashboard = () => {
     }, 350);
     return () => clearTimeout(timer);
   }, [searchTerm]);
+
+  const handleSearchChange = (field, value) => {
+    setColumnFilters((prev) => ({ ...prev, [field]: value }));
+    setPage(1);
+    if (field === "member") {
+      setSearchTerm(value);
+    } else if (field === "status") {
+      setStatusFilter(value);
+    }
+  };
+
+  const handleResetFilters = () => {
+    setColumnFilters({
+      date: "",
+      member: "",
+      type: "",
+      amount: "",
+      status: "",
+    });
+    setSearchTerm("");
+    setStatusFilter("");
+    setPage(1);
+  };
 
   const fetchSummary = async () => {
     try {
@@ -154,8 +184,7 @@ const SimpananDashboard = () => {
   const handleTypeSelect = (k) => {
     setActiveType(k);
     setPage(1);
-    setSearchTerm("");
-    setStatusFilter("");
+    handleResetFilters();
     if (k !== "SUKARELA") setActiveSukarelaCategory("SETORAN");
   };
 
@@ -171,9 +200,31 @@ const SimpananDashboard = () => {
     });
   };
 
-  // Sorting on the server-filtered current page transactions
+  // Filtering & sorting on the current page transactions
   const processedTransactions = useMemo(() => {
     let list = [...transactions];
+
+    if (columnFilters.date) {
+      const q = columnFilters.date.toLowerCase();
+      list = list.filter((t) => {
+        const d = (t.date || t.created_at || "").toLowerCase();
+        return d.includes(q);
+      });
+    }
+    if (columnFilters.type) {
+      const q = columnFilters.type.toLowerCase();
+      list = list.filter((t) => {
+        const p = (t.product_name || t.type || "").toLowerCase();
+        return p.includes(q);
+      });
+    }
+    if (columnFilters.amount) {
+      const q = columnFilters.amount.replace(/[^0-9]/g, "");
+      list = list.filter((t) => {
+        const amt = String(t.amount || "");
+        return amt.includes(q);
+      });
+    }
 
     if (sortConfig.key) {
       list.sort((a, b) => {
@@ -201,7 +252,7 @@ const SimpananDashboard = () => {
     }
 
     return list;
-  }, [transactions, sortConfig]);
+  }, [transactions, columnFilters, sortConfig]);
 
   const handleExportTransactions = async () => {
     setExporting(true);
@@ -392,129 +443,54 @@ const SimpananDashboard = () => {
                 </Nav>
               </div>
 
-              {/* Sub-tabs for Sukarela (Setoran vs Pencairan) */}
-              {activeType === "SUKARELA" && (
-                <div className="d-flex align-items-center gap-2">
-                  <span className="text-muted extra-small fw-bold text-uppercase">Kategori:</span>
-                  <div className="d-flex align-items-center gap-1 p-1 bg-light rounded-pill border">
-                    <button
-                      type="button"
-                      className={`btn btn-sm py-1 px-3 rounded-pill border-0 shadow-none d-flex align-items-center gap-1 extra-small fw-bold ${
-                        activeSukarelaCategory === "SETORAN"
-                          ? "bg-white text-primary shadow-sm"
-                          : "text-muted"
-                      }`}
-                      onClick={() => {
-                        setActiveSukarelaCategory("SETORAN");
-                        setPage(1);
-                      }}
-                    >
-                      <ArrowDownLeft size={13} className="text-success" weight="bold" />
-                      Setoran
-                    </button>
-                    <button
-                      type="button"
-                      className={`btn btn-sm py-1 px-3 rounded-pill border-0 shadow-none d-flex align-items-center gap-1 extra-small fw-bold ${
-                        activeSukarelaCategory === "PENCAIRAN"
-                          ? "bg-white text-primary shadow-sm"
-                          : "text-muted"
-                      }`}
-                      onClick={() => {
-                        setActiveSukarelaCategory("PENCAIRAN");
-                        setPage(1);
-                      }}
-                    >
-                      <ArrowUpRight size={13} className="text-danger" weight="bold" />
-                      Pencairan
-                    </button>
+              {/* Sub-tabs for Sukarela (Setoran vs Pencairan) & Total Badge */}
+              <div className="d-flex flex-wrap align-items-center gap-2 gap-md-3">
+                {activeType === "SUKARELA" && (
+                  <div className="d-flex align-items-center gap-2">
+                    <span className="text-muted extra-small fw-bold text-uppercase">Kategori:</span>
+                    <div className="d-flex align-items-center gap-1 p-1 bg-light rounded-pill border">
+                      <button
+                        type="button"
+                        className={`btn btn-sm py-1 px-3 rounded-pill border-0 shadow-none d-flex align-items-center gap-1 extra-small fw-bold ${
+                          activeSukarelaCategory === "SETORAN"
+                            ? "bg-white text-primary shadow-sm"
+                            : "text-muted"
+                        }`}
+                        onClick={() => {
+                          setActiveSukarelaCategory("SETORAN");
+                          setPage(1);
+                        }}
+                      >
+                        <ArrowDownLeft size={13} className="text-success" weight="bold" />
+                        Setoran
+                      </button>
+                      <button
+                        type="button"
+                        className={`btn btn-sm py-1 px-3 rounded-pill border-0 shadow-none d-flex align-items-center gap-1 extra-small fw-bold ${
+                          activeSukarelaCategory === "PENCAIRAN"
+                            ? "bg-white text-primary shadow-sm"
+                            : "text-muted"
+                        }`}
+                        onClick={() => {
+                          setActiveSukarelaCategory("PENCAIRAN");
+                          setPage(1);
+                        }}
+                      >
+                        <ArrowUpRight size={13} className="text-danger" weight="bold" />
+                        Pencairan
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+                <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold">
+                  Total: {pagination?.total_records || transactions.length} Transaksi
+                </span>
+              </div>
             </div>
           </Tab.Container>
         </div>
 
-        {/* Filter Toolbar */}
-        <div className="table-filter-bar px-4 py-3 bg-white border-bottom">
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-            <div className="d-flex flex-wrap align-items-center gap-2 flex-grow-1 w-100 w-md-auto">
-              {/* Search with MagnifyingGlass and clear button */}
-              <div className="position-relative flex-grow-1" style={{ maxWidth: "340px", minWidth: "220px" }}>
-                <MagnifyingGlass
-                  size={16}
-                  className="position-absolute text-muted"
-                  style={{ top: "10px", left: "12px" }}
-                />
-                <Form.Control
-                  type="text"
-                  placeholder="Cari nama atau no. anggota..."
-                  className="rounded-3 shadow-none ps-5 pe-4 py-1.5"
-                  style={{ fontSize: "0.85rem" }}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <button
-                    type="button"
-                    className="btn btn-link p-0 position-absolute text-muted text-decoration-none"
-                    style={{ top: "8px", right: "10px" }}
-                    onClick={() => setSearchTerm("")}
-                    title="Hapus pencarian"
-                  >
-                    <X size={15} weight="bold" />
-                  </button>
-                )}
-              </div>
-
-              {/* Status Filter */}
-              <div style={{ minWidth: "165px" }}>
-                <Form.Select
-                  size="sm"
-                  className="rounded-3 shadow-none py-1.5"
-                  style={{ fontSize: "0.85rem" }}
-                  value={statusFilter}
-                  onChange={(e) => {
-                    setStatusFilter(e.target.value);
-                    setPage(1);
-                  }}
-                >
-                  <option value="">Semua Status</option>
-                  <option value="Selesai">Selesai</option>
-                  <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Ditolak">Ditolak</option>
-                </Form.Select>
-              </div>
-
-              {/* Reset filter button */}
-              {isFiltered && (
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="text-danger text-decoration-none d-flex align-items-center gap-1 p-0 ms-1"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setStatusFilter("");
-                    setPage(1);
-                  }}
-                  title="Reset Semua Filter"
-                >
-                  <X size={14} weight="bold" />
-                  <span className="extra-small fw-semibold">Reset</span>
-                </Button>
-              )}
-            </div>
-
-            {/* Total Records Counter */}
-            <div className="d-flex align-items-center gap-2 text-muted small ms-auto">
-              <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold">
-                Total: {pagination?.total_records || transactions.length} Transaksi
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Table Body */}
+        {/* Table Body with In-Header Search Rows */}
         <Card.Body className="p-0">
           <TransactionTable
             transactions={processedTransactions}
@@ -531,11 +507,10 @@ const SimpananDashboard = () => {
               setLimit(newSize);
               setPage(1);
             }}
-            onResetFilter={() => {
-              setSearchTerm("");
-              setStatusFilter("");
-              setPage(1);
-            }}
+            showSearchRow={true}
+            searchFilters={columnFilters}
+            onSearchChange={handleSearchChange}
+            onResetFilter={handleResetFilters}
           />
         </Card.Body>
       </Card>

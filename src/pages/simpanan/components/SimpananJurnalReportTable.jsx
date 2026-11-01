@@ -3,6 +3,7 @@ import { Table, Spinner } from "react-bootstrap";
 import { formatRupiah } from "./reportConstants";
 
 const SimpananJurnalReportTable = ({ loading, summary }) => {
+  const [searchAkun, setSearchAkun] = useState("");
   const [searchDeskripsi, setSearchDeskripsi] = useState("");
   const [searchDebet, setSearchDebet] = useState("");
   const [searchKredit, setSearchKredit] = useState("");
@@ -16,14 +17,15 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
 
   const filteredRows = useMemo(() => {
     return rows.filter((r) => {
+      const matchAkun = !searchAkun.trim() || r.akun.toLowerCase().includes(searchAkun.toLowerCase());
       const matchDeskripsi = !searchDeskripsi.trim() || r.deskripsi.toLowerCase().includes(searchDeskripsi.toLowerCase());
       const debetStr = r.debet != null ? formatRupiah(r.debet).toLowerCase() : "";
       const matchDebet = !searchDebet.trim() || debetStr.includes(searchDebet.toLowerCase()) || String(r.debet || "").includes(searchDebet);
       const kreditStr = r.kredit != null ? formatRupiah(r.kredit).toLowerCase() : "";
       const matchKredit = !searchKredit.trim() || kreditStr.includes(searchKredit.toLowerCase()) || String(r.kredit || "").includes(searchKredit);
-      return matchDeskripsi && matchDebet && matchKredit;
+      return matchAkun && matchDeskripsi && matchDebet && matchKredit;
     });
-  }, [rows, searchDeskripsi, searchDebet, searchKredit]);
+  }, [rows, searchAkun, searchDeskripsi, searchDebet, searchKredit]);
 
   return (
     <div className="table-responsive border rounded-3">
@@ -36,7 +38,15 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
             <th className="num-cell" style={{ width: "200px" }}>Kredit</th>
           </tr>
           <tr>
-            <th className="p-1" style={{ fontWeight: "normal" }}></th>
+            <th className="p-1" style={{ fontWeight: "normal" }}>
+              <input
+                type="text"
+                className="compact-search-input"
+                placeholder="Cari Akun"
+                value={searchAkun}
+                onChange={(e) => setSearchAkun(e.target.value)}
+              />
+            </th>
             <th className="p-1" style={{ fontWeight: "normal" }}>
               <input
                 type="text"

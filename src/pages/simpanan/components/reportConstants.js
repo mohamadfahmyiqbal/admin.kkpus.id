@@ -6,7 +6,7 @@ export const formatRupiah = (val) =>
   }).format(val || 0);
 
 export const REPORT_SEARCH_PLACEHOLDERS = [
-  "",
+  "No",
   "Cari Nama",
   "Cari Total",
   "Cari Pokok",

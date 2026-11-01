@@ -88,18 +88,16 @@ const SimpananListReportTable = ({
                         : undefined,
                   }}
                 >
-                  {idx > 0 && (
-                    <input
-                      type="text"
-                      className="compact-search-input"
-                      placeholder={ph}
-                      value={searchFilters[idx]}
-                      onChange={(e) => {
-                        onFilterChange(idx, e.target.value);
-                        setCurrentPage(1);
-                      }}
-                    />
-                  )}
+                  <input
+                    type="text"
+                    className={`compact-search-input ${idx === 0 ? "text-center" : ""}`}
+                    placeholder={ph}
+                    value={searchFilters[idx] || ""}
+                    onChange={(e) => {
+                      onFilterChange(idx, e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  />
                 </th>
               ))}
             </tr>
