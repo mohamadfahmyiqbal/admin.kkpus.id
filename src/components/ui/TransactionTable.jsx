@@ -190,7 +190,10 @@ export const TransactionTable = ({
                 </div>
               </th>
 
-              <th className="py-3 px-4 text-muted small fw-bold text-uppercase text-center" style={{ width: "110px" }}>
+              <th
+                className="py-3 px-3 text-muted small fw-bold text-uppercase text-center text-nowrap"
+                style={{ width: "110px", minWidth: "110px" }}
+              >
                 Aksi
               </th>
             </tr>
@@ -256,16 +259,16 @@ export const TransactionTable = ({
                     <option value="Ditolak">Ditolak</option>
                   </Form.Select>
                 </th>
-                <th className="py-2 px-2 text-center">
+                <th className="py-2 px-2 text-center text-nowrap" style={{ width: "110px", minWidth: "110px" }}>
                   {Object.values(searchFilters || {}).some((v) => Boolean(v)) && (
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      className="d-inline-flex align-items-center gap-1 py-1 px-2 border-0 extra-small fw-semibold"
+                      className="btn-reset-table-filter border-0 extra-small fw-semibold"
                       onClick={onResetFilter}
                       title="Reset Semua Pencarian Kolom"
                     >
-                      <X size={14} weight="bold" />
+                      <X size={13} weight="bold" />
                       <span>Reset</span>
                     </Button>
                   )}
@@ -390,49 +393,61 @@ export const TransactionTable = ({
                     </td>
 
                     {/* 6. Aksi */}
-                    <td className="py-3 px-4 text-center">
-                      <div className="d-flex justify-content-center align-items-center gap-1.5">
+                    <td className="py-3 px-3 text-center text-nowrap" style={{ width: "110px", minWidth: "110px" }}>
+                      <div className="d-flex justify-content-center align-items-center gap-2">
                         {isNeedsApproval ? (
                           <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Verifikasi Pembayaran Manual</Tooltip>}
+                            overlay={
+                              <Tooltip id={`tt-manual-${tx.id || tx.transaction_id || Math.random()}`}>
+                                Verifikasi Pembayaran Manual
+                              </Tooltip>
+                            }
                           >
                             <button
                               type="button"
-                              className="btn btn-sm btn-outline-warning rounded-circle p-1.5 border shadow-none"
-                              style={{ width: "32px", height: "32px" }}
+                              className="btn-action-table text-warning bg-warning bg-opacity-15 hover-bg-warning border-0"
                               onClick={() => onApprove && onApprove(tx)}
+                              aria-label="Verifikasi Pembayaran Manual"
                             >
-                              <CheckCircle size={15} weight="bold" className="text-warning-emphasis" />
+                              <CheckCircle size={16} weight="bold" />
                             </button>
                           </OverlayTrigger>
                         ) : isWithdrawalPending ? (
                           <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Proses Persetujuan Pencairan</Tooltip>}
+                            overlay={
+                              <Tooltip id={`tt-withdraw-${tx.id || tx.transaction_id || Math.random()}`}>
+                                Proses Persetujuan Pencairan
+                              </Tooltip>
+                            }
                           >
                             <button
                               type="button"
-                              className="btn btn-sm btn-outline-primary rounded-circle p-1.5 border shadow-none"
-                              style={{ width: "32px", height: "32px" }}
+                              className="btn-action-table text-success bg-success bg-opacity-10 hover-bg-success border-0"
                               onClick={() => onApprove && onApprove(tx)}
+                              aria-label="Proses Persetujuan Pencairan"
                             >
-                              <CheckCircle size={15} weight="bold" className="text-primary" />
+                              <CheckCircle size={16} weight="bold" />
                             </button>
                           </OverlayTrigger>
                         ) : null}
 
                         <OverlayTrigger
                           placement="top"
-                          overlay={<Tooltip>Lihat Detail Transaksi</Tooltip>}
+                          overlay={
+                            <Tooltip id={`tt-view-${tx.id || tx.transaction_id || Math.random()}`}>
+                              Lihat Detail Transaksi
+                            </Tooltip>
+                          }
                         >
                           <button
                             type="button"
-                            className="btn btn-sm btn-light border rounded-circle p-1.5 text-muted shadow-none"
-                            style={{ width: "32px", height: "32px" }}
+                            className="btn-action-table text-primary bg-primary bg-opacity-10 hover-bg-primary border-0"
                             onClick={() => onView && onView(tx)}
+                            aria-label="Lihat Detail Transaksi"
                           >
-                            <Eye size={15} weight="bold" />
+                            <Eye size={16} weight="bold" />
                           </button>
                         </OverlayTrigger>
                       </div>

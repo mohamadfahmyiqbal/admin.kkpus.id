@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Row, Col, Card, Button, Form, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {
@@ -99,6 +99,22 @@ const SimpananDashboard = () => {
   const [showManualApprovalModal, setShowManualApprovalModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [exporting, setExporting] = useState(false);
+
+  const tabsWrapperRef = useRef(null);
+
+  // Enable smooth horizontal scrolling on mouse wheel
+  useEffect(() => {
+    const el = tabsWrapperRef.current;
+    if (!el) return;
+    const handleWheel = (e) => {
+      if (e.deltaY !== 0 && el.scrollWidth > el.clientWidth) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
 
   // Debounce search input for member query
   useEffect(() => {
@@ -426,11 +442,28 @@ const SimpananDashboard = () => {
       {/* Main Table Card */}
       <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
         {/* Navigation Tabs (Pokok, Wajib, Sukarela) */}
-        <div className="px-4 pt-3 pb-2 border-bottom bg-white">
+        <div className="px-3 px-md-4 pt-3 pb-2 border-bottom bg-white">
           <Tab.Container activeKey={activeType} onSelect={handleTypeSelect}>
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-              <div className="global-tabs-wrapper mb-0">
-                <Nav variant="pills" className="global-tabs border-0 flex-nowrap">
+            <div className="d-flex flex-column flex-lg-row justify-content-between align-items-stretch align-items-lg-center gap-3">
+              <div
+                ref={tabsWrapperRef}
+                className="tabs-scrollable-container mb-0 flex-grow-1"
+                style={{
+                  overflowX: "auto",
+                  WebkitOverflowScrolling: "touch",
+                  maxWidth: "100%",
+                  minWidth: 0,
+                }}
+              >
+                <Nav
+                  variant="pills"
+                  className="global-tabs border-0 flex-nowrap"
+                  style={{
+                    display: "inline-flex",
+                    width: "max-content",
+                    minWidth: "max-content",
+                  }}
+                >
                   <Nav.Item>
                     <Nav.Link eventKey="POKOK">Simpanan Pokok</Nav.Link>
                   </Nav.Item>
@@ -444,7 +477,7 @@ const SimpananDashboard = () => {
               </div>
 
               {/* Sub-tabs for Sukarela (Setoran vs Pencairan) & Total Badge */}
-              <div className="d-flex flex-wrap align-items-center gap-2 gap-md-3">
+              <div className="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-end gap-2 gap-md-3 flex-shrink-0">
                 {activeType === "SUKARELA" && (
                   <div className="d-flex align-items-center gap-2">
                     <span className="text-muted extra-small fw-bold text-uppercase">Kategori:</span>
@@ -482,7 +515,7 @@ const SimpananDashboard = () => {
                     </div>
                   </div>
                 )}
-                <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold">
+                <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold ms-auto ms-lg-0">
                   Total: {pagination?.total_records || transactions.length} Transaksi
                 </span>
               </div>

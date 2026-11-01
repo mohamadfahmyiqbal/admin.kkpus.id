@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import savingsService from "../../utils/api/USavings";
@@ -22,6 +22,21 @@ const SimpananReportPage = () => {
   const [searchFilters, setSearchFilters] = useState(Array(12).fill(""));
 
   const currentYear = new Date().getFullYear();
+  const tabsWrapperRef = useRef(null);
+
+  // Enable smooth horizontal scrolling on mouse wheel
+  useEffect(() => {
+    const el = tabsWrapperRef.current;
+    if (!el) return;
+    const handleWheel = (e) => {
+      if (e.deltaY !== 0 && el.scrollWidth > el.clientWidth) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
+    };
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
 
   const fetchReport = async () => {
     setLoading(true);
@@ -161,11 +176,25 @@ const SimpananReportPage = () => {
       <div className="animate-fade-in">
         <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
           <Card.Body className="p-0">
-            <div className="global-tabs-wrapper pt-3 mb-0">
+            <div
+              ref={tabsWrapperRef}
+              className="tabs-scrollable-container pt-3 mb-0 w-100"
+              style={{
+                overflowX: "auto",
+                WebkitOverflowScrolling: "touch",
+                maxWidth: "100%",
+                minWidth: 0,
+              }}
+            >
               <Tab.Container activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
                 <Nav
                   variant="pills"
-                  className="global-tabs tabs-sm border-0 px-4 mb-0"
+                  className="global-tabs tabs-sm border-0 px-3 px-md-4 mb-0 flex-nowrap"
+                  style={{
+                    display: "inline-flex",
+                    width: "max-content",
+                    minWidth: "max-content",
+                  }}
                 >
                   <Nav.Item>
                     <Nav.Link eventKey="list">List Report</Nav.Link>

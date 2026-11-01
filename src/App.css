@@ -182,7 +182,9 @@
 }
 
 /* Tombol Aksi di Tabel Admin */
-.btn-action-table {
+.btn-action-table,
+.btn.rounded-circle,
+.btn-icon {
   width: 32px !important;
   height: 32px !important;
   min-width: 32px !important;
@@ -194,16 +196,79 @@
   border-radius: 50% !important;
   transition: all 0.2s ease-in-out !important;
   line-height: 1 !important;
+  box-shadow: none !important;
 }
 
-.btn-action-table svg {
+.btn-action-table svg,
+.btn.rounded-circle svg,
+.btn-icon svg {
   display: block !important;
   flex-shrink: 0 !important;
 }
 
-.btn-action-table:hover {
+.btn-action-table:hover,
+.btn.rounded-circle:hover,
+.btn-icon:hover {
   transform: translateY(-1px) scale(1.05) !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Reset button in table header search rows */
+.btn-reset-table-filter {
+  padding: 4px 10px !important;
+  font-size: 0.75rem !important;
+  border-radius: 6px !important;
+  min-height: auto !important;
+  height: 26px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+}
+
+/* Pill buttons in tables */
+.btn.rounded-pill,
+.btn-table-action-pill {
+  border-radius: 9999px !important;
+}
+
+/* Scrollable Tabs Container */
+.tabs-scrollable-container {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #cbd5e1 transparent !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding-bottom: 6px !important;
+}
+
+.tabs-scrollable-container::-webkit-scrollbar {
+  height: 4px !important;
+  display: block !important;
+}
+
+.tabs-scrollable-container::-webkit-scrollbar-track {
+  background: #f1f5f9 !important;
+  border-radius: 999px !important;
+}
+
+.tabs-scrollable-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+  border-radius: 999px !important;
+}
+
+.tabs-scrollable-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8 !important;
+}
+
+.tabs-scrollable-container .global-tabs,
+.global-tabs-scrollable {
+  flex-wrap: nowrap !important;
+  width: max-content !important;
+  min-width: max-content !important;
 }
 
 .custom-table-admin thead th {
