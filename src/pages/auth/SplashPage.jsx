@@ -36,6 +36,51 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Reset cookie, CacheStorage, dan Service Worker pada saat splash screen
+  useEffect(() => {
+    const purgeCacheAndCookies = async () => {
+      try {
+        // 1. Bersihkan Cookies Domain
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const eqPos = cookie.indexOf("=");
+          const name = (eqPos > -1 ? cookie.substr(0, eqPos) : cookie).trim();
+          if (name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname};`;
+            const parts = window.location.hostname.split(".");
+            if (parts.length > 1) {
+              const root = parts.slice(-2).join(".");
+              document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${root};`;
+            }
+          }
+        }
+
+        // 2. Bersihkan CacheStorage (Caches API browser)
+        if ("caches" in window) {
+          const cacheKeys = await caches.keys();
+          await Promise.all(cacheKeys.map((key) => caches.delete(key)));
+        }
+
+        // 3. Unregister seluruh Service Worker yang aktif
+        if ("serviceWorker" in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const reg of registrations) {
+            await reg.unregister();
+          }
+        }
+
+        // 4. Bersihkan sessionStorage
+        sessionStorage.clear();
+      } catch (err) {
+        console.warn("[SplashPage] Gagal membersihkan cache dan cookie:", err);
+      }
+    };
+
+    purgeCacheAndCookies();
+  }, []);
+
   return (
     <main
       className={`splashx-screen ${className}`}
