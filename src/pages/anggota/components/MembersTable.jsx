@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { Table, Spinner, Badge, Button, Pagination, Form } from "react-bootstrap";
 import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear } from "phosphor-react";
 
@@ -33,7 +33,7 @@ const MembersTable = ({
     paginatedMembers.some((m) => selectedMemberIds.includes(m.member_id)) &&
     !isCurrentPageAllSelected;
 
-  const renderSortIcon = (key) => {
+  const renderSortIcon = useCallback((key) => {
     if (!sortConfig || sortConfig.key !== key) {
       return <ArrowsDownUp size={13} className="text-muted ms-1 opacity-50" />;
     }
@@ -42,7 +42,24 @@ const MembersTable = ({
     ) : (
       <CaretDown size={13} className="text-primary ms-1" weight="bold" />
     );
-  };
+  }, [sortConfig]);
+
+  const paginationItems = useMemo(() => {
+    if (totalPages <= 1) return [];
+    const items = [];
+    for (let page = 1; page <= totalPages; page++) {
+      if (
+        page === 1 ||
+        page === totalPages ||
+        (page >= currentPage - 1 && page <= currentPage + 1)
+      ) {
+        items.push({ type: "page", page });
+      } else if (page === currentPage - 2 || page === currentPage + 2) {
+        items.push({ type: "ellipsis", page });
+      }
+    }
+    return items;
+  }, [totalPages, currentPage]);
 
   const hasAnyFilter = Object.values(filters).some((v) => Boolean(v));
 
@@ -363,27 +380,19 @@ const MembersTable = ({
                 disabled={currentPage === 1}
               />
 
-              {[...Array(totalPages)].map((_, idx) => {
-                const page = idx + 1;
-                if (
-                  page === 1 ||
-                  page === totalPages ||
-                  (page >= currentPage - 1 && page <= currentPage + 1)
-                ) {
-                  return (
-                    <Pagination.Item
-                      key={page}
-                      active={page === currentPage}
-                      onClick={() => onPageChange?.(page)}
-                    >
-                      {page}
-                    </Pagination.Item>
-                  );
-                } else if (page === currentPage - 2 || page === currentPage + 2) {
-                  return <Pagination.Ellipsis key={page} disabled />;
-                }
-                return null;
-              })}
+              {paginationItems.map((item) =>
+                item.type === "page" ? (
+                  <Pagination.Item
+                    key={item.page}
+                    active={item.page === currentPage}
+                    onClick={() => onPageChange?.(item.page)}
+                  >
+                    {item.page}
+                  </Pagination.Item>
+                ) : (
+                  <Pagination.Ellipsis key={item.page} disabled />
+                )
+              )}
 
               <Pagination.Next
                 onClick={() => onPageChange?.(currentPage + 1)}

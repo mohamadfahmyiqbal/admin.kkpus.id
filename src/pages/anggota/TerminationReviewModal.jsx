@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal, Row, Col } from "react-bootstrap";
 import { UserMinus } from "phosphor-react";
 import Swal from "sweetalert2";
-import { jwtDecodePage } from "../../utils/helpers";
+import { jwtDecodePage, getMediaUrl } from "../../utils/helpers";
 import TerminationMemberInfoSection from "./components/TerminationMemberInfoSection";
 import TerminationReasonSection from "./components/TerminationReasonSection";
 import TerminationFinancialSummarySection from "./components/TerminationFinancialSummarySection";
@@ -42,17 +42,6 @@ function TerminationReviewModal({
   })();
 
   if (!data) return null;
-
-  const getMediaUrl = (path) => {
-    if (!path) return "";
-    const cleanPath = path.replace(/\\/g, "/");
-    if (cleanPath.startsWith("http") || cleanPath.startsWith("data:")) return cleanPath;
-    const base = (
-      import.meta.env.VITE_API_ORIGIN ||
-      (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
-    ).replace(/\/$/, "");
-    return `${base}${cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`}`;
-  };
 
   const {
     termination_id,

@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import { User } from "phosphor-react";
+import { SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
 
 const MemberIdentitySection = ({ data, getMediaUrl }) => {
   const {
@@ -84,7 +85,7 @@ const MemberIdentitySection = ({ data, getMediaUrl }) => {
                   }}
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = "https://placehold.co/400x300?text=Gambar+Tidak+Ditemukan";
+                    e.target.src = SVG_FALLBACK_IMAGE;
                   }}
                 />
               </div>
@@ -104,7 +105,7 @@ const MemberIdentitySection = ({ data, getMediaUrl }) => {
                   }}
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = "https://placehold.co/400x300?text=Gambar+Tidak+Ditemukan";
+                    e.target.src = SVG_FALLBACK_IMAGE;
                   }}
                 />
               </div>

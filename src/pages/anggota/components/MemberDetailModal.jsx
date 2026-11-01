@@ -19,17 +19,7 @@ import {
   ShieldCheck,
   CheckCircle,
 } from "phosphor-react";
-
-const getMediaUrl = (path) => {
-  if (!path) return "";
-  const cleanPath = path.replace(/\\/g, "/");
-  if (cleanPath.startsWith("http") || cleanPath.startsWith("data:")) return cleanPath;
-  const base = (
-    import.meta.env.VITE_API_ORIGIN ||
-    (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
-  ).replace(/\/$/, "");
-  return `${base}${cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`}`;
-};
+import { getMediaUrl, SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
 
 const InfoCard = ({ icon: Icon, label, value, subValue, colProps = { md: 6 } }) => (
   <Col {...colProps}>
@@ -646,7 +636,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                             style={{ maxHeight: "200px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
                             onError={(e) => {
                               e.target.onerror = null;
-                              e.target.src = "https://placehold.co/400x300?text=KTP+Tidak+Ditemukan";
+                              e.target.src = SVG_FALLBACK_IMAGE;
                             }}
                           />
                         </a>
@@ -665,7 +655,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                             style={{ maxHeight: "200px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
                             onError={(e) => {
                               e.target.onerror = null;
-                              e.target.src = "https://placehold.co/400x300?text=Swafoto+Tidak+Ditemukan";
+                              e.target.src = SVG_FALLBACK_IMAGE;
                             }}
                           />
                         </a>

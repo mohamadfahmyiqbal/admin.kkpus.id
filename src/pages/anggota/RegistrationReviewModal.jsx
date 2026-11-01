@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { User } from "phosphor-react";
-import { jwtDecodePage } from "../../utils/helpers";
+import { jwtDecodePage, getMediaUrl } from "../../utils/helpers";
 import MemberIdentitySection from "./components/MemberIdentitySection";
 import MemberPaymentProofSection from "./components/MemberPaymentProofSection";
 import MemberDetailsSection from "./components/MemberDetailsSection";
@@ -39,17 +39,6 @@ function RegistrationReviewModal({
   })();
 
   if (!data) return null;
-
-  const getMediaUrl = (path) => {
-    if (!path) return "";
-    const cleanPath = path.replace(/\\/g, "/");
-    if (cleanPath.startsWith("http") || cleanPath.startsWith("data:")) return cleanPath;
-    const base = (
-      import.meta.env.VITE_API_ORIGIN ||
-      (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
-    ).replace(/\/$/, "");
-    return `${base}${cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`}`;
-  };
 
   const { registration_id, full_name, currentStep } = data || {};
   const targetRole = currentStep?.verifierRole?.role_name || "";

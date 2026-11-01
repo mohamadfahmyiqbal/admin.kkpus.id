@@ -1,5 +1,6 @@
 import React from "react";
 import { Row, Col, Card } from "react-bootstrap";
+import { SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
 
 const MemberPaymentProofSection = ({ pendingPayment, fullName, getMediaUrl }) => {
   if (!pendingPayment) {
@@ -80,7 +81,7 @@ const MemberPaymentProofSection = ({ pendingPayment, fullName, getMediaUrl }) =>
                 }}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "https://placehold.co/400x300?text=Gambar+Tidak+Ditemukan";
+                  e.target.src = SVG_FALLBACK_IMAGE;
                 }}
               />
             </a>

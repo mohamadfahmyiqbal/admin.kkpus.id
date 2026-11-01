@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useDeferredValue, Suspense, lazy } from "react";
 import { Card } from "react-bootstrap";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
 import exportToExcel from "../../utils/helpers/exportToExcel";
-import ImportAnggotaModal from "./components/ImportAnggotaModal";
 import MembersHeader from "./components/MembersHeader";
 import MembersStats from "./components/MembersStats";
 import MembersTable from "./components/MembersTable";
-import MemberDetailModal from "./components/MemberDetailModal";
-import EditRoleModal from "./components/EditRoleModal";
+
+// Lazy load modal berat untuk optimasi bundle size
+const MemberDetailModal = lazy(() => import("./components/MemberDetailModal"));
+const EditRoleModal = lazy(() => import("./components/EditRoleModal"));
+const ImportAnggotaModal = lazy(() => import("./components/ImportAnggotaModal"));
 
 const MembersPage = () => {
   const [members, setMembers] = useState([]);
@@ -31,6 +33,9 @@ const MembersPage = () => {
     joinDate: "",
     status: "",
   });
+
+  // Concurrent transition filter menggunakan useDeferredValue agar pengetikan tidak freeze
+  const deferredFilters = useDeferredValue(columnFilters);
 
   const [sortConfig, setSortConfig] = useState({
     key: "join_date",
@@ -110,14 +115,14 @@ const MembersPage = () => {
     });
   }, []);
 
-  // Filter & Urutkan Data per-kolom
+  // Filter & Urutkan Data per-kolom (menggunakan deferredFilters untuk performa responsif)
   const processedMembers = useMemo(() => {
-    const fMemberNo = (columnFilters.memberNo || "").trim().toLowerCase();
-    const fNameContact = (columnFilters.nameOrContact || "").trim().toLowerCase();
-    const fType = (columnFilters.type || "").trim().toLowerCase();
-    const fRole = (columnFilters.role || "").trim().toLowerCase();
-    const fJoinDate = (columnFilters.joinDate || "").trim().toLowerCase();
-    const fStatus = (columnFilters.status || "").trim().toLowerCase();
+    const fMemberNo = (deferredFilters.memberNo || "").trim().toLowerCase();
+    const fNameContact = (deferredFilters.nameOrContact || "").trim().toLowerCase();
+    const fType = (deferredFilters.type || "").trim().toLowerCase();
+    const fRole = (deferredFilters.role || "").trim().toLowerCase();
+    const fJoinDate = (deferredFilters.joinDate || "").trim().toLowerCase();
+    const fStatus = (deferredFilters.status || "").trim().toLowerCase();
 
     const filtered = members.filter((m) => {
       // 1. Filter No. Anggota / NIK
@@ -191,7 +196,7 @@ const MembersPage = () => {
     }
 
     return filtered;
-  }, [members, columnFilters, sortConfig, formatDate]);
+  }, [members, deferredFilters, sortConfig, formatDate]);
 
   const handleExportMembers = useCallback(() => {
     if (!processedMembers || processedMembers.length === 0) {
@@ -239,25 +244,46 @@ const MembersPage = () => {
     exportToExcel(dataToExport, `Data_Anggota_Koperasi_${new Date().toISOString().split("T")[0]}`);
   }, [processedMembers, formatDate]);
 
+  // Handler Hapus Anggota Tunggal dengan Verifikasi Password & Audit Log
   const handleDeleteMember = useCallback(async (memberId) => {
     if (!memberId) return;
 
-    const confirm = await Swal.fire({
-      title: "Apakah Anda yakin?",
-      text: "Data anggota ini akan dihapus secara permanen!",
+    const { value: password, isConfirmed } = await Swal.fire({
+      title: "Konfirmasi Hard Delete Anggota",
+      html: `
+        <div class="text-start small">
+          <p class="text-danger fw-bold mb-1">⚠️ PERINGATAN: Tindakan ini permanen!</p>
+          <p class="text-muted mb-2">Seluruh data profil dan relasi anggota akan dihapus secara fisik dan dicatat dalam log audit aktivitas.</p>
+          <p class="mb-1 fw-semibold text-dark">Masukkan password akun Anda untuk mengonfirmasi:</p>
+        </div>
+      `,
+      input: "password",
+      inputPlaceholder: "Password akun Anda...",
+      inputAttributes: {
+        autocapitalize: "off",
+        autocorrect: "off",
+        autocomplete: "current-password",
+      },
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dc3545",
       cancelButtonColor: "#6c757d",
-      confirmButtonText: "Ya, hapus!",
+      confirmButtonText: "Ya, Hapus Permanen",
       cancelButtonText: "Batal",
+      inputValidator: (val) => {
+        if (!val) {
+          return "Password administrator wajib diisi!";
+        }
+      },
     });
 
-    if (confirm.isConfirmed) {
+    if (isConfirmed && password) {
       try {
-        const res = await api.delete(`/anggota/${memberId}`);
+        const res = await api.delete(`/anggota/${memberId}`, {
+          data: { password },
+        });
         if (res.data?.success) {
-          Swal.fire("Terhapus!", "Anggota berhasil dihapus.", "success");
+          Swal.fire("Terhapus!", res.data.message || "Anggota berhasil dihapus permanen.", "success");
           fetchMembers();
           setShowDetailModal(false);
           setSelectedMemberIds((prev) => prev.filter((id) => id !== memberId));
@@ -268,25 +294,44 @@ const MembersPage = () => {
     }
   }, [fetchMembers]);
 
-  // Handler Hapus Banyak Sekaligus (Batch Delete)
+  // Handler Hapus Banyak Sekaligus (Batch Delete) dengan Verifikasi Password & Audit Log
   const handleDeleteBatch = useCallback(async () => {
     if (selectedMemberIds.length === 0) return;
 
-    const confirm = await Swal.fire({
-      title: "Hapus Anggota Terpilih?",
-      text: `Apakah Anda yakin ingin menghapus ${selectedMemberIds.length} anggota yang dipilih? Semua data terkait juga akan terhapus secara permanen!`,
+    const { value: password, isConfirmed } = await Swal.fire({
+      title: "Konfirmasi Hard Delete Massal",
+      html: `
+        <div class="text-start small">
+          <p class="text-danger fw-bold mb-1">⚠️ PERINGATAN: Menghapus ${selectedMemberIds.length} Anggota Sekaligus!</p>
+          <p class="text-muted mb-2">Seluruh data profil dan relasi anggota terpilih akan dihapus permanen. Tindakan ini akan dicatat ke log audit sistem.</p>
+          <p class="mb-1 fw-semibold text-dark">Masukkan password akun Anda untuk mengonfirmasi:</p>
+        </div>
+      `,
+      input: "password",
+      inputPlaceholder: "Password akun Anda...",
+      inputAttributes: {
+        autocapitalize: "off",
+        autocorrect: "off",
+        autocomplete: "current-password",
+      },
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dc3545",
       cancelButtonColor: "#6c757d",
-      confirmButtonText: `Ya, hapus ${selectedMemberIds.length} anggota!`,
+      confirmButtonText: `Ya, Hapus ${selectedMemberIds.length} Anggota`,
       cancelButtonText: "Batal",
+      inputValidator: (val) => {
+        if (!val) {
+          return "Password administrator wajib diisi!";
+        }
+      },
     });
 
-    if (confirm.isConfirmed) {
+    if (isConfirmed && password) {
       try {
         const res = await api.post("/anggota/batch-delete", {
           member_ids: selectedMemberIds,
+          password,
         });
 
         if (res.data?.success) {
@@ -350,36 +395,44 @@ const MembersPage = () => {
         </Card.Body>
       </Card>
 
-      <MemberDetailModal
-        show={showDetailModal}
-        onHide={() => setShowDetailModal(false)}
-        member={selectedMember}
-        onDelete={handleDeleteMember}
-        formatDate={formatDate}
-        onEditRole={(member) => {
-          setMemberToEditRole(member);
-          setShowRoleModal(true);
-        }}
-      />
+      <Suspense fallback={null}>
+        {showDetailModal && (
+          <MemberDetailModal
+            show={showDetailModal}
+            onHide={() => setShowDetailModal(false)}
+            member={selectedMember}
+            onDelete={handleDeleteMember}
+            formatDate={formatDate}
+            onEditRole={(member) => {
+              setMemberToEditRole(member);
+              setShowRoleModal(true);
+            }}
+          />
+        )}
 
-      <EditRoleModal
-        show={showRoleModal}
-        onHide={() => {
-          setShowRoleModal(false);
-          setMemberToEditRole(null);
-        }}
-        member={memberToEditRole}
-        onSuccess={() => {
-          fetchMembers();
-          setShowDetailModal(false);
-        }}
-      />
+        {showRoleModal && (
+          <EditRoleModal
+            show={showRoleModal}
+            onHide={() => {
+              setShowRoleModal(false);
+              setMemberToEditRole(null);
+            }}
+            member={memberToEditRole}
+            onSuccess={() => {
+              fetchMembers();
+              setShowDetailModal(false);
+            }}
+          />
+        )}
 
-      <ImportAnggotaModal
-        show={showImportModal}
-        onHide={() => setShowImportModal(false)}
-        onSuccess={fetchMembers}
-      />
+        {showImportModal && (
+          <ImportAnggotaModal
+            show={showImportModal}
+            onHide={() => setShowImportModal(false)}
+            onSuccess={fetchMembers}
+          />
+        )}
+      </Suspense>
     </div>
   );
 };
