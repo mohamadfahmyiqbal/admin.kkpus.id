@@ -15,11 +15,20 @@ import {
 import savingsService from "../../utils/api/USavings";
 import { exportToExcel } from "../../utils/helpers/exportToExcel";
 import TransactionTable from "../../components/ui/TransactionTable";
-import TransactionDetailModal from "../../components/modals/TransactionDetailModal";
-import WithdrawalApprovalModal from "../../components/modals/WithdrawalApprovalModal";
-import ManualPaymentApprovalModal from "../../components/modals/ManualPaymentApprovalModal";
-import GenericImportModal from "../../components/modals/GenericImportModal";
 import { formatRupiah, jwtEncode } from "../../utils/helpers";
+
+const TransactionDetailModal = React.lazy(() =>
+  import("../../components/modals/TransactionDetailModal")
+);
+const WithdrawalApprovalModal = React.lazy(() =>
+  import("../../components/modals/WithdrawalApprovalModal")
+);
+const ManualPaymentApprovalModal = React.lazy(() =>
+  import("../../components/modals/ManualPaymentApprovalModal")
+);
+const GenericImportModal = React.lazy(() =>
+  import("../../components/modals/GenericImportModal")
+);
 
 const SummaryCard = ({ summary = {} }) => {
   const cards = [
@@ -120,6 +129,7 @@ const SimpananDashboard = () => {
         page,
         limit,
         search: debouncedSearch,
+        status: statusFilter || undefined,
       };
       const res = await savingsService.getAdminSavingsTransactions(params);
       if (res.data?.status) {
@@ -131,7 +141,7 @@ const SimpananDashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [activeType, activeSukarelaCategory, page, limit, debouncedSearch]);
+  }, [activeType, activeSukarelaCategory, page, limit, debouncedSearch, statusFilter]);
 
   useEffect(() => {
     fetchSummary();
@@ -161,34 +171,9 @@ const SimpananDashboard = () => {
     });
   };
 
-  // Client-side filtering & sorting on the current page's transactions
+  // Sorting on the server-filtered current page transactions
   const processedTransactions = useMemo(() => {
     let list = [...transactions];
-
-    if (statusFilter) {
-      const sf = statusFilter.toLowerCase();
-      list = list.filter((t) => {
-        const s = (t.status || "").toLowerCase();
-        const raw = (t.raw_status || "").toLowerCase();
-        if (sf === "selesai") {
-          return s === "selesai" || raw === "completed" || raw === "paid" || raw === "approved";
-        }
-        if (sf === "menunggu verifikasi") {
-          return (
-            s.includes("verifikasi") ||
-            raw === "pending_verification" ||
-            Boolean(t.is_manual_payment)
-          );
-        }
-        if (sf === "pending") {
-          return s === "pending" || s.includes("menunggu");
-        }
-        if (sf === "ditolak") {
-          return s.includes("tolak") || raw === "rejected" || raw === "failed";
-        }
-        return s.includes(sf) || raw.includes(sf);
-      });
-    }
 
     if (sortConfig.key) {
       list.sort((a, b) => {
@@ -216,7 +201,7 @@ const SimpananDashboard = () => {
     }
 
     return list;
-  }, [transactions, statusFilter, sortConfig]);
+  }, [transactions, sortConfig]);
 
   const handleExportTransactions = async () => {
     setExporting(true);
@@ -227,6 +212,7 @@ const SimpananDashboard = () => {
         page: 1,
         limit: 10000,
         search: debouncedSearch || "",
+        status: statusFilter || undefined,
       };
 
       const res = await savingsService.getAdminSavingsTransactions(params);
@@ -554,57 +540,64 @@ const SimpananDashboard = () => {
         </Card.Body>
       </Card>
 
-      {/* Modal Detail Invoice Asli */}
-      <TransactionDetailModal
-        show={showDetailModal}
-        onHide={() => setShowDetailModal(false)}
-        transaction={selectedTx}
-        formatRupiah={formatRupiah}
-      />
+      {/* Lazy Loaded Modals with React.Suspense */}
+      <React.Suspense fallback={null}>
+        {showDetailModal && (
+          <TransactionDetailModal
+            show={showDetailModal}
+            onHide={() => setShowDetailModal(false)}
+            transaction={selectedTx}
+            formatRupiah={formatRupiah}
+          />
+        )}
 
-      {/* Modal Approval Pencairan Asli */}
-      <WithdrawalApprovalModal
-        show={showApprovalModal}
-        onHide={() => setShowApprovalModal(false)}
-        transaction={selectedTx}
-        formatRupiah={formatRupiah}
-        onSuccess={() => {
-          fetchSummary();
-          fetchTransactions();
-        }}
-      />
+        {showApprovalModal && (
+          <WithdrawalApprovalModal
+            show={showApprovalModal}
+            onHide={() => setShowApprovalModal(false)}
+            transaction={selectedTx}
+            formatRupiah={formatRupiah}
+            onSuccess={() => {
+              fetchSummary();
+              fetchTransactions();
+            }}
+          />
+        )}
 
-      {/* Modal Approval Pembayaran Manual (Setoran) */}
-      <ManualPaymentApprovalModal
-        show={showManualApprovalModal}
-        onHide={() => setShowManualApprovalModal(false)}
-        transaction={selectedTx}
-        onSuccess={() => {
-          fetchSummary();
-          fetchTransactions();
-        }}
-      />
+        {showManualApprovalModal && (
+          <ManualPaymentApprovalModal
+            show={showManualApprovalModal}
+            onHide={() => setShowManualApprovalModal(false)}
+            transaction={selectedTx}
+            onSuccess={() => {
+              fetchSummary();
+              fetchTransactions();
+            }}
+          />
+        )}
 
-      {/* Modal Import Data Simpanan */}
-      <GenericImportModal
-        show={showImportModal}
-        onHide={() => setShowImportModal(false)}
-        onSuccess={() => {
-          fetchSummary();
-          fetchTransactions();
-        }}
-        title="Import Data Transaksi Simpanan Anggota"
-        templateEndpoint="/savings/template-import"
-        importEndpoint="/savings/import"
-        templateFileName="Template_Import_Simpanan.xlsx"
-        instructionNotes={[
-          "Gunakan template resmi yang telah diunduh dari tombol 'Unduh Template' di atas.",
-          "Pastikan kolom 'No. Anggota' sesuai dengan nomor anggota yang terdaftar di sistem.",
-          "Pilihan Jenis Simpanan: POKOK, WAJIB, atau SUKARELA.",
-          "Nominal diisi nominal transaksi tanpa titik/koma (misal: 100000). Baris dengan nominal kosong atau 0 akan otomatis dilewati.",
-          "Format Tanggal Transaksi: YYYY-MM-DD (contoh: 2026-10-29).",
-        ]}
-      />
+        {showImportModal && (
+          <GenericImportModal
+            show={showImportModal}
+            onHide={() => setShowImportModal(false)}
+            onSuccess={() => {
+              fetchSummary();
+              fetchTransactions();
+            }}
+            title="Import Data Transaksi Simpanan Anggota"
+            templateEndpoint="/savings/template-import"
+            importEndpoint="/savings/import"
+            templateFileName="Template_Import_Simpanan.xlsx"
+            instructionNotes={[
+              "Gunakan template resmi yang telah diunduh dari tombol 'Unduh Template' di atas.",
+              "Pastikan kolom 'No. Anggota' sesuai dengan nomor anggota yang terdaftar di sistem.",
+              "Pilihan Jenis Simpanan: POKOK, WAJIB, atau SUKARELA.",
+              "Nominal diisi nominal transaksi tanpa titik/koma (misal: 100000). Baris dengan nominal kosong atau 0 akan otomatis dilewati.",
+              "Format Tanggal Transaksi: YYYY-MM-DD (contoh: 2026-10-29).",
+            ]}
+          />
+        )}
+      </React.Suspense>
     </div>
   );
 };

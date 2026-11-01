@@ -1,5 +1,3 @@
-import React from "react";
-
 export const formatRupiah = (val) =>
   new Intl.NumberFormat("id-ID", {
     style: "currency",

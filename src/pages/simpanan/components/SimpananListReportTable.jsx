@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Table, Spinner, Form, Pagination } from "react-bootstrap";
 import { formatRupiah, REPORT_SEARCH_PLACEHOLDERS } from "./reportConstants";
 
@@ -18,7 +18,7 @@ const SimpananListReportTable = ({
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
 
   // Reset ke halaman 1 jika filter berubah atau halaman saat ini melebihi total pages
-  useMemo(() => {
+  useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(1);
     }
