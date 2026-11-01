@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import dashboardService from "../../../utils/api/UDashboard";
 import jualBeliService from "../../../utils/api/UJualBeli";
 import JualBeliSetoranModal from "../../../components/modals/JualBeliSetoranModal";
@@ -164,6 +165,64 @@ const PinjamanList = () => {
   const handleProcessApproval = (item) => {
     setSelectedApprovalTx(item);
     setShowApprovalModal(true);
+  };
+
+  const handleExportPinjaman = () => {
+    if (!transactions || transactions.length === 0) {
+      Swal.fire("Info", "Tidak ada data pinjaman untuk diexport.", "info");
+      return;
+    }
+
+    const hasActiveFilter = Object.values(filters).some((v) => Boolean(v));
+    const targetData = hasActiveFilter ? filteredTransactions : transactions;
+
+    if (!targetData || targetData.length === 0) {
+      Swal.fire(
+        "Info",
+        "Tidak ada data pinjaman yang cocok dengan filter untuk diexport.",
+        "info"
+      );
+      return;
+    }
+
+    const exportRows = targetData.map((item, idx) => {
+      const totalRequired =
+        Number(item.amount_requested || 0) +
+        Number(item.margin_amount || 0) -
+        Number(item.down_payment || 0);
+      const remainingDebt = Math.max(
+        0,
+        totalRequired - Number(item.paid_amount || 0)
+      );
+      const isPaidOff =
+        Number(item.paid_amount || 0) >= totalRequired && totalRequired > 0
+          ? "Lunas"
+          : "Belum Lunas";
+
+      return {
+        No: idx + 1,
+        "No Transaksi": item.financing_id || item.id || "-",
+        Anggota: item.member_name || item.name || "-",
+        "Jenis Pinjaman": item.category || item.purpose || "Pinjaman Lunak",
+        "Jumlah Pinjaman": Number(item.amount_requested || 0),
+        "Tenor (Bulan)":
+          item.cooperation_months || item.tenure || item.tenor_months || "-",
+        "Cicilan / Bulan": Number(
+          item.monthly_installment || item.installment_amount || 0
+        ),
+        "Total Tagihan": totalRequired,
+        "Total Terbayar": Number(item.paid_amount || 0),
+        "Sisa Piutang": remainingDebt,
+        "Status Cicilan": isPaidOff,
+        "Status Approval": item.status || "-",
+        "Tanggal Pengajuan": item.created_at
+          ? new Date(item.created_at).toLocaleDateString("id-ID")
+          : "-",
+      };
+    });
+
+    const today = new Date().toISOString().split("T")[0];
+    exportToExcel(exportRows, `Data_Pinjaman_Lunak_${today}`);
   };
 
   return (
