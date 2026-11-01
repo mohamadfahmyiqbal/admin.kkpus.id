@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "./styles/admin-theme.css";
 import "./App.css";
 import { initSocket, disconnectSocket } from "./utils/api/socket";
+import PwaUpdatePrompt from "./components/pwa/PwaUpdatePrompt";
+import OfflineIndicator from "./components/pwa/OfflineIndicator";
 
 const App = () => {
   useEffect(() => {
@@ -32,6 +34,8 @@ const App = () => {
 
   return (
     <>
+      <OfflineIndicator />
+      <PwaUpdatePrompt />
       <ToastContainer
         position="top-right"
         autoClose={4000}

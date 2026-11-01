@@ -20,6 +20,13 @@ class UNotification {
     };
     return http.post("/notifikasi/update-status", payload);
   }
+
+  /**
+   * Tandai semua notifikasi menjadi sudah dibaca
+   */
+  markAllAsRead() {
+    return http.post("/notifikasi/update-status", { all: true, status: 2 });
+  }
 }
 
 export default new UNotification();
