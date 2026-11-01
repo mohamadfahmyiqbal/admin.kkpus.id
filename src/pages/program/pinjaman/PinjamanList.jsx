@@ -7,6 +7,7 @@ import jualBeliService from "../../../utils/api/UJualBeli";
 import JualBeliSetoranModal from "../../../components/modals/JualBeliSetoranModal";
 import ProgramApprovalModal from "../../../components/modals/ProgramApprovalModal";
 import TransactionDetailModal from "../../../components/modals/TransactionDetailModal";
+import ManualPaymentApprovalModal from "../../../components/modals/ManualPaymentApprovalModal";
 import ImportPinjamanModal from "./components/ImportPinjamanModal";
 import PinjamanListHeader from "./components/PinjamanListHeader";
 import PinjamanTable from "./components/PinjamanTable";
@@ -34,6 +35,9 @@ const PinjamanList = () => {
   // Modals state
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [selectedApprovalTx, setSelectedApprovalTx] = useState(null);
+
+  const [showManualModal, setShowManualModal] = useState(false);
+  const [selectedManualTx, setSelectedManualTx] = useState(null);
 
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedDetailTx, setSelectedDetailTx] = useState(null);
@@ -195,6 +199,11 @@ const PinjamanList = () => {
   };
 
   const handleProcessApproval = (item) => {
+    if (item.is_manual_payment) {
+      setSelectedManualTx(item);
+      setShowManualModal(true);
+      return;
+    }
     setSelectedApprovalTx(item);
     setShowApprovalModal(true);
   };
@@ -395,6 +404,17 @@ const PinjamanList = () => {
             : null
         }
         formatRp={formatCurrency}
+      />
+
+      {/* Manual Payment Approval Modal (Setoran Pinjaman) */}
+      <ManualPaymentApprovalModal
+        show={showManualModal}
+        onHide={() => {
+          setShowManualModal(false);
+          setSelectedManualTx(null);
+        }}
+        transaction={selectedManualTx}
+        onSuccess={() => fetchData()}
       />
 
       {/* Transaction Detail Modal */}
