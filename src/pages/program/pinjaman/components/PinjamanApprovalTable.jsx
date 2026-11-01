@@ -1,5 +1,13 @@
 import React, { useState, useMemo } from "react";
-import { Table, Button, Form, Spinner, Pagination } from "react-bootstrap";
+import {
+  Table,
+  Button,
+  Form,
+  Spinner,
+  Pagination,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { X, ArrowsDownUp, CaretUp, CaretDown, CheckCircle } from "phosphor-react";
 
 const PinjamanApprovalTable = ({
@@ -131,13 +139,14 @@ const PinjamanApprovalTable = ({
                 role="button"
                 className="px-3 py-3 font-medium user-select-none"
                 onClick={() => handleSort("rincian")}
+                style={{ cursor: "pointer" }}
               >
                 Rincian {renderSortIcon("rincian")}
               </th>
               <th
                 role="button"
                 className="px-3 py-3 font-medium user-select-none"
-                style={{ width: "220px" }}
+                style={{ width: "220px", cursor: "pointer" }}
                 onClick={() => handleSort("nominal")}
               >
                 Nominal {renderSortIcon("nominal")}
@@ -145,12 +154,12 @@ const PinjamanApprovalTable = ({
               <th
                 role="button"
                 className="px-3 py-3 font-medium user-select-none"
-                style={{ width: "160px" }}
+                style={{ width: "160px", cursor: "pointer" }}
                 onClick={() => handleSort("waktu")}
               >
                 Waktu {renderSortIcon("waktu")}
               </th>
-              <th className="px-3 py-3 text-center font-medium" style={{ width: "120px" }}>
+              <th className="px-3 py-3 text-center font-medium" style={{ width: "120px", minWidth: "120px" }}>
                 Aksi
               </th>
             </tr>
@@ -158,29 +167,16 @@ const PinjamanApprovalTable = ({
             {/* Filter row */}
             <tr className="bg-light bg-opacity-75">
               <th className="py-2 px-2">
-                <div className="d-flex align-items-center gap-1">
-                  <Form.Control
-                    size="sm"
-                    placeholder="Cari anggota / item..."
-                    value={colFilters.rincian}
-                    onChange={(e) =>
-                      handleFilterChange("rincian", e.target.value)
-                    }
-                    className="rounded-2 shadow-none border-secondary border-opacity-25"
-                    style={{ fontSize: "11px" }}
-                  />
-                  {hasAnyFilter && (
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      className="p-0 px-1 border-0"
-                      onClick={handleResetFilters}
-                      title="Reset Semua Filter"
-                    >
-                      <X size={14} weight="bold" />
-                    </Button>
-                  )}
-                </div>
+                <Form.Control
+                  size="sm"
+                  placeholder="Cari anggota / item..."
+                  value={colFilters.rincian}
+                  onChange={(e) =>
+                    handleFilterChange("rincian", e.target.value)
+                  }
+                  className="rounded-2 shadow-none border-secondary border-opacity-25"
+                  style={{ fontSize: "11px" }}
+                />
               </th>
               <th className="py-2 px-2">
                 <Form.Control
@@ -206,7 +202,34 @@ const PinjamanApprovalTable = ({
                   style={{ fontSize: "11px" }}
                 />
               </th>
-              <th className="py-2 px-2 text-center" />
+              <th className="py-2 px-2 text-center align-middle">
+                {hasAnyFilter && (
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="tt-reset-approval-filters">
+                        Reset Semua Filter
+                      </Tooltip>
+                    }
+                  >
+                    <Button
+                      variant="light"
+                      size="sm"
+                      className="btn-action-table text-danger bg-danger bg-opacity-10 hover-bg-danger border-0 mx-auto"
+                      style={{
+                        width: "26px",
+                        height: "26px",
+                        minWidth: "26px",
+                        minHeight: "26px",
+                      }}
+                      onClick={handleResetFilters}
+                      aria-label="Reset Semua Filter"
+                    >
+                      <X size={14} weight="bold" />
+                    </Button>
+                  </OverlayTrigger>
+                )}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -253,16 +276,26 @@ const PinjamanApprovalTable = ({
                       : "-"}
                   </td>
                   <td className="px-3 py-2 text-center">
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      className="rounded-pill px-3 py-1 shadow-xs d-inline-flex align-items-center gap-1"
-                      style={{ fontWeight: 600, fontSize: "12px" }}
-                      onClick={() => onProcessApproval(item)}
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={
+                        <Tooltip id={`tt-proc-${item.id || idx}`}>
+                          Proses Persetujuan Pinjaman
+                        </Tooltip>
+                      }
                     >
-                      <CheckCircle size={14} weight="bold" />
-                      Proses
-                    </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="rounded-pill px-3 py-1 shadow-sm d-inline-flex align-items-center gap-1 border-0"
+                        style={{ fontWeight: 600, fontSize: "12px", transition: "all 0.2s" }}
+                        onClick={() => onProcessApproval(item)}
+                        aria-label="Proses Approval"
+                      >
+                        <CheckCircle size={14} weight="bold" />
+                        <span>Proses</span>
+                      </Button>
+                    </OverlayTrigger>
                   </td>
                 </tr>
               ))
@@ -297,7 +330,7 @@ const PinjamanApprovalTable = ({
               <option value={50}>50 baris</option>
               <option value={100}>100 baris</option>
             </Form.Select>
-            <Pagination className="mb-0">
+            <Pagination size="sm" className="mb-0">
               <Pagination.First
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}

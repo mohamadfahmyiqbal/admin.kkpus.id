@@ -12,6 +12,7 @@ import {
 import {
   Receipt,
   Eye,
+  Coins,
   User,
   X,
   ArrowsDownUp,
@@ -265,7 +266,7 @@ const PinjamanTable = ({
             <tr>
               <th
                 className="px-3 py-3 font-medium text-center"
-                style={{ width: "90px" }}
+                style={{ width: "95px", minWidth: "95px" }}
               >
                 Aksi
               </th>
@@ -273,6 +274,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium user-select-none"
                 onClick={() => handleSort("anggota")}
+                style={{ cursor: "pointer" }}
               >
                 Anggota {renderSortIcon("anggota")}
               </th>
@@ -280,6 +282,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium user-select-none"
                 onClick={() => handleSort("jenis_pinjaman")}
+                style={{ cursor: "pointer" }}
               >
                 Jenis Pinjaman {renderSortIcon("jenis_pinjaman")}
               </th>
@@ -287,6 +290,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium text-end user-select-none"
                 onClick={() => handleSort("jumlah_pinjaman")}
+                style={{ cursor: "pointer" }}
               >
                 Jumlah Pinjaman {renderSortIcon("jumlah_pinjaman")}
               </th>
@@ -294,6 +298,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium text-center user-select-none"
                 onClick={() => handleSort("tenor")}
+                style={{ cursor: "pointer" }}
               >
                 Tenor {renderSortIcon("tenor")}
               </th>
@@ -301,6 +306,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium text-end user-select-none"
                 onClick={() => handleSort("cicilan")}
+                style={{ cursor: "pointer" }}
               >
                 Cicilan {renderSortIcon("cicilan")}
               </th>
@@ -308,6 +314,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium text-end user-select-none"
                 onClick={() => handleSort("piutang")}
+                style={{ cursor: "pointer" }}
               >
                 Piutang {renderSortIcon("piutang")}
               </th>
@@ -315,6 +322,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium text-center user-select-none"
                 onClick={() => handleSort("status_cicilan")}
+                style={{ cursor: "pointer" }}
               >
                 Status Cicilan {renderSortIcon("status_cicilan")}
               </th>
@@ -322,6 +330,7 @@ const PinjamanTable = ({
                 role="button"
                 className="px-3 py-3 font-medium text-center user-select-none"
                 onClick={() => handleSort("status_approval")}
+                style={{ cursor: "pointer" }}
               >
                 Status Approval {renderSortIcon("status_approval")}
               </th>
@@ -329,17 +338,32 @@ const PinjamanTable = ({
 
             {/* Filter thead row */}
             <tr className="bg-light bg-opacity-75">
-              <th className="py-2 px-1 text-center">
+              <th className="py-2 px-1 text-center align-middle">
                 {hasAnyFilter && (
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    className="p-0 px-1 border-0"
-                    onClick={handleResetFilters}
-                    title="Reset Semua Filter"
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="tt-reset-filter-pinjaman">
+                        Reset Semua Filter
+                      </Tooltip>
+                    }
                   >
-                    <X size={14} weight="bold" />
-                  </Button>
+                    <Button
+                      variant="light"
+                      size="sm"
+                      className="btn-action-table text-danger bg-danger bg-opacity-10 hover-bg-danger border-0 mx-auto"
+                      style={{
+                        width: "26px",
+                        height: "26px",
+                        minWidth: "26px",
+                        minHeight: "26px",
+                      }}
+                      onClick={handleResetFilters}
+                      aria-label="Reset Semua Filter"
+                    >
+                      <X size={14} weight="bold" />
+                    </Button>
+                  </OverlayTrigger>
                 )}
               </th>
               <th className="py-2 px-2">
@@ -482,21 +506,21 @@ const PinjamanTable = ({
                 return (
                   <tr key={tx.id || tx.financing_id}>
                     <td className="px-3 py-2 text-center">
-                      <div className="d-flex justify-content-center align-items-center gap-1">
+                      <div className="d-flex justify-content-center align-items-center gap-2">
                         <OverlayTrigger
                           placement="top"
                           overlay={
                             <Tooltip id={`tt-inv-${tx.id || tx.financing_id}`}>
-                              Lihat Detail Invoice
+                              Lihat Invoice / Detail Transaksi
                             </Tooltip>
                           }
                         >
                           <Button
                             variant="light"
                             size="sm"
-                            className="p-1 rounded-circle border shadow-xs text-primary d-inline-flex align-items-center justify-content-center"
-                            style={{ width: "30px", height: "30px" }}
+                            className="btn-action-table text-primary bg-primary bg-opacity-10 hover-bg-primary border-0"
                             onClick={() => onViewInvoice(tx)}
+                            aria-label="Lihat Detail Invoice"
                           >
                             <Receipt size={16} weight="bold" />
                           </Button>
@@ -508,18 +532,18 @@ const PinjamanTable = ({
                             <Tooltip
                               id={`tt-setoran-${tx.id || tx.financing_id}`}
                             >
-                              Catat / Lihat Setoran Cicilan
+                              Kartu Setoran & Cicilan
                             </Tooltip>
                           }
                         >
                           <Button
                             variant="light"
                             size="sm"
-                            className="p-1 rounded-circle border shadow-xs text-info d-inline-flex align-items-center justify-content-center"
-                            style={{ width: "30px", height: "30px" }}
+                            className="btn-action-table text-success bg-success bg-opacity-10 hover-bg-success border-0"
                             onClick={() => onViewTransaksi(tx)}
+                            aria-label="Kartu Setoran & Cicilan"
                           >
-                            <Eye size={16} weight="bold" />
+                            <Coins size={16} weight="bold" />
                           </Button>
                         </OverlayTrigger>
                       </div>
@@ -618,7 +642,7 @@ const PinjamanTable = ({
               <option value={50}>50 baris</option>
               <option value={100}>100 baris</option>
             </Form.Select>
-            <Pagination className="mb-0">
+            <Pagination size="sm" className="mb-0">
               <Pagination.First
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}

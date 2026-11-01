@@ -96,57 +96,89 @@ const PinjamanList = () => {
           ? "Lunas"
           : "Belum Lunas";
 
-      const amountReqStr = String(item.amount_requested || "");
-      const tenorStr = String(
+      const memberQuery = (filters.anggota || "").toLowerCase().trim();
+      const memberName = (item.member_name || "").toLowerCase();
+      const financingId = (item.financing_id || "").toLowerCase();
+
+      if (
+        memberQuery &&
+        !memberName.includes(memberQuery) &&
+        !financingId.includes(memberQuery)
+      ) {
+        return false;
+      }
+
+      const jenis = (
+        item.category ||
+        item.purpose ||
+        "Pinjaman Lunak"
+      ).toLowerCase();
+      if (
+        filters.jenis_pinjaman &&
+        !jenis.includes(filters.jenis_pinjaman.toLowerCase().trim())
+      ) {
+        return false;
+      }
+
+      const checkNumeric = (filterVal, numVal) => {
+        if (!filterVal) return true;
+        const clean = filterVal.replace(/\D/g, "");
+        const formatted = formatCurrency(numVal).toLowerCase();
+        return (
+          String(numVal || 0).includes(clean) ||
+          formatted.includes(filterVal.toLowerCase().trim())
+        );
+      };
+
+      if (!checkNumeric(filters.jumlah_pinjaman, item.amount_requested)) {
+        return false;
+      }
+
+      const tenorVal = String(
         item.cooperation_months || item.tenure || item.tenor_months || "-"
       );
-      const cicilanStr = String(
-        item.monthly_installment || item.installment_amount || ""
-      );
-      const piutangStr = String(remainingDebt || "");
+      if (
+        filters.tenor &&
+        !tenorVal.toLowerCase().includes(filters.tenor.toLowerCase().trim())
+      ) {
+        return false;
+      }
 
-      const memberMatch =
-        (item.member_name || "")
-          .toLowerCase()
-          .includes(filters.anggota.toLowerCase()) ||
-        (item.financing_id || "")
-          .toLowerCase()
-          .includes(filters.anggota.toLowerCase());
+      const cicilanVal =
+        item.monthly_installment || item.installment_amount || 0;
+      if (!checkNumeric(filters.cicilan, cicilanVal)) {
+        return false;
+      }
 
-      const jenisMatch = (item.category || item.purpose || "Pinjaman Lunak")
-        .toLowerCase()
-        .includes(filters.jenis_pinjaman.toLowerCase());
+      if (!checkNumeric(filters.piutang, remainingDebt)) {
+        return false;
+      }
 
-      const jumlahMatch = amountReqStr.includes(filters.jumlah_pinjaman);
-      const tenorMatch = tenorStr
-        .toLowerCase()
-        .includes(filters.tenor.toLowerCase());
-      const cicilanMatch = cicilanStr.includes(filters.cicilan);
-      const piutangMatch = piutangStr.includes(filters.piutang);
-      const statusCicilanMatch = isPaidOff
-        .toLowerCase()
-        .includes(filters.status_cicilan.toLowerCase());
-      const statusApprovalMatch = (item.status || "")
-        .toLowerCase()
-        .includes(filters.status_approval.toLowerCase());
+      if (
+        filters.status_cicilan &&
+        isPaidOff.toLowerCase() !== filters.status_cicilan.toLowerCase()
+      ) {
+        return false;
+      }
 
-      return (
-        memberMatch &&
-        jenisMatch &&
-        jumlahMatch &&
-        tenorMatch &&
-        cicilanMatch &&
-        piutangMatch &&
-        statusCicilanMatch &&
-        statusApprovalMatch
-      );
+      if (
+        filters.status_approval &&
+        (item.status || "").toUpperCase() !==
+          filters.status_approval.toUpperCase()
+      ) {
+        return false;
+      }
+
+      return true;
     });
-  }, [transactions, filters]);
+  }, [transactions, filters, formatCurrency]);
 
   const handleViewInvoice = (tx) => {
     setSelectedDetailTx({
-      id: tx.id || tx.financing_id,
-      member: tx.member_name || "Anggota",
+      id: tx.financing_id || tx.id,
+      transaction_id: tx.financing_id || tx.id,
+      member: tx.member_name || tx.name || "Anggota",
+      full_name: tx.member_name || tx.name || "Anggota",
       member_id: tx.member_id || "-",
       date: tx.created_at || new Date().toISOString(),
       amount: tx.amount_requested,
@@ -258,8 +290,19 @@ const PinjamanList = () => {
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="approval" className="fw-medium">
-                    Approval ({pendingApprovals.length})
+                  <Nav.Link
+                    eventKey="approval"
+                    className="fw-medium d-flex align-items-center gap-2"
+                  >
+                    <span>Approval</span>
+                    {pendingApprovals.length > 0 && (
+                      <span
+                        className="badge rounded-pill bg-danger"
+                        style={{ fontSize: "11px" }}
+                      >
+                        {pendingApprovals.length}
+                      </span>
+                    )}
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
@@ -269,6 +312,8 @@ const PinjamanList = () => {
               {/* Tab 1: Daftar Pinjaman */}
               <Tab.Pane eventKey="list">
                 <PinjamanListHeader
+                  onRefresh={fetchData}
+                  loading={loading}
                   onOpenImport={() => setShowImportModal(true)}
                   onExport={handleExportPinjaman}
                   hasData={transactions && transactions.length > 0}
@@ -363,7 +408,11 @@ const PinjamanList = () => {
       {/* Jual Beli / Pinjaman Setoran Modal */}
       <JualBeliSetoranModal
         show={showSetoranModal}
-        onHide={() => setShowSetoranModal(false)}
+        onHide={() => {
+          setShowSetoranModal(false);
+          fetchData();
+        }}
+        onVerificationSuccess={() => fetchData()}
         transaction={selectedSetoranTx}
         formatRp={formatCurrency}
       />
