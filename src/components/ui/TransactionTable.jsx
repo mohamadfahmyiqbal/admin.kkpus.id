@@ -406,7 +406,7 @@ export const TransactionTable = ({
                           >
                             <button
                               type="button"
-                              className="btn-action-table text-warning bg-warning bg-opacity-15 hover-bg-warning border-0"
+                              className="btn-action-table action-warning border-0"
                               onClick={() => onApprove && onApprove(tx)}
                               aria-label="Verifikasi Pembayaran Manual"
                             >
@@ -424,7 +424,7 @@ export const TransactionTable = ({
                           >
                             <button
                               type="button"
-                              className="btn-action-table text-success bg-success bg-opacity-10 hover-bg-success border-0"
+                              className="btn-action-table action-approve border-0"
                               onClick={() => onApprove && onApprove(tx)}
                               aria-label="Proses Persetujuan Pencairan"
                             >
@@ -443,7 +443,7 @@ export const TransactionTable = ({
                         >
                           <button
                             type="button"
-                            className="btn-action-table text-primary bg-primary bg-opacity-10 hover-bg-primary border-0"
+                            className="btn-action-table action-view border-0"
                             onClick={() => onView && onView(tx)}
                             aria-label="Lihat Detail Transaksi"
                           >

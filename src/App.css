@@ -194,9 +194,11 @@
   align-items: center !important;
   justify-content: center !important;
   border-radius: 50% !important;
+  border: 1px solid transparent !important;
   transition: all 0.2s ease-in-out !important;
   line-height: 1 !important;
   box-shadow: none !important;
+  cursor: pointer !important;
 }
 
 .btn-action-table svg,
@@ -204,6 +206,78 @@
 .btn-icon svg {
   display: block !important;
   flex-shrink: 0 !important;
+}
+
+/* Primary / View Detail Button */
+.btn-action-table.action-view,
+.btn-action-table.text-primary,
+.btn-action-primary {
+  background-color: #eff6ff !important;
+  border-color: #dbeafe !important;
+  color: #2563eb !important;
+}
+.btn-action-table.action-view:hover,
+.btn-action-table.text-primary:hover,
+.btn-action-primary:hover {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25) !important;
+}
+
+/* Success / Approve Withdrawal Button */
+.btn-action-table.action-approve,
+.btn-action-table.text-success,
+.btn-action-success {
+  background-color: #f0fdf4 !important;
+  border-color: #dcfce7 !important;
+  color: #16a34a !important;
+}
+.btn-action-table.action-approve:hover,
+.btn-action-table.text-success:hover,
+.btn-action-success:hover {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.25) !important;
+}
+
+/* Warning / Manual Verification Button */
+.btn-action-table.action-warning,
+.btn-action-table.text-warning,
+.btn-action-warning {
+  background-color: #fffbeb !important;
+  border-color: #fde68a !important;
+  color: #b45309 !important;
+}
+.btn-action-table.action-warning:hover,
+.btn-action-table.text-warning:hover,
+.btn-action-warning:hover {
+  background-color: #d97706 !important;
+  border-color: #d97706 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.25) !important;
+}
+
+/* Danger / Delete Button */
+.btn-action-table.action-danger,
+.btn-action-table.text-danger,
+.btn-action-danger {
+  background-color: #fef2f2 !important;
+  border-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+.btn-action-table.action-danger:hover,
+.btn-action-table.text-danger:hover,
+.btn-action-danger:hover {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.25) !important;
 }
 
 .btn-action-table:hover,
