@@ -80,6 +80,12 @@ class ProgramService {
     });
   }
 
+  importTransaksiPinjaman(formData) {
+    return api.post("/program/pinjaman/import-transaksi", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  }
+
   importArisan(formData) {
     return api.post("/program/arisan/import", formData, {
       headers: { "Content-Type": "multipart/form-data" },
