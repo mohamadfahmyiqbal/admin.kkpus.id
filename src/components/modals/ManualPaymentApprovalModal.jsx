@@ -23,6 +23,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
   const [blobUrl, setBlobUrl] = useState(null);
   const [fileLoading, setFileLoading] = useState(false);
   const [fileError, setFileError] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   // Mendukung berbagai penamaan properti bukti transfer dari berbagai controller/model
   const rawProofCandidate =
@@ -117,6 +118,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
     if (show && proofUrl) {
       setFileLoading(true);
       setFileError(false);
+      setImageError(false);
 
       if (proofUrl.startsWith("data:") || proofUrl.startsWith("blob:")) {
         setBlobUrl(proofUrl);
@@ -141,6 +143,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
       setBlobUrl(null);
       setFileLoading(false);
       setFileError(false);
+      setImageError(false);
     }
 
     return () => {
