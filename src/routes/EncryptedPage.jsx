@@ -1,7 +1,7 @@
 import React, { Suspense, useMemo } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import PAGE_COMPONENTS from "./PageRoutes";
-import { jwtDecodePage, jwtEncode } from "../utils/helpers";
+import { jwtDecodePage, jwtEncode, isJwtExpired } from "../utils/helpers";
 import LayoutGlobal from "../components/layout/LayoutGlobal";
 
 const PageLoader = () => (
@@ -40,7 +40,11 @@ export const EncryptedPage = React.memo(() => {
   // Cek token auth untuk protected route
   if (isProtected) {
     const authToken = localStorage.getItem("token");
-    if (!authToken) {
+    if (!authToken || isJwtExpired(authToken)) {
+      if (authToken) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userData");
+      }
       return <Navigate to={`/${jwtEncode({ page: "authLogin" })}`} replace />;
     }
   }

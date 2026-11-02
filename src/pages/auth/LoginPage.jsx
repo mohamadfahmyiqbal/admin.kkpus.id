@@ -14,7 +14,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { jwtEncode } from "../../utils/helpers";
+import { jwtEncode, isJwtExpired } from "../../utils/helpers";
 import "./LoginPage.css";
 
 const LoginPage = () => {
@@ -30,18 +30,24 @@ const LoginPage = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate(`/${jwtEncode({ page: "dashboard" })}`, { replace: true });
+      if (isJwtExpired(token)) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userData");
+      } else {
+        navigate(`/${jwtEncode({ page: "dashboard" })}`, { replace: true });
+      }
     }
   }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (loading) return; // Prevent double submit
     setError(null);
     setEmailHpInvalid(false);
     setPasswordInvalid(false);
 
     const cleanEmail = emailHp.trim();
-    const cleanPass = password.trim();
+    const cleanPass = password; // Pertahankan spasi asli pada password
 
     if (!cleanEmail || !cleanPass) {
       if (!cleanEmail) setEmailHpInvalid(true);
@@ -57,28 +63,49 @@ const LoginPage = () => {
         (import.meta.env.PROD ? "https://api.kkpus.id/api" : "https://localhost:3445/api");
       const response = await fetch(`${apiBase}/auth/accountLogin`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailHp: cleanEmail, password: cleanPass }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-Client-App": "admin",
+        },
+        body: JSON.stringify({
+          emailHp: cleanEmail,
+          password: cleanPass,
+          clientType: "admin",
+        }),
       });
-      const data = await response.json();
+
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        setError("Respon server tidak valid atau server sedang dalam pemeliharaan.");
+        return;
+      }
 
       if (response.ok && data.success) {
         const roles = data.data.user.roles || [];
-        const allowedRoles = ["pengawas", "ketua", "bendahara", "admin"];
+        const allowedRoles = [
+          "pengawas",
+          "ketua",
+          "bendahara",
+          "admin",
+          "super admin",
+          "superadmin",
+        ];
         const hasAccess = roles.some((r) =>
           allowedRoles.includes(r.toLowerCase())
         );
 
         if (!hasAccess) {
           setError(
-            "Akses ditolak: Hanya Pengawas, Ketua, atau Bendahara yang dapat mengakses aplikasi ini."
+            "Akses ditolak: Hanya Pengawas, Ketua, Bendahara, atau Admin yang dapat mengakses aplikasi ini."
           );
           return;
         }
 
         localStorage.setItem("token", data.data.token);
         localStorage.setItem("userData", JSON.stringify(data.data.user));
-        window.dispatchEvent(new Event("storage_sync"));
+        window.dispatchEvent(new Event("storage"));
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
       } else {
         setError(
@@ -228,16 +255,21 @@ const LoginPage = () => {
                     <Form onSubmit={handleLogin} noValidate>
                       <Row className="g-4">
                         <Col md={12}>
-                          <Form.Label>Username atau Email Admin</Form.Label>
+                          <Form.Label>Email atau Nomor Handphone Admin</Form.Label>
                           <InputGroup>
                             <InputGroup.Text>
                               <FaUser />
                             </InputGroup.Text>
                             <Form.Control
                               value={emailHp}
-                              onChange={(e) => setEmailHp(e.target.value)}
+                              onChange={(e) => {
+                                setEmailHp(e.target.value);
+                                if (emailHpInvalid) setEmailHpInvalid(false);
+                                if (error) setError(null);
+                              }}
                               isInvalid={emailHpInvalid}
                               placeholder="admin@koperasi.com"
+                              autoComplete="username"
                             />
                             <Form.Control.Feedback type="invalid">
                               Email atau Nomor HP wajib diisi
@@ -255,15 +287,24 @@ const LoginPage = () => {
                             </InputGroup.Text>
                             <Form.Control
                               value={password}
-                              onChange={(e) => setPassword(e.target.value)}
+                              onChange={(e) => {
+                                setPassword(e.target.value);
+                                if (passwordInvalid) setPasswordInvalid(false);
+                                if (error) setError(null);
+                              }}
                               isInvalid={passwordInvalid}
                               type={showPassword ? "text" : "password"}
                               placeholder="••••••••"
+                              className="pbs-password-input"
+                              autoComplete="current-password"
                             />
                             <Button
+                              type="button"
                               variant="light"
                               className="border border-start-0 text-muted pbs-password-eye-btn"
                               onClick={() => setShowPassword(!showPassword)}
+                              aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                              title={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
                             >
                               {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </Button>

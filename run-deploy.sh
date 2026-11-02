@@ -22,8 +22,8 @@ if [ ! -d "$BUILD_DIR" ]; then
 fi
 
 echo "=== [3/4] Menyalin hasil build ke direktori deployment ==="
-# Sesuaikan target foldernya dengan direktori deployment Anda di /var/www/
-TARGET_DIR="/var/www/kkpusid" # Ganti dengan /var/www/admin.kkpus.id untuk repo admin
+# Sesuaikan target foldernya dengan direktori deployment admin di /var/www/
+TARGET_DIR="/var/www/admin.kkpus.id"
 
 sudo rm -rf ${TARGET_DIR}/*
 sudo cp -r ${BUILD_DIR}/* ${TARGET_DIR}/

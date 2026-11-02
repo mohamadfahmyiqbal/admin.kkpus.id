@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Topbar from "./Topbar";
 import SidebarNav from "./SidebarNav";
 import { jwtEncode } from "../../utils/helpers";
+import api from "../../utils/api/common";
+import { disconnectSocket } from "../../utils/api/socket";
 
 const DESKTOP_WIDTH = 768;
 
@@ -35,10 +37,23 @@ const LayoutGlobal = ({ children, pageName }) => {
     setIsSidebarOpen(false);
   }, []);
 
-  const handleLogout = useCallback(() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userData");
-    navigate(`/${jwtEncode({ page: "authLogin" })}`);
+  const handleLogout = useCallback(async () => {
+    try {
+      disconnectSocket();
+    } catch (e) {
+      console.warn("Socket disconnect failed:", e);
+    }
+
+    try {
+      await api.post("/auth/logout");
+    } catch (e) {
+      console.warn("Server logout failed:", e);
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      window.dispatchEvent(new Event("storage"));
+      navigate(`/${jwtEncode({ page: "authLogin" })}`);
+    }
   }, [navigate]);
 
   return (

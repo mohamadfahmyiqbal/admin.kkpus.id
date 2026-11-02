@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { jwtEncode } from "../../utils/helpers";
+import { jwtEncode, isJwtExpired } from "../../utils/helpers";
 import "./SplashPage.css";
 
 const LOADING_MESSAGES = [
@@ -28,7 +28,12 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
     }
 
     const token = localStorage.getItem("token");
-    const targetPage = token ? "dashboard" : "authLogin";
+    const isValid = token && !isJwtExpired(token);
+    if (token && !isValid) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+    }
+    const targetPage = isValid ? "dashboard" : "authLogin";
     navigate(`/${jwtEncode({ page: targetPage })}`, { replace: true });
   }, [navigate]);
 

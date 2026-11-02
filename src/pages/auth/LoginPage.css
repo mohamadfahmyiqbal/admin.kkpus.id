@@ -176,6 +176,10 @@
   height: 32px;
 }
 
+.pbs-login-v2 .input-group .pbs-password-input {
+  border-radius: 0 !important;
+}
+
 .pbs-password-eye-btn {
   border-radius: 0 12px 12px 0 !important;
 }

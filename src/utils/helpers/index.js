@@ -43,6 +43,25 @@ export const jwtDecodePage = (token) => {
   }
 };
 
+export const isJwtExpired = (token) => {
+  if (!token || typeof token !== "string") return true;
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return true;
+    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const pad = base64.length % 4;
+    if (pad) {
+      base64 += "=".repeat(4 - pad);
+    }
+    const decoded = atob(base64);
+    const payload = JSON.parse(decodeURIComponent(decoded));
+    if (!payload.exp) return false;
+    return Date.now() >= payload.exp * 1000;
+  } catch {
+    return true;
+  }
+};
+
 export const formatRupiah = (value) => {
   if (!value) return "Rp 0";
   const num = parseInt(value, 10);
@@ -71,6 +90,7 @@ export const SVG_FALLBACK_IMAGE =
 export default {
   jwtEncode,
   jwtDecodePage,
+  isJwtExpired,
   formatRupiah,
   getMediaUrl,
   SVG_FALLBACK_IMAGE,

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { jwtEncode, jwtDecodePage } from "./index.js";
+import { jwtEncode, jwtDecodePage, isJwtExpired } from "./index.js";
 
 test("jwtEncode menghasilkan string berformat header.payload.", () => {
   const token = jwtEncode({ page: "globalSplash" });
@@ -38,4 +38,24 @@ test("jwtEncode mendukung custom expiresIn options", () => {
 
   assert.equal(decoded.page, "dashboard");
   assert.ok(decoded._exp >= now + 60000);
+});
+
+test("isJwtExpired memvalidasi token kedaluwarsa dengan tepat", () => {
+  // Token null / string kosong / acak dianggap expired
+  assert.equal(isJwtExpired(null), true);
+  assert.equal(isJwtExpired(undefined), true);
+  assert.equal(isJwtExpired(""), true);
+  assert.equal(isJwtExpired("invalid.token"), true);
+
+  // Token yang belum expired (exp di masa depan)
+  const futureExp = Math.floor(Date.now() / 1000) + 3600; // 1 jam ke depan
+  const validPayload = btoa(JSON.stringify({ member_id: 1, exp: futureExp }));
+  const validToken = `header.${validPayload}.signature`;
+  assert.equal(isJwtExpired(validToken), false);
+
+  // Token yang sudah expired (exp di masa lalu)
+  const pastExp = Math.floor(Date.now() / 1000) - 3600; // 1 jam lalu
+  const expiredPayload = btoa(JSON.stringify({ member_id: 1, exp: pastExp }));
+  const expiredToken = `header.${expiredPayload}.signature`;
+  assert.equal(isJwtExpired(expiredToken), true);
 });

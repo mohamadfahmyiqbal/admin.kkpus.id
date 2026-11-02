@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtEncode } from "../helpers";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
@@ -21,6 +22,33 @@ api.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userData");
+        window.dispatchEvent(new Event("storage"));
+
+        // Redirect to login if user is not already on login page
+        if (typeof window !== "undefined") {
+          try {
+            const loginUrl = `/${jwtEncode({ page: "authLogin" })}`;
+            if (window.location.pathname !== loginUrl) {
+              window.location.href = loginUrl;
+            }
+          } catch {
+            window.location.href = "/";
+          }
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default api;
