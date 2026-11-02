@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
+import { Card, Tab, Nav, Breadcrumb, Alert, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import jualBeliService from "../../utils/api/UJualBeli";
 import { exportToExcel } from "../../utils/helpers/exportToExcel";
 import { jwtEncode } from "../../utils/helpers";
+import { computeJurnal } from "../../utils/jualBeliReportMath";
 
 import JualBeliReportHeader from "./report/JualBeliReportHeader";
 import JualBeliReportListTable from "./report/JualBeliReportListTable";
@@ -13,17 +14,25 @@ const JualBeliReport = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("list");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [reportData, setReportData] = useState([]);
 
   const fetchReport = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await jualBeliService.getJualBeliReport();
       if (res.data?.status) {
         setReportData(res.data.data || []);
+      } else {
+        setError(res.data?.message || "Gagal memuat laporan.");
       }
     } catch (err) {
-      console.error("Failed to fetch data", err);
+      setError(
+        err.response?.data?.message ||
+          "Gagal memuat laporan. Periksa koneksi lalu coba lagi."
+      );
+      console.error("Failed to fetch data", err?.message);
     } finally {
       setLoading(false);
     }
@@ -62,40 +71,17 @@ const JualBeliReport = () => {
       }
     );
 
-    const piutangPokok =
-      totals.tahun_ini.pokok +
-      totals.tahun_lalu.pokok +
-      totals.tahun_lalu2.pokok;
-    const marginDitangguhkan =
-      totals.tahun_ini.margin +
-      totals.tahun_lalu.margin +
-      totals.tahun_lalu2.margin;
-    const kasDp =
-      totals.tahun_ini.dp + totals.tahun_lalu.dp + totals.tahun_lalu2.dp;
-    const kasCicilan =
-      totals.tahun_ini.cicilan +
-      totals.tahun_lalu.cicilan +
-      totals.tahun_lalu2.cicilan;
-    const kas = kasDp + kasCicilan;
-    const piutangJualBeli = piutangPokok - kasDp - kasCicilan;
-    const totalDebit = kas + piutangJualBeli;
-    const totalKredit = piutangPokok;
-
     return {
       listData: list,
       listTotals: totals,
-      jurnal: {
-        totalDebit,
-        totalKredit,
-        piutangPokok,
-        marginDitangguhkan,
-        kasDp,
-        kasCicilan,
-        kas,
-        piutangJualBeli,
-      },
+      jurnal: computeJurnal(totals),
     };
   }, [reportData]);
+
+  const hasOlderData = useMemo(
+    () => reportData.some((item) => Number(item.tahun_lain?.total || 0) > 0),
+    [reportData]
+  );
 
   const handleExport = () => {
     const exportData = listData.map((item, idx) => ({
@@ -132,6 +118,14 @@ const JualBeliReport = () => {
         <Breadcrumb className="mb-0" style={{ fontSize: "12px" }}>
           <Breadcrumb.Item
             onClick={() => navigate(`/${jwtEncode({ page: "dashboard" })}`)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigate(`/${jwtEncode({ page: "dashboard" })}`);
+              }
+            }}
+            role="button"
+            tabIndex={0}
             style={{ cursor: "pointer" }}
           >
             Dashboard
@@ -140,6 +134,14 @@ const JualBeliReport = () => {
             onClick={() =>
               navigate(`/${jwtEncode({ page: "jualBeliDashboard" })}`)
             }
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigate(`/${jwtEncode({ page: "jualBeliDashboard" })}`);
+              }
+            }}
+            role="button"
+            tabIndex={0}
             style={{ cursor: "pointer" }}
           >
             Jual Beli
@@ -154,6 +156,26 @@ const JualBeliReport = () => {
         loading={loading}
         hasData={listData.length > 0}
       />
+
+      {error && !loading && (
+        <Alert
+          variant="danger"
+          className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2"
+        >
+          <span>{error}</span>
+          <Button variant="outline-danger" size="sm" onClick={fetchReport}>
+            Coba lagi
+          </Button>
+        </Alert>
+      )}
+
+      {hasOlderData && (
+        <Alert variant="warning">
+          Ada transaksi jual beli sebelum tahun {currentYear - 2}. Data tersebut
+          tidak ditampilkan pada tabel tiga tahun ini; gunakan export atau
+          periode laporan terpisah untuk melihatnya.
+        </Alert>
+      )}
 
       <div className="animate-fade-in">
         <Card className="border-0 shadow-sm rounded-4 overflow-hidden">

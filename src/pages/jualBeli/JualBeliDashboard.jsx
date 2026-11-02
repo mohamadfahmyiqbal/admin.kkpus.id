@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Card, Tab, Nav, Spinner, Breadcrumb } from "react-bootstrap";
+import { Card, Tab, Nav, Spinner, Breadcrumb, Alert, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { MagnifyingGlass } from "phosphor-react";
 import * as XLSX from "xlsx";
@@ -17,6 +17,7 @@ import ImportExcelModal from "./components/ImportExcelModal";
 const JualBeliDashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [transactions, setTransactions] = useState([]);
   const [showApproval, setShowApproval] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
@@ -28,6 +29,7 @@ const JualBeliDashboard = () => {
 
   const fetchTransactions = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await jualBeliService.getFinancingHistory({
         type: "jualbeli",
@@ -35,9 +37,15 @@ const JualBeliDashboard = () => {
       });
       if (res.data?.status) {
         setTransactions(res.data.data.transactions || res.data.data || []);
+      } else {
+        setError(res.data?.message || "Gagal memuat data transaksi.");
       }
     } catch (err) {
-      console.error("Failed to fetch transactions", err);
+      setError(
+        err.response?.data?.message ||
+          "Gagal memuat data transaksi. Periksa koneksi lalu coba lagi."
+      );
+      console.error("Failed to fetch transactions", err?.message);
     } finally {
       setLoading(false);
     }
@@ -46,6 +54,18 @@ const JualBeliDashboard = () => {
   useEffect(() => {
     fetchTransactions();
   }, []);
+
+  // Buang ID terpilih yang sudah tidak ada di data terbaru agar batch delete
+  // tidak mengirim ID basi.
+  useEffect(() => {
+    const availableIds = new Set(
+      transactions.map((tx) => tx.id || tx.financing_id)
+    );
+    setSelectedIds((prev) => {
+      const next = prev.filter((id) => availableIds.has(id));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [transactions]);
 
   const formatRp = (val) =>
     new Intl.NumberFormat("id-ID", {
@@ -79,7 +99,7 @@ const JualBeliDashboard = () => {
       XLSX.utils.book_append_sheet(wb, ws, "Data Jual Beli");
       XLSX.writeFile(wb, "Laporan_Jual_Beli.xlsx");
     } catch (err) {
-      console.error("Failed to export data", err);
+      console.error("Failed to export data", err?.message);
     }
   };
 
@@ -218,6 +238,14 @@ const JualBeliDashboard = () => {
         <Breadcrumb className="mb-0" style={{ fontSize: "12px" }}>
           <Breadcrumb.Item
             onClick={() => navigate(`/${jwtEncode({ page: "dashboard" })}`)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigate(`/${jwtEncode({ page: "dashboard" })}`);
+              }
+            }}
+            role="button"
+            tabIndex={0}
             style={{ cursor: "pointer" }}
           >
             Dashboard
@@ -226,6 +254,14 @@ const JualBeliDashboard = () => {
             onClick={() =>
               navigate(`/${jwtEncode({ page: "jualBeliDashboard" })}`)
             }
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigate(`/${jwtEncode({ page: "jualBeliDashboard" })}`);
+              }
+            }}
+            role="button"
+            tabIndex={0}
             style={{ cursor: "pointer" }}
           >
             Jual Beli
@@ -243,6 +279,15 @@ const JualBeliDashboard = () => {
         selectedCount={selectedIds.length}
         onDeleteSelected={handleDeleteBatch}
       />
+
+      {error && !loading && (
+        <Alert variant="danger" className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+          <span>{error}</span>
+          <Button variant="outline-danger" size="sm" onClick={fetchTransactions}>
+            Coba lagi
+          </Button>
+        </Alert>
+      )}
 
       {loading ? (
         <div className="bg-white rounded p-4 shadow-sm border border-light mt-3 text-center py-5">
@@ -343,6 +388,7 @@ const JualBeliDashboard = () => {
           setShowApproval(false);
           setSelectedTx(null);
         }}
+        onSuccess={fetchTransactions}
         transaction={selectedTx}
         formatRp={formatRp}
       />
@@ -362,6 +408,7 @@ const JualBeliDashboard = () => {
           setShowSetoran(false);
           setSelectedTx(null);
         }}
+        onVerificationSuccess={fetchTransactions}
         transaction={selectedTx}
         formatRp={formatRp}
       />

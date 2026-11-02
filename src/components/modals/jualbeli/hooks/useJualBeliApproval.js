@@ -8,6 +8,7 @@ export const useJualBeliApproval = ({
   transaction,
   show,
   onHide,
+  onSuccess,
   formatRp,
   viewOnly = false,
 }) => {
@@ -171,7 +172,7 @@ export const useJualBeliApproval = ({
           "success"
         ).then(() => {
           onHide();
-          window.location.reload();
+          if (onSuccess) onSuccess();
         });
       } else {
         Swal.fire(
@@ -213,7 +214,7 @@ export const useJualBeliApproval = ({
         Swal.fire("Berhasil!", "Pengajuan Jual Beli Ditolak!", "success").then(
           () => {
             onHide();
-            window.location.reload();
+            if (onSuccess) onSuccess();
           }
         );
       } else {

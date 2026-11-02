@@ -5,6 +5,7 @@ import { ArrowLeft, FloppyDisk } from "phosphor-react";
 import Swal from "sweetalert2";
 import programService from "../../../utils/api/UProgram";
 import { jwtEncode } from "../../../utils/helpers";
+import { formatCurrency } from "../../../utils/helpers/filterUtils";
 
 const PinjamanInputModal = () => {
   const navigate = useNavigate();
@@ -55,7 +56,32 @@ const PinjamanInputModal = () => {
     e.preventDefault();
     setLoading(true);
 
+    // Validate jumlah field
+    const jumlahNumber = Number(formData.jumlah.replace(/[^\d]/g, "") || 0);
+    if (isNaN(jumlahNumber) || jumlahNumber <= 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Validasi Gagal",
+        text: "Jumlah harus berupa angka lebih besar dari nol",
+        confirmButtonColor: "#d33",
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
+      // Additional validation on submit
+      if (!formData.keperluan.trim()) {
+        Swal.fire({
+          icon: "error",
+          title: "Validasi Gagal",
+          text: "Keperluan wajib diisi",
+          confirmButtonColor: "#d33",
+        });
+        setLoading(false);
+        return;
+      }
+
       const res = await programService.postInputModal(formData);
       if (res.data?.status) {
         Swal.fire({

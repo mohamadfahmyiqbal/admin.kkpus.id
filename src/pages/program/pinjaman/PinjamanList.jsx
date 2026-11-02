@@ -12,6 +12,7 @@ import ImportPinjamanModal from "./components/ImportPinjamanModal";
 import PinjamanListHeader from "./components/PinjamanListHeader";
 import PinjamanTable from "./components/PinjamanTable";
 import PinjamanApprovalTable from "./components/PinjamanApprovalTable";
+import { formatCurrency, filterPinjamanTransactions } from "../../../utils/helpers/filterUtils";
 import { jwtEncode } from "../../../utils/helpers";
 import exportToExcel from "../../../utils/helpers/exportToExcel";
 
@@ -85,97 +86,10 @@ const PinjamanList = () => {
       minimumFractionDigits: 0,
     }).format(val || 0);
 
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((item) => {
-      const totalRequired =
-        Number(item.amount_requested || 0) +
-        Number(item.margin_amount || 0) -
-        Number(item.down_payment || 0);
-      const remainingDebt = Math.max(
-        0,
-        totalRequired - Number(item.paid_amount || 0)
-      );
-      const isPaidOff =
-        Number(item.paid_amount || 0) >= totalRequired && totalRequired > 0
-          ? "Lunas"
-          : "Belum Lunas";
-
-      const memberQuery = (filters.anggota || "").toLowerCase().trim();
-      const memberName = (item.member_name || "").toLowerCase();
-      const financingId = (item.financing_id || "").toLowerCase();
-
-      if (
-        memberQuery &&
-        !memberName.includes(memberQuery) &&
-        !financingId.includes(memberQuery)
-      ) {
-        return false;
-      }
-
-      const jenis = (
-        item.category ||
-        item.purpose ||
-        "Pinjaman Lunak"
-      ).toLowerCase();
-      if (
-        filters.jenis_pinjaman &&
-        !jenis.includes(filters.jenis_pinjaman.toLowerCase().trim())
-      ) {
-        return false;
-      }
-
-      const checkNumeric = (filterVal, numVal) => {
-        if (!filterVal) return true;
-        const clean = filterVal.replace(/\D/g, "");
-        const formatted = formatCurrency(numVal).toLowerCase();
-        return (
-          String(numVal || 0).includes(clean) ||
-          formatted.includes(filterVal.toLowerCase().trim())
-        );
-      };
-
-      if (!checkNumeric(filters.jumlah_pinjaman, item.amount_requested)) {
-        return false;
-      }
-
-      const tenorVal = String(
-        item.cooperation_months || item.tenure || item.tenor_months || "-"
-      );
-      if (
-        filters.tenor &&
-        !tenorVal.toLowerCase().includes(filters.tenor.toLowerCase().trim())
-      ) {
-        return false;
-      }
-
-      const cicilanVal =
-        item.monthly_installment || item.installment_amount || 0;
-      if (!checkNumeric(filters.cicilan, cicilanVal)) {
-        return false;
-      }
-
-      if (!checkNumeric(filters.piutang, remainingDebt)) {
-        return false;
-      }
-
-      if (
-        filters.status_cicilan &&
-        isPaidOff.toLowerCase() !== filters.status_cicilan.toLowerCase()
-      ) {
-        return false;
-      }
-
-      if (
-        filters.status_approval &&
-        (item.status || "").toUpperCase() !==
-          filters.status_approval.toUpperCase()
-      ) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [transactions, filters, formatCurrency]);
+  const filteredTransactions = useMemo(() =>
+    filterPinjamanTransactions(transactions, filters, formatCurrency),
+    [transactions, filters, formatCurrency]
+  );
 
   const handleViewInvoice = (tx) => {
     setSelectedDetailTx({

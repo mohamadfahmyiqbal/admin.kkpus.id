@@ -189,7 +189,7 @@ export const ListReportTab = ({
                       className="text-end"
                       style={{ borderRight: "1px solid #dee2e6" }}
                     >
-                      Rp 0
+                      {formatRupiah(sisaCicilan)}
                     </td>
                     <td
                       className="text-center"
@@ -272,7 +272,14 @@ export const ListReportTab = ({
                   className="text-end text-danger"
                   style={{ borderRight: "1px solid #dee2e6" }}
                 >
-                  Rp 0
+                  {formatRupiah(
+                    (listTotals?.tahun_ini?.total || 0) +
+                      (listTotals?.tahun_lalu?.total || 0) +
+                      (listTotals?.tahun_lalu2?.total || 0) -
+                      ((listTotals?.tahun_ini?.cicilan || 0) +
+                        (listTotals?.tahun_lalu?.cicilan || 0) +
+                        (listTotals?.tahun_lalu2?.cicilan || 0))
+                  )}
                 </td>
                 <td
                   className="text-center"

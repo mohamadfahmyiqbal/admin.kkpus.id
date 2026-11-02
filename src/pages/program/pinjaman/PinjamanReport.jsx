@@ -85,7 +85,13 @@ const PinjamanReport = () => {
         ((item.tahun_ini?.cicilan || 0) +
           (item.tahun_lalu?.cicilan || 0) +
           (item.tahun_lalu2?.cicilan || 0)),
-      "Cicilan Tak Tertagih": 0,
+      "Cicilan Tak Tertagih":
+        (item.tahun_ini?.total || 0) +
+        (item.tahun_lalu?.total || 0) +
+        (item.tahun_lalu2?.total || 0) -
+        ((item.tahun_ini?.cicilan || 0) +
+          (item.tahun_lalu?.cicilan || 0) +
+          (item.tahun_lalu2?.cicilan || 0)),
       Status: item.status === "COMPLETED" ? "Lunas" : "Belum Lunas",
     }));
 

@@ -13,6 +13,7 @@ import { useJualBeliApproval } from "./jualbeli/hooks/useJualBeliApproval";
 const JualBeliApprovalModal = ({
   show,
   onHide,
+  onSuccess,
   transaction,
   formatRp,
   viewOnly = false,
@@ -21,6 +22,7 @@ const JualBeliApprovalModal = ({
     transaction,
     show,
     onHide,
+    onSuccess,
     formatRp,
     viewOnly,
   });

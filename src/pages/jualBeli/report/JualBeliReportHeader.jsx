@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import { FileXls } from "phosphor-react";
 
 const JualBeliReportHeader = ({ onExport, loading, hasData }) => {
   return (
@@ -17,7 +18,7 @@ const JualBeliReportHeader = ({ onExport, loading, hasData }) => {
           onClick={onExport}
           disabled={loading || !hasData}
         >
-          <i className="bi bi-file-earmark-excel me-1" /> Export Excel
+          <FileXls size={18} weight="bold" className="me-1" /> Export Excel
         </Button>
       </div>
     </div>

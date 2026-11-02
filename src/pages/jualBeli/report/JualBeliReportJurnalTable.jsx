@@ -38,10 +38,18 @@ const JualBeliReportJurnalTable = ({
       {
         id: 3,
         akun: "112-02",
-        deskripsi: "HPP (Harga Pokok Penjualan)",
+        deskripsi: "Persediaan / HPP",
         isIndent: true,
         debet: 0,
         kredit: jurnal.piutangPokok || 0,
+      },
+      {
+        id: 4,
+        akun: "212-01",
+        deskripsi: "Margin Ditangguhkan",
+        isIndent: true,
+        debet: 0,
+        kredit: jurnal.marginDitangguhkan || 0,
       },
     ];
   }, [jurnal]);
@@ -124,6 +132,20 @@ const JualBeliReportJurnalTable = ({
       return true;
     });
   }, [rawRows, colFilters, formatRupiah]);
+
+  const filteredTotals = useMemo(
+    () =>
+      filteredRows.reduce(
+        (acc, row) => ({
+          debet: acc.debet + Number(row.debet || 0),
+          kredit: acc.kredit + Number(row.kredit || 0),
+        }),
+        { debet: 0, kredit: 0 }
+      ),
+    [filteredRows]
+  );
+
+  const selisih = filteredTotals.debet - filteredTotals.kredit;
 
   // Sort
   const sortedRows = useMemo(() => {
@@ -276,19 +298,26 @@ const JualBeliReportJurnalTable = ({
             ))
           )}
         </tbody>
-        {hasData && (
+        {hasData && filteredRows.length > 0 && (
           <tfoot className="fw-bold table-light position-sticky bottom-0">
             <tr>
               <td colSpan="2" className="text-center">
                 Total
               </td>
               <td className="text-end text-primary">
-                {formatRupiah(jurnal.totalDebit)}
+                {formatRupiah(filteredTotals.debet)}
               </td>
               <td className="text-end text-primary">
-                {formatRupiah(jurnal.totalKredit)}
+                {formatRupiah(filteredTotals.kredit)}
               </td>
             </tr>
+            {Math.abs(selisih) > 0.01 && (
+              <tr>
+                <td colSpan="4" className="text-center text-danger small">
+                  Jurnal tidak seimbang. Selisih: {formatRupiah(selisih)}
+                </td>
+              </tr>
+            )}
           </tfoot>
         )}
       </Table>

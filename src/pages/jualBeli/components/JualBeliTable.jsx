@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Table, Badge, Form, Pagination, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Eye, Coins, CheckCircle, X, ArrowsDownUp, CaretUp, CaretDown, ArrowsClockwise, Trash } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";
+import { checkNumeric } from "../../../utils/helpers/filterUtils";
 
 const JualBeliTable = ({
   list = [],
@@ -80,6 +81,24 @@ const JualBeliTable = ({
     );
   };
 
+  const sortableProps = (key) => ({
+    role: "button",
+    tabIndex: 0,
+    "aria-sort":
+      sortConfig.key === key
+        ? sortConfig.direction === "asc"
+          ? "ascending"
+          : "descending"
+        : "none",
+    onClick: () => handleSort(key),
+    onKeyDown: (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleSort(key);
+      }
+    },
+  });
+
   const hasAnyFilter = Object.values(colFilters).some((v) => Boolean(v));
 
   // 1. Filter data per kolom
@@ -153,18 +172,8 @@ const JualBeliTable = ({
       }
 
       // Check numeric/string values for remaining columns
-      if (
-        colFilters.totalJualBeli &&
-        !String(totalJualBeli).includes(colFilters.totalJualBeli.replace(/\D/g, ""))
-      ) {
-        return false;
-      }
-      if (
-        colFilters.dp &&
-        !String(dp).includes(colFilters.dp.replace(/\D/g, ""))
-      ) {
-        return false;
-      }
+      if (!checkNumeric(colFilters.totalJualBeli, totalJualBeli)) return false;
+      if (!checkNumeric(colFilters.dp, dp)) return false;
       if (
         colFilters.tenor &&
         !String(tx.cooperation_months || "").includes(colFilters.tenor.trim())
@@ -177,30 +186,10 @@ const JualBeliTable = ({
       ) {
         return false;
       }
-      if (
-        colFilters.cicilan &&
-        !String(installment).includes(colFilters.cicilan.replace(/\D/g, ""))
-      ) {
-        return false;
-      }
-      if (
-        colFilters.piutang &&
-        !String(piutang).includes(colFilters.piutang.replace(/\D/g, ""))
-      ) {
-        return false;
-      }
-      if (
-        colFilters.diskon &&
-        !String(discount).includes(colFilters.diskon.replace(/\D/g, ""))
-      ) {
-        return false;
-      }
-      if (
-        colFilters.sisaCicilan &&
-        !String(sisaCicilan).includes(colFilters.sisaCicilan.replace(/\D/g, ""))
-      ) {
-        return false;
-      }
+      if (!checkNumeric(colFilters.cicilan, installment)) return false;
+      if (!checkNumeric(colFilters.piutang, piutang)) return false;
+      if (!checkNumeric(colFilters.diskon, discount)) return false;
+      if (!checkNumeric(colFilters.sisaCicilan, sisaCicilan)) return false;
 
       return true;
     });
@@ -222,9 +211,11 @@ const JualBeliTable = ({
       } else if (sortConfig.key === "totalJualBeli") {
         aVal =
           Number(a.item_price || a.amount_requested || 0) +
+          Number(a.operational_cost || 0) +
           Number(a.margin_amount || 0);
         bVal =
           Number(b.item_price || b.amount_requested || 0) +
+          Number(b.operational_cost || 0) +
           Number(b.margin_amount || 0);
       } else if (sortConfig.key === "dp") {
         aVal = Number(a.down_payment || 0);
@@ -266,6 +257,7 @@ const JualBeliTable = ({
               <th className="px-3 py-3 text-center" style={{ width: "45px" }}>
                 <Form.Check
                   type="checkbox"
+                  aria-label="Pilih semua transaksi di halaman ini"
                   checked={paginatedList.length > 0 && paginatedList.every((tx) => selectedIds.includes(tx.id || tx.financing_id))}
                   onChange={() => onToggleSelectAll && onToggleSelectAll(paginatedList.map((tx) => tx.id || tx.financing_id))}
                   title="Pilih Semua di Halaman Ini"
@@ -275,52 +267,45 @@ const JualBeliTable = ({
                 Action
               </th>
               <th
-                role="button"
                 className="py-3 text-muted fw-bold user-select-none"
-                onClick={() => handleSort("anggota")}
+                {...sortableProps("anggota")}
               >
                 Anggota {renderSortIcon("anggota")}
               </th>
               <th
-                role="button"
                 className="py-3 text-muted fw-bold user-select-none"
-                onClick={() => handleSort("category")}
+                {...sortableProps("category")}
               >
                 Type {renderSortIcon("category")}
               </th>
               <th
-                role="button"
                 className="py-3 text-muted fw-bold user-select-none"
-                onClick={() => handleSort("namaBarang")}
+                {...sortableProps("namaBarang")}
               >
                 Nama Barang {renderSortIcon("namaBarang")}
               </th>
               <th
-                role="button"
                 className="py-3 text-muted fw-bold text-end user-select-none"
-                onClick={() => handleSort("totalJualBeli")}
+                {...sortableProps("totalJualBeli")}
               >
                 Total Jual Beli {renderSortIcon("totalJualBeli")}
               </th>
               <th
-                role="button"
                 className="py-3 text-muted fw-bold text-end user-select-none"
-                onClick={() => handleSort("dp")}
+                {...sortableProps("dp")}
               >
                 DP {renderSortIcon("dp")}
               </th>
               <th
-                role="button"
                 className="py-3 text-muted fw-bold text-center user-select-none"
-                onClick={() => handleSort("cooperation_months")}
+                {...sortableProps("cooperation_months")}
               >
                 Tenor {renderSortIcon("cooperation_months")}
               </th>
               <th className="py-3 text-muted fw-bold text-center">Sisa Tenor</th>
               <th
-                role="button"
                 className="py-3 text-muted fw-bold text-end user-select-none"
-                onClick={() => handleSort("cicilan")}
+                {...sortableProps("cicilan")}
               >
                 Cicilan {renderSortIcon("cicilan")}
               </th>
@@ -328,9 +313,8 @@ const JualBeliTable = ({
               <th className="py-3 text-muted fw-bold text-end">Diskon Pelunasan</th>
               <th className="py-3 text-muted fw-bold text-end">Sisa Cicilan</th>
               <th
-                role="button"
                 className="px-4 py-3 text-muted fw-bold text-center user-select-none"
-                onClick={() => handleSort("status")}
+                {...sortableProps("status")}
               >
                 Status Cicilan {renderSortIcon("status")}
               </th>
@@ -549,6 +533,7 @@ const JualBeliTable = ({
                     <td className="px-3 text-center py-3">
                       <Form.Check
                         type="checkbox"
+                        aria-label={`Pilih transaksi ${tx.item_name || tx.purpose || tx.financing_id || ""}`}
                         checked={selectedIds.includes(tx.id || tx.financing_id)}
                         onChange={() => onToggleSelect && onToggleSelect(tx.id || tx.financing_id)}
                       />

@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { Table, Spinner, Form, Pagination, Button } from "react-bootstrap";
 import { X, ArrowsDownUp, CaretUp, CaretDown } from "phosphor-react";
+import { checkNumeric } from "../../../utils/helpers/filterUtils";
 
 const JualBeliReportListTable = ({
   listData = [],
-  listTotals,
   loading,
   formatRupiah,
   currentYear,
@@ -96,12 +96,6 @@ const JualBeliReportListTable = ({
       }
 
       // Helper check numeric filter
-      const checkNumeric = (filterVal, numVal) => {
-        if (!filterVal) return true;
-        const clean = filterVal.replace(/\D/g, "");
-        return String(numVal || 0).includes(clean);
-      };
-
       if (!checkNumeric(colFilters.iniTotal, item.tahun_ini?.total)) return false;
       if (!checkNumeric(colFilters.iniPokok, item.tahun_ini?.pokok)) return false;
       if (!checkNumeric(colFilters.iniDp, item.tahun_ini?.dp)) return false;
@@ -123,6 +117,30 @@ const JualBeliReportListTable = ({
       return true;
     });
   }, [listData, colFilters]);
+
+  // Total mengikuti hasil filter agar footer tidak menampilkan angka yang
+  // berbeda dari baris yang sedang terlihat.
+  const displayTotals = useMemo(() => {
+    const keys = ["tahun_ini", "tahun_lalu", "tahun_lalu2"];
+    return filteredList.reduce(
+      (acc, item) => {
+        keys.forEach((yearKey) => {
+          if (!item[yearKey]) return;
+          acc[yearKey].total += Number(item[yearKey].total || 0);
+          acc[yearKey].pokok += Number(item[yearKey].pokok || 0);
+          acc[yearKey].dp += Number(item[yearKey].dp || 0);
+          acc[yearKey].margin += Number(item[yearKey].margin || 0);
+          acc[yearKey].cicilan += Number(item[yearKey].cicilan || 0);
+        });
+        return acc;
+      },
+      {
+        tahun_ini: { total: 0, pokok: 0, dp: 0, margin: 0, cicilan: 0 },
+        tahun_lalu: { total: 0, pokok: 0, dp: 0, margin: 0, cicilan: 0 },
+        tahun_lalu2: { total: 0, pokok: 0, dp: 0, margin: 0, cicilan: 0 },
+      }
+    );
+  }, [filteredList]);
 
   // 2. Sort
   const sortedList = useMemo(() => {
@@ -424,7 +442,7 @@ const JualBeliReportListTable = ({
               ))
             )}
           </tbody>
-          {listData.length > 0 && listTotals && (
+          {filteredList.length > 0 && (
             <tfoot
               className="table-light fw-bold position-sticky bottom-0"
               style={{ zIndex: 2 }}
@@ -435,58 +453,58 @@ const JualBeliReportListTable = ({
                   className="text-center position-sticky start-0 bg-light"
                   style={{ borderRight: "2px solid #dee2e6" }}
                 >
-                  Total Keseluruhan
+                  {hasAnyFilter ? "Total Hasil Filter" : "Total Keseluruhan"}
                 </td>
                 <td className="text-end text-primary">
-                  {formatRupiah(listTotals.tahun_ini.total)}
+                  {formatRupiah(displayTotals.tahun_ini.total)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_ini.pokok)}
+                  {formatRupiah(displayTotals.tahun_ini.pokok)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_ini.dp)}
+                  {formatRupiah(displayTotals.tahun_ini.dp)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_ini.margin)}
+                  {formatRupiah(displayTotals.tahun_ini.margin)}
                 </td>
                 <td
                   className="text-end"
                   style={{ borderRight: "2px solid #dee2e6" }}
                 >
-                  {formatRupiah(listTotals.tahun_ini.cicilan)}
+                  {formatRupiah(displayTotals.tahun_ini.cicilan)}
                 </td>
                 <td className="text-end text-primary">
-                  {formatRupiah(listTotals.tahun_lalu.total)}
+                  {formatRupiah(displayTotals.tahun_lalu.total)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_lalu.pokok)}
+                  {formatRupiah(displayTotals.tahun_lalu.pokok)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_lalu.dp)}
+                  {formatRupiah(displayTotals.tahun_lalu.dp)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_lalu.margin)}
+                  {formatRupiah(displayTotals.tahun_lalu.margin)}
                 </td>
                 <td
                   className="text-end"
                   style={{ borderRight: "2px solid #dee2e6" }}
                 >
-                  {formatRupiah(listTotals.tahun_lalu.cicilan)}
+                  {formatRupiah(displayTotals.tahun_lalu.cicilan)}
                 </td>
                 <td className="text-end text-primary">
-                  {formatRupiah(listTotals.tahun_lalu2.total)}
+                  {formatRupiah(displayTotals.tahun_lalu2.total)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_lalu2.pokok)}
+                  {formatRupiah(displayTotals.tahun_lalu2.pokok)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_lalu2.dp)}
+                  {formatRupiah(displayTotals.tahun_lalu2.dp)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_lalu2.margin)}
+                  {formatRupiah(displayTotals.tahun_lalu2.margin)}
                 </td>
                 <td className="text-end">
-                  {formatRupiah(listTotals.tahun_lalu2.cicilan)}
+                  {formatRupiah(displayTotals.tahun_lalu2.cicilan)}
                 </td>
               </tr>
             </tfoot>
