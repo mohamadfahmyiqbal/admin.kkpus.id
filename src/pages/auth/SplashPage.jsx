@@ -16,63 +16,43 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
   const [msgIndex, setMsgIndex] = useState(0);
   const navigate = useNavigate();
   const timerRef = useRef(null);
+  const hasNavigatedRef = useRef(false);
 
   const handleSkip = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    navigate(`/${jwtEncode({ page: "authLogin" })}`, { replace: true });
+    if (hasNavigatedRef.current) return;
+    hasNavigatedRef.current = true;
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+
+    const token = localStorage.getItem("token");
+    const targetPage = token ? "dashboard" : "authLogin";
+    navigate(`/${jwtEncode({ page: targetPage })}`, { replace: true });
   }, [navigate]);
 
   useEffect(() => {
     timerRef.current = setTimeout(handleSkip, delay);
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
     };
   }, [delay, handleSkip]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
-    }, 1200);
+    }, 750);
     return () => clearInterval(interval);
-  }, []);
-
-  // Reset cookie domain dan sessionStorage pada saat splash screen
-  useEffect(() => {
-    const purgeCacheAndCookies = async () => {
-      try {
-        // 1. Bersihkan Cookies Domain
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i];
-          const eqPos = cookie.indexOf("=");
-          const name = (eqPos > -1 ? cookie.substr(0, eqPos) : cookie).trim();
-          if (name) {
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname};`;
-            const parts = window.location.hostname.split(".");
-            if (parts.length > 1) {
-              const root = parts.slice(-2).join(".");
-              document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${root};`;
-            }
-          }
-        }
-
-        // 2. Bersihkan sessionStorage
-        sessionStorage.clear();
-      } catch (err) {
-        console.warn("[SplashPage] Gagal membersihkan cookie dan sessionStorage:", err);
-      }
-    };
-
-    purgeCacheAndCookies();
   }, []);
 
   return (
     <main
       className={`splashx-screen ${className}`}
-      role="status"
-      aria-live="polite"
-      aria-label="Memuat aplikasi Paguyuban Usaha Sukses"
+      aria-label="Halaman pembuka Paguyuban Usaha Sukses"
     >
       <div className="splashx-stars" aria-hidden="true" />
       <div className="splashx-noise" aria-hidden="true" />
@@ -80,8 +60,8 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
       <div className="splashx-orb splashx-orb-right" aria-hidden="true" />
 
       <Container className="splashx-wrap">
-        <section className="splashx-content text-center">
-          <h1 className="splashx-title">
+        <section className="splashx-content text-center" aria-labelledby="splashx-heading">
+          <h1 id="splashx-heading" className="splashx-title">
             <span className="splashx-title-white d-block">Paguyuban Usaha</span>
             <span className="splashx-title-green d-block">Sukses</span>
           </h1>
@@ -93,24 +73,37 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
 
           <div className="splashx-mosque-illustration">
             {imageError ? (
-              <div className="splashx-mosque-fallback" aria-hidden="true">
-                <span className="splashx-mosque-icon">🕌</span>
+              <div
+                className="splashx-mosque-fallback"
+                role="img"
+                aria-label="Logo Paguyuban Usaha Sukses"
+              >
+                <span className="splashx-mosque-icon" aria-hidden="true">
+                  🕌
+                </span>
               </div>
             ) : (
               <img
                 src="/assets/icons/PUSlogo.png"
-                alt="Logo PUS"
+                alt="Logo Paguyuban Usaha Sukses"
+                width="160"
+                height="160"
                 className="splashx-mosque-image"
                 onError={() => setImageError(true)}
               />
             )}
           </div>
 
-          <div className="splashx-loading-container" role="progressbar">
+          <div
+            className="splashx-loading-container"
+            role="progressbar"
+            aria-label="Proses memuat aplikasi"
+            aria-busy="true"
+          >
             <div className="splashx-loading-bar">
               <div className="splashx-loading-progress" aria-hidden="true" />
             </div>
-            <p className="splashx-loading-text">
+            <p className="splashx-loading-text" role="status" aria-live="polite">
               {LOADING_MESSAGES[msgIndex]}
             </p>
           </div>
@@ -125,7 +118,7 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
           </button>
 
           <p className="splashx-copyright">
-            © 2025 Paguyuban Usaha Sukses. All rights reserved.
+            © {new Date().getFullYear()} Paguyuban Usaha Sukses. All rights reserved.
           </p>
         </section>
       </Container>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Form, InputGroup, Button } from "react-bootstrap";
 import { motion } from "framer-motion";
 import {
@@ -26,6 +26,13 @@ const LoginPage = () => {
   const [emailHpInvalid, setEmailHpInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate(`/${jwtEncode({ page: "dashboard" })}`, { replace: true });
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
