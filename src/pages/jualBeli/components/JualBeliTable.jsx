@@ -85,10 +85,11 @@ const JualBeliTable = ({
   // 1. Filter data per kolom
   const filteredList = useMemo(() => {
     return list.filter((tx) => {
+      // Hanya kontrak yang memang ditutup eksplisit (COMPLETED/LUNAS) yang boleh
+      // memiliki sisa sebagai diskon pelunasan. Status PAID hasil kalkulasi
+      // backend tidak boleh dianggap diskon.
       const isCompleted =
-        tx.status === "LUNAS" ||
-        tx.status === "COMPLETED" ||
-        tx.status === "PAID";
+        tx.status === "LUNAS" || tx.status === "COMPLETED";
       const totalReq =
         Number(tx.item_price || tx.amount_requested || 0) +
         Number(tx.operational_cost || 0);
@@ -507,9 +508,7 @@ const JualBeliTable = ({
             ) : (
               paginatedList.map((tx) => {
                 const isCompleted =
-                  tx.status === "LUNAS" ||
-                  tx.status === "COMPLETED" ||
-                  tx.status === "PAID";
+                  tx.status === "LUNAS" || tx.status === "COMPLETED";
                 const totalReq =
                   Number(tx.item_price || tx.amount_requested || 0) +
                   Number(tx.operational_cost || 0);
