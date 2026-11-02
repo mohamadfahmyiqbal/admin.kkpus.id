@@ -40,16 +40,24 @@ export const useDashboardData = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [dashRes, regRes] = await Promise.all([
+      const [dashRes, regRes] = await Promise.allSettled([
         dashboardService.getAdminDashboardData(),
         approvalService.getPendingRegistrations(),
       ]);
 
-      if (dashRes.data?.success) {
-        setDashboardData(dashRes.data.data);
+      if (dashRes.status === "fulfilled" && dashRes.value?.data?.success) {
+        setDashboardData((prev) => ({
+          ...prev,
+          ...(dashRes.value.data.data || {}),
+        }));
+      } else if (dashRes.status === "rejected") {
+        console.error("Gagal memuat ringkasan dashboard:", dashRes.reason);
       }
-      if (regRes.data?.success) {
-        setPendingRegistrations(regRes.data.data);
+
+      if (regRes.status === "fulfilled" && regRes.value?.data?.success) {
+        setPendingRegistrations(regRes.value.data.data || []);
+      } else if (regRes.status === "rejected") {
+        console.error("Gagal memuat pendaftaran tertunda:", regRes.reason);
       }
     } catch (err) {
       console.error("Gagal memuat data dashboard admin:", err);
@@ -59,11 +67,14 @@ export const useDashboardData = () => {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
     fetchData();
+
     const socket = getSocket();
     if (socket) {
       let lastToastTime = 0;
       const refreshHandler = (payload) => {
+        if (!isMounted) return;
         console.log("🔔 [Dashboard] Socket event received:", payload);
         fetchData();
 
@@ -88,12 +99,17 @@ export const useDashboardData = () => {
       socket.on("TRANSACTION_UPDATED", refreshHandler);
 
       return () => {
+        isMounted = false;
         socket.off("APPROVAL_UPDATE", refreshHandler);
         socket.off("notifications:update", refreshHandler);
         socket.off("REGISTRATION_UPDATED", refreshHandler);
         socket.off("TRANSACTION_UPDATED", refreshHandler);
       };
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [fetchData]);
 
   const statsList = useMemo(() => {
@@ -105,28 +121,37 @@ export const useDashboardData = () => {
       Bank: <Bank size={28} />,
       TrendUp: <TrendUp size={28} />,
     };
-    return (dashboardData.stats || []).map((s) => ({
-      ...s,
-      icon: iconMap[s.icon] || s.icon || <Wallet size={28} />,
-    }));
-  }, [dashboardData.stats]);
+    return (dashboardData?.stats || []).map((s) => {
+      let renderedIcon = <Wallet size={28} />;
+      if (typeof s?.icon === "string") {
+        renderedIcon = iconMap[s.icon] || <Wallet size={28} />;
+      } else if (s?.icon) {
+        renderedIcon = s.icon;
+      }
+      return {
+        ...s,
+        icon: renderedIcon,
+      };
+    });
+  }, [dashboardData?.stats]);
 
   const categorizedData = useMemo(() => {
-    const manualFromSimpanan = (dashboardData.pendingCategorized?.simpanan || [])
-      .filter((s) => s.is_manual_payment);
-    const manualFromRegistration = (dashboardData.pendingCategorized?.registration || [])
-      .filter((s) => s.is_manual_payment);
+    const manualFromSimpanan = (dashboardData?.pendingCategorized?.simpanan || [])
+      .filter((s) => s?.is_manual_payment);
+    const manualFromRegistration = (dashboardData?.pendingCategorized?.registration || [])
+      .filter((s) => s?.is_manual_payment);
 
     const allManualRegMap = new Map();
-    [...manualFromRegistration, ...manualFromSimpanan].forEach((item) => {
-      if (!allManualRegMap.has(item.id)) {
-        allManualRegMap.set(item.id, {
+    [...manualFromRegistration, ...manualFromSimpanan].forEach((item, index) => {
+      const key = item?.id ?? item?.transaction_id ?? `manual-${index}`;
+      if (!allManualRegMap.has(key)) {
+        allManualRegMap.set(key, {
           ...item,
-          full_name: item.name || item.full_name,
-          status_name: item.item || "Verifikasi Setoran Pokok/Wajib",
-          amount: item.amount,
-          date: item.date,
-          registration_id: item.id,
+          full_name: item?.name || item?.full_name || "-",
+          status_name: item?.item || "Verifikasi Setoran Pokok/Wajib",
+          amount: item?.amount,
+          date: item?.date || "-",
+          registration_id: item?.id,
         });
       }
     });
@@ -134,25 +159,25 @@ export const useDashboardData = () => {
 
     return {
       registration: [
-        ...(pendingRegistrations || []).map((r) => ({
+        ...(pendingRegistrations || []).filter(Boolean).map((r) => ({
           ...r,
-          full_name: r.type === "TERMINATION" ? r.member?.full_name : (r.full_name || r.name),
-          status_name: r.type === "TERMINATION" ? "Pengajuan Berhenti" : (r.memberTypeDetail?.status_name || r.member_type),
+          full_name: r.type === "TERMINATION" ? (r.member?.full_name || "-") : (r.full_name || r.name || "-"),
+          status_name: r.type === "TERMINATION" ? "Pengajuan Berhenti" : (r.memberTypeDetail?.status_name || r.member_type || "-"),
           date: r.registered_at || r.submitted_at || "-",
         })),
         ...registrationPayments,
       ],
-      simpanan: dashboardData.pendingCategorized?.simpanan || [],
-      jualBeli: dashboardData.pendingCategorized?.jualBeli || [],
-      program: dashboardData.pendingCategorized?.program || [],
-      tabungan: dashboardData.pendingCategorized?.tabungan || [],
-      investasi: dashboardData.pendingCategorized?.investasi || [],
+      simpanan: dashboardData?.pendingCategorized?.simpanan || [],
+      jualBeli: dashboardData?.pendingCategorized?.jualBeli || [],
+      program: dashboardData?.pendingCategorized?.program || [],
+      tabungan: dashboardData?.pendingCategorized?.tabungan || [],
+      investasi: dashboardData?.pendingCategorized?.investasi || [],
     };
-  }, [pendingRegistrations, dashboardData.pendingCategorized]);
+  }, [pendingRegistrations, dashboardData?.pendingCategorized]);
 
   const totalPending = useMemo(() => {
-    return Object.values(categorizedData).reduce(
-      (acc, arr) => acc + (arr ? arr.length : 0),
+    return Object.values(categorizedData || {}).reduce(
+      (acc, arr) => acc + (Array.isArray(arr) ? arr.length : 0),
       0
     );
   }, [categorizedData]);

@@ -21,7 +21,7 @@ const DashboardApprovalQueue = ({
       <Card.Header className="bg-white py-3 border-0 d-flex justify-content-between align-items-center">
         <h5 className="mb-0 fw-bold">Antrian Persetujuan</h5>
         <Badge bg="danger" pill className="px-3 py-2">
-          {totalPending} Menunggu
+          {totalPending || 0} Menunggu
         </Badge>
       </Card.Header>
       <Card.Body className="pt-0">
@@ -30,32 +30,32 @@ const DashboardApprovalQueue = ({
             <Nav variant="pills" className="global-tabs tabs-sm flex-nowrap">
               <Nav.Item>
                 <Nav.Link eventKey="registration">
-                  Keanggotaan ({categorizedData.registration.length})
+                  Keanggotaan ({categorizedData?.registration?.length || 0})
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="simpanan">
-                  Simpanan ({categorizedData.simpanan.length})
+                  Simpanan ({categorizedData?.simpanan?.length || 0})
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="jualBeli">
-                  Jual Beli ({categorizedData.jualBeli.length})
+                  Jual Beli ({categorizedData?.jualBeli?.length || 0})
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="program">
-                  Program ({categorizedData.program.length})
+                  Program ({categorizedData?.program?.length || 0})
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="tabungan">
-                  Tabungan ({categorizedData.tabungan.length})
+                  Tabungan ({categorizedData?.tabungan?.length || 0})
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link eventKey="investasi">
-                  Investasi ({categorizedData.investasi.length})
+                  Investasi ({categorizedData?.investasi?.length || 0})
                 </Nav.Link>
               </Nav.Item>
             </Nav>
@@ -63,7 +63,7 @@ const DashboardApprovalQueue = ({
           <Tab.Content>
             <Tab.Pane eventKey="registration">
               <ApprovalTable
-                data={categorizedData.registration}
+                data={categorizedData?.registration || []}
                 titleField="full_name"
                 nameField="status_name"
                 loading={loading}
@@ -75,7 +75,7 @@ const DashboardApprovalQueue = ({
             </Tab.Pane>
             <Tab.Pane eventKey="simpanan">
               <ApprovalTable
-                data={categorizedData.simpanan}
+                data={categorizedData?.simpanan || []}
                 loading={loading}
                 emptyMessage="Tidak ada antrian simpanan"
                 onAction={handleWithdrawalReviewClick}
@@ -85,7 +85,7 @@ const DashboardApprovalQueue = ({
             </Tab.Pane>
             <Tab.Pane eventKey="jualBeli">
               <ApprovalTable
-                data={categorizedData.jualBeli}
+                data={categorizedData?.jualBeli || []}
                 titleField="name"
                 nameField="item"
                 loading={loading}
@@ -97,7 +97,7 @@ const DashboardApprovalQueue = ({
             </Tab.Pane>
             <Tab.Pane eventKey="program">
               <ApprovalTable
-                data={categorizedData.program}
+                data={categorizedData?.program || []}
                 titleField="name"
                 nameField="item"
                 loading={loading}
@@ -109,7 +109,7 @@ const DashboardApprovalQueue = ({
             </Tab.Pane>
             <Tab.Pane eventKey="tabungan">
               <ApprovalTable
-                data={categorizedData.tabungan}
+                data={categorizedData?.tabungan || []}
                 titleField="name"
                 nameField="item"
                 loading={loading}
@@ -121,7 +121,7 @@ const DashboardApprovalQueue = ({
             </Tab.Pane>
             <Tab.Pane eventKey="investasi">
               <ApprovalTable
-                data={categorizedData.investasi}
+                data={categorizedData?.investasi || []}
                 titleField="name"
                 nameField="item"
                 loading={loading}

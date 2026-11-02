@@ -43,6 +43,7 @@ export const useDashboardModals = (fetchData) => {
 
   // Click Handlers
   const handleReviewClick = useCallback((item) => {
+    if (!item) return;
     if (item.is_manual_payment) {
       setSelectedManualPayment(item);
       setShowManualModal(true);
@@ -58,6 +59,7 @@ export const useDashboardModals = (fetchData) => {
   }, []);
 
   const handleWithdrawalReviewClick = useCallback((item) => {
+    if (!item) return;
     if (item.is_manual_payment) {
       setSelectedManualPayment(item);
       setShowManualModal(true);
@@ -68,6 +70,7 @@ export const useDashboardModals = (fetchData) => {
   }, []);
 
   const handleJualBeliReviewClick = useCallback((item) => {
+    if (!item) return;
     if (item.is_manual_payment) {
       setSelectedManualPayment(item);
       setShowManualModal(true);
@@ -78,6 +81,7 @@ export const useDashboardModals = (fetchData) => {
   }, []);
 
   const handleProgramReviewClick = useCallback((item) => {
+    if (!item) return;
     if (item.is_manual_payment) {
       setSelectedManualPayment(item);
       setShowManualModal(true);
@@ -88,6 +92,7 @@ export const useDashboardModals = (fetchData) => {
   }, []);
 
   const handleTabunganReviewClick = useCallback((item) => {
+    if (!item) return;
     if (item.is_manual_payment) {
       setSelectedManualPayment(item);
       setShowManualModal(true);
@@ -103,6 +108,7 @@ export const useDashboardModals = (fetchData) => {
   }, []);
 
   const handleInvestasiReviewClick = useCallback((item) => {
+    if (!item) return;
     if (item.is_manual_payment) {
       setSelectedManualPayment(item);
       setShowManualModal(true);
@@ -141,9 +147,17 @@ export const useDashboardModals = (fetchData) => {
         await approvalService.processRegistrationApproval(id, payload);
       }
 
-      Swal.fire("Berhasil", "Pendaftaran berhasil disetujui", "success");
+      Swal.fire(
+        "Berhasil",
+        type === "TERMINATION"
+          ? "Penghentian keanggotaan berhasil disetujui"
+          : "Pendaftaran berhasil disetujui",
+        "success"
+      );
       setShowRegModal(false);
       setShowTermModal(false);
+      setSelectedReg(null);
+      setSelectedTerm(null);
       fetchData?.();
     } catch (err) {
       Swal.fire("Error", err?.response?.data?.message || "Terjadi kesalahan saat memproses", "error");
@@ -174,9 +188,17 @@ export const useDashboardModals = (fetchData) => {
         await approvalService.processRegistrationApproval(id, payload);
       }
 
-      Swal.fire("Berhasil", "Pendaftaran berhasil ditolak", "success");
+      Swal.fire(
+        "Berhasil",
+        type === "TERMINATION"
+          ? "Penghentian keanggotaan berhasil ditolak"
+          : "Pendaftaran berhasil ditolak",
+        "success"
+      );
       setShowRegModal(false);
       setShowTermModal(false);
+      setSelectedReg(null);
+      setSelectedTerm(null);
       fetchData?.();
     } catch (err) {
       Swal.fire("Error", err?.response?.data?.message || "Terjadi kesalahan saat memproses", "error");
@@ -190,28 +212,36 @@ export const useDashboardModals = (fetchData) => {
     showRegModal,
     setShowRegModal,
     selectedReg,
+    setSelectedReg,
     showTermModal,
     setShowTermModal,
     selectedTerm,
+    setSelectedTerm,
     processingReg,
     showWithdrawalModal,
     setShowWithdrawalModal,
     selectedWithdrawal,
+    setSelectedWithdrawal,
     showJualBeliModal,
     setShowJualBeliModal,
     selectedJualBeli,
+    setSelectedJualBeli,
     showProgramModal,
     setShowProgramModal,
     selectedProgram,
+    setSelectedProgram,
     showTabunganModal,
     setShowTabunganModal,
     selectedTabungan,
+    setSelectedTabungan,
     showInvestasiModal,
     setShowInvestasiModal,
     selectedInvestasi,
+    setSelectedInvestasi,
     showPendanaanModal,
     setShowPendanaanModal,
     selectedPendanaan,
+    setSelectedPendanaan,
     showManualModal,
     setShowManualModal,
     selectedManualPayment,

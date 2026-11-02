@@ -16,23 +16,23 @@ export const MotionCard = ({ children, className = "", ...props }) => (
 
 const DashboardStats = ({ stats = [] }) => (
   <Row className="mb-4 g-3">
-    {stats.map((s, idx) => (
-      <Col md={4} lg={4} className="mb-3" key={idx}>
+    {(Array.isArray(stats) ? stats : []).map((s, idx) => (
+      <Col md={4} lg={4} className="mb-3" key={s?.title || idx}>
         <MotionCard>
           <div className="card-body d-flex align-items-center p-3">
             <div
-              className={`p-2 rounded-3 bg-${s.color} bg-opacity-10 text-${s.color} me-2 flex-shrink-0`}
+              className={`p-2 rounded-3 bg-${s?.color || "primary"} bg-opacity-10 text-${s?.color || "primary"} me-2 flex-shrink-0`}
             >
-              {s.icon}
+              {s?.icon}
             </div>
             <div className="overflow-hidden">
               <h6
                 className="text-muted mb-0 extra-small fw-semibold text-uppercase text-truncate"
                 style={{ letterSpacing: "0.5px" }}
               >
-                {s.title}
+                {s?.title || "-"}
               </h6>
-              <h5 className="fw-bold mb-0 text-truncate">{s.value}</h5>
+              <h5 className="fw-bold mb-0 text-truncate">{s?.value ?? "-"}</h5>
             </div>
           </div>
         </MotionCard>

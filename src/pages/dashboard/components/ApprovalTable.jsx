@@ -2,6 +2,14 @@ import React from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { ArrowRight } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";
+import { formatRupiah } from "../../../utils/helpers";
+
+const formatTableAmount = (amount) => {
+  if (amount === 0) return formatRupiah(0);
+  if (!amount) return "-";
+  if (typeof amount === "number") return formatRupiah(amount);
+  return amount;
+};
 
 const ApprovalTable = ({
   data = [],
@@ -37,34 +45,34 @@ const ApprovalTable = ({
                 Memuat data...
               </td>
             </tr>
-          ) : data.length === 0 ? (
+          ) : !data || data.length === 0 ? (
             <tr>
               <td colSpan="4" className="p-0 border-0">
-                <EmptyState title="Antrian Kosong" message={emptyMessage} />
+                <EmptyState title="Antrian Kosong" message={emptyMessage || "Tidak ada data antrian"} />
               </td>
             </tr>
           ) : (
             data.map((item, idx) => (
-              <tr key={item.id || idx}>
+              <tr key={item?.id || item?.registration_id || idx}>
                 <td className="px-3 py-3 border-bottom-0">
                   <div
                     className="fw-bold text-dark mb-1 text-truncate"
                     style={{ maxWidth: "180px" }}
                   >
-                    {item[titleField] || item.full_name || item.item || item.name || "-"}
+                    {item?.[titleField] || item?.full_name || item?.item || item?.name || "-"}
                   </div>
                   <div
                     className="text-muted text-truncate"
                     style={{ maxWidth: "180px" }}
                   >
-                    {item[nameField] || item.status_name || item.name || item.tx_category || "-"}
+                    {item?.[nameField] || item?.status_name || item?.name || item?.tx_category || "-"}
                   </div>
                 </td>
                 <td className="px-3 py-3 fw-semibold text-dark border-bottom-0">
-                  {item.amount || "-"}
+                  {formatTableAmount(item?.amount)}
                 </td>
                 <td className="px-3 py-3 text-muted border-bottom-0">
-                  {item.date || "-"}
+                  {item?.date || "-"}
                 </td>
                 <td className="px-3 py-3 text-end border-bottom-0">
                   <Button
@@ -72,9 +80,10 @@ const ApprovalTable = ({
                     size="sm"
                     className="rounded-pill px-3 py-1 shadow-sm border text-primary"
                     style={{ fontWeight: 600 }}
-                    onClick={() => onAction(item)}
+                    aria-label={`Proses antrian ${item?.[titleField] || item?.full_name || item?.name || ""}`}
+                    onClick={() => onAction?.(item)}
                   >
-                    {item.is_manual_payment ? "Proses" : item.registration_id ? "Review" : "Proses"}
+                    {item?.is_manual_payment ? "Proses" : item?.registration_id ? "Review" : "Proses"}
                   </Button>
                 </td>
               </tr>
@@ -83,12 +92,12 @@ const ApprovalTable = ({
         </tbody>
       </table>
     </div>
-    {data.length > 0 && (
+    {Array.isArray(data) && data.length > 0 && onSeeAll && (
       <div className="text-center py-3 border-top mt-2">
         <Button
           variant="link"
           className="text-decoration-none extra-small fw-bold p-0 d-inline-flex align-items-center gap-1"
-          onClick={() => onSeeAll(seeAllPage)}
+          onClick={() => onSeeAll?.(seeAllPage)}
         >
           Lihat Semua <ArrowRight size={14} />
         </Button>

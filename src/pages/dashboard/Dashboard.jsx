@@ -32,6 +32,15 @@ const Dashboard = () => {
     navigate(`/${jwtEncode({ page: pageName })}`);
   };
 
+  const handleOpenNotifications = () => {
+    const notifBtn = document.querySelector('button[aria-label="Buka Notifikasi"]');
+    if (notifBtn) {
+      notifBtn.click();
+    } else {
+      handleQuickNav("reportsPage");
+    }
+  };
+
   return (
     <div className="pb-5">
       <DashboardHeader onOpenLogs={() => handleQuickNav("reportsPage")} />
@@ -59,7 +68,7 @@ const Dashboard = () => {
         <Col xl={4} lg={12} className="mb-4">
           <DashboardNotificationsCard
             notifications={notifications}
-            onOpenNotifications={() => handleQuickNav("notificationPage")}
+            onOpenNotifications={handleOpenNotifications}
           />
         </Col>
       </Row>

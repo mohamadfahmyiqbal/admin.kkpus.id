@@ -3,6 +3,7 @@ import React, { Suspense, lazy } from "react";
 import { Spinner } from "react-bootstrap";
 import savingsService from "../../../utils/api/USavings";
 import tabunganService from "../../../utils/api/UTabungan";
+import { formatRupiah } from "../../../utils/helpers";
 
 const RegistrationReviewModal = lazy(() => import("../../anggota/RegistrationReviewModal"));
 const TerminationReviewModal = lazy(() => import("../../anggota/TerminationReviewModal"));
@@ -19,28 +20,36 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
     showRegModal,
     setShowRegModal,
     selectedReg,
+    setSelectedReg,
     showTermModal,
     setShowTermModal,
     selectedTerm,
+    setSelectedTerm,
     processingReg,
     showWithdrawalModal,
     setShowWithdrawalModal,
     selectedWithdrawal,
+    setSelectedWithdrawal,
     showJualBeliModal,
     setShowJualBeliModal,
     selectedJualBeli,
+    setSelectedJualBeli,
     showProgramModal,
     setShowProgramModal,
     selectedProgram,
+    setSelectedProgram,
     showTabunganModal,
     setShowTabunganModal,
     selectedTabungan,
+    setSelectedTabungan,
     showInvestasiModal,
     setShowInvestasiModal,
     selectedInvestasi,
+    setSelectedInvestasi,
     showPendanaanModal,
     setShowPendanaanModal,
     selectedPendanaan,
+    setSelectedPendanaan,
     showManualModal,
     setShowManualModal,
     selectedManualPayment,
@@ -60,7 +69,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
       {/* 1. Modal Review Pendaftaran Anggota */}
       <RegistrationReviewModal
         show={showRegModal}
-        onHide={() => setShowRegModal(false)}
+        onHide={() => {
+          setShowRegModal(false);
+          setSelectedReg?.(null);
+        }}
         data={selectedReg}
         onApprove={(id, stepId, notes) =>
           handleProcessRegistration(id, stepId, notes, "REGISTRATION")
@@ -74,7 +86,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
       {/* 2. Modal Review Berhenti Keanggotaan */}
       <TerminationReviewModal
         show={showTermModal}
-        onHide={() => setShowTermModal(false)}
+        onHide={() => {
+          setShowTermModal(false);
+          setSelectedTerm?.(null);
+        }}
         data={selectedTerm}
         onApprove={(id, stepId, notes, proof) =>
           handleProcessRegistration(id, stepId, notes, "TERMINATION", proof)
@@ -90,8 +105,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         show={showWithdrawalModal}
         onHide={() => {
           setShowWithdrawalModal(false);
-          fetchData();
+          setSelectedWithdrawal?.(null);
+          fetchData?.();
         }}
+        onSuccess={() => fetchData?.()}
         transaction={
           selectedWithdrawal
             ? {
@@ -108,7 +125,7 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
               }
             : null
         }
-        formatRupiah={(v) => v}
+        formatRupiah={formatRupiah}
         isTreasurer={false}
         approvalApi={
           selectedWithdrawal?.item === "Pencairan Tabungan"
@@ -127,8 +144,11 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         show={showJualBeliModal}
         onHide={() => {
           setShowJualBeliModal(false);
-          fetchData();
+          setSelectedJualBeli?.(null);
+          fetchData?.();
         }}
+        onSuccess={() => fetchData?.()}
+        formatRp={formatRupiah}
         transaction={
           selectedJualBeli
             ? {
@@ -162,8 +182,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         show={showProgramModal}
         onHide={() => {
           setShowProgramModal(false);
-          fetchData();
+          setSelectedProgram?.(null);
+          fetchData?.();
         }}
+        formatRp={formatRupiah}
         transaction={
           selectedProgram
             ? {
@@ -195,8 +217,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         show={showTabunganModal}
         onHide={() => {
           setShowTabunganModal(false);
-          fetchData();
+          setSelectedTabungan?.(null);
+          fetchData?.();
         }}
+        formatRp={formatRupiah}
         transaction={selectedTabungan}
       />
 
@@ -205,8 +229,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         show={showInvestasiModal}
         onHide={() => {
           setShowInvestasiModal(false);
-          fetchData();
+          setSelectedInvestasi?.(null);
+          fetchData?.();
         }}
+        formatRp={formatRupiah}
         transaction={
           selectedInvestasi
             ? {
@@ -230,8 +256,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         show={showPendanaanModal}
         onHide={() => {
           setShowPendanaanModal(false);
-          fetchData();
+          setSelectedPendanaan?.(null);
+          fetchData?.();
         }}
+        formatRp={formatRupiah}
         transaction={
           selectedPendanaan
             ? {
@@ -258,10 +286,10 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         show={showManualModal}
         onHide={() => {
           setShowManualModal(false);
-          setSelectedManualPayment(null);
+          setSelectedManualPayment?.(null);
         }}
         transaction={selectedManualPayment}
-        onSuccess={() => fetchData()}
+        onSuccess={() => fetchData?.()}
       />
     </Suspense>
   );
