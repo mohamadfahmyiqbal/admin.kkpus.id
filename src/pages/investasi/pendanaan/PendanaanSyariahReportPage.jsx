@@ -92,6 +92,8 @@ const PendanaanSyariahReportPage = () => {
           <Button
             variant="danger"
             className="shadow-sm d-flex align-items-center gap-2 fw-medium"
+            disabled
+            title="Fitur Export PDF segera hadir"
           >
             <FilePdf size={18} /> Export PDF
           </Button>
