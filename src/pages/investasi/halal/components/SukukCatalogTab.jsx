@@ -134,6 +134,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan jenis sukuk"
                       value={filters.type}
                       onChange={(e) => handleFilterChange(e, "type")}
                     />
@@ -142,6 +143,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan nama produk sukuk"
                       value={filters.issue_name}
                       onChange={(e) => handleFilterChange(e, "issue_name")}
                     />
@@ -150,6 +152,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan penerbit sukuk"
                       value={filters.issuer}
                       onChange={(e) => handleFilterChange(e, "issuer")}
                     />
@@ -158,6 +161,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan minimal investasi"
                       value={filters.min_investment}
                       onChange={(e) => handleFilterChange(e, "min_investment")}
                     />
@@ -166,6 +170,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan total target pendanaan"
                       value={filters.total_amount}
                       onChange={(e) => handleFilterChange(e, "total_amount")}
                     />
@@ -174,6 +179,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan tenor"
                       value={filters.tenor}
                       onChange={(e) => handleFilterChange(e, "tenor")}
                     />
@@ -182,6 +188,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan kupon"
                       value={filters.coupon}
                       onChange={(e) => handleFilterChange(e, "coupon")}
                     />
@@ -190,6 +197,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan harga sukuk"
                       value={filters.price}
                       onChange={(e) => handleFilterChange(e, "price")}
                     />
@@ -198,6 +206,7 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
+                      aria-label="Filter berdasarkan status sukuk"
                       value={filters.status}
                       onChange={(e) => handleFilterChange(e, "status")}
                     />
