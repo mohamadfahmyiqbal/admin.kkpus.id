@@ -54,8 +54,8 @@ const InvestasiListReportTab = ({
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary"
-                  value={searchFilters[1]}
-                  onChange={(e) => handleSearchChange(1, e.target.value)}
+                  value={searchFilters.member_name || ""}
+                  onChange={(e) => handleSearchChange("member_name", e.target.value)}
                 />
               </div>
             </th>
@@ -68,8 +68,8 @@ const InvestasiListReportTab = ({
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary"
-                  value={searchFilters[2]}
-                  onChange={(e) => handleSearchChange(2, e.target.value)}
+                  value={searchFilters.member_no || ""}
+                  onChange={(e) => handleSearchChange("member_no", e.target.value)}
                 />
               </div>
             </th>
@@ -82,8 +82,8 @@ const InvestasiListReportTab = ({
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary"
-                  value={searchFilters[3]}
-                  onChange={(e) => handleSearchChange(3, e.target.value)}
+                  value={searchFilters.issue_name || ""}
+                  onChange={(e) => handleSearchChange("issue_name", e.target.value)}
                 />
               </div>
             </th>
@@ -95,23 +95,9 @@ const InvestasiListReportTab = ({
                 <Form.Control
                   type="text"
                   placeholder="Cari..."
-                  className="bg-light border-light shadow-none focus-ring-primary"
-                  value={searchFilters[4]}
-                  onChange={(e) => handleSearchChange(4, e.target.value)}
-                />
-              </div>
-            </th>
-            <th className="p-2 border-0">
-              <div className="input-group input-group-sm">
-                <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
-                </span>
-                <Form.Control
-                  type="text"
-                  placeholder="Cari..."
-                  className="bg-light border-light shadow-none focus-ring-primary text-end"
-                  value={searchFilters[5]}
-                  onChange={(e) => handleSearchChange(5, e.target.value)}
+                  className="bg-light border-light shadow-none focus-ring-primary text-center"
+                  value={searchFilters.lembar || ""}
+                  onChange={(e) => handleSearchChange("lembar", e.target.value)}
                 />
               </div>
             </th>
@@ -124,8 +110,8 @@ const InvestasiListReportTab = ({
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary text-end"
-                  value={searchFilters[6]}
-                  onChange={(e) => handleSearchChange(6, e.target.value)}
+                  value={searchFilters.amount || ""}
+                  onChange={(e) => handleSearchChange("amount", e.target.value)}
                 />
               </div>
             </th>
@@ -138,8 +124,22 @@ const InvestasiListReportTab = ({
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary text-end"
-                  value={searchFilters[7]}
-                  onChange={(e) => handleSearchChange(7, e.target.value)}
+                  value={searchFilters.imbal_hasil || ""}
+                  onChange={(e) => handleSearchChange("imbal_hasil", e.target.value)}
+                />
+              </div>
+            </th>
+            <th className="p-2 border-0">
+              <div className="input-group input-group-sm">
+                <span className="input-group-text bg-light border-light text-muted">
+                  <MagnifyingGlass size={14} />
+                </span>
+                <Form.Control
+                  type="text"
+                  placeholder="Cari..."
+                  className="bg-light border-light shadow-none focus-ring-primary text-end"
+                  value={searchFilters.pengembalian || ""}
+                  onChange={(e) => handleSearchChange("pengembalian", e.target.value)}
                 />
               </div>
             </th>
@@ -147,8 +147,8 @@ const InvestasiListReportTab = ({
               <Form.Select
                 size="sm"
                 className="bg-light border-light shadow-none focus-ring-primary"
-                value={searchFilters[8]}
-                onChange={(e) => handleSearchChange(8, e.target.value)}
+                value={searchFilters.status || ""}
+                onChange={(e) => handleSearchChange("status", e.target.value)}
               >
                 <option value="">Semua Status</option>
                 <option value="PAID">Lunas</option>
