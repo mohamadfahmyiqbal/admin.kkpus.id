@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Modal } from "react-bootstrap";
+import Swal from "sweetalert2";
 import api from "../../../../utils/api/common";
 import SukukScheduleModal from "./SukukScheduleModal";
 import {
@@ -78,11 +79,11 @@ const SukukInvestorsModal = ({ show, onHide, transaction }) => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (res.data.status) {
-        alert("Bukti transfer berhasil diupload.");
+        Swal.fire("Berhasil", "Bukti transfer berhasil diupload.", "success");
         fetchMembers();
       }
     } catch {
-      alert("Gagal upload bukti transfer.");
+      Swal.fire("Gagal", "Gagal upload bukti transfer.", "error");
     } finally {
       setLoading(false);
       setUploadingId(null);
