@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Modal, Button, Badge } from "react-bootstrap";
-import { Printer, DownloadSimple } from "phosphor-react";
+import { Printer } from "phosphor-react";
+import DOMPurify from "dompurify";
 
 export const TransactionDetailModal = ({
   show,
@@ -35,7 +36,8 @@ export const TransactionDetailModal = ({
   // Fungsi Cetak Khusus Area Struk / Invoice Modal Saja
   const handlePrint = () => {
     if (!printRef.current) return;
-    const printContents = printRef.current.innerHTML;
+    const cleanContents = DOMPurify.sanitize(printRef.current.innerHTML);
+    const safeTxId = String(transaction.id || transaction.transaction_id || "transaksi").replace(/[^a-zA-Z0-9_-]/g, "");
 
     const printWindow = window.open("", "_blank", "width=800,height=800");
     if (!printWindow) {
@@ -47,7 +49,7 @@ export const TransactionDetailModal = ({
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Invoice-${transaction.id || "transaksi"}</title>
+          <title>Invoice-${safeTxId}</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
           <style>
             body {
@@ -73,65 +75,13 @@ export const TransactionDetailModal = ({
         </head>
         <body>
           <div class="invoice-container">
-            ${printContents}
+            ${cleanContents}
           </div>
           <script>
             window.onload = function() {
               window.focus();
               window.print();
               setTimeout(function() { window.close(); }, 500);
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-  };
-
-  // Fungsi Download PDF Invoice
-  const handleDownloadPdf = () => {
-    if (!printRef.current) return;
-    const printContents = printRef.current.innerHTML;
-
-    const printWindow = window.open("", "_blank", "width=800,height=800");
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Invoice-${transaction.id || "transaksi"}</title>
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-          <style>
-            body {
-              background-color: #fff;
-              padding: 24px;
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            }
-            .invoice-container {
-              max-width: 550px;
-              margin: 0 auto;
-              border: 1px solid #cbd5e1;
-              padding: 32px;
-              border-radius: 12px;
-            }
-            .border-dashed {
-              border-style: dashed !important;
-            }
-            @media print {
-              body { padding: 0; }
-              .invoice-container { border: none; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="invoice-container">
-            ${printContents}
-          </div>
-          <script>
-            window.onload = function() {
-              window.focus();
-              window.print();
             };
           </script>
         </body>
@@ -271,20 +221,12 @@ export const TransactionDetailModal = ({
         </Button>
         <div className="d-flex gap-2">
           <Button
-            variant="outline-primary"
-            onClick={handleDownloadPdf}
-            className="fw-medium px-3 d-flex align-items-center gap-2"
-            title="Download / Simpan sebagai PDF"
-          >
-            <DownloadSimple size={18} />
-            <span>PDF</span>
-          </Button>
-          <Button
             variant="primary"
             onClick={handlePrint}
             className="fw-medium px-4 d-flex align-items-center gap-2"
+            title="Cetak Invoice atau Simpan sebagai PDF"
           >
-            <Printer size={18} /> Cetak Invoice
+            <Printer size={18} /> Cetak / Simpan PDF
           </Button>
         </div>
       </Modal.Footer>

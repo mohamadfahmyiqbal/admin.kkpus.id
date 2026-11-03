@@ -300,7 +300,7 @@ export const TransactionTable = ({
                 </td>
               </tr>
             ) : (
-              transactions.map((tx) => {
+              transactions.map((tx, idx) => {
                 const { day, time } = formatDateTime(tx.date || tx.created_at);
                 const isDeposit =
                   tx.type === "Setoran" || tx.type === "Deposit" || !tx.type?.includes("Pencairan");
@@ -318,8 +318,10 @@ export const TransactionTable = ({
                 const isWithdrawalPending =
                   (tx.type === "Pencairan" || tx.type === "Pencairan Tabungan") && !isCompleted;
 
+                const rowKey = tx.id || tx.transaction_id || `tx-${idx}`;
+
                 return (
-                  <tr key={tx.id || tx.transaction_id || Math.random()}>
+                  <tr key={rowKey}>
                     {/* 1. Waktu */}
                     <td className="py-3 px-4">
                       <div className="d-flex flex-column">
@@ -399,7 +401,7 @@ export const TransactionTable = ({
                           <OverlayTrigger
                             placement="top"
                             overlay={
-                              <Tooltip id={`tt-manual-${tx.id || tx.transaction_id || Math.random()}`}>
+                              <Tooltip id={`tt-manual-${rowKey}`}>
                                 Verifikasi Pembayaran Manual
                               </Tooltip>
                             }
@@ -417,7 +419,7 @@ export const TransactionTable = ({
                           <OverlayTrigger
                             placement="top"
                             overlay={
-                              <Tooltip id={`tt-withdraw-${tx.id || tx.transaction_id || Math.random()}`}>
+                              <Tooltip id={`tt-withdraw-${rowKey}`}>
                                 Proses Persetujuan Pencairan
                               </Tooltip>
                             }
@@ -436,7 +438,7 @@ export const TransactionTable = ({
                         <OverlayTrigger
                           placement="top"
                           overlay={
-                            <Tooltip id={`tt-view-${tx.id || tx.transaction_id || Math.random()}`}>
+                            <Tooltip id={`tt-view-${rowKey}`}>
                               Lihat Detail Transaksi
                             </Tooltip>
                           }

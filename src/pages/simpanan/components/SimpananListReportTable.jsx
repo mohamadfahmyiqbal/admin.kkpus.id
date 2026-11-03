@@ -29,6 +29,34 @@ const SimpananListReportTable = ({
     return filteredList.slice(startIndex, startIndex + pageSize);
   }, [filteredList, startIndex, pageSize]);
 
+  const historicalTotals = useMemo(() => {
+    let laluTotal = 0;
+    let laluPokok = 0;
+    let laluWajib = 0;
+    let laluSukarela = 0;
+    let lalu2Total = 0;
+    let lalu2Pokok = 0;
+
+    const source = reportList && reportList.length > 0 ? reportList : [];
+    source.forEach((item) => {
+      laluTotal += parseFloat(item.tahun_lalu?.total) || 0;
+      laluPokok += parseFloat(item.tahun_lalu?.pokok) || 0;
+      laluWajib += parseFloat(item.tahun_lalu?.wajib) || 0;
+      laluSukarela += parseFloat(item.tahun_lalu?.sukarela) || 0;
+      lalu2Total += parseFloat(item.tahun_lalu2?.total) || 0;
+      lalu2Pokok += parseFloat(item.tahun_lalu2?.pokok) || 0;
+    });
+
+    return {
+      laluTotal,
+      laluPokok,
+      laluWajib,
+      laluSukarela,
+      lalu2Total,
+      lalu2Pokok,
+    };
+  }, [reportList]);
+
   return (
     <div>
       <div className="table-responsive border rounded-3">
@@ -177,12 +205,12 @@ const SimpananListReportTable = ({
                 >
                   {formatRupiah(summary.total_sukarela)}
                 </td>
-                <td className="num-cell text-primary">{formatRupiah(0)}</td>
-                <td className="num-cell">{formatRupiah(0)}</td>
-                <td className="num-cell">{formatRupiah(0)}</td>
-                <td className="num-cell col-separator">{formatRupiah(0)}</td>
-                <td className="num-cell text-primary">{formatRupiah(0)}</td>
-                <td className="num-cell">{formatRupiah(0)}</td>
+                <td className="num-cell text-primary">{formatRupiah(historicalTotals.laluTotal)}</td>
+                <td className="num-cell">{formatRupiah(historicalTotals.laluPokok)}</td>
+                <td className="num-cell">{formatRupiah(historicalTotals.laluWajib)}</td>
+                <td className="num-cell col-separator">{formatRupiah(historicalTotals.laluSukarela)}</td>
+                <td className="num-cell text-primary">{formatRupiah(historicalTotals.lalu2Total)}</td>
+                <td className="num-cell">{formatRupiah(historicalTotals.lalu2Pokok)}</td>
               </tr>
             </tfoot>
           )}

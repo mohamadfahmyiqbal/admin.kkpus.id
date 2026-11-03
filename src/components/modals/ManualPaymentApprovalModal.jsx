@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Row, Col, Badge } from "react-bootstrap";
+import axios from "axios";
 import {
   CheckCircle,
   XCircle,
@@ -126,7 +127,17 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
         return;
       }
 
-      api
+      const isExternal =
+        proofUrl.startsWith("http://") || proofUrl.startsWith("https://");
+      const isSameOrigin =
+        Boolean(import.meta.env.VITE_API_ORIGIN && proofUrl.startsWith(import.meta.env.VITE_API_ORIGIN)) ||
+        proofUrl.startsWith("https://api.kkpus.id") ||
+        proofUrl.startsWith("https://localhost:3445");
+
+      // Use clean axios client without Authorization header for third-party URLs to prevent token leak
+      const client = isExternal && !isSameOrigin ? axios : api;
+
+      client
         .get(proofUrl, { responseType: "blob" })
         .then((res) => {
           activeBlob = URL.createObjectURL(res.data);

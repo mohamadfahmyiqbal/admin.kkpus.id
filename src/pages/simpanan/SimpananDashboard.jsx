@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Row, Col, Card, Button, Form, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Wallet,
   Money,
@@ -116,14 +117,20 @@ const SimpananDashboard = () => {
     return () => el.removeEventListener("wheel", handleWheel);
   }, []);
 
-  // Debounce search input for member query
+  const [debouncedFilters, setDebouncedFilters] = useState({ date: "", amount: "" });
+
+  // Debounce search inputs for query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm.trim());
+      setDebouncedFilters({
+        date: (columnFilters.date || "").trim(),
+        amount: (columnFilters.amount || "").trim(),
+      });
       setPage(1);
     }, 350);
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [searchTerm, columnFilters.date, columnFilters.amount]);
 
   const handleSearchChange = (field, value) => {
     setColumnFilters((prev) => ({ ...prev, [field]: value }));
@@ -163,6 +170,7 @@ const SimpananDashboard = () => {
       }
     } catch (err) {
       console.error("Gagal mengambil summary simpanan:", err);
+      toast.error("Gagal mengambil ringkasan saldo simpanan");
     }
   };
 
@@ -176,6 +184,8 @@ const SimpananDashboard = () => {
         limit,
         search: debouncedSearch,
         status: statusFilter || undefined,
+        date: debouncedFilters.date || undefined,
+        amount: debouncedFilters.amount || undefined,
       };
       const res = await savingsService.getAdminSavingsTransactions(params);
       if (res.data?.status) {
@@ -184,10 +194,11 @@ const SimpananDashboard = () => {
       }
     } catch (err) {
       console.error("Gagal mengambil transaksi simpanan:", err);
+      toast.error("Gagal mengambil daftar transaksi simpanan");
     } finally {
       setLoading(false);
     }
-  }, [activeType, activeSukarelaCategory, page, limit, debouncedSearch, statusFilter]);
+  }, [activeType, activeSukarelaCategory, page, limit, debouncedSearch, statusFilter, debouncedFilters]);
 
   useEffect(() => {
     fetchSummary();
@@ -220,25 +231,11 @@ const SimpananDashboard = () => {
   const processedTransactions = useMemo(() => {
     let list = [...transactions];
 
-    if (columnFilters.date) {
-      const q = columnFilters.date.toLowerCase();
-      list = list.filter((t) => {
-        const d = (t.date || t.created_at || "").toLowerCase();
-        return d.includes(q);
-      });
-    }
     if (columnFilters.type) {
       const q = columnFilters.type.toLowerCase();
       list = list.filter((t) => {
         const p = (t.product_name || t.type || "").toLowerCase();
         return p.includes(q);
-      });
-    }
-    if (columnFilters.amount) {
-      const q = columnFilters.amount.replace(/[^0-9]/g, "");
-      list = list.filter((t) => {
-        const amt = String(t.amount || "");
-        return amt.includes(q);
       });
     }
 
@@ -268,7 +265,7 @@ const SimpananDashboard = () => {
     }
 
     return list;
-  }, [transactions, columnFilters, sortConfig]);
+  }, [transactions, columnFilters.type, sortConfig]);
 
   const handleExportTransactions = async () => {
     setExporting(true);
@@ -280,16 +277,15 @@ const SimpananDashboard = () => {
         limit: 10000,
         search: debouncedSearch || "",
         status: statusFilter || undefined,
+        date: debouncedFilters.date || undefined,
+        amount: debouncedFilters.amount || undefined,
       };
 
       const res = await savingsService.getAdminSavingsTransactions(params);
-      const dataToProcess =
-        res.data?.data?.transactions && res.data.data.transactions.length > 0
-          ? res.data.data.transactions
-          : transactions;
+      const dataToProcess = res.data?.data?.transactions || [];
 
       if (!dataToProcess || dataToProcess.length === 0) {
-        alert("Tidak ada data transaksi simpanan untuk diexport.");
+        toast.info("Tidak ada data transaksi simpanan untuk diexport.");
         return;
       }
 
@@ -331,7 +327,7 @@ const SimpananDashboard = () => {
       exportToExcel(formattedData, `Transaksi_Simpanan_${typeLabel}_${today}`);
     } catch (err) {
       console.error("Gagal export transaksi simpanan:", err);
-      alert("Terjadi kesalahan saat mengekspor data simpanan.");
+      toast.error("Terjadi kesalahan saat mengekspor data simpanan.");
     } finally {
       setExporting(false);
     }

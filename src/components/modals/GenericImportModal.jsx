@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
+import DOMPurify from "dompurify";
 import api from "../../utils/api/common";
 
 const GenericImportModal = ({
@@ -33,13 +34,7 @@ const GenericImportModal = ({
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error("Gagal mendownload template:", err);
-      const apiOrigin =
-        import.meta.env.VITE_API_ORIGIN ||
-        (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445");
-      const cleanEndpoint = templateEndpoint.startsWith("/")
-        ? templateEndpoint
-        : `/${templateEndpoint}`;
-      window.location.href = `${apiOrigin}/api${cleanEndpoint}`;
+      setErrorMsg("Gagal mengunduh template Excel. Pastikan Anda memiliki izin akses.");
     }
   };
 
@@ -88,7 +83,10 @@ const GenericImportModal = ({
         if (errors && errors.length > 0) {
           detailsHtml += `<hr/><div style="max-height: 140px; overflow-y: auto; text-align: left; font-size: 12px;">`;
           errors.slice(0, 5).forEach((err) => {
-            detailsHtml += `Baris ${err.row || "-"}: ${err.reason || err.message || JSON.stringify(err)}<br/>`;
+            const cleanRow = DOMPurify.sanitize(String(err.row || "-"));
+            const rawMsg = err.reason || err.message || JSON.stringify(err);
+            const cleanReason = DOMPurify.sanitize(String(rawMsg));
+            detailsHtml += `Baris ${cleanRow}: ${cleanReason}<br/>`;
           });
           if (errors.length > 5) {
             detailsHtml += `... dan ${errors.length - 5} kesalahan lainnya.`;
@@ -99,7 +97,7 @@ const GenericImportModal = ({
         Swal.fire({
           icon: totalImported > 0 ? "success" : "warning",
           title: totalImported > 0 ? "Import Selesai" : "Import Gagal Diproses",
-          html: detailsHtml,
+          html: DOMPurify.sanitize(detailsHtml),
           confirmButtonColor: "#28a745",
         }).then(() => {
           setFile(null);
