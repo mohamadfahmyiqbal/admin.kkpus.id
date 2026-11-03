@@ -283,7 +283,7 @@ const PendanaanSyariahReportPage = () => {
                               (item.tahun_lalu2?.cicilan || 0);
 
                             return (
-                              <tr key={idx} className="border-bottom">
+                              <tr key={item.id || item.transaction_no || idx} className="border-bottom">
                                 <td className="py-3 px-4">
                                   <div className="fw-bold text-dark">
                                     {item.nama}
