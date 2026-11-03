@@ -49,9 +49,9 @@ const PendanaanTable = ({
               </td>
             </tr>
           ) : (
-            items.map((item) => (
+            items.map((item, idx) => (
               <tr
-                key={item.id || item.financing_id}
+                key={item.id || item.financing_id || `fallback-${idx}`}
                 className="border-bottom"
               >
                 <td className="px-4 text-center py-3">

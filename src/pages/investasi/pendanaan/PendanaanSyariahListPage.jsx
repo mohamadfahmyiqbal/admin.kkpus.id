@@ -38,6 +38,11 @@ const PendanaanSyariahListPage = () => {
 
   useEffect(() => {
     fetchTransactions();
+    const interval = setInterval(() => {
+      fetchTransactions();
+    }, 30000); // 30 detik
+
+    return () => clearInterval(interval);
   }, []);
 
   const formatCurrency = (val) =>

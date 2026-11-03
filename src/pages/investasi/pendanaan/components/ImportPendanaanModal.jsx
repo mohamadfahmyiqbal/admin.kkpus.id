@@ -13,12 +13,7 @@ const ImportPendanaanModal = ({ show, onHide, onSuccess }) => {
     setErrorMsg("");
     const selected = e.target.files[0];
     if (selected) {
-      const validTypes = [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "application/vnd.ms-excel",
-      ];
       if (
-        !validTypes.includes(selected.type) &&
         !selected.name.endsWith(".xlsx") &&
         !selected.name.endsWith(".xls")
       ) {
