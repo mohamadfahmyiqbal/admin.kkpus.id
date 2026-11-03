@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Table, Button, Badge, Form, Spinner } from "react-bootstrap";
 import { Eye, Users, SmileyMeh } from "phosphor-react";
 import api from "../../../../utils/api/common";
+import { checkNumeric } from "../../../../utils/helpers/filterUtils";
 import DetailSukukModal from "./DetailSukukModal";
 import SukukInvestorsModal from "./SukukInvestorsModal";
 
@@ -43,21 +44,15 @@ const SukukCatalogTab = () => {
       (item.issuer || "")
         .toLowerCase()
         .includes(filters.issuer.toLowerCase()) &&
-      String(item.min_investment || "")
-        .toLowerCase()
-        .includes(filters.min_investment.toLowerCase()) &&
-      String(item.total_amount || "")
-        .toLowerCase()
-        .includes(filters.total_amount.toLowerCase()) &&
+      checkNumeric(filters.min_investment, item.min_investment) &&
+      checkNumeric(filters.total_amount, item.total_amount) &&
       String(item.tenor || "")
         .toLowerCase()
         .includes(filters.tenor.toLowerCase()) &&
       (item.coupon || "")
         .toLowerCase()
         .includes(filters.coupon.toLowerCase()) &&
-      String(item.price || "")
-        .toLowerCase()
-        .includes(filters.price.toLowerCase()) &&
+      checkNumeric(filters.price, item.price) &&
       (item.status || "").toLowerCase().includes(filters.status.toLowerCase())
   );
 
