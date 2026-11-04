@@ -55,7 +55,7 @@ const SimpananConfigPage = () => {
   };
 
   const handleSave = async (billTypeId, amount) => {
-    if (!amount || amount < 0) {
+    if (amount === "" || amount === null || Number(amount) < 0) {
       Swal.fire({
         icon: "warning",
         title: "Peringatan",
@@ -130,6 +130,8 @@ const SimpananConfigPage = () => {
                       <input
                         type="text"
                         className="form-control form-control-sm"
+                        aria-label={`Nominal ${item.type_name}`}
+                        inputMode="numeric"
                         value={formatInputRupiah(item.default_amount)}
                         onChange={(e) =>
                           handleAmountChange(item.bill_type_id, e.target.value)
