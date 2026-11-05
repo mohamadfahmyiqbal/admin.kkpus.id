@@ -91,12 +91,17 @@ const SukukInvestorRow = ({
                 variant="outline-success"
                 size="sm"
                 className="rounded-circle d-flex align-items-center justify-content-center bg-success bg-opacity-10 border-0 hover-scale"
-                onClick={() =>
-                  window.open(
-                    `https://api.kkpus.id/api/${item.transfer_proof}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => {
+                  const rawUrl = item.transfer_proof.startsWith("http")
+                    ? item.transfer_proof
+                    : `${
+                        import.meta.env.VITE_API_ORIGIN ||
+                        (import.meta.env.VITE_API_URL
+                          ? new URL(import.meta.env.VITE_API_URL).origin
+                          : window.location.origin)
+                      }/api/${item.transfer_proof}`;
+                  window.open(rawUrl, "_blank", "noopener,noreferrer");
+                }}
                 style={{
                   width: "36px",
                   height: "36px",

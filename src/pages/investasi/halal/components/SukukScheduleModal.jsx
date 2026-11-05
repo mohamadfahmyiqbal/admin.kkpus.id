@@ -24,9 +24,15 @@ const SukukScheduleModal = ({ show, onHide, type, member, issueName }) => {
 
   const schedules = (() => {
     const list = [];
-    const now = new Date();
+    const baseDate = member.start_date
+      ? new Date(member.start_date)
+      : member.created_at
+      ? new Date(member.created_at)
+      : new Date();
+
     if (isPrincipal) {
-      const dueDate = new Date(now.setMonth(now.getMonth() + 12));
+      const dueDate = new Date(baseDate);
+      dueDate.setFullYear(dueDate.getFullYear() + 1);
       list.push({
         id: 1,
         date: dueDate.toISOString().split("T")[0],
@@ -35,9 +41,9 @@ const SukukScheduleModal = ({ show, onHide, type, member, issueName }) => {
         notes: "Pengembalian Pokok Sukuk (Jatuh Tempo)",
       });
     } else {
-      const monthlyShare = member.imbal_hasil / 12;
+      const monthlyShare = (member.imbal_hasil || 0) / 12;
       for (let i = 1; i <= 12; i++) {
-        const d = new Date();
+        const d = new Date(baseDate);
         d.setMonth(d.getMonth() + i);
         list.push({
           id: i,
