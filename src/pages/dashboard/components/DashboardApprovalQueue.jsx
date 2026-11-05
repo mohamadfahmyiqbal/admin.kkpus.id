@@ -1,3 +1,4 @@
+// PATH: src/pages/dashboard/components/DashboardApprovalQueue.jsx
 import React from "react";
 import { Card, Badge, Tab, Nav } from "react-bootstrap";
 import ApprovalTable from "./ApprovalTable";

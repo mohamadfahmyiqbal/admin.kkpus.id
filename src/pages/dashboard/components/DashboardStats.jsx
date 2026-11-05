@@ -1,3 +1,4 @@
+// PATH: src/pages/dashboard/components/DashboardStats.jsx
 import React from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import { motion } from "framer-motion";

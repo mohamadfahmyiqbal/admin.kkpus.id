@@ -1,12 +1,25 @@
-import React from "react";
+// PATH: src/pages/dashboard/components/DashboardNotificationsCard.jsx
+import React, { forwardRef, useImperativeHandle } from "react";
 import { Card, Button, ListGroup } from "react-bootstrap";
 import { Clock } from "phosphor-react";
 
-const DashboardNotificationsCard = ({
-  notifications = [],
-  onOpenNotifications,
-}) => {
+const DashboardNotificationsCard = forwardRef((
+  { notifications = [], onOpenNotifications },
+  ref
+) => {
   const notifList = Array.isArray(notifications) ? notifications : [];
+
+  // Attach ref to the button element for external access
+  const buttonRef = (element) => {
+    if (ref && typeof ref === 'object' && ref !== null) {
+      if (typeof ref.current === 'undefined') {
+        ref.current = {};
+      }
+      ref.current.buttonElement = element;
+      ref.current.focus = () => element?.focus();
+      ref.current.click = () => onOpenNotifications?.();
+    }
+  };
 
   return (
     <Card className="border-0 shadow-sm h-100">
@@ -55,10 +68,12 @@ const DashboardNotificationsCard = ({
         </ListGroup>
         <div className="p-2 text-center border-top">
           <Button
+            ref={buttonRef}
             variant="link"
             size="sm"
             className="w-100 fw-bold extra-small text-decoration-none p-0"
             onClick={() => onOpenNotifications?.()}
+            aria-label="Buka Notifikasi"
           >
             Buka Semua Notifikasi
           </Button>
@@ -66,6 +81,8 @@ const DashboardNotificationsCard = ({
       </Card.Body>
     </Card>
   );
-};
+});
+
+DashboardNotificationsCard.displayName = "DashboardNotificationsCard";
 
 export default DashboardNotificationsCard;

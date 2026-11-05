@@ -1,3 +1,4 @@
+// PATH: src/pages/dashboard/components/DashboardHeader.jsx
 import React from "react";
 import { Button } from "react-bootstrap";
 import { ListDashes } from "phosphor-react";
