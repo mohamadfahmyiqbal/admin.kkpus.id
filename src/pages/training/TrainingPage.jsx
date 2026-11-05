@@ -234,8 +234,8 @@ const MaterialTab = ({ onEdit }) => {
           {data.length > 0 ? (
             data.map((item) => (
               <tr key={item.material_id}>
-                <td>{item.sequence_no}</td>
-                <td className="fw-medium text-dark">{item.material_name}</td>
+                <td>{item.order_index ?? item.sequence_no ?? 0}</td>
+                <td className="fw-medium text-dark">{item.material_title || item.material_name}</td>
                 <td>{item.material_type}</td>
                 <td className="text-center">
                   <div className="d-flex gap-2 justify-content-center">
@@ -452,10 +452,10 @@ const RankingTab = () => {
                   </div>
                 </td>
                 <td className="fw-medium text-dark">
-                  {item.user?.nama_lengkap || "Unknown"}
+                  {item.member?.full_name || item.user?.nama_lengkap || "Unknown"}
                 </td>
                 <td className="text-primary fw-bold">{item.total_score}</td>
-                <td className="text-center">{item.materials_completed}</td>
+                <td className="text-center">{item.completed_materials ?? item.materials_completed ?? 0}</td>
               </tr>
             ))
           ) : (
@@ -624,11 +624,11 @@ const MaterialModal = ({ show, onHide, material, onSuccess }) => {
         material
           ? {
               curriculum_id: material.curriculum_id || "",
-              material_name: material.material_name || "",
+              material_name: material.material_title || material.material_name || "",
               material_type: material.material_type || "ARTICLE",
-              content: material.content || "",
-              media_url: material.media_url || "",
-              sequence_no: material.sequence_no || 1,
+              content: material.description || material.content || "",
+              media_url: material.content_url || material.media_url || "",
+              sequence_no: material.order_index ?? material.sequence_no ?? 1,
             }
           : {
               curriculum_id: "",
@@ -737,6 +737,7 @@ const MaterialModal = ({ show, onHide, material, onSuccess }) => {
                 >
                   <option value="ARTICLE">Artikel</option>
                   <option value="VIDEO">Video</option>
+                  <option value="AUDIO">Audio</option>
                   <option value="DOCUMENT">Dokumen</option>
                 </Form.Select>
               </Form.Group>
@@ -898,7 +899,7 @@ const EvaluationModal = ({ show, onHide, evaluation, onSuccess }) => {
                   <option value="">Pilih Materi</option>
                   {materials.map((m) => (
                     <option key={m.material_id} value={m.material_id}>
-                      {m.material_name}
+                      {m.material_title || m.material_name}
                     </option>
                   ))}
                 </Form.Select>
