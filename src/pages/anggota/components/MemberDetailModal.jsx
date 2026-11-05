@@ -19,7 +19,7 @@ import {
   ShieldCheck,
   CheckCircle,
 } from "phosphor-react";
-import { getMediaUrl, SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
+import { getMediaUrl, SVG_FALLBACK_IMAGE, sanitizeString } from "../../../utils/helpers";
 
 const InfoCard = ({ icon: Icon, label, value, subValue, colProps = { md: 6 } }) => (
   <Col {...colProps}>
@@ -110,7 +110,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
               <User size={32} weight="bold" />
             </div>
             <div>
-              <h5 className="fw-bold text-dark mb-1">{member.full_name}</h5>
+              <h5 className="fw-bold text-dark mb-1">{sanitizeString(member.full_name)}</h5>
               <div className="d-flex flex-wrap align-items-center gap-2">
                 <Badge
                   bg={
@@ -169,35 +169,37 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
 
         {/* Tab Navigasi Kategori Data */}
         <Tab.Container activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-          <Nav variant="pills" className="bg-light p-1 rounded-3 mb-3 gap-1">
-            <Nav.Item>
-              <Nav.Link eventKey="semua" className="py-1.5 px-3 rounded-2 small fw-semibold">
-                Semua Informasi
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="pribadi" className="py-1.5 px-3 rounded-2 small fw-semibold">
-                Biodata
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="keuangan" className="py-1.5 px-3 rounded-2 small fw-semibold">
-                Simpanan & Finansial
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="pekerjaan" className="py-1.5 px-3 rounded-2 small fw-semibold">
-                Pekerjaan & Rekening
-              </Nav.Link>
-            </Nav.Item>
-            {(reg?.ktp_photo_path || reg?.selfie_photo_path) && (
+          <div className="tabs-scrollable-container mb-3 pb-1">
+            <Nav variant="pills" className="global-tabs-scrollable bg-light p-1 rounded-3 gap-1">
               <Nav.Item>
-                <Nav.Link eventKey="dokumen" className="py-1.5 px-3 rounded-2 small fw-semibold">
-                  Dokumen KTP
+                <Nav.Link eventKey="semua" className="py-1.5 px-3 rounded-2 small fw-semibold text-nowrap">
+                  Semua Informasi
                 </Nav.Link>
               </Nav.Item>
-            )}
-          </Nav>
+              <Nav.Item>
+                <Nav.Link eventKey="pribadi" className="py-1.5 px-3 rounded-2 small fw-semibold text-nowrap">
+                  Biodata
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="keuangan" className="py-1.5 px-3 rounded-2 small fw-semibold text-nowrap">
+                  Simpanan & Finansial
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="pekerjaan" className="py-1.5 px-3 rounded-2 small fw-semibold text-nowrap">
+                  Pekerjaan & Rekening
+                </Nav.Link>
+              </Nav.Item>
+              {(reg?.ktp_photo_path || reg?.selfie_photo_path) && (
+                <Nav.Item>
+                  <Nav.Link eventKey="dokumen" className="py-1.5 px-3 rounded-2 small fw-semibold text-nowrap">
+                    Dokumen KTP
+                  </Nav.Link>
+                </Nav.Item>
+              )}
+            </Nav>
+          </div>
 
           <Tab.Content className="pt-2">
             {/* Tab 0: Semua Informasi (Ditampilkan langsung agar tidak tersembunyi) */}
@@ -212,17 +214,17 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                     <InfoCard
                       icon={IdentificationCard}
                       label="Nomor Induk Kependudukan (NIK)"
-                      value={member.nik_ktp || reg?.nik_ktp}
+                      value={sanitizeString(member.nik_ktp || reg?.nik_ktp)}
                     />
                     <InfoCard
                       icon={Phone}
                       label="Nomor Telepon / WhatsApp"
-                      value={member.phone_number || reg?.phone_number}
+                      value={sanitizeString(member.phone_number || reg?.phone_number)}
                     />
                     <InfoCard
                       icon={EnvelopeSimple}
                       label="Alamat Email"
-                      value={member.email || reg?.email}
+                      value={sanitizeString(member.email || reg?.email)}
                     />
                     <InfoCard
                       icon={GenderIntersex}
@@ -239,10 +241,10 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                       icon={Calendar}
                       label="Tanggal Lahir"
                       value={
-                        member.date_of_brith
+                        (member.date_of_birth || member.date_of_brith)
                           ? formatDate
-                            ? formatDate(member.date_of_brith)
-                            : member.date_of_brith
+                            ? formatDate(member.date_of_birth || member.date_of_brith)
+                            : (member.date_of_birth || member.date_of_brith)
                           : "-"
                       }
                     />
@@ -473,10 +475,10 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                   icon={Calendar}
                   label="Tanggal Lahir"
                   value={
-                    member.date_of_brith
+                    (member.date_of_birth || member.date_of_brith)
                       ? formatDate
-                        ? formatDate(member.date_of_brith)
-                        : member.date_of_brith
+                        ? formatDate(member.date_of_birth || member.date_of_brith)
+                        : (member.date_of_birth || member.date_of_brith)
                       : "-"
                   }
                 />
