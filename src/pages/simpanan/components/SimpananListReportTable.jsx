@@ -13,6 +13,28 @@ const SimpananListReportTable = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
+  const [localFilters, setLocalFilters] = useState(searchFilters);
+
+  // Sync localFilters with searchFilters if parent changes (e.g. reset)
+  useEffect(() => {
+    setLocalFilters(searchFilters);
+  }, [searchFilters]);
+
+  // Debounce search input filter to avoid heavy re-render on each keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const isDifferent = localFilters.some((val, i) => val !== (searchFilters[i] || ""));
+      if (isDifferent) {
+        localFilters.forEach((val, i) => {
+          if (val !== (searchFilters[i] || "")) {
+            onFilterChange(i, val);
+          }
+        });
+        setCurrentPage(1);
+      }
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [localFilters, searchFilters, onFilterChange]);
 
   const totalItems = filteredList.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
@@ -121,10 +143,14 @@ const SimpananListReportTable = ({
                     className={`compact-search-input ${idx === 0 ? "text-center" : ""}`}
                     placeholder={ph}
                     aria-label={`Filter ${ph}`}
-                    value={searchFilters[idx] || ""}
+                    value={localFilters[idx] || ""}
                     onChange={(e) => {
-                      onFilterChange(idx, e.target.value);
-                      setCurrentPage(1);
+                      const val = e.target.value;
+                      setLocalFilters((prev) => {
+                        const copy = [...prev];
+                        copy[idx] = val;
+                        return copy;
+                      });
                     }}
                   />
                 </th>
