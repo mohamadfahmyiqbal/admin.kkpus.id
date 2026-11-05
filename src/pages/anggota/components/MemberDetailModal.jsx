@@ -143,6 +143,11 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                     Anggota
                   </Badge>
                 )}
+                {member.is_verified ? (
+                  <Badge bg="info" className="rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1">
+                    <CheckCircle size={12} weight="bold" /> Terverifikasi
+                  </Badge>
+                ) : null}
                 {onEditRole && (
                   <Button
                     variant="link"
@@ -448,17 +453,17 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                 <InfoCard
                   icon={IdentificationCard}
                   label="Nomor Induk Kependudukan (NIK)"
-                  value={member.nik_ktp || reg?.nik_ktp}
+                  value={sanitizeString(member.nik_ktp || reg?.nik_ktp)}
                 />
                 <InfoCard
                   icon={Phone}
                   label="Nomor Telepon / WhatsApp"
-                  value={member.phone_number || reg?.phone_number}
+                  value={sanitizeString(member.phone_number || reg?.phone_number)}
                 />
                 <InfoCard
                   icon={EnvelopeSimple}
                   label="Alamat Email"
-                  value={member.email || reg?.email}
+                  value={sanitizeString(member.email || reg?.email)}
                 />
                 <InfoCard
                   icon={GenderIntersex}

@@ -54,7 +54,8 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
         if (errors && errors.length > 0) {
           detailsHtml += `<hr/><div style="max-height: 120px; overflow-y: auto; text-align: left; font-size: 12px;">`;
           errors.slice(0, 5).forEach((err) => {
-            detailsHtml += `Baris ${err.row || "-"}: ${DOMPurify.sanitize(err.reason || "")}<br/>`;
+            const safeRow = String(err.row || "-").replace(/[^\w-]/g, "");
+            detailsHtml += `Baris ${safeRow}: ${DOMPurify.sanitize(err.reason || "")}<br/>`;
           });
           if (errors.length > 5) {
             detailsHtml += `... dan ${errors.length - 5} kesalahan lainnya.`;
@@ -65,7 +66,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
         Swal.fire({
           icon: totalImported > 0 ? "success" : "warning",
           title: "Import Selesai",
-          html: detailsHtml,
+          html: DOMPurify.sanitize(detailsHtml),
           confirmButtonColor: "#28a745",
         }).then(() => {
           setFile(null);

@@ -80,7 +80,7 @@ function TerminationReviewModal({
       : [];
     const userFullName = typeof currentUser.full_name === "string" ? currentUser.full_name.toLowerCase() : "";
 
-    const allRoles = [userRole, ...userRoles, ...userRoleAssignments, userFullName].filter(Boolean);
+    const allRoles = [userRole, ...userRoles, ...userRoleAssignments].filter(Boolean);
 
     return allRoles.some((r) => r.includes(target) || target.includes(r));
   })();
