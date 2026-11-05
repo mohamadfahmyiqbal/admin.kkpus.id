@@ -60,6 +60,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Akun"
+                aria-label="Cari Akun"
                 value={searchAkun}
                 onChange={(e) => setSearchAkun(e.target.value)}
               />
@@ -69,6 +70,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Deskripsi"
+                aria-label="Cari Deskripsi"
                 value={searchDeskripsi}
                 onChange={(e) => setSearchDeskripsi(e.target.value)}
               />
@@ -78,6 +80,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Debet"
+                aria-label="Cari Debet"
                 value={searchDebet}
                 onChange={(e) => setSearchDebet(e.target.value)}
               />
@@ -87,6 +90,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Kredit"
+                aria-label="Cari Kredit"
                 value={searchKredit}
                 onChange={(e) => setSearchKredit(e.target.value)}
               />

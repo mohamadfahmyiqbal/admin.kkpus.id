@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import savingsService from "../../utils/api/USavings";
 import { exportToExcel } from "../../utils/helpers/exportToExcel";
@@ -52,9 +53,20 @@ const SimpananReportPage = () => {
             total_all: 0,
           }
         );
+      } else if (res.data?.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Gagal Memuat Laporan",
+          text: res.data.message,
+        });
       }
     } catch (err) {
       console.error("Failed to fetch report data:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Kesalahan Sistem",
+        text: err.response?.data?.message || err.message || "Gagal memuat data laporan simpanan.",
+      });
     } finally {
       setLoading(false);
     }

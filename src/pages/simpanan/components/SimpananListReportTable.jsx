@@ -120,6 +120,7 @@ const SimpananListReportTable = ({
                     type="text"
                     className={`compact-search-input ${idx === 0 ? "text-center" : ""}`}
                     placeholder={ph}
+                    aria-label={`Filter ${ph}`}
                     value={searchFilters[idx] || ""}
                     onChange={(e) => {
                       onFilterChange(idx, e.target.value);
