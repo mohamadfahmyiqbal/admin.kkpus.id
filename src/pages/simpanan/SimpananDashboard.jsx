@@ -15,6 +15,8 @@ import {
 import savingsService from "../../utils/api/USavings";
 import { exportToExcel } from "../../utils/helpers/exportToExcel";
 import TransactionTable from "../../components/ui/TransactionTable";
+import MemberSavingsTable from "./components/MemberSavingsTable";
+import MemberSavingsDetailModal from "./components/MemberSavingsDetailModal";
 import { formatRupiah, jwtEncode } from "../../utils/helpers";
 
 const TransactionDetailModal = React.lazy(() =>
@@ -101,6 +103,18 @@ const SimpananDashboard = () => {
   const [showImportModal, setShowImportModal] = useState(false);
   const [exporting, setExporting] = useState(false);
 
+  // Anggota aggregates state (tabulasi pokok & wajib)
+  const [members, setMembers] = useState([]);
+  const [membersLoading, setMembersLoading] = useState(false);
+  const [membersPagination, setMembersPagination] = useState(null);
+  const [memberPage, setMemberPage] = useState(1);
+  const [memberLimit, setMemberLimit] = useState(10);
+  const [memberSearch, setMemberSearch] = useState("");
+  const [debouncedMemberSearch, setDebouncedMemberSearch] = useState("");
+  const [memberSortConfig, setMemberSortConfig] = useState({ key: "full_name", direction: "asc" });
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [showMemberModal, setShowMemberModal] = useState(false);
+
   const tabsWrapperRef = useRef(null);
 
   // Enable smooth horizontal scrolling on mouse wheel
@@ -123,7 +137,6 @@ const SimpananDashboard = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       const trimmedMember = searchTerm.trim();
-      // Only trigger server search if empty (reset) or at least 2 characters
       if (trimmedMember.length === 0 || trimmedMember.length >= 2) {
         setDebouncedSearch(trimmedMember);
       }
@@ -136,27 +149,49 @@ const SimpananDashboard = () => {
     return () => clearTimeout(timer);
   }, [searchTerm, columnFilters.date, columnFilters.amount]);
 
-  const handleSearchChange = (field, value) => {
-    setColumnFilters((prev) => ({ ...prev, [field]: value }));
-    setPage(1);
-    if (field === "member") {
-      setSearchTerm(value);
-    } else if (field === "status") {
-      setStatusFilter(value);
+  // Debounce search inputs for member aggregates query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedMemberSearch(memberSearch.trim());
+      setMemberPage(1);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [memberSearch]);
+
+  const fetchMemberAggregates = useCallback(async () => {
+    if (activeType !== "POKOK" && activeType !== "WAJIB") return;
+    setMembersLoading(true);
+    try {
+      const params = {
+        type: activeType,
+        page: memberPage,
+        limit: memberLimit,
+        search: debouncedMemberSearch,
+        sortBy: memberSortConfig.key,
+        sortDir: memberSortConfig.direction,
+      };
+      const res = await savingsService.getAdminSavingsMemberAggregates(params);
+      if (res.data?.status) {
+        const data = res.data.data;
+        setMembers(data.members || []);
+        setMembersPagination(data.pagination || null);
+      }
+    } catch (err) {
+      console.error("Gagal mengambil agregat simpanan anggota:", err);
+      toast.error("Gagal mengambil data simpanan anggota");
+    } finally {
+      setMembersLoading(false);
     }
+  }, [activeType, memberPage, memberLimit, debouncedMemberSearch, memberSortConfig]);
+
+  const handleMemberSearchChange = (val) => {
+    setMemberSearch(val);
+    setMemberPage(1);
   };
 
-  const handleResetFilters = () => {
-    setColumnFilters({
-      date: "",
-      member: "",
-      type: "",
-      amount: "",
-      status: "",
-    });
-    setSearchTerm("");
-    setStatusFilter("");
-    setPage(1);
+  const handleResetMemberFilters = () => {
+    setMemberSearch("");
+    setMemberPage(1);
   };
 
   const fetchSummary = async () => {
@@ -209,13 +244,19 @@ const SimpananDashboard = () => {
   }, []);
 
   useEffect(() => {
-    fetchTransactions();
-  }, [fetchTransactions]);
+    if (activeType === "POKOK" || activeType === "WAJIB") {
+      fetchMemberAggregates();
+    } else {
+      fetchTransactions();
+    }
+  }, [activeType, fetchMemberAggregates, fetchTransactions]);
 
   const handleTypeSelect = (k) => {
     setActiveType(k);
     setPage(1);
+    setMemberPage(1);
     handleResetFilters();
+    handleResetMemberFilters();
     if (k !== "SUKARELA") setActiveSukarelaCategory("SETORAN");
   };
 
@@ -271,7 +312,35 @@ const SimpananDashboard = () => {
     return list;
   }, [transactions, columnFilters.type, sortConfig]);
 
+  const handleExportMembers = async () => {
+    if (activeType !== "POKOK" && activeType !== "WAJIB") return;
+    setExporting(true);
+    try {
+      const membersToExport = activeType === "POKOK" ? [...members] : [...members];
+      const formattedData = membersToExport.map((m, idx) => ({
+        No: idx + 1,
+        "No. Anggota": m.member_no || "-",
+        "Nama Anggota": m.full_name || "-",
+        "Total Transaksi": m.total_count ?? 0,
+        "Total Nominal": parseFloat(m.total_amount) || 0,
+        "Total Terbayar": parseFloat(m.paid_amount) || 0,
+        "Transaksi Terbayar": m.paid_count ?? 0,
+        "Total Belum Terbayar": parseFloat(m.unpaid_amount) || 0,
+        "Transaksi Belum Terbayar": m.unpaid_count ?? 0,
+      }));
+
+      const today = new Date().toISOString().split("T")[0];
+      exportToExcel(formattedData, `Anggota_Simpanan_${activeType}_${today}`);
+    } catch (err) {
+      console.error("Gagal export anggota simpanan:", err);
+      toast.error("Terjadi kesalahan saat mengekspor anggota simpanan.");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleExportTransactions = async () => {
+    if (activeType === "POKOK" || activeType === "WAJIB") return;
     setExporting(true);
     try {
       const params = {
@@ -402,22 +471,26 @@ const SimpananDashboard = () => {
             className="border shadow-sm d-flex align-items-center gap-1.5 fw-medium text-muted bg-white px-3"
             onClick={() => {
               fetchSummary();
-              fetchTransactions();
+              if (activeType === "POKOK" || activeType === "WAJIB") {
+                fetchMemberAggregates();
+              } else {
+                fetchTransactions();
+              }
             }}
-            disabled={loading}
-            title="Refresh Data Transaksi"
+            disabled={loading || membersLoading}
+            title="Refresh Data Simpanan"
           >
-            <ArrowClockwise size={16} weight="bold" className={loading ? "spin" : ""} />
-            <span>{loading ? "Memuat..." : "Refresh"}</span>
+            <ArrowClockwise size={16} weight="bold" className={loading || membersLoading ? "spin" : ""} />
+            <span>{loading || membersLoading ? "Memuat..." : "Refresh"}</span>
           </Button>
 
           <Button
             variant="outline-success"
             size="sm"
             className="shadow-sm d-flex align-items-center gap-1.5 fw-medium px-3 bg-white"
-            onClick={handleExportTransactions}
-            disabled={exporting || loading}
-            title="Export Data Transaksi Simpanan ke Excel"
+            onClick={activeType === "POKOK" || activeType === "WAJIB" ? handleExportMembers : handleExportTransactions}
+            disabled={exporting || loading || membersLoading}
+            title="Export Data Simpanan ke Excel"
           >
             <FileXls size={16} weight="bold" className="text-success" />
             <span>{exporting ? "Mengekspor..." : "Export Excel"}</span>
@@ -515,38 +588,98 @@ const SimpananDashboard = () => {
                     </div>
                   </div>
                 )}
-                <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold ms-auto ms-lg-0">
-                  Total: {pagination?.total_records || transactions.length} Transaksi
-                </span>
+                {activeType === "POKOK" || activeType === "WAJIB" ? (
+                  <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold ms-auto ms-lg-0">
+                    Total: {membersPagination?.total_records || members.length} Anggota
+                  </span>
+                ) : (
+                  <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold ms-auto ms-lg-0">
+                    Total: {pagination?.total_records || transactions.length} Transaksi
+                  </span>
+                )}
               </div>
             </div>
           </Tab.Container>
         </div>
 
-        {/* Table Body with In-Header Search Rows */}
+        {/* Table Body */}
         <Card.Body className="p-0">
-          <TransactionTable
-            transactions={processedTransactions}
-            loading={loading}
-            formatRupiah={formatRupiah}
-            pagination={pagination}
-            onPageChange={(p) => setPage(p)}
-            onApprove={handleApprove}
-            onView={handleViewDetail}
-            sortConfig={sortConfig}
-            onSort={handleSort}
-            pageSize={limit}
-            onPageSizeChange={(newSize) => {
-              setLimit(newSize);
-              setPage(1);
-            }}
-            showSearchRow={true}
-            searchFilters={columnFilters}
-            onSearchChange={handleSearchChange}
-            onResetFilter={handleResetFilters}
-          />
+          {activeType === "POKOK" || activeType === "WAJIB" ? (
+            <MemberSavingsTable
+              members={members}
+              loading={membersLoading}
+              formatRupiah={formatRupiah}
+              pagination={membersPagination}
+              onPageChange={(p) => setMemberPage(p)}
+              pageSize={memberLimit}
+              onPageSizeChange={(newSize) => {
+                setMemberLimit(newSize);
+                setMemberPage(1);
+              }}
+              onViewDetail={(member) => {
+                setSelectedMember(member);
+                setShowMemberModal(true);
+              }}
+              sortConfig={memberSortConfig}
+              onSort={(key) => {
+                setMemberSortConfig((prev) => ({
+                  key,
+                  direction:
+                    prev.key === key && prev.direction === "asc"
+                      ? "desc"
+                      : "asc",
+                }));
+              }}
+              searchFilter={memberSearch}
+              onSearchChange={handleMemberSearchChange}
+              onResetFilter={handleResetMemberFilters}
+            />
+          ) : (
+            <TransactionTable
+              transactions={processedTransactions}
+              loading={loading}
+              formatRupiah={formatRupiah}
+              pagination={pagination}
+              onPageChange={(p) => setPage(p)}
+              onApprove={handleApprove}
+              onView={handleViewDetail}
+              sortConfig={sortConfig}
+              onSort={handleSort}
+              pageSize={limit}
+              onPageSizeChange={(newSize) => {
+                setLimit(newSize);
+                setPage(1);
+              }}
+              showSearchRow={true}
+              searchFilters={columnFilters}
+              onSearchChange={handleSearchChange}
+              onResetFilter={handleResetFilters}
+            />
+          )}
         </Card.Body>
       </Card>
+
+      {/* Detail Modal Simpanan Anggota */}
+      {showMemberModal && (
+        <MemberSavingsDetailModal
+          show={showMemberModal}
+          onHide={() => setShowMemberModal(false)}
+          member={selectedMember}
+          savingsType={activeType}
+          formatRupiah={formatRupiah}
+          onViewInvoice={(tx, mem) => {
+            setSelectedTx({
+              ...tx,
+              member: mem.full_name,
+              member_no: mem.member_no,
+              amount: tx.amount,
+              created_at: tx.date,
+              status: tx.status,
+            });
+            setShowDetailModal(true);
+          }}
+        />
+      )}
 
       {/* Lazy Loaded Modals with React.Suspense */}
       <React.Suspense fallback={null}>
