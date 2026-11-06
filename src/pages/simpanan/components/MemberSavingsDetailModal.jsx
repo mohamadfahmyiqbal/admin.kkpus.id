@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Modal, Button, Table, Form } from "react-bootstrap";
+import { Modal, Button, Table, Form, Pagination } from "react-bootstrap";
 import {
   X,
   Receipt,
@@ -32,10 +32,14 @@ export const MemberSavingsDetailModal = ({
     direction: "desc",
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   const transactions = member?.transactions || [];
 
   const handleFilterChange = (col, val) => {
     setColumnFilters((prev) => ({ ...prev, [col]: val }));
+    setCurrentPage(1);
   };
 
   const handleResetFilters = () => {
@@ -45,6 +49,7 @@ export const MemberSavingsDetailModal = ({
       amount: "",
       status: "",
     });
+    setCurrentPage(1);
   };
 
   const handleSort = (key) => {
@@ -143,10 +148,17 @@ export const MemberSavingsDetailModal = ({
     }
 
     if (columnFilters.amount) {
-      const cleanQ = columnFilters.amount.replace(/[^0-9]/g, "");
-      if (cleanQ) {
-        list = list.filter((tx) => String(tx.amount || "").includes(cleanQ));
-      }
+      const q = columnFilters.amount.trim();
+      const cleanDigits = q.replace(/[^0-9]/g, "");
+      list = list.filter((tx) => {
+        const amtStr = String(tx.amount || "");
+        const formattedAmt = formatRupiah ? formatRupiah(tx.amount || 0).toLowerCase() : "";
+        return (
+          amtStr.includes(cleanDigits) ||
+          amtStr.includes(q) ||
+          formattedAmt.includes(q.toLowerCase())
+        );
+      });
     }
 
     if (columnFilters.status) {
@@ -206,6 +218,31 @@ export const MemberSavingsDetailModal = ({
     return list;
   }, [transactions, columnFilters, sortConfig]);
 
+  const totalRecords = filteredAndSortedTransactions.length;
+  const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+  const activePage = Math.min(currentPage, totalPages);
+
+  const paginatedTransactions = useMemo(() => {
+    const start = (activePage - 1) * pageSize;
+    return filteredAndSortedTransactions.slice(start, start + pageSize);
+  }, [filteredAndSortedTransactions, activePage, pageSize]);
+
+  const getPaginationRange = (curr, total) => {
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    const delta = 1;
+    const range = [];
+    for (let i = Math.max(2, curr - delta); i <= Math.min(total - 1, curr + delta); i++) {
+      range.push(i);
+    }
+    if (curr - delta > 2) range.unshift("...");
+    range.unshift(1);
+    if (curr + delta < total - 1) range.push("...");
+    range.push(total);
+    return range;
+  };
+
   if (!member) return null;
 
   const typeLabel = savingsType === "POKOK" ? "Simpanan Pokok" : "Simpanan Wajib";
@@ -239,7 +276,16 @@ export const MemberSavingsDetailModal = ({
                 <th
                   className="py-2.5 px-3 cursor-pointer user-select-none"
                   style={{ width: "175px" }}
+                  role="button"
+                  tabIndex={0}
+                  aria-sort={sortConfig.key === "date" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                   onClick={() => handleSort("date")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSort("date");
+                    }
+                  }}
                 >
                   <div className="d-flex align-items-center">
                     <span>Tanggal</span>
@@ -248,7 +294,16 @@ export const MemberSavingsDetailModal = ({
                 </th>
                 <th
                   className="py-2.5 px-3 cursor-pointer user-select-none"
+                  role="button"
+                  tabIndex={0}
+                  aria-sort={sortConfig.key === "description" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                   onClick={() => handleSort("description")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSort("description");
+                    }
+                  }}
                 >
                   <div className="d-flex align-items-center">
                     <span>Keterangan</span>
@@ -258,7 +313,16 @@ export const MemberSavingsDetailModal = ({
                 <th
                   className="py-2.5 px-3 cursor-pointer user-select-none text-end"
                   style={{ width: "160px" }}
+                  role="button"
+                  tabIndex={0}
+                  aria-sort={sortConfig.key === "amount" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                   onClick={() => handleSort("amount")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSort("amount");
+                    }
+                  }}
                 >
                   <div className="d-flex align-items-center justify-content-end">
                     <span>Nominal</span>
@@ -268,7 +332,16 @@ export const MemberSavingsDetailModal = ({
                 <th
                   className="py-2.5 px-3 cursor-pointer user-select-none text-center"
                   style={{ width: "170px" }}
+                  role="button"
+                  tabIndex={0}
+                  aria-sort={sortConfig.key === "status" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                   onClick={() => handleSort("status")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSort("status");
+                    }
+                  }}
                 >
                   <div className="d-flex align-items-center justify-content-center">
                     <span>Status</span>
@@ -363,42 +436,102 @@ export const MemberSavingsDetailModal = ({
                   </td>
                 </tr>
               ) : (
-                filteredAndSortedTransactions.map((tx, idx) => (
-                  <tr key={tx.id || idx}>
-                    <td className="py-2.5 px-3 text-center text-muted fw-medium">{idx + 1}</td>
-                    <td className="py-2.5 px-3 text-secondary extra-small fw-medium">
-                      {formatDate(tx.date)}
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <div className="fw-semibold text-dark">{tx.description || tx.product_name}</div>
-                      {tx.type && (
-                        <div className="text-muted extra-small">Tipe: {tx.type}</div>
-                      )}
-                    </td>
-                    <td className="py-2.5 px-3 text-end fw-bold text-dark">
-                      {formatRupiah(tx.amount || 0)}
-                    </td>
-                    <td className="py-2.5 px-3 text-center">
-                      {renderStatusBadge(tx)}
-                    </td>
-                    <td className="py-2.5 px-3 text-center">
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill extra-small fw-semibold shadow-none"
-                        onClick={() => onViewInvoice && onViewInvoice(tx, member)}
-                        title="Tampilkan Invoice / Bukti Transaksi"
-                      >
-                        <Receipt size={14} weight="bold" />
-                        <span>Invoice</span>
-                      </Button>
-                    </td>
-                  </tr>
-                ))
+                paginatedTransactions.map((tx, idx) => {
+                  const globalIdx = (activePage - 1) * pageSize + idx + 1;
+                  return (
+                    <tr key={tx.id || globalIdx}>
+                      <td className="py-2.5 px-3 text-center text-muted fw-medium">{globalIdx}</td>
+                      <td className="py-2.5 px-3 text-secondary extra-small fw-medium">
+                        {formatDate(tx.date)}
+                      </td>
+                      <td className="py-2.5 px-3">
+                        <div className="fw-semibold text-dark">{tx.description || tx.product_name}</div>
+                        {tx.type && (
+                          <div className="text-muted extra-small">Tipe: {tx.type}</div>
+                        )}
+                      </td>
+                      <td className="py-2.5 px-3 text-end fw-bold text-dark">
+                        {formatRupiah(tx.amount || 0)}
+                      </td>
+                      <td className="py-2.5 px-3 text-center">
+                        {renderStatusBadge(tx)}
+                      </td>
+                      <td className="py-2.5 px-3 text-center">
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          className="d-inline-flex align-items-center gap-1 px-2.5 py-1 rounded-pill extra-small fw-semibold shadow-none"
+                          onClick={() => onViewInvoice && onViewInvoice(tx, member)}
+                          title="Tampilkan Invoice / Bukti Transaksi"
+                        >
+                          <Receipt size={14} weight="bold" />
+                          <span>Invoice</span>
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </Table>
         </div>
+
+        {/* Kontrol Pagination & Info Bar */}
+        {totalRecords > 0 && (
+          <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-3 px-1">
+            <div className="d-flex align-items-center gap-2 text-muted extra-small">
+              <span>Tampilkan:</span>
+              <Form.Select
+                size="sm"
+                className="bg-light border shadow-none extra-small text-dark"
+                style={{ width: "70px", height: "30px" }}
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </Form.Select>
+              <span>
+                Menampilkan {(activePage - 1) * pageSize + 1}-
+                {Math.min(activePage * pageSize, totalRecords)} dari {totalRecords} transaksi
+              </span>
+            </div>
+
+            {totalPages > 1 && (
+              <Pagination size="sm" className="mb-0 gap-1 extra-small">
+                <Pagination.Prev
+                  disabled={activePage <= 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  className="border-0 shadow-none"
+                />
+                {getPaginationRange(activePage, totalPages).map((p, idx) =>
+                  p === "..." ? (
+                    <Pagination.Ellipsis key={`el-${idx}`} disabled />
+                  ) : (
+                    <Pagination.Item
+                      key={p}
+                      active={p === activePage}
+                      onClick={() => setCurrentPage(p)}
+                      className="border-0 shadow-none"
+                    >
+                      {p}
+                    </Pagination.Item>
+                  )
+                )}
+                <Pagination.Next
+                  disabled={activePage >= totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  className="border-0 shadow-none"
+                />
+              </Pagination>
+            )}
+          </div>
+        )}
       </Modal.Body>
 
       <Modal.Footer className="border-top px-4 py-3 bg-light">
