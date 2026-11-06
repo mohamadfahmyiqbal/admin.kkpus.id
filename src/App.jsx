@@ -9,8 +9,11 @@ import "./App.css";
 import { initSocket, disconnectSocket } from "./utils/api/socket";
 import PwaUpdatePrompt from "./components/pwa/PwaUpdatePrompt";
 import OfflineIndicator from "./components/pwa/OfflineIndicator";
+import { useSocketUpdateListener } from "./hooks/useSocketUpdateListener";
 
 const App = () => {
+  useSocketUpdateListener();
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
