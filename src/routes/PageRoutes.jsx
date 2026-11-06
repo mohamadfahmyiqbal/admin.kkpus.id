@@ -25,6 +25,10 @@ const PAGE_COMPONENTS = {
     component: lazy(() => import("../pages/simpanan/SimpananReportPage")),
     isProtected: true,
   },
+  membersWithSavingsPage: {
+    component: lazy(() => import("../pages/simpanan/MembersWithSavingsPage")),
+    isProtected: true,
+  },
   jualBeliDashboard: {
     component: lazy(() => import("../pages/jualBeli/JualBeliDashboard")),
     isProtected: true,
