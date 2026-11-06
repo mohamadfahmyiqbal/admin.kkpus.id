@@ -61,15 +61,6 @@ export const TransactionTable = ({
   showSearchRow = true,
   onResetFilter,
 }) => {
-  if (loading) {
-    return (
-      <div className="bg-white rounded-4 p-5 text-center text-muted">
-        <Spinner animation="border" variant="primary" size="sm" className="me-2" />
-        <span className="small fw-semibold">Memuat data transaksi...</span>
-      </div>
-    );
-  }
-
   const formatDateTime = (dateStr) => {
     if (!dateStr) return { day: "-", time: "-" };
     const t = new Date(dateStr);
@@ -278,7 +269,14 @@ export const TransactionTable = ({
           </thead>
 
           <tbody>
-            {!transactions || transactions.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan="6" className="py-5 text-center text-muted border-0">
+                  <Spinner animation="border" variant="primary" size="sm" className="me-2" />
+                  <span className="small fw-semibold">Memuat data transaksi...</span>
+                </td>
+              </tr>
+            ) : !transactions || transactions.length === 0 ? (
               <tr>
                 <td colSpan="6" className="p-0 border-0">
                   <EmptyState

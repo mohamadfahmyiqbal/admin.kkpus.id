@@ -119,16 +119,20 @@ const SimpananDashboard = () => {
 
   const [debouncedFilters, setDebouncedFilters] = useState({ date: "", amount: "" });
 
-  // Debounce search inputs for query
+  // Debounce search inputs for query (500ms debounce to avoid rapid loading on single keystroke)
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearch(searchTerm.trim());
+      const trimmedMember = searchTerm.trim();
+      // Only trigger server search if empty (reset) or at least 2 characters
+      if (trimmedMember.length === 0 || trimmedMember.length >= 2) {
+        setDebouncedSearch(trimmedMember);
+      }
       setDebouncedFilters({
         date: (columnFilters.date || "").trim(),
         amount: (columnFilters.amount || "").trim(),
       });
       setPage(1);
-    }, 350);
+    }, 500);
     return () => clearTimeout(timer);
   }, [searchTerm, columnFilters.date, columnFilters.amount]);
 
