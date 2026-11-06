@@ -262,6 +262,28 @@ const SimpananDashboard = () => {
     setMemberPage(1);
   };
 
+  const handleSearchChange = (field, value) => {
+    setColumnFilters((prev) => ({ ...prev, [field]: value }));
+    if (field === "member") {
+      setSearchTerm(value);
+    }
+    setPage(1);
+  };
+
+  const handleResetFilters = () => {
+    setColumnFilters({
+      date: "",
+      member: "",
+      type: "",
+      amount: "",
+      status: "",
+    });
+    setSearchTerm("");
+    setDebouncedSearch("");
+    setStatusFilter("");
+    setPage(1);
+  };
+
   const fetchSummary = async () => {
     try {
       const res = await savingsService.getAdminSavingsSummary();
