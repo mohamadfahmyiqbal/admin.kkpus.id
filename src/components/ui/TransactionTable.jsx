@@ -129,8 +129,8 @@ export const TransactionTable = ({
 
   return (
     <>
-      <div className="table-responsive">
-        <Table align="middle" className="mb-0 custom-table-admin table-hover" hover>
+      <div className="table-responsive" style={{ overflowX: "auto" }}>
+        <Table align="middle" className="mb-0 custom-table-admin table-hover text-nowrap" hover style={{ minWidth: "900px" }}>
           <thead className="table-light">
             <tr>
               <th

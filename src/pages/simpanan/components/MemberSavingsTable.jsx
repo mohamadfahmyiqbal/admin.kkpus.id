@@ -81,8 +81,8 @@ export const MemberSavingsTable = ({
 
   return (
     <div className="d-flex flex-column h-100">
-      <div className="table-responsive flex-grow-1">
-        <Table hover className="align-middle mb-0 custom-table">
+      <div className="table-responsive flex-grow-1" style={{ overflowX: "auto" }}>
+        <Table hover className="align-middle mb-0 custom-table text-nowrap" style={{ minWidth: "900px" }}>
           <thead className="bg-light text-uppercase text-secondary" style={{ fontSize: "11px", letterSpacing: "0.5px" }}>
             <tr>
               <th className="py-3 px-3 text-center" style={{ width: "60px" }}>No</th>

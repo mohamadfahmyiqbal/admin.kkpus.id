@@ -231,8 +231,8 @@ export const MemberSavingsDetailModal = ({
 
       <Modal.Body className="p-4">
         {/* Tabel Rincian dengan filter kolom di thead */}
-        <div className="table-responsive border rounded-3 overflow-hidden">
-          <Table hover className="align-middle mb-0 custom-table" style={{ fontSize: "13px" }}>
+        <div className="table-responsive border rounded-3" style={{ overflowX: "auto" }}>
+          <Table hover className="align-middle mb-0 custom-table text-nowrap" style={{ fontSize: "13px", minWidth: "750px" }}>
             <thead className="bg-light text-uppercase text-secondary" style={{ fontSize: "11px", letterSpacing: "0.5px" }}>
               <tr>
                 <th className="py-2.5 px-3 text-center" style={{ width: "50px" }}>No</th>
