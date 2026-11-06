@@ -1,15 +1,11 @@
 import React from "react";
-import { Table, Badge, Pagination, Form, Spinner, Button } from "react-bootstrap";
+import { Table, Pagination, Form, Spinner, Button } from "react-bootstrap";
 import {
-  Eye,
   ArrowsDownUp,
   CaretUp,
   CaretDown,
   X,
   ListBullets,
-  CheckCircle,
-  Clock,
-  WarningCircle,
 } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";
 
@@ -45,9 +41,15 @@ export const MemberSavingsTable = ({
   onSort,
   pageSize = 10,
   onPageSizeChange,
-  searchFilter = "",
-  onSearchChange,
-  onResetFilter,
+  columnFilters = {
+    member_no: "",
+    full_name: "",
+    total_amount: "",
+    paid_amount: "",
+    unpaid_amount: "",
+  },
+  onColumnFilterChange,
+  onResetFilters,
 }) => {
   if (loading) {
     return (
@@ -75,6 +77,8 @@ export const MemberSavingsTable = ({
   const startItem = totalRecords === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalRecords);
 
+  const hasActiveFilters = Object.values(columnFilters || {}).some((v) => Boolean(v));
+
   return (
     <div className="d-flex flex-column h-100">
       <div className="table-responsive flex-grow-1">
@@ -85,7 +89,7 @@ export const MemberSavingsTable = ({
               <th
                 className="py-3 px-3 cursor-pointer user-select-none"
                 onClick={() => onSort && onSort("member_no")}
-                style={{ width: "130px" }}
+                style={{ width: "140px" }}
               >
                 <div className="d-flex align-items-center">
                   <span>No. Anggota</span>
@@ -131,37 +135,91 @@ export const MemberSavingsTable = ({
                   {renderSortIcon("unpaid_amount")}
                 </div>
               </th>
-              <th className="py-3 px-3 text-center" style={{ width: "140px" }}>
+              <th className="py-3 px-3 text-center" style={{ width: "130px" }}>
                 Aksi
               </th>
             </tr>
-            {/* Filter Search Row */}
+
+            {/* Filter Search Row across every column in thead */}
             <tr className="bg-white border-bottom">
               <th className="p-2 text-center">
-                {searchFilter && (
+                {hasActiveFilters && (
                   <Button
                     variant="link"
-                    className="p-0 text-muted"
-                    onClick={onResetFilter}
-                    title="Reset Filter"
+                    className="p-0 text-danger"
+                    onClick={onResetFilters}
+                    title="Reset Semua Pencarian Kolom"
                   >
-                    <X size={14} />
+                    <X size={14} weight="bold" />
                   </Button>
                 )}
               </th>
-              <th colSpan={2} className="p-2">
+              <th className="p-2">
                 <Form.Control
                   type="text"
-                  placeholder="Cari nama atau no. anggota..."
+                  placeholder="Cari no..."
                   size="sm"
-                  value={searchFilter}
-                  onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
+                  value={columnFilters?.member_no || ""}
+                  onChange={(e) => onColumnFilterChange?.("member_no", e.target.value)}
                   className="bg-light border-0 shadow-none text-dark"
-                  style={{ fontSize: "12px", height: "30px" }}
+                  style={{ fontSize: "11px", height: "28px" }}
                 />
               </th>
-              <th colSpan={4} className="p-2 text-end text-muted small fw-normal">
-                {searchFilter ? `Filter aktif: "${searchFilter}"` : ""}
+              <th className="p-2">
+                <Form.Control
+                  type="text"
+                  placeholder="Cari nama anggota..."
+                  size="sm"
+                  value={columnFilters?.full_name || ""}
+                  onChange={(e) => onColumnFilterChange?.("full_name", e.target.value)}
+                  className="bg-light border-0 shadow-none text-dark"
+                  style={{ fontSize: "11px", height: "28px" }}
+                />
+              </th>
+              <th className="p-2">
+                <Form.Control
+                  type="text"
+                  placeholder="Cari total..."
+                  size="sm"
+                  value={columnFilters?.total_amount || ""}
+                  onChange={(e) => onColumnFilterChange?.("total_amount", e.target.value)}
+                  className="bg-light border-0 shadow-none text-dark text-end"
+                  style={{ fontSize: "11px", height: "28px" }}
+                />
+              </th>
+              <th className="p-2">
+                <Form.Control
+                  type="text"
+                  placeholder="Cari terbayar..."
+                  size="sm"
+                  value={columnFilters?.paid_amount || ""}
+                  onChange={(e) => onColumnFilterChange?.("paid_amount", e.target.value)}
+                  className="bg-light border-0 shadow-none text-dark text-end"
+                  style={{ fontSize: "11px", height: "28px" }}
+                />
+              </th>
+              <th className="p-2">
+                <Form.Control
+                  type="text"
+                  placeholder="Cari belum bayar..."
+                  size="sm"
+                  value={columnFilters?.unpaid_amount || ""}
+                  onChange={(e) => onColumnFilterChange?.("unpaid_amount", e.target.value)}
+                  className="bg-light border-0 shadow-none text-dark text-end"
+                  style={{ fontSize: "11px", height: "28px" }}
+                />
+              </th>
+              <th className="p-2 text-center">
+                {hasActiveFilters && (
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    className="extra-small px-2 py-0 border-0 text-muted"
+                    onClick={onResetFilters}
+                  >
+                    Reset
+                  </Button>
+                )}
               </th>
             </tr>
           </thead>
@@ -171,7 +229,7 @@ export const MemberSavingsTable = ({
                 <td colSpan="7" className="p-0 border-0">
                   <EmptyState
                     title="Tidak Ada Data Anggota"
-                    description="Belum ada anggota yang memiliki data transaksi pada simpanan ini."
+                    description="Belum ada anggota yang memiliki data transaksi pada simpanan ini atau tidak cocok dengan filter."
                   />
                 </td>
               </tr>

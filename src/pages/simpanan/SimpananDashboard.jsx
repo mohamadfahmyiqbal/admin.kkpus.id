@@ -109,8 +109,20 @@ const SimpananDashboard = () => {
   const [membersPagination, setMembersPagination] = useState(null);
   const [memberPage, setMemberPage] = useState(1);
   const [memberLimit, setMemberLimit] = useState(10);
-  const [memberSearch, setMemberSearch] = useState("");
-  const [debouncedMemberSearch, setDebouncedMemberSearch] = useState("");
+  const [memberColumnFilters, setMemberColumnFilters] = useState({
+    member_no: "",
+    full_name: "",
+    total_amount: "",
+    paid_amount: "",
+    unpaid_amount: "",
+  });
+  const [debouncedMemberColumnFilters, setDebouncedMemberColumnFilters] = useState({
+    member_no: "",
+    full_name: "",
+    total_amount: "",
+    paid_amount: "",
+    unpaid_amount: "",
+  });
   const [memberSortConfig, setMemberSortConfig] = useState({ key: "full_name", direction: "asc" });
   const [selectedMember, setSelectedMember] = useState(null);
   const [showMemberModal, setShowMemberModal] = useState(false);
@@ -152,28 +164,78 @@ const SimpananDashboard = () => {
   // Debounce search inputs for member aggregates query
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedMemberSearch(memberSearch.trim());
+      setDebouncedMemberColumnFilters({
+        member_no: (memberColumnFilters.member_no || "").trim(),
+        full_name: (memberColumnFilters.full_name || "").trim(),
+        total_amount: (memberColumnFilters.total_amount || "").trim(),
+        paid_amount: (memberColumnFilters.paid_amount || "").trim(),
+        unpaid_amount: (memberColumnFilters.unpaid_amount || "").trim(),
+      });
       setMemberPage(1);
     }, 350);
     return () => clearTimeout(timer);
-  }, [memberSearch]);
+  }, [memberColumnFilters]);
 
   const fetchMemberAggregates = useCallback(async () => {
     if (activeType !== "POKOK" && activeType !== "WAJIB") return;
     setMembersLoading(true);
     try {
+      const generalSearch =
+        debouncedMemberColumnFilters.full_name ||
+        debouncedMemberColumnFilters.member_no ||
+        "";
       const params = {
         type: activeType,
         page: memberPage,
         limit: memberLimit,
-        search: debouncedMemberSearch,
+        search: generalSearch,
         sortBy: memberSortConfig.key,
         sortDir: memberSortConfig.direction,
       };
       const res = await savingsService.getAdminSavingsMemberAggregates(params);
       if (res.data?.status) {
         const data = res.data.data;
-        setMembers(data.members || []);
+        let memberRows = data.members || [];
+
+        // Apply any remaining specific column filters in-memory
+        if (debouncedMemberColumnFilters.member_no) {
+          const q = debouncedMemberColumnFilters.member_no.toLowerCase();
+          memberRows = memberRows.filter((m) =>
+            (m.member_no || "").toLowerCase().includes(q)
+          );
+        }
+        if (debouncedMemberColumnFilters.full_name) {
+          const q = debouncedMemberColumnFilters.full_name.toLowerCase();
+          memberRows = memberRows.filter((m) =>
+            (m.full_name || "").toLowerCase().includes(q)
+          );
+        }
+        if (debouncedMemberColumnFilters.total_amount) {
+          const cleanQ = debouncedMemberColumnFilters.total_amount.replace(/[^0-9]/g, "");
+          if (cleanQ) {
+            memberRows = memberRows.filter((m) =>
+              String(m.total_amount || "").includes(cleanQ)
+            );
+          }
+        }
+        if (debouncedMemberColumnFilters.paid_amount) {
+          const cleanQ = debouncedMemberColumnFilters.paid_amount.replace(/[^0-9]/g, "");
+          if (cleanQ) {
+            memberRows = memberRows.filter((m) =>
+              String(m.paid_amount || "").includes(cleanQ)
+            );
+          }
+        }
+        if (debouncedMemberColumnFilters.unpaid_amount) {
+          const cleanQ = debouncedMemberColumnFilters.unpaid_amount.replace(/[^0-9]/g, "");
+          if (cleanQ) {
+            memberRows = memberRows.filter((m) =>
+              String(m.unpaid_amount || "").includes(cleanQ)
+            );
+          }
+        }
+
+        setMembers(memberRows);
         setMembersPagination(data.pagination || null);
       }
     } catch (err) {
@@ -182,15 +244,21 @@ const SimpananDashboard = () => {
     } finally {
       setMembersLoading(false);
     }
-  }, [activeType, memberPage, memberLimit, debouncedMemberSearch, memberSortConfig]);
+  }, [activeType, memberPage, memberLimit, debouncedMemberColumnFilters, memberSortConfig]);
 
-  const handleMemberSearchChange = (val) => {
-    setMemberSearch(val);
+  const handleMemberColumnFilterChange = (field, val) => {
+    setMemberColumnFilters((prev) => ({ ...prev, [field]: val }));
     setMemberPage(1);
   };
 
-  const handleResetMemberFilters = () => {
-    setMemberSearch("");
+  const handleResetMemberColumnFilters = () => {
+    setMemberColumnFilters({
+      member_no: "",
+      full_name: "",
+      total_amount: "",
+      paid_amount: "",
+      unpaid_amount: "",
+    });
     setMemberPage(1);
   };
 
@@ -256,7 +324,7 @@ const SimpananDashboard = () => {
     setPage(1);
     setMemberPage(1);
     handleResetFilters();
-    handleResetMemberFilters();
+    handleResetMemberColumnFilters();
     if (k !== "SUKARELA") setActiveSukarelaCategory("SETORAN");
   };
 
@@ -630,9 +698,9 @@ const SimpananDashboard = () => {
                       : "asc",
                 }));
               }}
-              searchFilter={memberSearch}
-              onSearchChange={handleMemberSearchChange}
-              onResetFilter={handleResetMemberFilters}
+              columnFilters={memberColumnFilters}
+              onColumnFilterChange={(field, val) => handleMemberColumnFilterChange(field, val)}
+              onResetFilters={handleResetMemberColumnFilters}
             />
           ) : (
             <TransactionTable
