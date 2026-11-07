@@ -23,12 +23,19 @@ test("jwtDecodePage berhasil menguraikan token yang di-encode", () => {
 });
 
 test("jwtDecodePage mengembalikan null untuk input tidak valid", () => {
-  assert.equal(jwtDecodePage(null), null);
-  assert.equal(jwtDecodePage(undefined), null);
-  assert.equal(jwtDecodePage(""), null);
-  assert.equal(jwtDecodePage("bukan.token.valid.empat"), null);
-  assert.equal(jwtDecodePage("hanya-satu-bagian"), null);
-  assert.equal(jwtDecodePage("invalid!base64.invalid!base64."), null);
+  // Matikan console.error sementara saat menguji error token parsing
+  const originalError = console.error;
+  console.error = () => {};
+  try {
+    assert.equal(jwtDecodePage(null), null);
+    assert.equal(jwtDecodePage(undefined), null);
+    assert.equal(jwtDecodePage(""), null);
+    assert.equal(jwtDecodePage("bukan.token.valid.empat"), null);
+    assert.equal(jwtDecodePage("hanya-satu-bagian"), null);
+    assert.equal(jwtDecodePage("invalid!base64.invalid!base64."), null);
+  } finally {
+    console.error = originalError;
+  }
 });
 
 test("jwtEncode mendukung custom expiresIn options", () => {
