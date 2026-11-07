@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
+# Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Runtime data
@@ -26,12 +26,16 @@ coverage
 # nyc test coverage
 .nyc_output
 
-# Grunt intermediate storage (https://gruntjs.com/built-in-tasks/#grunt-clean)
+# Grunt intermediate storage
 .grunt
 
 # Vite / React build output
 dist
 dist-ssr
+build
+*.local
+.env.local
+.env.*.local
 
 # Dependency directories
 node_modules
