@@ -111,7 +111,7 @@ export const MemberSavingsTable = ({
                 style={{ width: "170px" }}
               >
                 <div className="d-flex align-items-center justify-content-end">
-                  <span>Total Transaksi</span>
+                  <span title="Hanya transaksi yang sudah dibayarkan (PAID)">Transaksi Terbayar</span>
                   {renderSortIcon("total_amount")}
                 </div>
               </th>
