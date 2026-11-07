@@ -16,6 +16,7 @@
     "axios": "^1.11.0",
     "bootstrap": "^5.3.7",
     "dompurify": "^3.4.12",
+    "exceljs": "^4.4.0",
     "framer-motion": "^12.40.0",
     "jspdf": "^4.2.1",
     "jwt-decode": "^4.0.0",
@@ -32,8 +33,7 @@
     "react-select": "^5.10.2",
     "react-toastify": "^11.0.5",
     "socket.io-client": "^4.8.3",
-    "sweetalert2": "^11.15.10",
-    "xlsx": "^0.18.5"
+    "sweetalert2": "^11.15.10"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.2",

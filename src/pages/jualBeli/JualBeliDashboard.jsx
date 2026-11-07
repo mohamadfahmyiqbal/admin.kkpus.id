@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Card, Tab, Nav, Spinner, Breadcrumb, Alert, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { MagnifyingGlass } from "phosphor-react";
-import * as XLSX from "xlsx";
+import { exportToExcel } from "../../utils/helpers/exportToExcel";
 import jualBeliService from "../../utils/api/UJualBeli";
 import JualBeliApprovalModal from "../../components/modals/JualBeliApprovalModal";
 import JualBeliSetoranModal from "../../components/modals/JualBeliSetoranModal";
@@ -94,10 +94,7 @@ const JualBeliDashboard = () => {
           Status: item.status,
         };
       });
-      const ws = XLSX.utils.json_to_sheet(exportData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Data Jual Beli");
-      XLSX.writeFile(wb, "Laporan_Jual_Beli.xlsx");
+      exportToExcel(exportData, "Laporan_Jual_Beli");
     } catch (err) {
       console.error("Failed to export data", err?.message);
     }
