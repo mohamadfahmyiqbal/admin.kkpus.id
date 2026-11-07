@@ -133,6 +133,18 @@ export default defineConfig(({ mode }) => {
       port: 3001,
       open: false,
     },
+    test: {
+      globals: true,
+      environment: "jsdom",
+      setupFiles: ["./src/setupTests.js"],
+      include: ["src/**/*.test.{js,jsx}"],
+      pool: "forks",
+      poolOptions: {
+        forks: {
+          singleFork: true,
+        },
+      },
+    },
     build: {
       outDir: 'dist',
       chunkSizeWarningLimit: 2000,

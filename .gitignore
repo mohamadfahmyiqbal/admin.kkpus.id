@@ -57,3 +57,7 @@ jspm_packages
 *.njsproj
 *.sln
 *.swp
+
+# Test artifacts
+playwright-report/
+test-results/
