@@ -1,23 +1,14 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Row, Col, Card, Button, Form, Tab, Nav, Breadcrumb } from "react-bootstrap";
+import React from "react";
+import { Card, Breadcrumb, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import {
-  Wallet,
-  Money,
-  ArrowDownLeft,
-  ArrowUpRight,
-  ArrowClockwise,
-  UploadSimple,
-  FileXls,
-  X,
-} from "phosphor-react";
-import savingsService from "../../utils/api/USavings";
-import { exportToExcel } from "../../utils/helpers/exportToExcel";
-import TransactionTable from "../../components/ui/TransactionTable";
-import MemberSavingsTable from "./components/MemberSavingsTable";
-import MemberSavingsDetailModal from "./components/MemberSavingsDetailModal";
+import { ArrowClockwise, FileXls, UploadSimple } from "phosphor-react";
 import { formatRupiah, jwtEncode } from "../../utils/helpers";
+import { useSimpananDashboard } from "./useSimpananDashboard";
+import SimpananSummaryCards from "./components/SimpananSummaryCards";
+import SimpananTabsHeader from "./components/SimpananTabsHeader";
+import MemberSavingsTable from "./components/MemberSavingsTable";
+import TransactionTable from "../../components/ui/TransactionTable";
+import MemberSavingsDetailModal from "./components/MemberSavingsDetailModal";
 
 const TransactionDetailModal = React.lazy(() =>
   import("../../components/modals/TransactionDetailModal")
@@ -32,497 +23,68 @@ const GenericImportModal = React.lazy(() =>
   import("../../components/modals/GenericImportModal")
 );
 
-const SummaryCard = ({ summary = {} }) => {
-  const cards = [
-    { title: "Total Semua Simpanan", value: summary.total_semua, icon: Wallet, color: "primary" },
-    { title: "Total Simpanan Pokok", value: summary.total_pokok, icon: Money, color: "success" },
-    { title: "Total Simpanan Wajib", value: summary.total_wajib, icon: ArrowDownLeft, color: "warning" },
-    { title: "Total Simpanan Sukarela", value: summary.total_sukarela, icon: ArrowUpRight, color: "info" },
-  ];
-
-  return (
-    <Row className="g-3 mb-4">
-      {cards.map((c, idx) => (
-        <Col md={3} sm={6} key={idx}>
-          <Card className="border-0 shadow-sm rounded-4 h-100">
-            <Card.Body className="p-3 d-flex align-items-center">
-              <div className={`bg-${c.color} bg-opacity-10 p-3 rounded-4 me-3 flex-shrink-0`}>
-                <c.icon size={24} className={`text-${c.color}`} weight="fill" />
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-muted fw-semibold mb-0 text-truncate small text-uppercase">
-                  {c.title}
-                </p>
-                <h5 className="fw-bold text-dark mb-0 text-truncate mt-1">
-                  {formatRupiah(c.value || 0)}
-                </h5>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-  );
-};
-
 const SimpananDashboard = () => {
   const navigate = useNavigate();
-  const [activeType, setActiveType] = useState("POKOK");
-  const [activeSukarelaCategory, setActiveSukarelaCategory] = useState("SETORAN");
-  const [summary, setSummary] = useState({
-    total_semua: 0,
-    total_pokok: 0,
-    total_wajib: 0,
-    total_sukarela: 0,
-  });
-
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState(null);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  // Column filter state for inputs in thead
-  const [columnFilters, setColumnFilters] = useState({
-    date: "",
-    member: "",
-    type: "",
-    amount: "",
-    status: "",
-  });
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
-
-  const [selectedTx, setSelectedTx] = useState(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showApprovalModal, setShowApprovalModal] = useState(false);
-  const [showManualApprovalModal, setShowManualApprovalModal] = useState(false);
-  const [showImportModal, setShowImportModal] = useState(false);
-  const [exporting, setExporting] = useState(false);
-
-  // Anggota aggregates state (tabulasi pokok & wajib)
-  const [members, setMembers] = useState([]);
-  const [membersLoading, setMembersLoading] = useState(false);
-  const [membersPagination, setMembersPagination] = useState(null);
-  const [memberPage, setMemberPage] = useState(1);
-  const [memberLimit, setMemberLimit] = useState(10);
-  const [memberColumnFilters, setMemberColumnFilters] = useState({
-    member_no: "",
-    full_name: "",
-    total_amount: "",
-    paid_amount: "",
-    unpaid_amount: "",
-  });
-  const [debouncedMemberColumnFilters, setDebouncedMemberColumnFilters] = useState({
-    member_no: "",
-    full_name: "",
-    total_amount: "",
-    paid_amount: "",
-    unpaid_amount: "",
-  });
-  const [memberSortConfig, setMemberSortConfig] = useState({ key: "full_name", direction: "asc" });
-  const [selectedMember, setSelectedMember] = useState(null);
-  const [showMemberModal, setShowMemberModal] = useState(false);
-
-  const tabsWrapperRef = useRef(null);
-
-  // Enable smooth horizontal scrolling on mouse wheel
-  useEffect(() => {
-    const el = tabsWrapperRef.current;
-    if (!el) return;
-    const handleWheel = (e) => {
-      if (e.deltaY !== 0 && el.scrollWidth > el.clientWidth) {
-        e.preventDefault();
-        el.scrollLeft += e.deltaY;
-      }
-    };
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, []);
-
-  const [debouncedFilters, setDebouncedFilters] = useState({ date: "", amount: "" });
-
-  // Debounce search inputs for query (500ms debounce to avoid rapid loading on single keystroke)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const trimmedMember = searchTerm.trim();
-      if (trimmedMember.length === 0 || trimmedMember.length >= 2) {
-        setDebouncedSearch(trimmedMember);
-      }
-      setDebouncedFilters({
-        date: (columnFilters.date || "").trim(),
-        amount: (columnFilters.amount || "").trim(),
-      });
-      setPage(1);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchTerm, columnFilters.date, columnFilters.amount]);
-
-  // Debounce search inputs for member aggregates query
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedMemberColumnFilters({
-        member_no: (memberColumnFilters.member_no || "").trim(),
-        full_name: (memberColumnFilters.full_name || "").trim(),
-        total_amount: (memberColumnFilters.total_amount || "").trim(),
-        paid_amount: (memberColumnFilters.paid_amount || "").trim(),
-        unpaid_amount: (memberColumnFilters.unpaid_amount || "").trim(),
-      });
-      setMemberPage(1);
-    }, 350);
-    return () => clearTimeout(timer);
-  }, [memberColumnFilters]);
-
-  const fetchMemberAggregates = useCallback(async () => {
-    if (activeType !== "POKOK" && activeType !== "WAJIB") return;
-    setMembersLoading(true);
-    try {
-      const generalSearch =
-        debouncedMemberColumnFilters.full_name ||
-        debouncedMemberColumnFilters.member_no ||
-        "";
-      const params = {
-        type: activeType,
-        page: memberPage,
-        limit: memberLimit,
-        search: generalSearch,
-        sortBy: memberSortConfig.key,
-        sortDir: memberSortConfig.direction,
-      };
-      const res = await savingsService.getAdminSavingsMemberAggregates(params);
-      if (res.data?.status) {
-        const data = res.data.data;
-        let memberRows = data.members || [];
-
-        // Apply any remaining specific column filters in-memory
-        if (debouncedMemberColumnFilters.member_no) {
-          const q = debouncedMemberColumnFilters.member_no.toLowerCase();
-          memberRows = memberRows.filter((m) =>
-            (m.member_no || "").toLowerCase().includes(q)
-          );
-        }
-        if (debouncedMemberColumnFilters.full_name) {
-          const q = debouncedMemberColumnFilters.full_name.toLowerCase();
-          memberRows = memberRows.filter((m) =>
-            (m.full_name || "").toLowerCase().includes(q)
-          );
-        }
-        if (debouncedMemberColumnFilters.total_amount) {
-          const cleanQ = debouncedMemberColumnFilters.total_amount.replace(/[^0-9]/g, "");
-          if (cleanQ) {
-            memberRows = memberRows.filter((m) =>
-              String(m.total_amount || "").includes(cleanQ)
-            );
-          }
-        }
-        if (debouncedMemberColumnFilters.paid_amount) {
-          const cleanQ = debouncedMemberColumnFilters.paid_amount.replace(/[^0-9]/g, "");
-          if (cleanQ) {
-            memberRows = memberRows.filter((m) =>
-              String(m.paid_amount || "").includes(cleanQ)
-            );
-          }
-        }
-        if (debouncedMemberColumnFilters.unpaid_amount) {
-          const cleanQ = debouncedMemberColumnFilters.unpaid_amount.replace(/[^0-9]/g, "");
-          if (cleanQ) {
-            memberRows = memberRows.filter((m) =>
-              String(m.unpaid_amount || "").includes(cleanQ)
-            );
-          }
-        }
-
-        setMembers(memberRows);
-        setMembersPagination(data.pagination || null);
-      }
-    } catch (err) {
-      console.error("Gagal mengambil agregat simpanan anggota:", err);
-      toast.error("Gagal mengambil data simpanan anggota");
-    } finally {
-      setMembersLoading(false);
-    }
-  }, [activeType, memberPage, memberLimit, debouncedMemberColumnFilters, memberSortConfig]);
-
-  const handleMemberColumnFilterChange = (field, val) => {
-    setMemberColumnFilters((prev) => ({ ...prev, [field]: val }));
-    setMemberPage(1);
-  };
-
-  const handleResetMemberColumnFilters = () => {
-    setMemberColumnFilters({
-      member_no: "",
-      full_name: "",
-      total_amount: "",
-      paid_amount: "",
-      unpaid_amount: "",
-    });
-    setMemberPage(1);
-  };
-
-  const handleSearchChange = (field, value) => {
-    setColumnFilters((prev) => ({ ...prev, [field]: value }));
-    if (field === "member") {
-      setSearchTerm(value);
-    }
-    setPage(1);
-  };
-
-  const handleResetFilters = () => {
-    setColumnFilters({
-      date: "",
-      member: "",
-      type: "",
-      amount: "",
-      status: "",
-    });
-    setSearchTerm("");
-    setDebouncedSearch("");
-    setStatusFilter("");
-    setPage(1);
-  };
-
-  const fetchSummary = async () => {
-    try {
-      const res = await savingsService.getAdminSavingsSummary();
-      if (res.data?.status) {
-        const data = res.data.data;
-        if (data.bills && Array.isArray(data.bills)) {
-          const pokok = data.bills.find((b) => b.item && b.item.toLowerCase().includes("pokok"));
-          const wajib = data.bills.find((b) => b.item && b.item.toLowerCase().includes("wajib"));
-          if (pokok) data.total_pokok = parseFloat(pokok.amount) || 0;
-          if (wajib) data.total_wajib = parseFloat(wajib.amount) || 0;
-        }
-        setSummary(data);
-      }
-    } catch (err) {
-      console.error("Gagal mengambil summary simpanan:", err);
-      toast.error("Gagal mengambil ringkasan saldo simpanan");
-    }
-  };
-
-  const fetchTransactions = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = {
-        type: activeType,
-        tx_category: activeType === "SUKARELA" ? activeSukarelaCategory : "SETORAN",
-        page,
-        limit,
-        search: debouncedSearch,
-        status: statusFilter || undefined,
-        date: debouncedFilters.date || undefined,
-        amount: debouncedFilters.amount || undefined,
-      };
-      const res = await savingsService.getAdminSavingsTransactions(params);
-      if (res.data?.status) {
-        setTransactions(res.data.data.transactions || []);
-        setPagination(res.data.data.pagination);
-      }
-    } catch (err) {
-      console.error("Gagal mengambil transaksi simpanan:", err);
-      toast.error("Gagal mengambil daftar transaksi simpanan");
-    } finally {
-      setLoading(false);
-    }
-  }, [activeType, activeSukarelaCategory, page, limit, debouncedSearch, statusFilter, debouncedFilters]);
-
-  useEffect(() => {
-    fetchSummary();
-  }, []);
-
-  useEffect(() => {
-    if (activeType === "POKOK" || activeType === "WAJIB") {
-      fetchMemberAggregates();
-    } else {
-      fetchTransactions();
-    }
-  }, [activeType, fetchMemberAggregates, fetchTransactions]);
-
-  const handleTypeSelect = (k) => {
-    setActiveType(k);
-    setPage(1);
-    setMemberPage(1);
-    handleResetFilters();
-    handleResetMemberColumnFilters();
-    if (k !== "SUKARELA") setActiveSukarelaCategory("SETORAN");
-  };
-
-  const handleSort = (key) => {
-    setSortConfig((prev) => {
-      if (prev.key === key) {
-        return {
-          key,
-          direction: prev.direction === "asc" ? "desc" : "asc",
-        };
-      }
-      return { key, direction: "asc" };
-    });
-  };
-
-  // Filtering & sorting on the current page transactions
-  const processedTransactions = useMemo(() => {
-    let list = [...transactions];
-
-    if (columnFilters.type) {
-      const q = columnFilters.type.toLowerCase();
-      list = list.filter((t) => {
-        const p = (t.product_name || t.type || "").toLowerCase();
-        return p.includes(q);
-      });
-    }
-
-    if (sortConfig.key) {
-      list.sort((a, b) => {
-        let valA = a[sortConfig.key];
-        let valB = b[sortConfig.key];
-
-        if (sortConfig.key === "date") {
-          valA = new Date(a.date || a.created_at || 0).getTime();
-          valB = new Date(b.date || b.created_at || 0).getTime();
-        } else if (sortConfig.key === "amount") {
-          valA = parseFloat(a.amount) || 0;
-          valB = parseFloat(b.amount) || 0;
-        } else if (sortConfig.key === "member") {
-          valA = (a.member || a.full_name || "").toLowerCase();
-          valB = (b.member || b.full_name || "").toLowerCase();
-        } else if (sortConfig.key === "status") {
-          valA = (a.status || "").toLowerCase();
-          valB = (b.status || "").toLowerCase();
-        }
-
-        if (valA < valB) return sortConfig.direction === "asc" ? -1 : 1;
-        if (valA > valB) return sortConfig.direction === "asc" ? 1 : -1;
-        return 0;
-      });
-    }
-
-    return list;
-  }, [transactions, columnFilters.type, sortConfig]);
-
-  const handleExportMembers = async () => {
-    if (activeType !== "POKOK" && activeType !== "WAJIB") return;
-    setExporting(true);
-    try {
-      const membersToExport = activeType === "POKOK" ? [...members] : [...members];
-      const formattedData = membersToExport.map((m, idx) => ({
-        No: idx + 1,
-        "No. Anggota": m.member_no || "-",
-        "Nama Anggota": m.full_name || "-",
-        "Total Transaksi": m.total_count ?? 0,
-        "Total Nominal": parseFloat(m.total_amount) || 0,
-        "Total Terbayar": parseFloat(m.paid_amount) || 0,
-        "Transaksi Terbayar": m.paid_count ?? 0,
-        "Total Belum Terbayar": parseFloat(m.unpaid_amount) || 0,
-        "Transaksi Belum Terbayar": m.unpaid_count ?? 0,
-      }));
-
-      const today = new Date().toISOString().split("T")[0];
-      exportToExcel(formattedData, `Anggota_Simpanan_${activeType}_${today}`);
-    } catch (err) {
-      console.error("Gagal export anggota simpanan:", err);
-      toast.error("Terjadi kesalahan saat mengekspor anggota simpanan.");
-    } finally {
-      setExporting(false);
-    }
-  };
-
-  const handleExportTransactions = async () => {
-    if (activeType === "POKOK" || activeType === "WAJIB") return;
-    setExporting(true);
-    try {
-      const params = {
-        type: activeType,
-        tx_category: activeType === "SUKARELA" ? activeSukarelaCategory : "SETORAN",
-        page: 1,
-        limit: 10000,
-        search: debouncedSearch || "",
-        status: statusFilter || undefined,
-        date: debouncedFilters.date || undefined,
-        amount: debouncedFilters.amount || undefined,
-      };
-
-      const res = await savingsService.getAdminSavingsTransactions(params);
-      const dataToProcess = res.data?.data?.transactions || [];
-
-      if (!dataToProcess || dataToProcess.length === 0) {
-        toast.info("Tidak ada data transaksi simpanan untuk diexport.");
-        return;
-      }
-
-      const formattedData = dataToProcess.map((tx, idx) => {
-        const dateObj = tx.date || tx.created_at ? new Date(tx.date || tx.created_at) : null;
-        const dateStr = dateObj
-          ? dateObj.toLocaleDateString("id-ID", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            }) +
-            " " +
-            dateObj.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) +
-            " WIB"
-          : "-";
-
-        const isCompleted =
-          tx.status === "Selesai" ||
-          tx.status === "COMPLETED" ||
-          tx.status === "APPROVED" ||
-          tx.raw_status === "COMPLETED";
-
-        return {
-          No: idx + 1,
-          "Waktu Transaksi": dateStr,
-          "No. Anggota": tx.member_no || tx.member_id || "-",
-          "Nama Anggota": tx.member || tx.full_name || "-",
-          "Jenis Simpanan": tx.product_name || activeType,
-          "Tipe Transaksi":
-            tx.type || (activeSukarelaCategory === "PENCAIRAN" ? "Pencairan" : "Setoran"),
-          Nominal: parseFloat(tx.amount) || 0,
-          Status: isCompleted ? "Selesai" : tx.status || "Pending",
-        };
-      });
-
-      const typeLabel =
-        activeType === "SUKARELA" ? `Sukarela_${activeSukarelaCategory}` : activeType;
-      const today = new Date().toISOString().split("T")[0];
-      exportToExcel(formattedData, `Transaksi_Simpanan_${typeLabel}_${today}`);
-    } catch (err) {
-      console.error("Gagal export transaksi simpanan:", err);
-      toast.error("Terjadi kesalahan saat mengekspor data simpanan.");
-    } finally {
-      setExporting(false);
-    }
-  };
-
-  const handleViewDetail = (tx) => {
-    setSelectedTx(tx);
-    if (
-      tx.type === "Pencairan" ||
-      tx.type === "Pencairan Tabungan" ||
-      activeSukarelaCategory === "PENCAIRAN"
-    ) {
-      setShowApprovalModal(true);
-    } else {
-      setShowDetailModal(true);
-    }
-  };
-
-  const handleApprove = (tx) => {
-    setSelectedTx(tx);
-    if (
-      tx.is_manual_payment ||
-      tx.raw_status === "PENDING_VERIFICATION" ||
-      tx.status === "PENDING_VERIFICATION"
-    ) {
-      setShowManualApprovalModal(true);
-    } else {
-      setShowApprovalModal(true);
-    }
-  };
-
-  const isFiltered = Boolean(searchTerm || statusFilter);
+  const {
+    activeType,
+    activeSukarelaCategory,
+    summary,
+    transactions,
+    members,
+    pagination,
+    membersPagination,
+    page,
+    limit,
+    memberPage,
+    memberLimit,
+    columnFilters,
+    searchTerm,
+    debouncedSearch,
+    statusFilter,
+    sortConfig,
+    memberColumnFilters,
+    debouncedMemberColumnFilters,
+    memberSortConfig,
+    selectedTx,
+    showDetailModal,
+    showApprovalModal,
+    showManualApprovalModal,
+    showImportModal,
+    selectedMember,
+    showMemberModal,
+    loading,
+    membersLoading,
+    exporting,
+    tabsWrapperRef,
+    debouncedFilters,
+    processedTransactions,
+    isFiltered,
+    fetchSummary,
+    fetchTransactions,
+    fetchMemberAggregates,
+    setActiveSukarelaCategory,
+    setPage,
+    setMemberPage,
+    setLimit,
+    setMemberLimit,
+    setSelectedMember,
+    setSelectedTx,
+    handleTypeSelect,
+    handleSort,
+    handleMemberColumnFilterChange,
+    handleResetMemberColumnFilters,
+    handleSearchChange,
+    handleResetFilters,
+    handleExportMembers,
+    handleExportTransactions,
+    handleViewDetail,
+    handleApprove,
+    setShowDetailModal,
+    setShowApprovalModal,
+    setShowManualApprovalModal,
+    setShowImportModal,
+    setShowMemberModal,
+  } = useSimpananDashboard();
 
   return (
     <div className="pb-5">
@@ -600,97 +162,25 @@ const SimpananDashboard = () => {
       </div>
 
       {/* Summary Cards */}
-      <SummaryCard summary={summary} />
+      <SimpananSummaryCards summary={summary} />
 
       {/* Main Table Card */}
       <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
-        {/* Navigation Tabs (Pokok, Wajib, Sukarela) */}
-        <div className="px-3 px-md-4 pt-3 pb-2 border-bottom bg-white">
-          <Tab.Container activeKey={activeType} onSelect={handleTypeSelect}>
-            <div className="d-flex flex-column flex-lg-row justify-content-between align-items-stretch align-items-lg-center gap-3">
-              <div
-                ref={tabsWrapperRef}
-                className="tabs-scrollable-container mb-0 flex-grow-1"
-                style={{
-                  overflowX: "auto",
-                  WebkitOverflowScrolling: "touch",
-                  maxWidth: "100%",
-                  minWidth: 0,
-                }}
-              >
-                <Nav
-                  variant="pills"
-                  className="global-tabs border-0 flex-nowrap"
-                  style={{
-                    display: "inline-flex",
-                    width: "max-content",
-                    minWidth: "max-content",
-                  }}
-                >
-                  <Nav.Item>
-                    <Nav.Link eventKey="POKOK">Simpanan Pokok</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="WAJIB">Simpanan Wajib</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="SUKARELA">Simpanan Sukarela</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </div>
-
-              {/* Sub-tabs for Sukarela (Setoran vs Pencairan) & Total Badge */}
-              <div className="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-end gap-2 gap-md-3 flex-shrink-0">
-                {activeType === "SUKARELA" && (
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="text-muted extra-small fw-bold text-uppercase">Kategori:</span>
-                    <div className="d-flex align-items-center gap-1 p-1 bg-light rounded-pill border">
-                      <button
-                        type="button"
-                        className={`btn btn-sm py-1 px-3 rounded-pill border-0 shadow-none d-flex align-items-center gap-1 extra-small fw-bold ${
-                          activeSukarelaCategory === "SETORAN"
-                            ? "bg-white text-primary shadow-sm"
-                            : "text-muted"
-                        }`}
-                        onClick={() => {
-                          setActiveSukarelaCategory("SETORAN");
-                          setPage(1);
-                        }}
-                      >
-                        <ArrowDownLeft size={13} className="text-success" weight="bold" />
-                        Setoran
-                      </button>
-                      <button
-                        type="button"
-                        className={`btn btn-sm py-1 px-3 rounded-pill border-0 shadow-none d-flex align-items-center gap-1 extra-small fw-bold ${
-                          activeSukarelaCategory === "PENCAIRAN"
-                            ? "bg-white text-primary shadow-sm"
-                            : "text-muted"
-                        }`}
-                        onClick={() => {
-                          setActiveSukarelaCategory("PENCAIRAN");
-                          setPage(1);
-                        }}
-                      >
-                        <ArrowUpRight size={13} className="text-danger" weight="bold" />
-                        Pencairan
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {activeType === "POKOK" || activeType === "WAJIB" ? (
-                  <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold ms-auto ms-lg-0">
-                    Total: {membersPagination?.total_records || members.length} Anggota
-                  </span>
-                ) : (
-                  <span className="badge bg-light text-dark border px-3 py-1.5 rounded-pill fw-semibold ms-auto ms-lg-0">
-                    Total: {pagination?.total_records || transactions.length} Transaksi
-                  </span>
-                )}
-              </div>
-            </div>
-          </Tab.Container>
-        </div>
+        {/* Navigation Tabs Header */}
+        <SimpananTabsHeader
+          activeType={activeType}
+          onTypeSelect={handleTypeSelect}
+          activeSukarelaCategory={activeSukarelaCategory}
+          onSukarelaCategoryChange={(cat) => {
+            setActiveSukarelaCategory(cat);
+            setPage(1);
+          }}
+          totalRecords={
+            activeType === "POKOK" || activeType === "WAJIB"
+              ? membersPagination?.total_records || members.length
+              : pagination?.total_records || transactions.length
+          }
+        />
 
         {/* Table Body */}
         <Card.Body className="p-0">
@@ -711,17 +201,9 @@ const SimpananDashboard = () => {
                 setShowMemberModal(true);
               }}
               sortConfig={memberSortConfig}
-              onSort={(key) => {
-                setMemberSortConfig((prev) => ({
-                  key,
-                  direction:
-                    prev.key === key && prev.direction === "asc"
-                      ? "desc"
-                      : "asc",
-                }));
-              }}
+              onSort={handleSort}
               columnFilters={memberColumnFilters}
-              onColumnFilterChange={(field, val) => handleMemberColumnFilterChange(field, val)}
+              onColumnFilterChange={handleMemberColumnFilterChange}
               onResetFilters={handleResetMemberColumnFilters}
             />
           ) : (
