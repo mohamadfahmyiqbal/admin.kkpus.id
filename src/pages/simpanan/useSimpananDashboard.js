@@ -48,6 +48,10 @@ export function useSimpananDashboard() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
+  const [debouncedFilters, setDebouncedFilters] = useState({
+    date: "",
+    amount: "",
+  });
 
   const [memberColumnFilters, setMemberColumnFilters] = useState({
     member_no: "",
