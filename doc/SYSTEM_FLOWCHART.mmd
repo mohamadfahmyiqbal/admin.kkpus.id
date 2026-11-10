@@ -1,0 +1,272 @@
+flowchart TD
+    %% ========================================================================
+    %% SYSTEM FLOWCHART - KKPUS (Koperasi Paguyuban Usaha Sukses Syariah)
+    %% Subdomain: @kkpusid\ @admin.kkpus.id\ @api.kkpus.id\
+    %% Standar: ISO/IEC 27001:2022, enterprise-grade, end-to-end
+    %% ========================================================================
+
+    %% ---------- ACTORS ----------
+    subgraph ACTORS ["👥 ACTORS"]
+        MEMBER["👤 Member / Nasabah (Anggota)"]
+        ADMIN["🛡️ Admin / Ketua / Bendahara / Pengawas"]
+        SYSTEM["⚙️ Sistem Otomatis (Cron/Webhook/Socket)"]
+    end
+
+    %% ---------- FRONTEND: MEMBER PORTAL (@kkpusid) ----------
+    subgraph KKPUSID ["🌐 kkpusid - Member Portal (PWA, React + Vite)"]
+        direction TB
+        SPLASH["📱 Splash / Version Check / PWA SW"]
+        LANDING["🏠 Landing Page (Public)"]
+        LOGIN["🔐 Login / Register / Forgot Password"]
+        DASH["📊 Dashboard Member"]
+        SUB["Simpanan / Tabungan"]
+        LOAN["Pinjaman / Arisan"]
+        TRANS["Jual Beli / Transaksi"]
+        INVEST["Investasi Halal / Sukuk / Pendanaan"]
+        TRAIN["Training / Materi / Evaluasi"]
+        BILL["Billing / Invoice / Midtrans"]
+        NOTIF["Notifikasi / Web Push (VAPID)"]
+        PROFILE["Akun / Profil / Logout"]
+    end
+
+    %% ---------- FRONTEND: ADMIN PORTAL (@admin.kkpus.id) ----------
+    subgraph ADMINPORTAL ["🛠️ admin.kkpus.id - Admin Backoffice (React + Vite)"]
+        direction TB
+        ASPLASH["📱 Splash / PWA SW"]
+        ALOGIN["🔐 Login Admin (role: pengawas/ketua/bendahara/admin)"]
+        ADASH["📊 Dashboard Admin + Approval Queue"]
+        AMEMB["👥 Kelola Anggota (Members)"]
+        ASIM["💰 Kelola Simpanan"]
+        ATAB["🏦 Kelola Tabungan (Program/Withdraw)"]
+        AJB["🛒 Kelola Jual Beli / Transaksi"]
+        APINJ["📋 Kelola Pinjaman / Arisan (Batch/Draw)"]
+        AINV["📈 Kelola Investasi / Pendanaan Syariah"]
+        ACONF["⚙️ Konfigurasi (Akad / Simpanan / Fee)"]
+        ABILL["🧾 Billing & Pembayaran Manual"]
+        AREPORT["📊 Laporan (Simpanan/Pinjaman/Arisan/Investasi)"]
+        ASETT["🔐 Pengaturan & Akun Admin"]
+    end
+
+    %% ---------- BACKEND API (@api.kkpus.id) ----------
+    subgraph APISERVER ["🖥️ api.kkpus.id - Backend API (Express + Sequelize + MySQL)"]
+        direction TB
+        GW["🚪 API Gateway / Base Route (/api)"]
+        AUTH["🔐 Auth Controller (register/login/logout/forgot/OTP)"]
+        MID["🛡️ Middleware: JWT + Role + RateLimit + CORS"]
+        SAV["💰 Savings / Simpanan Routes"]
+        TAB["🏦 Tabungan Routes"]
+        LOANR["📋 Pinjaman / Financing Routes"]
+        JRB["🛒 Jual Beli Routes"]
+        INVR["📈 Investasi Routes"]
+        ARSR["🎟️ Arisan Routes"]
+        BILLR["🧾 Billing / Invoice / Webhook Routes"]
+        PUSH["📬 Push Notification Routes (VAPID)"]
+        CONT["📰 Content / Articles / Landing Routes"]
+        DASHR["📊 Dashboard Routes (Member/Admin)"]
+    end
+
+    %% ---------- DATABASE ----------
+    subgraph DBLAYER ["🗄️ Database Layer (MySQL / Sequelize)"]
+        direction TB
+        MEMBERS["members / user_roles / member_role_assignment"]
+        SAVINGS["savings / transactions / withdrawals"]
+        TABUNG["tabungan programs / targets / bills"]
+        LOANS["financing / loan products / applications / terms"]
+        JUAL["jualbeli / transactions / receipts / hutang / aktiva-tetap"]
+        ARISAN["arisan batches / participants / payments / draws"]
+        INVESTASI["investasi / pendanaan syariah / portofolio / orders"]
+        BILLING["billing / invoices / voluntary bills / payment fees"]
+        TERM["membership_terminations / account_lockouts"]
+        LOGS["audit logs / security events"]
+    end
+
+    %% ---------- REAL-TIME & EXTERNAL ----------
+    subgraph EXTERNAL ["🔌 Real-Time & External Integrations"]
+        direction TB
+        SOCKET["🔌 Socket.io (real-time events)"]
+        MIDTRANS["💳 Midtrans (Snap / Disburse / Notification webhook)"]
+        DOKU["🏦 DOKU / Jokul (checkout notification webhook)"]
+        IRIS["🔗 Midtrans Iris (notification webhook)"]
+        PUSHSV["📬 Push Notification Service (VAPID)"]
+        EMAIL["📧 Email / SMS Gateway"]
+        CERT["🔐 SSL/TLS Certificates (kkpus_id.crt / .key)"]
+    end
+
+    %% ========================================================================
+    %% FLOW: ACTORS → FRONTENDS
+    %% ========================================================================
+    MEMBER --> SPLASH
+    MEMBER --> LANDING
+    MEMBER --> LOGIN
+    ADMIN --> ASPLASH
+    ADMIN --> ALOGIN
+    SYSTEM --> SOCKET
+
+    %% ========================================================================
+    %% FLOW: MEMBER PORTAL INTERNAL
+    %% ========================================================================
+    SPLASH --> LOGIN
+    LANDING --> LOGIN
+    LOGIN -.->|JWT token (localStorage)| DASH
+    DASH --> SUB
+    DASH --> LOAN
+    DASH --> TRANS
+    DASH --> INVEST
+    DASH --> TRAIN
+    DASH --> BILL
+    DASH --> NOTIF
+    DASH --> PROFILE
+    SUB --> SAV
+    LOAN --> LOANR
+    TRANS --> JRB
+    INVEST --> INVR
+    TRAIN --> CONT
+    BILL --> BILLR
+    NOTIF --> PUSH
+    PROFILE --> AUTH
+
+    %% ========================================================================
+    %% FLOW: ADMIN PORTAL INTERNAL
+    %% ========================================================================
+    ASPLASH --> ALOGIN
+    ALOGIN -.->|JWT token (role-based)| ADASH
+    ADASH --> AMEMB
+    ADASH --> ASIM
+    ADASH --> ATAB
+    ADASH --> AJB
+    ADASH --> APINJ
+    ADASH --> AINV
+    ADASH --> ACONF
+    ADASH --> ABILL
+    ADASH --> AREPORT
+    ADASH --> ASETT
+    AMEMB --> SAVINGS
+    ASIM --> SAVINGS
+    ATAB --> TABUNG
+    AJB --> JUAL
+    APINJ --> LOANS
+    APINJ --> ARISAN
+    AINV --> INVESTASI
+    ACONF --> SAVINGS
+    ACONF --> LOANS
+    ABILL --> BILLING
+    AREPORT --> LOGS
+    ASETT --> AUTH
+
+    %% ========================================================================
+    %% FLOW: FRONTENDS → BACKEND API
+    %% ========================================================================
+    LOGIN -->|HTTPS + JWT | GW
+    DASH -->|Authorization: Bearer | GW
+    SUB -->|API calls | GW
+    LOAN -->|API calls | GW
+    TRANS -->|API calls | GW
+    INVEST -->|API calls | GW
+    TRAIN -->|API calls | GW
+    BILL -->|API calls | GW
+    NOTIF -->|API calls | GW
+    PROFILE -->|API calls | GW
+
+    ALOGIN -->|X-Client-App: admin | GW
+    ADASH -->|Authorization: Bearer | GW
+    AMEMB -->|API calls | GW
+    ASIM -->|API calls | GW
+    ATAB -->|API calls | GW
+    AJB -->|API calls | GW
+    APINJ -->|API calls | GW
+    AINV -->|API calls | GW
+    ACONF -->|API calls | GW
+    ABILL -->|API calls | GW
+    AREPORT -->|API calls | GW
+    ASETT -->|API calls | GW
+
+    %% ========================================================================
+    %% FLOW: API GATEWAY → CONTROLLERS → MIDDLEWARE
+    %% ========================================================================
+    GW --> MID
+    MID --> AUTH
+    MID --> SAV
+    MID --> TAB
+    MID --> LOANR
+    MID --> JRB
+    MID --> INVR
+    MID --> ARSR
+    MID --> BILLR
+    MID --> PUSH
+    MID --> CONT
+    MID --> DASHR
+
+    AUTH --> MEMBERS
+    SAV --> SAVINGS
+    TAB --> TABUNG
+    LOANR --> LOANS
+    JRB --> JUAL
+    INVR --> INVESTASI
+    ARSR --> ARISAN
+    BILLR --> BILLING
+    PUSH --> PUSHSV
+    CONT --> MEMBERS
+    DASHR --> SAVINGS
+    DASHR --> LOANS
+    DASHR --> JUAL
+
+    %% ========================================================================
+    %% FLOW: CONTROLLERS → DATABASE
+    %% ========================================================================
+    SAVINGS --> MEMBERS
+    TABUNG --> MEMBERS
+    LOANS --> MEMBERS
+    JUAL --> MEMBERS
+    ARISAN --> MEMBERS
+    INVESTASI --> MEMBERS
+    BILLING --> MEMBERS
+
+    SAVINGS --> LOGS
+    TABUNG --> LOGS
+    LOANS --> LOGS
+    JUAL --> LOGS
+    ARISAN --> LOGS
+    INVESTASI --> LOGS
+    BILLING --> LOGS
+
+    %% ========================================================================
+    %% FLOW: REAL-TIME & EXTERNAL
+    %% ========================================================================
+    SOCKET -.->|push event | DASH
+    SOCKET -.->|push event | ADASH
+    APISERVER -.->|Socket.io emit | SOCKET
+
+    BILL -->|payment request | MIDTRANS
+    BILL -->|payment request | DOKU
+    BILL -->|payment request | IRIS
+    MIDTRANS -->|webhook notification | BILLR
+    DOKU -->|webhook notification | BILLR
+    IRIS -->|webhook notification | BILLR
+
+    NOTIF -->|subscribe / VAPID key | PUSHSV
+    PUSHSV -->|send push | MEMBER
+    EMAIL -->|transactional email | MEMBER
+    EMAIL -->|transactional email | ADMIN
+
+    CERT -.->|TLS termination | GW
+
+    %% ========================================================================
+    %% STYLING
+    %% ========================================================================
+    classDef actor fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef frontend fill:#fff3e0,stroke:#ef6c00,stroke-width:2px;
+    classDef backend fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef database fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef external fill:#eceff1,stroke:#455a64,stroke-width:2px;
+
+    class MEMBER,ADMIN,SYSTEM actor;
+    class SPLASH,LANDING,LOGIN,DASH,SUB,LOAN,TRANS,INVEST,TRAIN,BILL,NOTIF,PROFILE,ASPLASH,ALOGIN,ADASH,AMEMB,ASIM,ATAB,AJB,APINJ,AINV,ACONF,ABILL,AREPORT,ASETT frontend;
+    class GW,AUTH,MID,SAV,TAB,LOANR,JRB,INVR,ARSR,BILLR,PUSH,CONT,DASHR backend;
+    class MEMBERS,SAVINGS,TABUNG,LOANS,JUAL,ARISAN,INVESTASI,BILLING,TERM,LOGS database;
+    class SOCKET,MIDTRANS,DOKU,IRIS,PUSHSV,EMAIL,CERT external;
+
+    linkStyle default stroke-width:1.5px,fill:none,stroke:#666;
+    linkStyle 20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37 stroke:#ef6c00,stroke-width:2px;
+    linkStyle 38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56 stroke:#2e7d32,stroke-width:2px;
+    linkStyle 57,58,59,60,61,62,63,64,65,66,67,68,69,70 stroke:#7b1fa2,stroke-width:2px;
+    linkStyle 71,72,73,74,75,76,77,78,79,80 stroke:#455a64,stroke-width:2px,stroke-dasharray: 5 5;
