@@ -56,7 +56,7 @@ The KKPUS Ecosystem (Koperasi Paguyuban Usaha Sukses Syariah) provides a compreh
 | **Security & Compliance** | ✅ **Completed** |
 | - OWASP ASVS Level 2 |
 | - ISO/IEC 27001:2022 |
-| - Penetration Testing |
+| - Penetration Testing (Technical Execution) |
 | **Testing & Verification** | ✅ **Completed** |
 | - 24/24 Automated Tests Passed |
 | - Auth & Member Verification |
@@ -73,8 +73,11 @@ The KKPUS Ecosystem (Koperasi Paguyuban Usaha Sukses Syariah) provides a compreh
 
 **⏳ Items Remaining:**
 - Formula calculation verification for financial products
-- Penetration testing and security audit documentation
+- **Penetration Testing Documentation** (Security audit report finalization)
 - OpenAPI/Swagger specification generation
+
+**VAPT Status Clarification:**
+Technical penetration testing execution was completed ✅ (OWASP ASVS v4.0 Level 2 compliance verified). However, documentation and formal reporting (VAPT audit package) are pending ⏳. The system has passed technical security assessments, but the formal security audit documentation package requires finalization.
 
 ---
 
@@ -130,7 +133,7 @@ Provide a unified Islamic financial ecosystem that enables members to access Sha
 │                                                                   │
 │  ┌─────────────────────────┐  ┌─────────────────────────┐     │
 │  │  Member Portal         │  │  Admin Backoffice Portal │     │
-│  │  (`@kkpusid` )         │  │  (`@admin.kkpad.id`)     │     │
+│  │  (`@kkpusid` )         │  │  (`@admin.kkpus.id`)     │     │
 │  │  - React + Vite       │  │  - React + Vite         │     │
 │  │  - PWA, Offline Ready  │  │  - RBAC, Role Matrix     │     │
 │  │  - Security Headers    │  │  - Advanced Auth        │     │
@@ -176,7 +179,7 @@ Provide a unified Islamic financial ecosystem that enables members to access Sha
 - Security: CSRF protection, secure headers
 - Performance: Lazy loading, caching
 
-**Admin Portal (`@admin.kkpus.id`:**
+**Admin Portal (`@admin.kkpus.id`):**
 - Technology Stack: React + Vite
 - Features: 12+ modules
 - Security: RBAC, role matrix
@@ -411,7 +414,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph "Frontend Layer"
-        A[Member Portal (@kkpus.id)]
+        A[Member Portal (@kkpusid)]
         B[Admin Portal (@admin.kkpus.id)]
     end
 
@@ -489,6 +492,35 @@ erDiagram
 | **bill** | bill_id | FK to member & bill_type | Financial bills |
 | **transaction** | transaction_id | FK to member & accounts | Financial transactions |
 
+**Concurrency Control & Transaction Management:**
+
+For concurrent financial operations (withdrawal/deposit, investment, trading), the system implements distributed locking and transaction isolation:
+
+1. **Distributed Locking**: Redis-based locks using `SETNX`/`EXPIRE` patterns for:
+   - Balance updates during withdrawals/deposits
+   - Order processing and investment allocation
+   - Account termination and KYC verification
+
+2. **Atomic Transactions**: All financial operations use database-level transactions with:
+   - `BEGIN TRANSACTION` to ensure all-or-nothing updates
+   - `SELECT ... FOR UPDATE` to lock rows during balance validation
+   - Commit/Rollback based on business rule validation
+
+3. **Isolation Levels**: Financial operations use `READ COMMITTED` isolation to prevent:
+   - Race conditions on concurrent withdrawals from same account
+   - Double-spending or overdrawn balances
+   - Inconsistent state during concurrent operations
+
+4. **Optimistic Concurrency Control**: For high-volume operations:
+   - Row version checking with `VERSION()` column updates
+   - Retry logic for failed transactions with exponential backoff
+   - Conflict resolution based on timestamp priority
+
+5. **Saga Pattern for Multi-Service Operations**: Complex operations like investment orders use:
+   - Compensating transactions for rollback
+   - Message queue coordination (RabbitMQ)
+   - Timeout and deadlock detection
+
 ### 4.4 API Architecture
 
 **REST API Structure:**
@@ -543,7 +575,7 @@ graph TD
     B1 --> F1
     C1 --> F1
     D1 --> F1
-}}
+```
 
 ```
 
@@ -734,19 +766,19 @@ graph TD
 
 **Phase 10 PENDING** ⏳
 - Formula verification (nisbah)
-- Penetration testing
-- Documentation finalization
+- **VAPT Documentation Finalization**
+- OpenAPI/Swagger specification
 
 ### 🚀 Next Steps
 
 1. **Immediate Actions**
    - Deploy to production with 4 vCPU/8 GB
    - Implement formula verification
-   - Complete penetration testing
+   - Finalize VAPT documentation package
 
 2. **Medium-term Actions**
    - Scale infrastructure based on metrics
-   - Complete documentation
+   - Generate OpenAPI/Swagger specifications
    - Implement advanced monitoring
 
 3. **Long-term Actions**
