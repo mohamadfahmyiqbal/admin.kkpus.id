@@ -10,7 +10,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "virtual:pwa-register/react": path.resolve(__dirname, "./src/mocks/pwa-register-mock.js"),
+      "virtual:pwa-register/react": path.resolve(import.meta.dirname, "./src/mocks/pwa-register-mock.js"),
     },
   },
 });

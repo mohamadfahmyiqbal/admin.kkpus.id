@@ -13,9 +13,16 @@ const api = axios.create({
   },
 });
 
+// Helper to read auth token from httpOnly cookie
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  return parts.length === 2 ? parts.pop().split(';').shift() : null;
+};
+
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("auth_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,9 +35,10 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      const token = localStorage.getItem("token");
+      const token = getCookie("auth_token");
       if (token) {
-        localStorage.removeItem("token");
+        // Clear the auth_token cookie (server also clears on logout)
+        document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict";
         localStorage.removeItem("userData");
         window.dispatchEvent(new Event("storage"));
 

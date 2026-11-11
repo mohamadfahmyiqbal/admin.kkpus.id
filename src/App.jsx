@@ -15,22 +15,29 @@ const App = () => {
   useSocketUpdateListener();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    // Read token from cookies instead of localStorage
+    const getCookie = (name) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      return parts.length === 2 ? parts.pop().split(';').shift() : null;
+    };
+    
+    const token = getCookie("auth_token");
     if (token) {
       initSocket(token);
     }
 
-    const handleStorage = () => {
-      const currentToken = localStorage.getItem("token");
-      if (currentToken) {
-        initSocket(currentToken);
+    const handleCookieChange = () => {
+      const token = getCookie("auth_token");
+      if (token) {
+        initSocket(token);
       }
     };
 
-    window.addEventListener("storage", handleStorage);
+    window.addEventListener("cookieChange", handleCookieChange);
 
     return () => {
-      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("cookieChange", handleCookieChange);
       disconnectSocket();
     };
   }, []);

@@ -14,7 +14,8 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { jwtEncode, isJwtExpired } from "../../utils/helpers";
+import { jwtEncode } from "../../utils/helpers";
+import api from "../../utils/api/common";
 import "./LoginPage.css";
 
 const LoginPage = () => {
@@ -28,15 +29,16 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      if (isJwtExpired(token)) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userData");
-      } else {
-        navigate(`/${jwtEncode({ page: "dashboard" })}`, { replace: true });
-      }
-    }
+    // Check if session exists via backend /api/auth/me using credentials cookie
+    api.get("/api/auth/me")
+      .then((res) => {
+        if (res.data?.success) {
+          navigate(`/${jwtEncode({ page: "dashboard" })}`, { replace: true });
+        }
+      })
+      .catch(() => {
+        // Not authenticated or expired, stay on login page
+      });
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -103,7 +105,7 @@ const LoginPage = () => {
           return;
         }
 
-        localStorage.setItem("token", data.data.token);
+        // Set non-sensitive user metadata to localStorage, token is securely placed in httpOnly cookie by backend
         localStorage.setItem("userData", JSON.stringify(data.data.user));
         window.dispatchEvent(new Event("storage"));
         navigate(`/${jwtEncode({ page: "dashboard" })}`);

@@ -75,7 +75,6 @@ export const useDashboardData = () => {
       let lastToastTime = 0;
       const refreshHandler = (payload) => {
         if (!isMounted) return;
-        console.log("🔔 [Dashboard] Socket event received:", payload);
         fetchData();
 
         const now = Date.now();

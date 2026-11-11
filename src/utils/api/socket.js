@@ -10,7 +10,7 @@ export const initSocket = (token) => {
     return socket;
   }
 
-  const effectiveToken = token || localStorage.getItem("token");
+  const effectiveToken = token || getCookie("auth_token");
 
   socket = io(SOCKET_URL, {
     auth: { token: effectiveToken },
@@ -21,13 +21,16 @@ export const initSocket = (token) => {
   socket.on("connect", () => {
     console.log("🔌 [Socket Admin] Terhubung ke server socket:", socket.id);
     try {
-      const stored = localStorage.getItem("userData");
-      if (stored) {
-        const user = JSON.parse(stored);
-        const memberId = user.member_id || user.id || user.userId;
-        if (memberId) {
-          socket.emit("register", memberId);
-          console.log("👤 [Socket Admin] Register user ke socket:", memberId);
+      const token = getCookie("auth_token");
+      if (token) {
+        const stored = getCookie("userData");
+        if (stored) {
+          const user = JSON.parse(stored);
+          const memberId = user.member_id || user.id || user.userId;
+          if (memberId) {
+            socket.emit("register", memberId);
+            console.log("👤 [Socket Admin] Register user ke socket:", memberId);
+          }
         }
       }
     } catch (e) {}
@@ -46,7 +49,7 @@ export const initSocket = (token) => {
 
 export const getSocket = () => {
   if (!socket || !socket.connected) {
-    const token = localStorage.getItem("token");
+    const token = getCookie("auth_token");
     if (token) {
       return initSocket(token);
     }
@@ -59,6 +62,13 @@ export const disconnectSocket = () => {
     socket.disconnect();
     socket = null;
   }
+};
+
+// Helper to read from httpOnly cookie (token is in auth_token cookie)
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  return parts.length === 2 ? parts.pop().split(';').shift() : null;
 };
 
 export default {
