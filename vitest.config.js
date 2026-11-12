@@ -7,7 +7,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/setupTests.js"],
     include: ["src/**/*.test.{js,jsx}"],
-    isolate: false,
+    pool: "vmThreads",
   },
   resolve: {
     alias: {
