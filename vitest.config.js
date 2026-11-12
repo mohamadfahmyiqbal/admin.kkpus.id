@@ -7,12 +7,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/setupTests.js"],
     include: ["src/**/*.test.{js,jsx}"],
-    pool: "threads",
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    isolate: false,
   },
   resolve: {
     alias: {
