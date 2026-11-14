@@ -21,6 +21,21 @@
   visibility: hidden !important;
   pointer-events: none !important;
   transform: translateY(10px) !important;
+  display: none !important;
+}
+
+/* Fix submenu desktop hover & click usability */
+.sidebar-horizontal .sidebar-submenu.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  display: block !important;
+  transform: translateY(0) !important;
+}
+
+.sidebar-horizontal .sidebar-submenu li button.sidebar-link-btn {
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
 /* ==========================================================================

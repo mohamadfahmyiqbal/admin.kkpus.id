@@ -18,7 +18,7 @@ import { jwtEncode } from "../../utils/helpers";
 
 const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNavigate }) => {
   const hasChildren = Boolean(item.children && item.children.length);
-  const key = item.key;
+  const key = item.key || item.href || item.label;
   const isOpen = Boolean(openKeys[key]);
 
   const isActive = useMemo(() => {
@@ -105,6 +105,7 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
         children: [
           { label: "Dashboard", href: "simpananDashboard", icon: FaChartPie },
           { label: "Report", href: "simpananReportPage", icon: FaFileAlt },
+          { label: "Anggota dengan Simpanan", href: "membersWithSavingsPage", icon: FaUsers },
         ],
       },
       {
