@@ -29,8 +29,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if session exists via backend /api/auth/me using credentials cookie
-    api.get("/api/auth/me")
+    // Check if session exists via backend /auth/me using credentials cookie
+    api.get("/auth/me")
       .then((res) => {
         if (res.data?.success) {
           navigate(`/${jwtEncode({ page: "dashboard" })}`, { replace: true });
