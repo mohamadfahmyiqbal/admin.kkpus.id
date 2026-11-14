@@ -15,16 +15,14 @@
   color: #475569;
 }
 
-/* Optimasi navbar desktop: submenu tertutup saat klik / tidak stuck */
-.sidebar-horizontal .sidebar-submenu:not(.show) {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  transform: translateY(10px) !important;
-  display: none !important;
+.sidebar-horizontal .sidebar-submenu {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+  display: none;
 }
 
-/* Fix submenu desktop hover & click usability */
 .sidebar-horizontal .sidebar-submenu.show {
   opacity: 1 !important;
   visibility: visible !important;

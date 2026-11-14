@@ -24,17 +24,20 @@ const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNaviga
   const isActive = useMemo(() => {
     if (item.href === currentPage) return true;
     if (hasChildren) {
-      return item.children.some((c) => c.href === currentPage || (c.children && c.children.some(cc => cc.href === currentPage)));
+      return item.children.some(
+        (c) =>
+          c.href === currentPage ||
+          (c.children && c.children.some((cc) => cc.href === currentPage))
+      );
     }
     return false;
   }, [item, currentPage, hasChildren]);
 
   if (hasChildren) {
-    const activeClass = isActive || isOpen ? "active" : "";
     return (
-      <li className={activeClass} role="none">
+      <li className={isActive ? "active" : ""} role="none">
         <button
-          className={`sidebar-link-btn has-arrow ${activeClass}`}
+          className={`sidebar-link-btn has-arrow ${isActive ? "active" : ""}`}
           aria-expanded={isOpen}
           onClick={(e) => onDropdownToggle(key, e)}
           type="button"
@@ -200,7 +203,14 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
   const handleDropdownToggle = (key, e) => {
     e.preventDefault();
     e.stopPropagation();
-    setOpenKeys((prev) => ({ ...prev, [key]: !prev[key] }));
+    setOpenKeys((prev) => {
+      const willOpen = !prev[key];
+      // Jika di desktop dan membuka menu root, tutup menu lain agar tidak bertumpuk
+      if (isDesktop && willOpen) {
+        return { [key]: true };
+      }
+      return { ...prev, [key]: willOpen };
+    });
   };
 
   const handleNavigate = (page) => {
