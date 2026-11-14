@@ -89,48 +89,58 @@ const MembersTable = ({
               <th className="text-center text-nowrap" style={{ width: "6%" }}>
                 Aksi
               </th>
-              <th
-                role="button"
-                className="user-select-none text-nowrap"
-                style={{ width: "18%" }}
-                onClick={() => onSort?.("member_no")}
-              >
-                No. Anggota / NIK {renderSortIcon("member_no")}
+              <th className="text-nowrap" style={{ width: "18%" }}>
+                <button
+                  type="button"
+                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
+                  onClick={() => onSort?.("member_no")}
+                  aria-label="Urutkan berdasarkan Nomor Anggota atau NIK"
+                >
+                  No. Anggota / NIK {renderSortIcon("member_no")}
+                </button>
               </th>
-              <th
-                role="button"
-                className="user-select-none text-nowrap"
-                style={{ width: "22%" }}
-                onClick={() => onSort?.("full_name")}
-              >
-                Nama & Kontak {renderSortIcon("full_name")}
+              <th className="text-nowrap" style={{ width: "22%" }}>
+                <button
+                  type="button"
+                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
+                  onClick={() => onSort?.("full_name")}
+                  aria-label="Urutkan berdasarkan Nama Anggota"
+                >
+                  Nama & Kontak {renderSortIcon("full_name")}
+                </button>
               </th>
-              <th
-                role="button"
-                className="user-select-none text-nowrap"
-                style={{ width: "14%" }}
-                onClick={() => onSort?.("member_type")}
-              >
-                Jenis Anggota {renderSortIcon("member_type")}
+              <th className="text-nowrap" style={{ width: "14%" }}>
+                <button
+                  type="button"
+                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
+                  onClick={() => onSort?.("member_type")}
+                  aria-label="Urutkan berdasarkan Jenis Anggota"
+                >
+                  Jenis Anggota {renderSortIcon("member_type")}
+                </button>
               </th>
               <th style={{ width: "13%" }} className="text-nowrap">
                 Peran / Role
               </th>
-              <th
-                role="button"
-                className="user-select-none text-nowrap"
-                style={{ width: "12%" }}
-                onClick={() => onSort?.("join_date")}
-              >
-                Bergabung {renderSortIcon("join_date")}
+              <th className="text-nowrap" style={{ width: "12%" }}>
+                <button
+                  type="button"
+                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
+                  onClick={() => onSort?.("join_date")}
+                  aria-label="Urutkan berdasarkan Tanggal Bergabung"
+                >
+                  Bergabung {renderSortIcon("join_date")}
+                </button>
               </th>
-              <th
-                role="button"
-                className="user-select-none text-nowrap"
-                style={{ width: "11%" }}
-                onClick={() => onSort?.("status")}
-              >
-                Status {renderSortIcon("status")}
+              <th className="text-nowrap" style={{ width: "11%" }}>
+                <button
+                  type="button"
+                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
+                  onClick={() => onSort?.("status")}
+                  aria-label="Urutkan berdasarkan Status Anggota"
+                >
+                  Status {renderSortIcon("status")}
+                </button>
               </th>
             </tr>
 
@@ -156,6 +166,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Cari No/NIK..."
+                  aria-label="Filter berdasarkan Nomor Anggota atau NIK"
                   value={filters.memberNo || ""}
                   onChange={(e) => onFilterChange?.("memberNo", e.target.value)}
                   className="bg-white border-1"
@@ -165,6 +176,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Cari Nama/HP/Email..."
+                  aria-label="Filter berdasarkan Nama, Nomor HP, atau Email"
                   value={filters.nameOrContact || ""}
                   onChange={(e) => onFilterChange?.("nameOrContact", e.target.value)}
                   className="bg-white border-1"
@@ -173,6 +185,7 @@ const MembersTable = ({
               <th className="py-2 px-2">
                 <Form.Select
                   size="sm"
+                  aria-label="Filter berdasarkan Jenis Anggota"
                   value={filters.type || ""}
                   onChange={(e) => onFilterChange?.("type", e.target.value)}
                   className="bg-white border-1"
@@ -186,6 +199,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Filter Peran..."
+                  aria-label="Filter berdasarkan Peran atau Role"
                   value={filters.role || ""}
                   onChange={(e) => onFilterChange?.("role", e.target.value)}
                   className="bg-white border-1"
@@ -195,6 +209,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Cari Thn/Bln..."
+                  aria-label="Filter berdasarkan Tahun atau Bulan Bergabung"
                   value={filters.joinDate || ""}
                   onChange={(e) => onFilterChange?.("joinDate", e.target.value)}
                   className="bg-white border-1"
@@ -203,6 +218,7 @@ const MembersTable = ({
               <th className="py-2 px-2">
                 <Form.Select
                   size="sm"
+                  aria-label="Filter berdasarkan Status Anggota"
                   value={filters.status || ""}
                   onChange={(e) => onFilterChange?.("status", e.target.value)}
                   className="bg-white border-1"
