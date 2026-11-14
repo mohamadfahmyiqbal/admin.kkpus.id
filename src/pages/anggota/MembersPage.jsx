@@ -248,6 +248,12 @@ const MembersPage = () => {
   const handleDeleteMember = useCallback(async (memberId) => {
     if (!memberId) return;
 
+    // Lepaskan fokus dari elemen di belakang dialog (mis. kolom pencarian)
+    // agar fokus tidak tertinggal di tabel saat konfirmasi muncul.
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     const { value: password, isConfirmed } = await Swal.fire({
       title: "Konfirmasi Hard Delete Anggota",
       html: `
@@ -273,9 +279,14 @@ const MembersPage = () => {
       cancelButtonText: "Batal",
       focusConfirm: false,
       returnFocus: false,
+      inputAutoFocus: true,
       didOpen: () => {
-        const input = Swal.getInput();
-        if (input) input.focus();
+        const focusInput = () => {
+          const input = Swal.getInput();
+          if (input) input.focus();
+        };
+        focusInput();
+        setTimeout(focusInput, 0);
       },
       inputValidator: (val) => {
         if (!val) {
@@ -305,6 +316,11 @@ const MembersPage = () => {
   const handleDeleteBatch = useCallback(async () => {
     if (selectedMemberIds.length === 0) return;
 
+    // Lepaskan fokus dari elemen di belakang dialog (mis. kolom pencarian).
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     const { value: password, isConfirmed } = await Swal.fire({
       title: "Konfirmasi Hard Delete Massal",
       html: `
@@ -330,9 +346,14 @@ const MembersPage = () => {
       cancelButtonText: "Batal",
       focusConfirm: false,
       returnFocus: false,
+      inputAutoFocus: true,
       didOpen: () => {
-        const input = Swal.getInput();
-        if (input) input.focus();
+        const focusInput = () => {
+          const input = Swal.getInput();
+          if (input) input.focus();
+        };
+        focusInput();
+        setTimeout(focusInput, 0);
       },
       inputValidator: (val) => {
         if (!val) {
