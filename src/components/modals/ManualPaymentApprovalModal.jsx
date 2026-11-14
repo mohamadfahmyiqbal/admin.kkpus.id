@@ -397,7 +397,9 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                 <div className="d-flex align-items-center gap-2 mb-2">
                   <User size={16} className="text-primary" />
                   <span className="text-muted small">Nama Anggota:</span>
-                  <span className="fw-semibold text-dark small ms-auto">{transaction.name}</span>
+                  <span className="fw-semibold text-dark small ms-auto">
+  {transaction.member || transaction.sender_name || transaction.full_name || "-"}
+</span>
                 </div>
                 {transaction.sender_bank && (
                   <div className="d-flex align-items-center gap-2 mb-2">
