@@ -15,27 +15,6 @@
   color: #475569;
 }
 
-.sidebar-horizontal .sidebar-submenu {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(10px);
-  display: none;
-}
-
-.sidebar-horizontal .sidebar-submenu.show {
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  display: block !important;
-  transform: translateY(0) !important;
-}
-
-.sidebar-horizontal .sidebar-submenu li button.sidebar-link-btn {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-
 /* ==========================================================================
    Header / Topbar Enhancements & Responsive Optimization
    ========================================================================== */

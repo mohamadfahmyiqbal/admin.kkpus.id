@@ -93,8 +93,13 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
         setOpenKeys({});
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const timer = setTimeout(() => {
+      document.addEventListener("click", handleClickOutside);
+    }, 0);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, [isDesktop]);
 
   const menuItems = useMemo(
@@ -207,7 +212,15 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
       const willOpen = !prev[key];
       // Jika di desktop dan membuka menu root, tutup menu lain agar tidak bertumpuk
       if (isDesktop && willOpen) {
-        return { [key]: true };
+        // Biarkan nested dropdown tetap bisa terbuka jika parent-nya terbuka
+        const nextKeys = {};
+        Object.keys(prev).forEach((k) => {
+          if (key.startsWith(k)) {
+            nextKeys[k] = true;
+          }
+        });
+        nextKeys[key] = true;
+        return nextKeys;
       }
       return { ...prev, [key]: willOpen };
     });
