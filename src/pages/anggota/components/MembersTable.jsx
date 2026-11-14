@@ -2,6 +2,19 @@ import React, { useMemo, useCallback } from "react";
 import { Table, Spinner, Badge, Button, Pagination, Form } from "react-bootstrap";
 import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear } from "phosphor-react";
 
+// Atribut anti-autofill untuk kolom pencarian.
+// Tanpa ini, browser (Chrome/Edge/1Password) menganggap kolom filter sebagai
+// field "on" dan menyuntikkan nilai tersimpan (mis. username login) saat ada
+// input password lain yang muncul di halaman (dialog konfirmasi hapus).
+const antiAutofill = {
+  autoComplete: "off",
+  autoCorrect: "off",
+  autoCapitalize: "none",
+  spellCheck: false,
+  "data-1p-ignore": "true",
+  "data-lpignore": "true",
+};
+
 const MembersTable = ({
   loading = false,
   members = [],
@@ -165,30 +178,36 @@ const MembersTable = ({
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
+                  name="memberFilterMemberNo"
                   placeholder="Cari No/NIK..."
                   aria-label="Filter berdasarkan Nomor Anggota atau NIK"
                   value={filters.memberNo || ""}
                   onChange={(e) => onFilterChange?.("memberNo", e.target.value)}
                   className="bg-white border-1"
+                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
+                  name="memberFilterNameOrContact"
                   placeholder="Cari Nama/HP/Email..."
                   aria-label="Filter berdasarkan Nama, Nomor HP, atau Email"
                   value={filters.nameOrContact || ""}
                   onChange={(e) => onFilterChange?.("nameOrContact", e.target.value)}
                   className="bg-white border-1"
+                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Select
                   size="sm"
+                  name="memberFilterType"
                   aria-label="Filter berdasarkan Jenis Anggota"
                   value={filters.type || ""}
                   onChange={(e) => onFilterChange?.("type", e.target.value)}
                   className="bg-white border-1"
+                  {...antiAutofill}
                 >
                   <option value="">Semua</option>
                   <option value="reguler">Reguler</option>
@@ -198,30 +217,36 @@ const MembersTable = ({
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
+                  name="memberFilterRole"
                   placeholder="Filter Peran..."
                   aria-label="Filter berdasarkan Peran atau Role"
                   value={filters.role || ""}
                   onChange={(e) => onFilterChange?.("role", e.target.value)}
                   className="bg-white border-1"
+                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
+                  name="memberFilterJoinDate"
                   placeholder="Cari Thn/Bln..."
                   aria-label="Filter berdasarkan Tahun atau Bulan Bergabung"
                   value={filters.joinDate || ""}
                   onChange={(e) => onFilterChange?.("joinDate", e.target.value)}
                   className="bg-white border-1"
+                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Select
                   size="sm"
+                  name="memberFilterStatus"
                   aria-label="Filter berdasarkan Status Anggota"
                   value={filters.status || ""}
                   onChange={(e) => onFilterChange?.("status", e.target.value)}
                   className="bg-white border-1"
+                  {...antiAutofill}
                 >
                   <option value="">Semua</option>
                   <option value="aktif">Aktif</option>
