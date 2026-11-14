@@ -14,7 +14,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { jwtEncode } from "../../utils/helpers";
+import { jwtEncode, isJwtExpired } from "../../utils/helpers";
 import api, { getCookie } from "../../utils/api/common";
 import "./LoginPage.css";
 
@@ -30,6 +30,12 @@ const LoginPage = () => {
 
   useEffect(() => {
     // Check if session exists via backend /auth/me using credentials cookie
+    // Only redirect to dashboard if both cookie/session AND localStorage token exist
+    const authToken = localStorage.getItem("token");
+    if (!authToken || isJwtExpired(authToken)) {
+      return;
+    }
+
     api.get("/auth/me")
       .then((res) => {
         if (res.data?.success) {
