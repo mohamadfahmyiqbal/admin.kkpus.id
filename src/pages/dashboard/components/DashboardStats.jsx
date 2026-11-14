@@ -30,10 +30,13 @@ const DashboardStats = ({ stats = [] }) => (
               <h6
                 className="text-muted mb-0 extra-small fw-semibold text-uppercase text-truncate"
                 style={{ letterSpacing: "0.5px" }}
+                title={s?.title || ""}
               >
                 {s?.title || "-"}
               </h6>
-              <h5 className="fw-bold mb-0 text-truncate">{s?.value ?? "-"}</h5>
+              <h5 className="fw-bold mb-0 text-truncate" title={String(s?.value ?? "-")}>
+                {s?.value ?? "-"}
+              </h5>
             </div>
           </div>
         </MotionCard>

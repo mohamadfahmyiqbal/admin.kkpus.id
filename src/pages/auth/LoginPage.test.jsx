@@ -38,7 +38,10 @@ describe('LoginPage', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/email\/nomor handphone dan password wajib diisi/i)
+        screen.getByText(/email atau nomor hp wajib diisi/i)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/password wajib diisi/i)
       ).toBeInTheDocument();
     });
   });

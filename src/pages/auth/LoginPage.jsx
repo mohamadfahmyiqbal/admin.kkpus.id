@@ -54,7 +54,6 @@ const LoginPage = () => {
     if (!cleanEmail || !cleanPass) {
       if (!cleanEmail) setEmailHpInvalid(true);
       if (!cleanPass) setPasswordInvalid(true);
-      setError("Email/Nomor Handphone dan Password wajib diisi");
       return;
     }
 
