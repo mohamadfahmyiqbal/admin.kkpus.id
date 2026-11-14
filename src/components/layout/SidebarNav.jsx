@@ -16,7 +16,7 @@ import {
 } from "react-icons/fa";
 import { jwtEncode } from "../../utils/helpers";
 
-const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNavigate }) => {
+const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNavigate, menuLeft, depth = 0 }) => {
   const hasChildren = Boolean(item.children && item.children.length);
   const key = item.key || item.href || item.label;
   const isOpen = Boolean(openKeys[key]);
@@ -39,13 +39,16 @@ const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNaviga
         <button
           className={`sidebar-link-btn has-arrow ${isActive ? "active" : ""}`}
           aria-expanded={isOpen}
-          onClick={(e) => onDropdownToggle(key, e)}
+          onClick={(e) => onDropdownToggle(key, e, depth)}
           type="button"
         >
           {item.icon && <item.icon className="sidebar-icon" size={16} />}
           <span className="sidebar-text">{item.label}</span>
         </button>
-        <ul className={`sidebar-submenu list-unstyled ${isOpen ? "show" : ""}`}>
+        <ul
+          className={`sidebar-submenu list-unstyled ${isOpen ? "show" : ""}`}
+          style={menuLeft == null ? undefined : { left: `${menuLeft}px` }}
+        >
           {item.children.map((child, idx) => (
             <MenuItem
               key={child.key || `${key}-${idx}`}
@@ -54,6 +57,7 @@ const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNaviga
               openKeys={openKeys}
               onDropdownToggle={onDropdownToggle}
               onNavigate={onNavigate}
+              depth={depth + 1}
             />
           ))}
         </ul>
@@ -78,6 +82,7 @@ const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNaviga
 export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpen }) => {
   const navigate = useNavigate();
   const [openKeys, setOpenKeys] = useState({});
+  const [menuLeft, setMenuLeft] = useState(20);
   const asideRef = useRef(null);
 
   // Otomatis tutup semua dropdown saat halaman aktif berubah
@@ -205,22 +210,19 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
     []
   );
 
-  const handleDropdownToggle = (key, e) => {
+  const handleDropdownToggle = (key, e, depth = 0) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isDesktop && depth === 0) {
+      const left = e.currentTarget.getBoundingClientRect().left;
+      setMenuLeft(Math.max(8, Math.min(left, window.innerWidth - 260)));
+    }
     setOpenKeys((prev) => {
       const willOpen = !prev[key];
-      // Jika di desktop dan membuka menu root, tutup menu lain agar tidak bertumpuk
-      if (isDesktop && willOpen) {
-        // Biarkan nested dropdown tetap bisa terbuka jika parent-nya terbuka
-        const nextKeys = {};
-        Object.keys(prev).forEach((k) => {
-          if (key.startsWith(k)) {
-            nextKeys[k] = true;
-          }
-        });
-        nextKeys[key] = true;
-        return nextKeys;
+      // Di desktop, hanya menu root yang menutup menu lain; submenu nested
+      // harus tetap membiarkan parent-nya terbuka.
+      if (isDesktop && depth === 0 && willOpen) {
+        return { [key]: true };
       }
       return { ...prev, [key]: willOpen };
     });
@@ -276,6 +278,7 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
                 openKeys={openKeys}
                 onDropdownToggle={handleDropdownToggle}
                 onNavigate={handleNavigate}
+                menuLeft={isDesktop ? menuLeft : undefined}
               />
             ))}
           </ul>
