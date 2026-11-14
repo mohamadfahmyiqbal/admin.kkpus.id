@@ -108,7 +108,10 @@ const LoginPage = () => {
           return;
         }
 
-        // Set non-sensitive user metadata to localStorage, token is securely placed in httpOnly cookie by backend
+        // Set non-sensitive user metadata and token for frontend route guard
+        if (data.data.token) {
+          localStorage.setItem("token", data.data.token);
+        }
         localStorage.setItem("userData", JSON.stringify(data.data.user));
         window.dispatchEvent(new Event("storage"));
         navigate(`/${jwtEncode({ page: "dashboard" })}`);

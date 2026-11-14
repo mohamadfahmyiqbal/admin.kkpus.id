@@ -1,5 +1,5 @@
 import axios from "axios";
-import { jwtEncode } from "../helpers";
+import { jwtEncode, jwtDecodePage } from "../helpers";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
@@ -49,8 +49,10 @@ api.interceptors.response.use(
         // Redirect to login if user is not already on login page
         if (typeof window !== "undefined") {
           try {
-            const loginUrl = `/${jwtEncode({ page: "authLogin" })}`;
-            if (window.location.pathname !== loginUrl) {
+            const currentPath = window.location.pathname.replace(/^\//, "");
+            const decodedCurrent = jwtDecodePage(currentPath);
+            if (!decodedCurrent || decodedCurrent.page !== "authLogin") {
+              const loginUrl = `/${jwtEncode({ page: "authLogin" })}`;
               window.location.href = loginUrl;
             }
           } catch {
