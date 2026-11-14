@@ -272,7 +272,7 @@ const MembersPage = () => {
       cancelButtonText: "Batal",
       inputValidator: (val) => {
         if (!val) {
-          return "Password administrator wajib diisi!";
+          return "Password wajib diisi!";
         }
       },
     });
@@ -322,7 +322,7 @@ const MembersPage = () => {
       cancelButtonText: "Batal",
       inputValidator: (val) => {
         if (!val) {
-          return "Password administrator wajib diisi!";
+          return "Password wajib diisi!";
         }
       },
     });

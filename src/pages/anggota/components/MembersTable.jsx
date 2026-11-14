@@ -323,8 +323,8 @@ const MembersTable = ({
                         )}
                         {m.email && (
                           <span
-                            className="d-inline-flex align-items-center gap-1 text-truncate"
-                            style={{ maxWidth: "160px" }}
+                            className="d-inline-flex align-items-center gap-1"
+                            title={m.email}
                           >
                             <EnvelopeSimple size={12} /> {m.email}
                           </span>
