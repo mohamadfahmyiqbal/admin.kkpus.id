@@ -12,6 +12,7 @@ import {
   FaFileAlt,
   FaCogs,
   FaUserShield,
+  FaTimes,
 } from "react-icons/fa";
 import { jwtEncode } from "../../utils/helpers";
 
@@ -232,11 +233,11 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
             </div>
             <button
               type="button"
-              className="btn btn-link p-0 text-white-50 sidebar-close-btn"
+              className="btn btn-link p-0 text-white-50 sidebar-close-btn d-flex align-items-center justify-content-center"
               onClick={onClose}
               aria-label="Close sidebar"
             >
-              <span className="sidebar-close-icon">×</span>
+              <FaTimes size={18} />
             </button>
           </div>
         )}

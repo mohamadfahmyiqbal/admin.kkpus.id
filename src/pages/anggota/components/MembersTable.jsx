@@ -278,24 +278,28 @@ const MembersTable = ({
                       />
                     </td>
                     <td className="text-center">
-                      <div className="d-flex align-items-center justify-content-center gap-1">
+                      <div className="d-flex align-items-center justify-content-center gap-2">
                         <Button
                           variant="light"
                           size="sm"
-                          className="rounded-circle p-2 text-primary border shadow-none"
+                          className="rounded-circle p-2 text-primary border"
+                          style={{ width: "36px", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                           onClick={() => onSelectMember(m)}
                           title="Lihat Detail Profil Lengkap"
+                          aria-label={`Lihat Detail Profil ${m.full_name || ""}`}
                         >
-                          <Eye size={15} />
+                          <Eye size={16} />
                         </Button>
                         <Button
                           variant="light"
                           size="sm"
-                          className="rounded-circle p-2 text-warning border shadow-none"
+                          className="rounded-circle p-2 text-warning border"
+                          style={{ width: "36px", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                           onClick={() => onEditRole?.(m)}
                           title="Ubah Role / Peran Anggota"
+                          aria-label={`Ubah Role ${m.full_name || ""}`}
                         >
-                          <UserGear size={15} />
+                          <UserGear size={16} />
                         </Button>
                       </div>
                     </td>

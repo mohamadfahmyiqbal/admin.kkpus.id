@@ -71,7 +71,7 @@ const Dashboard = () => {
     <div className="pb-5">
       <DashboardHeader onOpenLogs={() => handleQuickNav("reportsPage")} />
 
-      <DashboardStats stats={statsList} />
+      <DashboardStats stats={statsList} loading={loading} />
 
       <Row>
         <Col xl={8} lg={12} className="mb-4">
