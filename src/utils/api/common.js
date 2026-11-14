@@ -13,8 +13,8 @@ const api = axios.create({
   },
 });
 
-// Helper to read auth token from httpOnly cookie
-const getCookie = (name) => {
+// Helper to read auth token or cookies
+export const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   return parts.length === 2 ? parts.pop().split(';').shift() : null;
@@ -25,6 +25,10 @@ api.interceptors.request.use(
     const token = getCookie("auth_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    const xsrfToken = getCookie("XSRF-TOKEN");
+    if (xsrfToken) {
+      config.headers["X-XSRF-TOKEN"] = xsrfToken;
     }
     return config;
   },

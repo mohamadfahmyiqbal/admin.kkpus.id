@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { jwtEncode } from "../../utils/helpers";
-import api from "../../utils/api/common";
+import api, { getCookie } from "../../utils/api/common";
 import "./LoginPage.css";
 
 const LoginPage = () => {
@@ -60,31 +60,34 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const apiBase =
-        import.meta.env.VITE_API_BASE_URL ||
-        (import.meta.env.PROD ? "https://api.kkpus.id/api" : "https://localhost:3445/api");
-      const response = await fetch(`${apiBase}/auth/accountLogin`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Client-App": "admin",
-        },
-        body: JSON.stringify({
+      let xsrfToken = getCookie("XSRF-TOKEN");
+      if (!xsrfToken) {
+        try {
+          const csrfRes = await api.get("/auth/csrf-token");
+          xsrfToken = csrfRes.data?.csrfToken || getCookie("XSRF-TOKEN");
+        } catch (csrfErr) {
+          console.warn("Failed to fetch CSRF token:", csrfErr);
+        }
+      }
+
+      const res = await api.post(
+        "/auth/accountLogin",
+        {
           emailHp: cleanEmail,
           password: cleanPass,
           clientType: "admin",
-        }),
-      });
+        },
+        {
+          headers: {
+            "X-Client-App": "admin",
+            ...(xsrfToken ? { "X-XSRF-TOKEN": xsrfToken } : {}),
+          },
+        }
+      );
 
-      let data;
-      try {
-        data = await response.json();
-      } catch {
-        setError("Respon server tidak valid atau server sedang dalam pemeliharaan.");
-        return;
-      }
+      const data = res.data;
 
-      if (response.ok && data.success) {
+      if (data && data.success) {
         const roles = data.data.user.roles || [];
         const allowedRoles = [
           "pengawas",
@@ -111,13 +114,16 @@ const LoginPage = () => {
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
       } else {
         setError(
-          data.message ||
+          data?.message ||
             "Kredensial tidak valid. Email/Nomor HP atau Password salah."
         );
       }
     } catch (err) {
       console.error("Login Error:", err);
-      setError("Terjadi kesalahan jaringan atau server tidak merespon.");
+      const serverMessage =
+        err.response?.data?.message ||
+        "Terjadi kesalahan jaringan atau server tidak merespon.";
+      setError(serverMessage);
     } finally {
       setLoading(false);
     }
