@@ -262,7 +262,8 @@ const MembersPage = () => {
       inputAttributes: {
         autocapitalize: "off",
         autocorrect: "off",
-        autocomplete: "current-password",
+        autocomplete: "off",
+        name: "admin-confirmation-password",
       },
       icon: "warning",
       showCancelButton: true,
@@ -270,6 +271,12 @@ const MembersPage = () => {
       cancelButtonColor: "#6c757d",
       confirmButtonText: "Ya, Hapus Permanen",
       cancelButtonText: "Batal",
+      focusConfirm: false,
+      returnFocus: false,
+      didOpen: () => {
+        const input = Swal.getInput();
+        if (input) input.focus();
+      },
       inputValidator: (val) => {
         if (!val) {
           return "Password wajib diisi!";
@@ -312,7 +319,8 @@ const MembersPage = () => {
       inputAttributes: {
         autocapitalize: "off",
         autocorrect: "off",
-        autocomplete: "current-password",
+        autocomplete: "off",
+        name: "admin-confirmation-password",
       },
       icon: "warning",
       showCancelButton: true,
@@ -320,6 +328,12 @@ const MembersPage = () => {
       cancelButtonColor: "#6c757d",
       confirmButtonText: `Ya, Hapus ${selectedMemberIds.length} Anggota`,
       cancelButtonText: "Batal",
+      focusConfirm: false,
+      returnFocus: false,
+      didOpen: () => {
+        const input = Swal.getInput();
+        if (input) input.focus();
+      },
       inputValidator: (val) => {
         if (!val) {
           return "Password wajib diisi!";

@@ -20,15 +20,21 @@ const MembersHeader = ({
       <Col md={6} className="text-md-end mt-3 mt-md-0 d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
         {selectedCount > 0 && (
           <Button
+            type="button"
             variant="danger"
             className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm animate__animated animate__fadeIn"
-            onClick={onDeleteBatch}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onDeleteBatch?.();
+            }}
           >
             <Trash size={18} weight="bold" />
             Hapus ({selectedCount}) Anggota
           </Button>
         )}
         <Button
+          type="button"
           variant="outline-primary"
           className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm"
           onClick={onImport}
@@ -37,6 +43,7 @@ const MembersHeader = ({
           Import Excel
         </Button>
         <Button
+          type="button"
           variant="success"
           className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm text-white"
           onClick={onExport}
