@@ -93,14 +93,24 @@ export const useJualBeliApproval = ({
     );
   }, [transaction]);
 
+  const hasPaidDP = useMemo(() => {
+    return (
+      Boolean(transaction?.has_paid_dp) ||
+      ["PAID", "SUCCESS", "SETTLEMENT", "CAPTURE"].includes(
+        String(transaction?.dp_payment?.status || "").toUpperCase()
+      )
+    );
+  }, [transaction]);
+
   const hasUploadedDP = useMemo(() => {
     return (
       !hasDownPayment ||
       !!dpProofUrl ||
+      hasPaidDP ||
       Boolean(transaction?.has_uploaded_dp) ||
       Boolean(transaction?.has_paid_dp)
     );
-  }, [hasDownPayment, dpProofUrl, transaction]);
+  }, [hasDownPayment, dpProofUrl, hasPaidDP, transaction]);
 
   const canApprove = useMemo(() => {
     return checkCanApprove({
@@ -255,6 +265,7 @@ export const useJualBeliApproval = ({
     hasDownPayment,
     dpProofUrl,
     hasUploadedDP,
+    hasPaidDP,
     canApprove,
     totalDisplay,
     formatCurrency: formattedCurrency,
