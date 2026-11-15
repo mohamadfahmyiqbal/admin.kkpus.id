@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
-import { jwtEncode } from "./index.js";
+import { jwtEncode } from "./index";
 
 export const useNavigation = () => {
   const navigate = useNavigate();

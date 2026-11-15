@@ -1,0 +1,1 @@
+import{yr as e}from"./vendor-react-Bj-GI7jC.js";var t=`https://api.kkpus.id`,n=null,r=r=>n&&n.connected?n:(n=e(t,{auth:{token:r},transports:[`websocket`,`polling`],timeout:2e4}),n.on(`connect`,()=>{}),n.on(`disconnect`,e=>{}),n.on(`connect_error`,e=>{console.error(`❌ Error koneksi socket:`,e.message)}),n),i=()=>n;export{r as n,i as t};

@@ -92,7 +92,8 @@ function RegistrationReviewModal({
       userRole.includes(target) ||
       target.includes(userRole) ||
       userRoleAssignments.some((r) => r.includes(target) || target.includes(r)) ||
-      userRoles.some((r) => r.includes(target) || target.includes(r));
+      userRoles.some((r) => r.includes(target) || target.includes(r)) ||
+      userFullName.includes(target);
 
     if (!hasMatchingRole) return false;
 

@@ -24,22 +24,11 @@ export const WithdrawalApprovalModal = ({
 
   useEffect(() => {
     if (!show) {
-      if (preview && preview !== "pdf") {
-        URL.revokeObjectURL(preview);
-      }
       setFile(null);
       setPreview(null);
       setNote("");
     }
-  }, [show, preview]);
-
-  useEffect(() => {
-    return () => {
-      if (preview && preview !== "pdf") {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, [preview]);
+  }, [show]);
 
   if (!transaction) return null;
 
@@ -79,7 +68,8 @@ export const WithdrawalApprovalModal = ({
 
   const canApprove = (() => {
     if (isApprovedFinal || isRejectedFinal) return false;
-    if (!currentRoleName || !currentUser) return false;
+    if (!currentRoleName) return true;
+    if (!currentUser) return true;
 
     const target = currentRoleName.toLowerCase();
     const userRole = typeof currentUser.role === "string" ? currentUser.role.toLowerCase() : "";
@@ -114,9 +104,6 @@ export const WithdrawalApprovalModal = ({
       if (f.size > 2 * 1024 * 1024) {
         Swal.fire("Peringatan", "Ukuran file bukti transfer maksimal 2MB!", "warning");
         return;
-      }
-      if (preview && preview !== "pdf") {
-        URL.revokeObjectURL(preview);
       }
       setFile(f);
       if (f.type.startsWith("image/")) {

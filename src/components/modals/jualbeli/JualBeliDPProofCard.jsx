@@ -6,7 +6,6 @@ import { FileImage, ShieldCheck, WarningCircle, Eye } from "phosphor-react";
 const JualBeliDPProofCard = ({
   downPayment,
   hasUploadedDP,
-  hasPaidDP = false,
   dpProofUrl,
   dpPayment,
   formatCurrency,
@@ -91,34 +90,6 @@ const JualBeliDPProofCard = ({
                 <Eye size={14} /> Klik untuk perbesar
               </div>
             </div>
-          </div>
-        ) : hasPaidDP ? (
-          <div>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small">Status Pembayaran DP:</span>
-              <Badge bg="success" className="px-3 py-1 rounded-pill fw-semibold bg-opacity-10 text-success border border-success border-opacity-25">
-                DP Sudah Dibayar
-              </Badge>
-            </div>
-            {dpPayment && (
-              <Row className="small text-muted mb-0 g-1 bg-light p-2 rounded-3">
-                <Col xs={6}>
-                  <span className="d-block text-secondary" style={{ fontSize: "11px" }}>Jumlah:</span>
-                  <span className="fw-semibold text-dark">{formatCurrency(dpPayment.amount || downPayment)}</span>
-                </Col>
-                {dpPayment.sender_bank && (
-                  <Col xs={6}>
-                    <span className="d-block text-secondary" style={{ fontSize: "11px" }}>Metode:</span>
-                    <span className="fw-semibold text-dark">{dpPayment.sender_bank}</span>
-                  </Col>
-                )}
-              </Row>
-            )}
-            {!dpPayment && (
-              <p className="small text-muted mb-0">
-                Pembayaran DP telah diverifikasi tanpa berkas bukti transfer terlampir.
-              </p>
-            )}
           </div>
         ) : (
           <div className="alert alert-warning py-2 px-3 small mb-0 rounded-3 text-center d-flex align-items-center gap-2">

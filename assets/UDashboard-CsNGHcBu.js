@@ -1,0 +1,1 @@
+import{t as e}from"./common-C-lmPg47.js";var t=new class{getAdminDashboardData(){return e.get(`/dashboard/admin?_t=${new Date().getTime()}`)}};export{t};

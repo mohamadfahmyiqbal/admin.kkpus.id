@@ -70,15 +70,12 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
             >
               <CurrencyDollar size={18} weight="fill" />
             </div>
-            <span className="text-muted small fw-medium">Harga Barang</span>
+            <span className="text-muted small fw-medium">Harga & DP</span>
           </div>
           <div className="text-end">
             <p className="mb-0 fw-bold text-dark small">
-              {formatCurrency(transaction.item_price || transaction.amount_requested)}
+              {formatCurrency(transaction.amount_requested)}
             </p>
-            <span className="text-muted d-block small">
-              Pokok dibiayai: {formatCurrency(transaction.amount_requested || transaction.principal_amount)}
-            </span>
             <span className="text-success fw-bold small">
               DP: {formatCurrency(transaction.down_payment)}
             </span>
@@ -120,7 +117,7 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
                 bg="info"
                 className="bg-opacity-10 text-info fw-bold border-0 px-3 py-2 rounded-pill small"
               >
-                {transaction.cooperation_months ?? transaction.tenure ?? "-"} Bulan
+                {transaction.tenure} Bulan
               </Badge>
               <span className="text-muted d-block mt-1 small">
                 {formatCurrency(transaction.monthly_installment)}/bln

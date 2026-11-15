@@ -1,5 +1,4 @@
 import axios from "axios";
-import { jwtEncode, jwtDecodePage } from "../helpers";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
@@ -13,56 +12,15 @@ const api = axios.create({
   },
 });
 
-// Helper to read auth token or cookies
-export const getCookie = (name) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  return parts.length === 2 ? parts.pop().split(';').shift() : null;
-};
-
 api.interceptors.request.use(
   (config) => {
-    const token = getCookie("auth_token");
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-    }
-    const xsrfToken = getCookie("XSRF-TOKEN");
-    if (xsrfToken) {
-      config.headers["X-XSRF-TOKEN"] = xsrfToken;
     }
     return config;
   },
   (error) => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      const token = getCookie("auth_token");
-      if (token) {
-        // Clear the auth_token cookie (server also clears on logout)
-        document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict";
-        localStorage.removeItem("userData");
-        window.dispatchEvent(new Event("storage"));
-
-        // Redirect to login if user is not already on login page
-        if (typeof window !== "undefined") {
-          try {
-            const currentPath = window.location.pathname.replace(/^\//, "");
-            const decodedCurrent = jwtDecodePage(currentPath);
-            if (!decodedCurrent || decodedCurrent.page !== "authLogin") {
-              const loginUrl = `/${jwtEncode({ page: "authLogin" })}`;
-              window.location.href = loginUrl;
-            }
-          } catch {
-            window.location.href = "/";
-          }
-        }
-      }
-    }
-    return Promise.reject(error);
-  }
 );
 
 export default api;

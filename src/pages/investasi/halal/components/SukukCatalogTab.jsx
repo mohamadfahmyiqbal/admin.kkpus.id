@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Card, Table, Button, Badge, Form, Spinner } from "react-bootstrap";
 import { Eye, Users, SmileyMeh } from "phosphor-react";
 import api from "../../../../utils/api/common";
-import { checkNumeric } from "../../../../utils/helpers/filterUtils";
 import DetailSukukModal from "./DetailSukukModal";
 import SukukInvestorsModal from "./SukukInvestorsModal";
 
@@ -44,15 +43,21 @@ const SukukCatalogTab = () => {
       (item.issuer || "")
         .toLowerCase()
         .includes(filters.issuer.toLowerCase()) &&
-      checkNumeric(filters.min_investment, item.min_investment) &&
-      checkNumeric(filters.total_amount, item.total_amount) &&
+      String(item.min_investment || "")
+        .toLowerCase()
+        .includes(filters.min_investment.toLowerCase()) &&
+      String(item.total_amount || "")
+        .toLowerCase()
+        .includes(filters.total_amount.toLowerCase()) &&
       String(item.tenor || "")
         .toLowerCase()
         .includes(filters.tenor.toLowerCase()) &&
       (item.coupon || "")
         .toLowerCase()
         .includes(filters.coupon.toLowerCase()) &&
-      checkNumeric(filters.price, item.price) &&
+      String(item.price || "")
+        .toLowerCase()
+        .includes(filters.price.toLowerCase()) &&
       (item.status || "").toLowerCase().includes(filters.status.toLowerCase())
   );
 
@@ -134,7 +139,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan jenis sukuk"
                       value={filters.type}
                       onChange={(e) => handleFilterChange(e, "type")}
                     />
@@ -143,7 +147,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan nama produk sukuk"
                       value={filters.issue_name}
                       onChange={(e) => handleFilterChange(e, "issue_name")}
                     />
@@ -152,7 +155,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan penerbit sukuk"
                       value={filters.issuer}
                       onChange={(e) => handleFilterChange(e, "issuer")}
                     />
@@ -161,7 +163,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan minimal investasi"
                       value={filters.min_investment}
                       onChange={(e) => handleFilterChange(e, "min_investment")}
                     />
@@ -170,7 +171,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan total target pendanaan"
                       value={filters.total_amount}
                       onChange={(e) => handleFilterChange(e, "total_amount")}
                     />
@@ -179,7 +179,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan tenor"
                       value={filters.tenor}
                       onChange={(e) => handleFilterChange(e, "tenor")}
                     />
@@ -188,7 +187,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan kupon"
                       value={filters.coupon}
                       onChange={(e) => handleFilterChange(e, "coupon")}
                     />
@@ -197,7 +195,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan harga sukuk"
                       value={filters.price}
                       onChange={(e) => handleFilterChange(e, "price")}
                     />
@@ -206,7 +203,6 @@ const SukukCatalogTab = () => {
                     <Form.Control
                       size="sm"
                       placeholder="Cari..."
-                      aria-label="Filter berdasarkan status sukuk"
                       value={filters.status}
                       onChange={(e) => handleFilterChange(e, "status")}
                     />

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Modal } from "react-bootstrap";
-import Swal from "sweetalert2";
 import api from "../../../../utils/api/common";
-import { checkNumeric } from "../../../../utils/helpers/filterUtils";
 import SukukScheduleModal from "./SukukScheduleModal";
 import {
   SukukInvestorsModalHeader,
@@ -80,11 +78,11 @@ const SukukInvestorsModal = ({ show, onHide, transaction }) => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (res.data.status) {
-        Swal.fire("Berhasil", "Bukti transfer berhasil diupload.", "success");
+        alert("Bukti transfer berhasil diupload.");
         fetchMembers();
       }
     } catch {
-      Swal.fire("Gagal", "Gagal upload bukti transfer.", "error");
+      alert("Gagal upload bukti transfer.");
     } finally {
       setLoading(false);
       setUploadingId(null);
@@ -103,10 +101,18 @@ const SukukInvestorsModal = ({ show, onHide, transaction }) => {
         (item.member_name || "")
           .toLowerCase()
           .includes(filters.member_name.toLowerCase()) &&
-        checkNumeric(filters.lembar, item.lembar) &&
-        checkNumeric(filters.amount, item.amount) &&
-        checkNumeric(filters.pengembalian, item.pengembalian) &&
-        checkNumeric(filters.imbal_hasil, item.imbal_hasil) &&
+        String(item.lembar || "")
+          .toLowerCase()
+          .includes(filters.lembar.toLowerCase()) &&
+        String(item.amount || "")
+          .toLowerCase()
+          .includes(filters.amount.toLowerCase()) &&
+        String(item.pengembalian || "")
+          .toLowerCase()
+          .includes(filters.pengembalian.toLowerCase()) &&
+        String(item.imbal_hasil || "")
+          .toLowerCase()
+          .includes(filters.imbal_hasil.toLowerCase()) &&
         (item.status || "").toLowerCase().includes(filters.status.toLowerCase())
     );
   }, [members, filters]);

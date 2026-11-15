@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useDeferredValue, useRef, Suspense, lazy } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useDeferredValue, Suspense, lazy } from "react";
 import { Card } from "react-bootstrap";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
@@ -6,7 +6,6 @@ import exportToExcel from "../../utils/helpers/exportToExcel";
 import MembersHeader from "./components/MembersHeader";
 import MembersStats from "./components/MembersStats";
 import MembersTable from "./components/MembersTable";
-import { createEmptyMemberFilters, isSameFilterState } from "./utils/memberFilterUtils";
 
 // Lazy load modal berat untuk optimasi bundle size
 const MemberDetailModal = lazy(() => import("./components/MemberDetailModal"));
@@ -26,28 +25,17 @@ const MembersPage = () => {
   const pageSize = 10;
 
   // State filter per-kolom di thead
-  const [columnFilters, setColumnFilters] = useState(createEmptyMemberFilters);
+  const [columnFilters, setColumnFilters] = useState({
+    memberNo: "",
+    nameOrContact: "",
+    type: "",
+    role: "",
+    joinDate: "",
+    status: "",
+  });
 
   // Concurrent transition filter menggunakan useDeferredValue agar pengetikan tidak freeze
   const deferredFilters = useDeferredValue(columnFilters);
-
-  // Simpan filter terakhir di ref agar bisa dipulihkan bila browser menyuntikkan
-  // nilai (autofill) ke kolom pencarian saat dialog Swal terbuka.
-  const columnFiltersRef = useRef(columnFilters);
-  useEffect(() => {
-    columnFiltersRef.current = columnFilters;
-  }, [columnFilters]);
-
-  /**
-   * Pulihkan filter bila ada perubahan yang terjadi selama dialog konfirmasi
-   * terbuka. Dialog modal memblokir input latar, jadi perubahan apa pun berarti
-   * suntikan dari browser, bukan ketikan pengguna.
-   */
-  const restoreFiltersIfUnchangedByUser = useCallback((snapshot) => {
-    if (isSameFilterState(columnFiltersRef.current, snapshot)) return;
-    setColumnFilters(snapshot);
-    columnFiltersRef.current = snapshot;
-  }, []);
 
   const [sortConfig, setSortConfig] = useState({
     key: "join_date",
@@ -90,7 +78,14 @@ const MembersPage = () => {
   }, []);
 
   const handleResetFilters = useCallback(() => {
-    setColumnFilters(createEmptyMemberFilters());
+    setColumnFilters({
+      memberNo: "",
+      nameOrContact: "",
+      type: "",
+      role: "",
+      joinDate: "",
+      status: "",
+    });
     setCurrentPage(1);
   }, []);
 
@@ -253,15 +248,6 @@ const MembersPage = () => {
   const handleDeleteMember = useCallback(async (memberId) => {
     if (!memberId) return;
 
-    // Lepaskan fokus dari elemen di belakang dialog (mis. kolom pencarian)
-    // agar fokus tidak tertinggal di tabel saat konfirmasi muncul.
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-
-    // Snapshot filter sebelum dialog dibuka untuk mendeteksi suntikan autofill.
-    const filterSnapshot = columnFiltersRef.current;
-
     const { value: password, isConfirmed } = await Swal.fire({
       title: "Konfirmasi Hard Delete Anggota",
       html: `
@@ -276,10 +262,7 @@ const MembersPage = () => {
       inputAttributes: {
         autocapitalize: "off",
         autocorrect: "off",
-        // "new-password" mencegah password manager mengisi kredensial tersimpan
-        // (dan ikut menyuntikkan username-nya ke kolom pencarian di belakang).
-        autocomplete: "new-password",
-        name: "admin-delete-confirmation",
+        autocomplete: "current-password",
       },
       icon: "warning",
       showCancelButton: true,
@@ -287,21 +270,9 @@ const MembersPage = () => {
       cancelButtonColor: "#6c757d",
       confirmButtonText: "Ya, Hapus Permanen",
       cancelButtonText: "Batal",
-      focusConfirm: false,
-      returnFocus: false,
-      inputAutoFocus: true,
-      didOpen: () => {
-        const focusInput = () => {
-          const input = Swal.getInput();
-          if (input) input.focus();
-        };
-        focusInput();
-        setTimeout(focusInput, 0);
-      },
-      didClose: () => restoreFiltersIfUnchangedByUser(filterSnapshot),
       inputValidator: (val) => {
         if (!val) {
-          return "Password wajib diisi!";
+          return "Password administrator wajib diisi!";
         }
       },
     });
@@ -321,19 +292,11 @@ const MembersPage = () => {
         Swal.fire("Gagal", err.response?.data?.message || "Gagal menghapus anggota", "error");
       }
     }
-  }, [fetchMembers, restoreFiltersIfUnchangedByUser]);
+  }, [fetchMembers]);
 
   // Handler Hapus Banyak Sekaligus (Batch Delete) dengan Verifikasi Password & Audit Log
   const handleDeleteBatch = useCallback(async () => {
     if (selectedMemberIds.length === 0) return;
-
-    // Lepaskan fokus dari elemen di belakang dialog (mis. kolom pencarian).
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-
-    // Snapshot filter sebelum dialog dibuka untuk mendeteksi suntikan autofill.
-    const filterSnapshot = columnFiltersRef.current;
 
     const { value: password, isConfirmed } = await Swal.fire({
       title: "Konfirmasi Hard Delete Massal",
@@ -349,10 +312,7 @@ const MembersPage = () => {
       inputAttributes: {
         autocapitalize: "off",
         autocorrect: "off",
-        // "new-password" mencegah password manager mengisi kredensial tersimpan
-        // (dan ikut menyuntikkan username-nya ke kolom pencarian di belakang).
-        autocomplete: "new-password",
-        name: "admin-delete-confirmation",
+        autocomplete: "current-password",
       },
       icon: "warning",
       showCancelButton: true,
@@ -360,21 +320,9 @@ const MembersPage = () => {
       cancelButtonColor: "#6c757d",
       confirmButtonText: `Ya, Hapus ${selectedMemberIds.length} Anggota`,
       cancelButtonText: "Batal",
-      focusConfirm: false,
-      returnFocus: false,
-      inputAutoFocus: true,
-      didOpen: () => {
-        const focusInput = () => {
-          const input = Swal.getInput();
-          if (input) input.focus();
-        };
-        focusInput();
-        setTimeout(focusInput, 0);
-      },
-      didClose: () => restoreFiltersIfUnchangedByUser(filterSnapshot),
       inputValidator: (val) => {
         if (!val) {
-          return "Password wajib diisi!";
+          return "Password administrator wajib diisi!";
         }
       },
     });
@@ -404,7 +352,7 @@ const MembersPage = () => {
         );
       }
     }
-  }, [selectedMemberIds, fetchMembers, restoreFiltersIfUnchangedByUser]);
+  }, [selectedMemberIds, fetchMembers]);
 
   return (
     <div className="pb-5">

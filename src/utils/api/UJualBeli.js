@@ -65,15 +65,6 @@ class JualBeliService {
     return api.get(`/financial/receipt/${id}`, { responseType: "blob" });
   }
 
-  downloadImportTemplate(type = "kontrak") {
-    const endpoint =
-      type === "cicilan"
-        ? "/jualbeli/template-import-cicilan"
-        : "/jualbeli/template-import";
-
-    return api.get(endpoint, { responseType: "blob" });
-  }
-
   importJualBeli(formData) {
     return api.post("/jualbeli/import", formData, {
       headers: { "Content-Type": "multipart/form-data" },

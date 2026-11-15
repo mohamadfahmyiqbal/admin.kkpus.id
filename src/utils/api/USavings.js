@@ -29,10 +29,6 @@ class SavingsService {
     return api.get("/savings/admin-transactions", { params });
   }
 
-  getAdminSavingsMemberAggregates(params) {
-    return api.get("/savings/admin-member-aggregates", { params });
-  }
-
   getAdminSavingsReport(params) {
     return api.get("/savings/admin-report", { params });
   }

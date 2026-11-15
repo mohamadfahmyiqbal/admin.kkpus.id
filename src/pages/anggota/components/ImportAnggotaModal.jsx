@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
-import DOMPurify from "dompurify";
 import api from "../../../utils/api/common";
 
 const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
@@ -54,8 +53,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
         if (errors && errors.length > 0) {
           detailsHtml += `<hr/><div style="max-height: 120px; overflow-y: auto; text-align: left; font-size: 12px;">`;
           errors.slice(0, 5).forEach((err) => {
-            const safeRow = String(err.row || "-").replace(/[^\w-]/g, "");
-            detailsHtml += `Baris ${safeRow}: ${DOMPurify.sanitize(err.reason || "")}<br/>`;
+            detailsHtml += `Baris ${err.row}: ${err.reason}<br/>`;
           });
           if (errors.length > 5) {
             detailsHtml += `... dan ${errors.length - 5} kesalahan lainnya.`;
@@ -66,7 +64,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
         Swal.fire({
           icon: totalImported > 0 ? "success" : "warning",
           title: "Import Selesai",
-          html: DOMPurify.sanitize(detailsHtml),
+          html: detailsHtml,
           confirmButtonColor: "#28a745",
         }).then(() => {
           setFile(null);

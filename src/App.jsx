@@ -9,35 +9,25 @@ import "./App.css";
 import { initSocket, disconnectSocket } from "./utils/api/socket";
 import PwaUpdatePrompt from "./components/pwa/PwaUpdatePrompt";
 import OfflineIndicator from "./components/pwa/OfflineIndicator";
-import { useSocketUpdateListener } from "./hooks/useSocketUpdateListener";
 
 const App = () => {
-  useSocketUpdateListener();
-
   useEffect(() => {
-    // Read token from cookies instead of localStorage
-    const getCookie = (name) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      return parts.length === 2 ? parts.pop().split(';').shift() : null;
-    };
-    
-    const token = getCookie("auth_token");
+    const token = localStorage.getItem("token");
     if (token) {
       initSocket(token);
     }
 
-    const handleCookieChange = () => {
-      const token = getCookie("auth_token");
-      if (token) {
-        initSocket(token);
+    const handleStorage = () => {
+      const currentToken = localStorage.getItem("token");
+      if (currentToken) {
+        initSocket(currentToken);
       }
     };
 
-    window.addEventListener("cookieChange", handleCookieChange);
+    window.addEventListener("storage", handleStorage);
 
     return () => {
-      window.removeEventListener("cookieChange", handleCookieChange);
+      window.removeEventListener("storage", handleStorage);
       disconnectSocket();
     };
   }, []);

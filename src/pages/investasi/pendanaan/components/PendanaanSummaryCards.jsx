@@ -43,7 +43,7 @@ const PendanaanSummaryCards = ({ summary, formatCurrency }) => (
             MENUNGGU PERSETUJUAN
           </h6>
           <h3 className="fw-bold text-warning mb-0">
-            {(summary.pendingCount ?? 0)} Pengajuan
+            {summary.pendingCount} Pengajuan
           </h3>
         </Card.Body>
       </Card>

@@ -13,28 +13,6 @@ const SimpananListReportTable = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);
-  const [localFilters, setLocalFilters] = useState(searchFilters);
-
-  // Sync localFilters with searchFilters if parent changes (e.g. reset)
-  useEffect(() => {
-    setLocalFilters(searchFilters);
-  }, [searchFilters]);
-
-  // Debounce search input filter to avoid heavy re-render on each keystroke
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const isDifferent = localFilters.some((val, i) => val !== (searchFilters[i] || ""));
-      if (isDifferent) {
-        localFilters.forEach((val, i) => {
-          if (val !== (searchFilters[i] || "")) {
-            onFilterChange(i, val);
-          }
-        });
-        setCurrentPage(1);
-      }
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [localFilters, searchFilters, onFilterChange]);
 
   const totalItems = filteredList.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
@@ -50,34 +28,6 @@ const SimpananListReportTable = ({
   const currentItems = useMemo(() => {
     return filteredList.slice(startIndex, startIndex + pageSize);
   }, [filteredList, startIndex, pageSize]);
-
-  const historicalTotals = useMemo(() => {
-    let laluTotal = 0;
-    let laluPokok = 0;
-    let laluWajib = 0;
-    let laluSukarela = 0;
-    let lalu2Total = 0;
-    let lalu2Pokok = 0;
-
-    const source = reportList && reportList.length > 0 ? reportList : [];
-    source.forEach((item) => {
-      laluTotal += parseFloat(item.tahun_lalu?.total) || 0;
-      laluPokok += parseFloat(item.tahun_lalu?.pokok) || 0;
-      laluWajib += parseFloat(item.tahun_lalu?.wajib) || 0;
-      laluSukarela += parseFloat(item.tahun_lalu?.sukarela) || 0;
-      lalu2Total += parseFloat(item.tahun_lalu2?.total) || 0;
-      lalu2Pokok += parseFloat(item.tahun_lalu2?.pokok) || 0;
-    });
-
-    return {
-      laluTotal,
-      laluPokok,
-      laluWajib,
-      laluSukarela,
-      lalu2Total,
-      lalu2Pokok,
-    };
-  }, [reportList]);
 
   return (
     <div>
@@ -142,15 +92,10 @@ const SimpananListReportTable = ({
                     type="text"
                     className={`compact-search-input ${idx === 0 ? "text-center" : ""}`}
                     placeholder={ph}
-                    aria-label={`Filter ${ph}`}
-                    value={localFilters[idx] || ""}
+                    value={searchFilters[idx] || ""}
                     onChange={(e) => {
-                      const val = e.target.value;
-                      setLocalFilters((prev) => {
-                        const copy = [...prev];
-                        copy[idx] = val;
-                        return copy;
-                      });
+                      onFilterChange(idx, e.target.value);
+                      setCurrentPage(1);
                     }}
                   />
                 </th>
@@ -232,12 +177,12 @@ const SimpananListReportTable = ({
                 >
                   {formatRupiah(summary.total_sukarela)}
                 </td>
-                <td className="num-cell text-primary">{formatRupiah(historicalTotals.laluTotal)}</td>
-                <td className="num-cell">{formatRupiah(historicalTotals.laluPokok)}</td>
-                <td className="num-cell">{formatRupiah(historicalTotals.laluWajib)}</td>
-                <td className="num-cell col-separator">{formatRupiah(historicalTotals.laluSukarela)}</td>
-                <td className="num-cell text-primary">{formatRupiah(historicalTotals.lalu2Total)}</td>
-                <td className="num-cell">{formatRupiah(historicalTotals.lalu2Pokok)}</td>
+                <td className="num-cell text-primary">{formatRupiah(0)}</td>
+                <td className="num-cell">{formatRupiah(0)}</td>
+                <td className="num-cell">{formatRupiah(0)}</td>
+                <td className="num-cell col-separator">{formatRupiah(0)}</td>
+                <td className="num-cell text-primary">{formatRupiah(0)}</td>
+                <td className="num-cell">{formatRupiah(0)}</td>
               </tr>
             </tfoot>
           )}

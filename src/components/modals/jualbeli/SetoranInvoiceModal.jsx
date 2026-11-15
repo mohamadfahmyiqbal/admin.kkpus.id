@@ -26,15 +26,6 @@ const SetoranInvoiceModal = ({
 }) => {
   if (!invoice) return null;
 
-  const isPaid = invoice.status === "PAID" || invoice.status === "COMPLETED";
-  const isPending = invoice.status === "PENDING_VERIFICATION";
-  const statusLabel = isPaid
-    ? "LUNAS"
-    : isPending
-      ? "MENUNGGU VERIFIKASI"
-      : "BELUM LUNAS";
-  const statusVariant = isPaid ? "success" : isPending ? "warning" : "secondary";
-
   return (
     <Modal
       show={show}
@@ -97,10 +88,10 @@ const SetoranInvoiceModal = ({
 
           <div className="text-center">
             <Badge
-              bg={statusVariant}
-              className={`px-4 py-2 rounded-pill bg-opacity-10 text-${statusVariant} border border-${statusVariant} border-opacity-25 fs-6`}
+              bg="success"
+              className="px-4 py-2 rounded-pill bg-opacity-10 text-success border border-success border-opacity-25 fs-6"
             >
-              {statusLabel}
+              LUNAS
             </Badge>
           </div>
         </div>

@@ -1,10 +1,9 @@
-// PATH: src/pages/dashboard/components/DashboardHeader.jsx
 import React from "react";
 import { Button } from "react-bootstrap";
 import { ListDashes } from "phosphor-react";
 
 const DashboardHeader = ({ onOpenLogs }) => (
-  <div className="mb-4 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
+  <div className="mb-4 d-flex justify-content-between align-items-center">
     <div>
       <h3 className="fw-bold mb-1">Panel Ringkasan Admin</h3>
       <p className="text-muted mb-0">
@@ -14,7 +13,7 @@ const DashboardHeader = ({ onOpenLogs }) => (
     <Button
       variant="primary"
       className="rounded-pill px-4 shadow-sm d-flex align-items-center gap-2"
-      onClick={() => onOpenLogs?.()}
+      onClick={onOpenLogs}
     >
       <ListDashes size={18} /> Log Aktivitas
     </Button>

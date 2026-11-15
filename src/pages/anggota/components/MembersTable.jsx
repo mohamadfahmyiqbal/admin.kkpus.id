@@ -2,19 +2,6 @@ import React, { useMemo, useCallback } from "react";
 import { Table, Spinner, Badge, Button, Pagination, Form } from "react-bootstrap";
 import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear } from "phosphor-react";
 
-// Atribut anti-autofill untuk kolom pencarian.
-// Tanpa ini, browser (Chrome/Edge/1Password) menganggap kolom filter sebagai
-// field "on" dan menyuntikkan nilai tersimpan (mis. username login) saat ada
-// input password lain yang muncul di halaman (dialog konfirmasi hapus).
-const antiAutofill = {
-  autoComplete: "off",
-  autoCorrect: "off",
-  autoCapitalize: "none",
-  spellCheck: false,
-  "data-1p-ignore": "true",
-  "data-lpignore": "true",
-};
-
 const MembersTable = ({
   loading = false,
   members = [],
@@ -102,58 +89,48 @@ const MembersTable = ({
               <th className="text-center text-nowrap" style={{ width: "6%" }}>
                 Aksi
               </th>
-              <th className="text-nowrap" style={{ width: "18%" }}>
-                <button
-                  type="button"
-                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
-                  onClick={() => onSort?.("member_no")}
-                  aria-label="Urutkan berdasarkan Nomor Anggota atau NIK"
-                >
-                  No. Anggota / NIK {renderSortIcon("member_no")}
-                </button>
+              <th
+                role="button"
+                className="user-select-none text-nowrap"
+                style={{ width: "18%" }}
+                onClick={() => onSort?.("member_no")}
+              >
+                No. Anggota / NIK {renderSortIcon("member_no")}
               </th>
-              <th className="text-nowrap" style={{ width: "22%" }}>
-                <button
-                  type="button"
-                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
-                  onClick={() => onSort?.("full_name")}
-                  aria-label="Urutkan berdasarkan Nama Anggota"
-                >
-                  Nama & Kontak {renderSortIcon("full_name")}
-                </button>
+              <th
+                role="button"
+                className="user-select-none text-nowrap"
+                style={{ width: "22%" }}
+                onClick={() => onSort?.("full_name")}
+              >
+                Nama & Kontak {renderSortIcon("full_name")}
               </th>
-              <th className="text-nowrap" style={{ width: "14%" }}>
-                <button
-                  type="button"
-                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
-                  onClick={() => onSort?.("member_type")}
-                  aria-label="Urutkan berdasarkan Jenis Anggota"
-                >
-                  Jenis Anggota {renderSortIcon("member_type")}
-                </button>
+              <th
+                role="button"
+                className="user-select-none text-nowrap"
+                style={{ width: "14%" }}
+                onClick={() => onSort?.("member_type")}
+              >
+                Jenis Anggota {renderSortIcon("member_type")}
               </th>
               <th style={{ width: "13%" }} className="text-nowrap">
                 Peran / Role
               </th>
-              <th className="text-nowrap" style={{ width: "12%" }}>
-                <button
-                  type="button"
-                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
-                  onClick={() => onSort?.("join_date")}
-                  aria-label="Urutkan berdasarkan Tanggal Bergabung"
-                >
-                  Bergabung {renderSortIcon("join_date")}
-                </button>
+              <th
+                role="button"
+                className="user-select-none text-nowrap"
+                style={{ width: "12%" }}
+                onClick={() => onSort?.("join_date")}
+              >
+                Bergabung {renderSortIcon("join_date")}
               </th>
-              <th className="text-nowrap" style={{ width: "11%" }}>
-                <button
-                  type="button"
-                  className="btn btn-link p-0 text-decoration-none text-reset fw-bold d-inline-flex align-items-center w-100"
-                  onClick={() => onSort?.("status")}
-                  aria-label="Urutkan berdasarkan Status Anggota"
-                >
-                  Status {renderSortIcon("status")}
-                </button>
+              <th
+                role="button"
+                className="user-select-none text-nowrap"
+                style={{ width: "11%" }}
+                onClick={() => onSort?.("status")}
+              >
+                Status {renderSortIcon("status")}
               </th>
             </tr>
 
@@ -178,36 +155,27 @@ const MembersTable = ({
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
-                  name="memberFilterMemberNo"
                   placeholder="Cari No/NIK..."
-                  aria-label="Filter berdasarkan Nomor Anggota atau NIK"
                   value={filters.memberNo || ""}
                   onChange={(e) => onFilterChange?.("memberNo", e.target.value)}
                   className="bg-white border-1"
-                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
-                  name="memberFilterNameOrContact"
                   placeholder="Cari Nama/HP/Email..."
-                  aria-label="Filter berdasarkan Nama, Nomor HP, atau Email"
                   value={filters.nameOrContact || ""}
                   onChange={(e) => onFilterChange?.("nameOrContact", e.target.value)}
                   className="bg-white border-1"
-                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Select
                   size="sm"
-                  name="memberFilterType"
-                  aria-label="Filter berdasarkan Jenis Anggota"
                   value={filters.type || ""}
                   onChange={(e) => onFilterChange?.("type", e.target.value)}
                   className="bg-white border-1"
-                  {...antiAutofill}
                 >
                   <option value="">Semua</option>
                   <option value="reguler">Reguler</option>
@@ -217,36 +185,27 @@ const MembersTable = ({
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
-                  name="memberFilterRole"
                   placeholder="Filter Peran..."
-                  aria-label="Filter berdasarkan Peran atau Role"
                   value={filters.role || ""}
                   onChange={(e) => onFilterChange?.("role", e.target.value)}
                   className="bg-white border-1"
-                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Control
                   size="sm"
-                  name="memberFilterJoinDate"
                   placeholder="Cari Thn/Bln..."
-                  aria-label="Filter berdasarkan Tahun atau Bulan Bergabung"
                   value={filters.joinDate || ""}
                   onChange={(e) => onFilterChange?.("joinDate", e.target.value)}
                   className="bg-white border-1"
-                  {...antiAutofill}
                 />
               </th>
               <th className="py-2 px-2">
                 <Form.Select
                   size="sm"
-                  name="memberFilterStatus"
-                  aria-label="Filter berdasarkan Status Anggota"
                   value={filters.status || ""}
                   onChange={(e) => onFilterChange?.("status", e.target.value)}
                   className="bg-white border-1"
-                  {...antiAutofill}
                 >
                   <option value="">Semua</option>
                   <option value="aktif">Aktif</option>
@@ -303,28 +262,24 @@ const MembersTable = ({
                       />
                     </td>
                     <td className="text-center">
-                      <div className="d-flex align-items-center justify-content-center gap-2">
+                      <div className="d-flex align-items-center justify-content-center gap-1">
                         <Button
                           variant="light"
                           size="sm"
-                          className="rounded-circle p-2 text-primary border"
-                          style={{ width: "36px", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                          className="rounded-circle p-2 text-primary border shadow-none"
                           onClick={() => onSelectMember(m)}
                           title="Lihat Detail Profil Lengkap"
-                          aria-label={`Lihat Detail Profil ${m.full_name || ""}`}
                         >
-                          <Eye size={16} />
+                          <Eye size={15} />
                         </Button>
                         <Button
                           variant="light"
                           size="sm"
-                          className="rounded-circle p-2 text-warning border"
-                          style={{ width: "36px", height: "36px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                          className="rounded-circle p-2 text-warning border shadow-none"
                           onClick={() => onEditRole?.(m)}
                           title="Ubah Role / Peran Anggota"
-                          aria-label={`Ubah Role ${m.full_name || ""}`}
                         >
-                          <UserGear size={16} />
+                          <UserGear size={15} />
                         </Button>
                       </div>
                     </td>
@@ -348,8 +303,8 @@ const MembersTable = ({
                         )}
                         {m.email && (
                           <span
-                            className="d-inline-flex align-items-center gap-1"
-                            title={m.email}
+                            className="d-inline-flex align-items-center gap-1 text-truncate"
+                            style={{ maxWidth: "160px" }}
                           >
                             <EnvelopeSimple size={12} /> {m.email}
                           </span>

@@ -11,16 +11,7 @@ const InvestasiReportPage = () => {
   const [reportData, setReportData] = useState([]);
   const [summaryData, setSummaryData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [searchFilters, setSearchFilters] = useState({
-    member_name: "",
-    member_no: "",
-    issue_name: "",
-    lembar: "",
-    amount: "",
-    imbal_hasil: "",
-    pengembalian: "",
-    status: "",
-  });
+  const [searchFilters, setSearchFilters] = useState(Array(10).fill(""));
 
   const fetchReportData = async () => {
     setLoading(true);
@@ -48,45 +39,53 @@ const InvestasiReportPage = () => {
       minimumFractionDigits: 0,
     }).format(val || 0);
 
-  const handleSearchChange = useCallback((field, value) => {
-    setSearchFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const handleSearchChange = useCallback((index, value) => {
+    setSearchFilters((prev) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
   }, []);
 
   const filteredData = useMemo(() => {
-    return reportData.filter((item) => {
-      const matchName = !searchFilters.member_name ||
-        (item.member_name || "").toLowerCase().includes(searchFilters.member_name.toLowerCase());
-      const matchNo = !searchFilters.member_no ||
-        (item.member_no || "").toLowerCase().includes(searchFilters.member_no.toLowerCase());
-      const matchIssue = !searchFilters.issue_name ||
-        (item.issue_name || "").toLowerCase().includes(searchFilters.issue_name.toLowerCase());
-      const matchLembar = !searchFilters.lembar ||
-        String(item.lembar ?? "").toLowerCase().includes(searchFilters.lembar.toLowerCase());
-      const matchAmount = !searchFilters.amount ||
-        String(item.amount ?? "").toLowerCase().includes(searchFilters.amount.toLowerCase()) ||
-        formatRupiah(item.amount).toLowerCase().includes(searchFilters.amount.toLowerCase());
-      const matchImbalHasil = !searchFilters.imbal_hasil ||
-        String(item.imbal_hasil ?? "").toLowerCase().includes(searchFilters.imbal_hasil.toLowerCase()) ||
-        formatRupiah(item.imbal_hasil).toLowerCase().includes(searchFilters.imbal_hasil.toLowerCase());
-      const matchPengembalian = !searchFilters.pengembalian ||
-        String(item.pengembalian ?? "").toLowerCase().includes(searchFilters.pengembalian.toLowerCase()) ||
-        formatRupiah(item.pengembalian).toLowerCase().includes(searchFilters.pengembalian.toLowerCase());
-      const matchStatus = !searchFilters.status ||
-        (item.status || "").toLowerCase().includes(searchFilters.status.toLowerCase());
+    if (!searchFilters.some((f) => f && f.trim() !== "")) return reportData;
 
-      return (
-        matchName &&
-        matchNo &&
-        matchIssue &&
-        matchLembar &&
-        matchAmount &&
-        matchImbalHasil &&
-        matchPengembalian &&
-        matchStatus
-      );
+    return reportData.filter((item) => {
+      const rawValues = [
+        String(item.no),
+        (item.member_name || "").toLowerCase(),
+        (item.member_no || "").toLowerCase(),
+        (item.issue_name || "").toLowerCase(),
+        String(item.lembar ?? ""),
+        String(item.amount ?? ""),
+        String(item.imbal_hasil ?? ""),
+        String(item.pengembalian ?? ""),
+        (item.status || "").toLowerCase(),
+      ];
+
+      const formattedValues = [
+        String(item.no),
+        (item.member_name || "").toLowerCase(),
+        (item.member_no || "").toLowerCase(),
+        (item.issue_name || "").toLowerCase(),
+        `${item.lembar} lb`,
+        formatRupiah(item.amount),
+        formatRupiah(item.imbal_hasil),
+        formatRupiah(item.pengembalian),
+        (item.status || "").toLowerCase(),
+      ];
+
+      return searchFilters.every((filterVal, idx) => {
+        if (!filterVal || !filterVal.trim()) return true;
+        if (idx === 8 && filterVal !== "") {
+          return rawValues[idx].includes(filterVal.toLowerCase());
+        }
+        const searchLower = filterVal.toLowerCase();
+        const matchesRaw = rawValues[idx] && rawValues[idx].includes(searchLower);
+        const matchesFormatted =
+          formattedValues[idx] && formattedValues[idx].includes(searchLower);
+        return matchesRaw || matchesFormatted;
+      });
     });
   }, [reportData, searchFilters]);
 

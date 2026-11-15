@@ -1,27 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner, Nav } from "react-bootstrap";
 import { UploadSimple, DownloadSimple, Receipt, ShoppingCart } from "phosphor-react";
 import Swal from "sweetalert2";
 import jualBeliService from "../../../utils/api/UJualBeli";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB, sama dengan batas di API
-
 const ImportExcelModal = ({ show, onHide, onSuccess }) => {
   const [activeTab, setActiveTab] = useState("kontrak"); // "kontrak" atau "cicilan"
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [downloading, setDownloading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const fileInputRef = useRef(null);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setFile(null);
     setErrorMsg("");
-  };
-
-  const resetFileInput = () => {
-    if (fileInputRef.current) fileInputRef.current.value = null;
   };
 
   const handleSubmit = async (e) => {
@@ -47,16 +39,13 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
         Swal.fire({
           icon: "success",
           title: "Import Berhasil",
-          text: `Berhasil import: ${res.data.data.totalImported} data. Gagal import: ${res.data.data.totalFailed} data.`,
+          html: `Berhasil import: <b>${res.data.data.totalImported}</b> data<br/>Gagal import: <b>${res.data.data.totalFailed}</b> data`,
           confirmButtonColor: "#28a745",
         }).then(() => {
           setFile(null);
-          resetFileInput();
           if (onSuccess) onSuccess();
           onHide();
         });
-      } else {
-        setErrorMsg(res.data?.message || "Import gagal diproses.");
       }
     } catch (err) {
       setErrorMsg(
@@ -73,62 +62,33 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
     setErrorMsg("");
     const selected = e.target.files[0];
     if (selected) {
-      const isExcel =
-        [
+      if (
+        ![
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "application/vnd.ms-excel",
-        ].includes(selected.type) ||
-        selected.name.endsWith(".xlsx") ||
-        selected.name.endsWith(".xls");
-
-      if (!isExcel) {
+        ].includes(selected.type) &&
+        !selected.name.endsWith(".xlsx") &&
+        !selected.name.endsWith(".xls")
+      ) {
         setErrorMsg("Harap pilih file Excel yang valid (.xlsx atau .xls)");
         setFile(null);
-        resetFileInput();
+        e.target.value = null;
         return;
       }
-
-      if (selected.size > MAX_FILE_SIZE) {
-        setErrorMsg("Ukuran file maksimal 5 MB.");
-        setFile(null);
-        resetFileInput();
-        return;
-      }
-
       setFile(selected);
     }
   };
 
-  const handleDownloadTemplate = async () => {
-    setDownloading(true);
-    setErrorMsg("");
-    try {
-      const res = await jualBeliService.downloadImportTemplate(activeTab);
-      const blob = new Blob([res.data], {
-        type:
-          res.headers?.["content-type"] ||
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download =
-        activeTab === "kontrak"
-          ? "Template_Import_Kontrak_JualBeli.xlsx"
-          : "Template_Import_Cicilan_JualBeli.xlsx";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      setErrorMsg(
-        err.response?.data?.message ||
-          err.message ||
-          "Gagal mengunduh template."
-      );
-    } finally {
-      setDownloading(false);
-    }
+  const getTemplateDownloadUrl = () => {
+    const apiOrigin =
+      import.meta.env.VITE_API_ORIGIN ||
+      (import.meta.env.VITE_API_URL
+        ? new URL(import.meta.env.VITE_API_URL).origin
+        : window.location.origin);
+
+    return activeTab === "kontrak"
+      ? `${apiOrigin}/api/jualbeli/template-import`
+      : `${apiOrigin}/api/jualbeli/template-import-cicilan`;
   };
 
   return (
@@ -201,13 +161,12 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
               variant="outline-primary"
               size="sm"
               className="mt-3 d-flex align-items-center gap-2 fw-semibold"
-              onClick={handleDownloadTemplate}
-              disabled={downloading}
+              onClick={() => {
+                window.location.href = getTemplateDownloadUrl();
+              }}
             >
               <DownloadSimple size={16} weight="bold" />
-              {downloading
-                ? "Mengunduh..."
-                : `Unduh Template ${activeTab === "kontrak" ? "Kontrak Jual Beli" : "Riwayat Cicilan"}`}
+              Unduh Template {activeTab === "kontrak" ? "Kontrak Jual Beli" : "Riwayat Cicilan"}
             </Button>
           </div>
         </Alert>
@@ -223,7 +182,6 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
                 accept=".xlsx, .xls"
                 onChange={handleFileChange}
                 disabled={uploading}
-                ref={fileInputRef}
                 className="py-2 form-control-file"
               />
             </div>

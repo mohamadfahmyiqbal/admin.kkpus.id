@@ -1,6 +1,5 @@
 import React from "react";
 import Swal from "sweetalert2";
-import DOMPurify from "dompurify";
 import { CheckCircle, XCircle, UserCircle, ShieldCheck } from "phosphor-react";
 
 export const ApprovalPlaceholder = ({
@@ -33,19 +32,15 @@ export const ApprovalPlaceholder = ({
   }
 
   const handleClick = () => {
-    const cleanRole = DOMPurify.sanitize(role);
-    const cleanApprover = DOMPurify.sanitize(approverName);
-    const cleanNote = DOMPurify.sanitize(note);
-
     Swal.fire({
-      title: `Detail Persetujuan - ${cleanRole}`,
+      title: `Detail Persetujuan - ${role}`,
       html: `
         <div class="text-center" style="font-size: 14px;">
           <p class="mb-2"><strong>Status:</strong> <span class="badge ${statusBadgeClass}">${statusText}</span></p>
-          ${cleanApprover ? `<p class="mb-2"><strong>Oleh:</strong> ${cleanApprover}</p>` : ""}
+          ${approverName ? `<p class="mb-2"><strong>Oleh:</strong> ${approverName}</p>` : ""}
           ${
-            cleanNote
-              ? `<div class="mt-3 p-3 bg-light rounded text-start"><strong class="d-block mb-1">Catatan:</strong> <span class="fst-italic">"${cleanNote}"</span></div>`
+            note
+              ? `<div class="mt-3 p-3 bg-light rounded text-start"><strong class="d-block mb-1">Catatan:</strong> <span class="fst-italic">"${note}"</span></div>`
               : `<p class="text-muted mt-2">Tidak ada catatan.</p>`
           }
         </div>

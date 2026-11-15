@@ -12,22 +12,14 @@
 
 .extra-small {
   font-size: 0.75rem;
-  color: #475569;
 }
 
-/* Desktop: dropdown harus lepas dari nav horizontal yang overflow:auto,
-   kalau tidak submenu terpotong (48px) dan tidak bisa diklik. */
-@media (min-width: 768px) {
-  .sidebar-horizontal .sidebar-nav > ul > li > .sidebar-submenu {
-    position: fixed;
-    top: 112px;
-    left: 20px;
-  }
-  .sidebar-horizontal li:hover > .sidebar-submenu:not(.show) {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-  }
+/* Optimasi navbar desktop: submenu tertutup saat klik / tidak stuck */
+.sidebar-horizontal .sidebar-submenu:not(.show) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(10px) !important;
 }
 
 /* ==========================================================================

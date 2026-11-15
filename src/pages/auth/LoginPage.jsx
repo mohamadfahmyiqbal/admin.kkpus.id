@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, InputGroup, Button } from "react-bootstrap";
 import { motion } from "framer-motion";
 import {
@@ -14,8 +14,7 @@ import {
   FaArrowRight,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { jwtEncode, isJwtExpired } from "../../utils/helpers";
-import api, { getCookie } from "../../utils/api/common";
+import { jwtEncode } from "../../utils/helpers";
 import "./LoginPage.css";
 
 const LoginPage = () => {
@@ -28,110 +27,61 @@ const LoginPage = () => {
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if session exists via backend /auth/me using credentials cookie
-    // Only redirect to dashboard if both cookie/session AND localStorage token exist
-    const authToken = localStorage.getItem("token");
-    if (!authToken || isJwtExpired(authToken)) {
-      return;
-    }
-
-    api.get("/auth/me")
-      .then((res) => {
-        if (res.data?.success) {
-          navigate(`/${jwtEncode({ page: "dashboard" })}`, { replace: true });
-        }
-      })
-      .catch(() => {
-        // Not authenticated or expired, stay on login page
-      });
-  }, [navigate]);
-
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (loading) return; // Prevent double submit
     setError(null);
     setEmailHpInvalid(false);
     setPasswordInvalid(false);
 
     const cleanEmail = emailHp.trim();
-    const cleanPass = password; // Pertahankan spasi asli pada password
+    const cleanPass = password.trim();
 
     if (!cleanEmail || !cleanPass) {
       if (!cleanEmail) setEmailHpInvalid(true);
       if (!cleanPass) setPasswordInvalid(true);
+      setError("Email/Nomor Handphone dan Password wajib diisi");
       return;
     }
 
     setLoading(true);
     try {
-      let xsrfToken = getCookie("XSRF-TOKEN");
-      if (!xsrfToken) {
-        try {
-          const csrfRes = await api.get("/auth/csrf-token");
-          xsrfToken = csrfRes.data?.csrfToken || getCookie("XSRF-TOKEN");
-        } catch (csrfErr) {
-          console.warn("Failed to fetch CSRF token:", csrfErr);
-        }
-      }
+      const apiBase =
+        import.meta.env.VITE_API_BASE_URL ||
+        (import.meta.env.PROD ? "https://api.kkpus.id/api" : "https://localhost:3445/api");
+      const response = await fetch(`${apiBase}/auth/accountLogin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emailHp: cleanEmail, password: cleanPass }),
+      });
+      const data = await response.json();
 
-      const res = await api.post(
-        "/auth/accountLogin",
-        {
-          emailHp: cleanEmail,
-          password: cleanPass,
-          clientType: "admin",
-        },
-        {
-          headers: {
-            "X-Client-App": "admin",
-            ...(xsrfToken ? { "X-XSRF-TOKEN": xsrfToken } : {}),
-          },
-        }
-      );
-
-      const data = res.data;
-
-      if (data && data.success) {
+      if (response.ok && data.success) {
         const roles = data.data.user.roles || [];
-        const allowedRoles = [
-          "pengawas",
-          "ketua",
-          "bendahara",
-          "admin",
-          "super admin",
-          "superadmin",
-        ];
+        const allowedRoles = ["pengawas", "ketua", "bendahara", "admin"];
         const hasAccess = roles.some((r) =>
           allowedRoles.includes(r.toLowerCase())
         );
 
         if (!hasAccess) {
           setError(
-            "Akses ditolak: Hanya Pengawas, Ketua, Bendahara, atau Admin yang dapat mengakses aplikasi ini."
+            "Akses ditolak: Hanya Pengawas, Ketua, atau Bendahara yang dapat mengakses aplikasi ini."
           );
           return;
         }
 
-        // Set non-sensitive user metadata and token for frontend route guard
-        if (data.data.token) {
-          localStorage.setItem("token", data.data.token);
-        }
+        localStorage.setItem("token", data.data.token);
         localStorage.setItem("userData", JSON.stringify(data.data.user));
-        window.dispatchEvent(new Event("storage"));
+        window.dispatchEvent(new Event("storage_sync"));
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
       } else {
         setError(
-          data?.message ||
+          data.message ||
             "Kredensial tidak valid. Email/Nomor HP atau Password salah."
         );
       }
     } catch (err) {
       console.error("Login Error:", err);
-      const serverMessage =
-        err.response?.data?.message ||
-        "Terjadi kesalahan jaringan atau server tidak merespon.";
-      setError(serverMessage);
+      setError("Terjadi kesalahan jaringan atau server tidak merespon.");
     } finally {
       setLoading(false);
     }
@@ -271,21 +221,16 @@ const LoginPage = () => {
                     <Form onSubmit={handleLogin} noValidate>
                       <Row className="g-4">
                         <Col md={12}>
-                          <Form.Label>Email atau Nomor Handphone Admin</Form.Label>
+                          <Form.Label>Username atau Email Admin</Form.Label>
                           <InputGroup>
                             <InputGroup.Text>
                               <FaUser />
                             </InputGroup.Text>
                             <Form.Control
                               value={emailHp}
-                              onChange={(e) => {
-                                setEmailHp(e.target.value);
-                                if (emailHpInvalid) setEmailHpInvalid(false);
-                                if (error) setError(null);
-                              }}
+                              onChange={(e) => setEmailHp(e.target.value)}
                               isInvalid={emailHpInvalid}
                               placeholder="admin@koperasi.com"
-                              autoComplete="username"
                             />
                             <Form.Control.Feedback type="invalid">
                               Email atau Nomor HP wajib diisi
@@ -303,24 +248,15 @@ const LoginPage = () => {
                             </InputGroup.Text>
                             <Form.Control
                               value={password}
-                              onChange={(e) => {
-                                setPassword(e.target.value);
-                                if (passwordInvalid) setPasswordInvalid(false);
-                                if (error) setError(null);
-                              }}
+                              onChange={(e) => setPassword(e.target.value)}
                               isInvalid={passwordInvalid}
                               type={showPassword ? "text" : "password"}
                               placeholder="••••••••"
-                              className="pbs-password-input"
-                              autoComplete="current-password"
                             />
                             <Button
-                              type="button"
                               variant="light"
                               className="border border-start-0 text-muted pbs-password-eye-btn"
                               onClick={() => setShowPassword(!showPassword)}
-                              aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
-                              title={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
                             >
                               {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </Button>

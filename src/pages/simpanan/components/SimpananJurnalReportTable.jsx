@@ -27,23 +27,6 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
     });
   }, [rows, searchAkun, searchDeskripsi, searchDebet, searchKredit]);
 
-  const totals = useMemo(() => {
-    const isFiltered = Boolean(searchAkun || searchDeskripsi || searchDebet || searchKredit);
-    if (!isFiltered) {
-      return {
-        debet: summary.total_all || 0,
-        kredit: summary.total_all || 0,
-      };
-    }
-    let d = 0;
-    let k = 0;
-    filteredRows.forEach((r) => {
-      if (r.debet != null) d += parseFloat(r.debet) || 0;
-      if (r.kredit != null) k += parseFloat(r.kredit) || 0;
-    });
-    return { debet: d, kredit: k };
-  }, [filteredRows, searchAkun, searchDeskripsi, searchDebet, searchKredit, summary]);
-
   return (
     <div className="table-responsive border rounded-3">
       <Table className="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap compact-table">
@@ -60,7 +43,6 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Akun"
-                aria-label="Cari Akun"
                 value={searchAkun}
                 onChange={(e) => setSearchAkun(e.target.value)}
               />
@@ -70,7 +52,6 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Deskripsi"
-                aria-label="Cari Deskripsi"
                 value={searchDeskripsi}
                 onChange={(e) => setSearchDeskripsi(e.target.value)}
               />
@@ -80,7 +61,6 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Debet"
-                aria-label="Cari Debet"
                 value={searchDebet}
                 onChange={(e) => setSearchDebet(e.target.value)}
               />
@@ -90,7 +70,6 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 type="text"
                 className="compact-search-input"
                 placeholder="Cari Kredit"
-                aria-label="Cari Kredit"
                 value={searchKredit}
                 onChange={(e) => setSearchKredit(e.target.value)}
               />
@@ -125,8 +104,8 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 <td colSpan="2" className="text-center">
                   Total
                 </td>
-                <td className="num-cell">{formatRupiah(totals.debet)}</td>
-                <td className="num-cell">{formatRupiah(totals.kredit)}</td>
+                <td className="num-cell">{formatRupiah(summary.total_all)}</td>
+                <td className="num-cell">{formatRupiah(summary.total_all)}</td>
               </tr>
             </>
           )}

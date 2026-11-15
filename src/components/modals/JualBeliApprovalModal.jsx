@@ -13,7 +13,6 @@ import { useJualBeliApproval } from "./jualbeli/hooks/useJualBeliApproval";
 const JualBeliApprovalModal = ({
   show,
   onHide,
-  onSuccess,
   transaction,
   formatRp,
   viewOnly = false,
@@ -22,7 +21,6 @@ const JualBeliApprovalModal = ({
     transaction,
     show,
     onHide,
-    onSuccess,
     formatRp,
     viewOnly,
   });
@@ -58,13 +56,6 @@ const JualBeliApprovalModal = ({
           <JualBeliDPProofCard
             downPayment={approval.downPayment}
             hasUploadedDP={approval.hasUploadedDP}
-            hasPaidDP={
-              approval.hasPaidDP ||
-              transaction.has_paid_dp === true ||
-              ["PAID", "SUCCESS", "SETTLEMENT", "CAPTURE"].includes(
-                String(transaction.dp_payment?.status || "").toUpperCase()
-              )
-            }
             dpProofUrl={approval.dpProofUrl}
             dpPayment={transaction.dp_payment}
             formatCurrency={approval.formatCurrency}

@@ -8,7 +8,6 @@ export const useJualBeliApproval = ({
   transaction,
   show,
   onHide,
-  onSuccess,
   formatRp,
   viewOnly = false,
 }) => {
@@ -93,24 +92,14 @@ export const useJualBeliApproval = ({
     );
   }, [transaction]);
 
-  const hasPaidDP = useMemo(() => {
-    return (
-      Boolean(transaction?.has_paid_dp) ||
-      ["PAID", "SUCCESS", "SETTLEMENT", "CAPTURE"].includes(
-        String(transaction?.dp_payment?.status || "").toUpperCase()
-      )
-    );
-  }, [transaction]);
-
   const hasUploadedDP = useMemo(() => {
     return (
       !hasDownPayment ||
       !!dpProofUrl ||
-      hasPaidDP ||
       Boolean(transaction?.has_uploaded_dp) ||
       Boolean(transaction?.has_paid_dp)
     );
-  }, [hasDownPayment, dpProofUrl, hasPaidDP, transaction]);
+  }, [hasDownPayment, dpProofUrl, transaction]);
 
   const canApprove = useMemo(() => {
     return checkCanApprove({
@@ -182,7 +171,7 @@ export const useJualBeliApproval = ({
           "success"
         ).then(() => {
           onHide();
-          if (onSuccess) onSuccess();
+          window.location.reload();
         });
       } else {
         Swal.fire(
@@ -224,7 +213,7 @@ export const useJualBeliApproval = ({
         Swal.fire("Berhasil!", "Pengajuan Jual Beli Ditolak!", "success").then(
           () => {
             onHide();
-            if (onSuccess) onSuccess();
+            window.location.reload();
           }
         );
       } else {
@@ -265,7 +254,6 @@ export const useJualBeliApproval = ({
     hasDownPayment,
     dpProofUrl,
     hasUploadedDP,
-    hasPaidDP,
     canApprove,
     totalDisplay,
     formatCurrency: formattedCurrency,

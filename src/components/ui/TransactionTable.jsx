@@ -61,6 +61,15 @@ export const TransactionTable = ({
   showSearchRow = true,
   onResetFilter,
 }) => {
+  if (loading) {
+    return (
+      <div className="bg-white rounded-4 p-5 text-center text-muted">
+        <Spinner animation="border" variant="primary" size="sm" className="me-2" />
+        <span className="small fw-semibold">Memuat data transaksi...</span>
+      </div>
+    );
+  }
+
   const formatDateTime = (dateStr) => {
     if (!dateStr) return { day: "-", time: "-" };
     const t = new Date(dateStr);
@@ -129,8 +138,8 @@ export const TransactionTable = ({
 
   return (
     <>
-      <div className="table-responsive" style={{ overflowX: "auto" }}>
-        <Table align="middle" className="mb-0 custom-table-admin table-hover text-nowrap" hover style={{ minWidth: "900px" }}>
+      <div className="table-responsive">
+        <Table align="middle" className="mb-0 custom-table-admin table-hover" hover>
           <thead className="table-light">
             <tr>
               <th
@@ -269,14 +278,7 @@ export const TransactionTable = ({
           </thead>
 
           <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="6" className="py-5 text-center text-muted border-0">
-                  <Spinner animation="border" variant="primary" size="sm" className="me-2" />
-                  <span className="small fw-semibold">Memuat data transaksi...</span>
-                </td>
-              </tr>
-            ) : !transactions || transactions.length === 0 ? (
+            {!transactions || transactions.length === 0 ? (
               <tr>
                 <td colSpan="6" className="p-0 border-0">
                   <EmptyState
@@ -298,7 +300,7 @@ export const TransactionTable = ({
                 </td>
               </tr>
             ) : (
-              transactions.map((tx, idx) => {
+              transactions.map((tx) => {
                 const { day, time } = formatDateTime(tx.date || tx.created_at);
                 const isDeposit =
                   tx.type === "Setoran" || tx.type === "Deposit" || !tx.type?.includes("Pencairan");
@@ -316,10 +318,8 @@ export const TransactionTable = ({
                 const isWithdrawalPending =
                   (tx.type === "Pencairan" || tx.type === "Pencairan Tabungan") && !isCompleted;
 
-                const rowKey = tx.id || tx.transaction_id || `tx-${idx}`;
-
                 return (
-                  <tr key={rowKey}>
+                  <tr key={tx.id || tx.transaction_id || Math.random()}>
                     {/* 1. Waktu */}
                     <td className="py-3 px-4">
                       <div className="d-flex flex-column">
@@ -399,7 +399,7 @@ export const TransactionTable = ({
                           <OverlayTrigger
                             placement="top"
                             overlay={
-                              <Tooltip id={`tt-manual-${rowKey}`}>
+                              <Tooltip id={`tt-manual-${tx.id || tx.transaction_id || Math.random()}`}>
                                 Verifikasi Pembayaran Manual
                               </Tooltip>
                             }
@@ -417,7 +417,7 @@ export const TransactionTable = ({
                           <OverlayTrigger
                             placement="top"
                             overlay={
-                              <Tooltip id={`tt-withdraw-${rowKey}`}>
+                              <Tooltip id={`tt-withdraw-${tx.id || tx.transaction_id || Math.random()}`}>
                                 Proses Persetujuan Pencairan
                               </Tooltip>
                             }
@@ -436,7 +436,7 @@ export const TransactionTable = ({
                         <OverlayTrigger
                           placement="top"
                           overlay={
-                            <Tooltip id={`tt-view-${rowKey}`}>
+                            <Tooltip id={`tt-view-${tx.id || tx.transaction_id || Math.random()}`}>
                               Lihat Detail Transaksi
                             </Tooltip>
                           }

@@ -6,23 +6,17 @@ const AkadConfigPage = () => {
   const [products, setProducts] = useState([]);
   const [features, setFeatures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   const fetchConfigs = async () => {
     try {
-      setError("");
       const [prodRes, featRes] = await Promise.all([
         api.get("/simpanan/products"),
         api.get("/simpanan/features"),
       ]);
-      if (prodRes.data?.status) setProducts(prodRes.data.data || []);
-      if (featRes.data?.status) setFeatures(featRes.data.data || []);
-      if (!prodRes.data?.status || !featRes.data?.status) {
-        setError("Gagal memuat sebagian data konfigurasi akad");
-      }
+      if (prodRes.data?.status) setProducts(prodRes.data.data);
+      if (featRes.data?.status) setFeatures(featRes.data.data);
     } catch (err) {
       console.error("Gagal mengambil data produk simpanan atau fitur:", err);
-      setError("Gagal memuat konfigurasi akad");
     } finally {
       setLoading(false);
     }
@@ -151,18 +145,6 @@ const AkadConfigPage = () => {
                     Memuat data...
                   </td>
                 </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan="5" className="text-center py-4 text-danger">
-                    {error}
-                  </td>
-                </tr>
-              ) : products.length === 0 && features.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="text-center py-4">
-                    Tidak ada data konfigurasi
-                  </td>
-                </tr>
               ) : (
                 <>
                   {products.map((item, index) => (
@@ -173,7 +155,6 @@ const AkadConfigPage = () => {
                       <td>
                         <select
                           className="form-select form-select-sm"
-                          aria-label={`Akad ${item.product_name}`}
                           value={item.akad || ""}
                           onChange={(e) =>
                             handleProductAkadChange(
@@ -215,7 +196,6 @@ const AkadConfigPage = () => {
                       <td>
                         <select
                           className="form-select form-select-sm"
-                          aria-label={`Akad ${item.menu} ${item.submenu}`}
                           value={item.akad_type || ""}
                           onChange={(e) =>
                             handleFeatureAkadChange(item.id, e.target.value)

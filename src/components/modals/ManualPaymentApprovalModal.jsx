@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Row, Col, Badge } from "react-bootstrap";
-import axios from "axios";
 import {
   CheckCircle,
   XCircle,
@@ -127,17 +126,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
         return;
       }
 
-      const isExternal =
-        proofUrl.startsWith("http://") || proofUrl.startsWith("https://");
-      const isSameOrigin =
-        Boolean(import.meta.env.VITE_API_ORIGIN && proofUrl.startsWith(import.meta.env.VITE_API_ORIGIN)) ||
-        proofUrl.startsWith("https://api.kkpus.id") ||
-        proofUrl.startsWith("https://localhost:3445");
-
-      // Use clean axios client without Authorization header for third-party URLs to prevent token leak
-      const client = isExternal && !isSameOrigin ? axios : api;
-
-      client
+      api
         .get(proofUrl, { responseType: "blob" })
         .then((res) => {
           activeBlob = URL.createObjectURL(res.data);
@@ -397,9 +386,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                 <div className="d-flex align-items-center gap-2 mb-2">
                   <User size={16} className="text-primary" />
                   <span className="text-muted small">Nama Anggota:</span>
-                  <span className="fw-semibold text-dark small ms-auto">
-  {transaction.member || transaction.sender_name || transaction.full_name || "-"}
-</span>
+                  <span className="fw-semibold text-dark small ms-auto">{transaction.name}</span>
                 </div>
                 {transaction.sender_bank && (
                   <div className="d-flex align-items-center gap-2 mb-2">

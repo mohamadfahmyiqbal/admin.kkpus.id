@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { FunnelSimple, UploadSimple, ArrowClockwise, FileXls } from "phosphor-react";
 
-const PendanaanHeader = ({ onImport, onExport, onRefresh, loading, hasData, onFilter }) => (
+const PendanaanHeader = ({ onImport, onExport, onRefresh, loading, hasData }) => (
   <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 animate-fade-in">
     <div>
       <h4 className="fw-bold text-dark mb-1">List Pendanaan Syariah</h4>
@@ -11,16 +11,13 @@ const PendanaanHeader = ({ onImport, onExport, onRefresh, loading, hasData, onFi
       </p>
     </div>
     <div className="d-flex gap-2">
-      {onFilter ? (
-        <Button
-          variant="outline-secondary"
-          size="sm"
-          className="d-flex align-items-center gap-2"
-          onClick={onFilter}
-        >
-          <FunnelSimple size={14} /> Filter
-        </Button>
-      ) : null}
+      <Button
+        variant="outline-secondary"
+        size="sm"
+        className="d-flex align-items-center gap-2"
+      >
+        <FunnelSimple size={14} /> Filter
+      </Button>
       {onExport && (
         <Button
           variant="outline-success"

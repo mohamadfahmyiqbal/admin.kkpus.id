@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Table, Button, Badge, Tab, Nav, Row, Col, Spinner } from "react-bootstrap";
 import { ArrowClockwise, FilePdf, FileXls } from "phosphor-react";
-import jsPDF from "jspdf";
 import investasiService from "../../../utils/api/UInvestasi";
 import exportToExcel from "../../../utils/helpers/exportToExcel";
 
@@ -32,55 +31,7 @@ const PendanaanSyariahReportPage = () => {
 
   useEffect(() => {
     fetchReport();
-    const interval = setInterval(() => {
-      fetchReport();
-    }, 30000); // 30 detik
-
-    return () => clearInterval(interval);
   }, []);
-
-  const handleExportPDF = () => {
-    if (!reportData?.listData?.length) return;
-
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("Laporan Pendanaan Syariah", 14, 20);
-    doc.setFontSize(10);
-    doc.text(`Dicetak: ${new Date().toLocaleDateString("id-ID")}`, 14, 28);
-
-    let startY = 38;
-    doc.setFontSize(12);
-    doc.text("Ringkasan:", 14, startY);
-    startY += 8;
-    doc.setFontSize(10);
-    doc.text(`Total Pendanaan: ${formatCurrency(reportData.total_pinjaman_keluar || 0)}`, 14, startY);
-    startY += 6;
-    doc.text(`Total Dibayar: ${formatCurrency(reportData.total_dibayar || 0)}`, 14, startY);
-    startY += 6;
-    doc.text(`Sisa Piutang: ${formatCurrency(reportData.sisa_piutang || 0)}`, 14, startY);
-    startY += 12;
-
-    doc.setFontSize(12);
-    doc.text("Daftar Anggota:", 14, startY);
-    startY += 8;
-
-    doc.setFontSize(9);
-    reportData.listData.forEach((item, index) => {
-      if (startY > 270) {
-        doc.addPage();
-        startY = 20;
-      }
-      const totalPembiayaan =
-        (item.tahun_ini?.total || 0) +
-        (item.tahun_lalu?.total || 0) +
-        (item.tahun_lalu2?.total || 0);
-      const text = `${index + 1}. ${item.nama} - ${item.keperluan} | Tenor: ${item.termin} Bln | Total: ${formatCurrency(totalPembiayaan)} | Status: ${item.status}`;
-      doc.text(text, 14, startY);
-      startY += 6;
-    });
-
-    doc.save(`Laporan_Pendanaan_Syariah_${new Date().toISOString().split("T")[0]}.pdf`);
-  };
 
   const handleExportExcel = () => {
     const exportRows = reportData?.listData?.map((item, idx) => ({
@@ -141,8 +92,6 @@ const PendanaanSyariahReportPage = () => {
           <Button
             variant="danger"
             className="shadow-sm d-flex align-items-center gap-2 fw-medium"
-            onClick={handleExportPDF}
-            disabled={!reportData?.listData?.length}
           >
             <FilePdf size={18} /> Export PDF
           </Button>
@@ -332,7 +281,7 @@ const PendanaanSyariahReportPage = () => {
                               (item.tahun_lalu2?.cicilan || 0);
 
                             return (
-                              <tr key={item.id || item.transaction_no || idx} className="border-bottom">
+                              <tr key={idx} className="border-bottom">
                                 <td className="py-3 px-4">
                                   <div className="fw-bold text-dark">
                                     {item.nama}
