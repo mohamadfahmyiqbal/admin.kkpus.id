@@ -32,9 +32,7 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: |
-          # Lint is non-blocking for pre-existing issues (tracked in M6)
-          npm run lint 2>&1 || true
+        run: npm run lint
 
       - name: Run Tests
         run: npm run test:ci 2>&1 || true  # Non-blocking until tests are added (M6)
