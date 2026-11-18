@@ -1,0 +1,19 @@
+# Gitleaks configuration for admin.kkpus.id frontend
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlist for known false positives"
+paths = [
+    ".env.sample",
+    ".env.development.sample",
+    ".env.production.sample",
+    "node_modules",
+    "dist",
+    "coverage",
+]
+
+regexes = [
+    "YOUR_.*_HERE",
+    "test-secret",
+]
