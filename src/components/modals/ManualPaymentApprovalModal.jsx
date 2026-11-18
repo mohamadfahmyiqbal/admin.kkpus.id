@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Row, Col, Badge } from "react-bootstrap";
 import {
   CheckCircle,
@@ -22,7 +22,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
   const [showFullProof, setShowFullProof] = useState(false);
   const [blobUrl, setBlobUrl] = useState(null);
   const [fileLoading, setFileLoading] = useState(false);
-  const [fileError, setFileError] = useState(false);
+  const [, setFileError] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   // Mendukung berbagai penamaan properti bukti transfer dari berbagai controller/model
@@ -132,8 +132,8 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
           activeBlob = URL.createObjectURL(res.data);
           setBlobUrl(activeBlob);
         })
-        .catch((err) => {
-          console.error("Gagal mengambil berkas bukti via blob:", err);
+        .catch(() => {
+          /* console.error: "Gagal mengambil berkas bukti via blob:", err */
           setBlobUrl(proofUrl);
         })
         .finally(() => {
@@ -190,12 +190,12 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
           text: res.data?.message || "Gagal memproses verifikasi.",
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch (_err) {
+      /* console.error: err */
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: err.response?.data?.message || "Terjadi kesalahan sistem.",
+        text: _err.response?.data?.message || "Terjadi kesalahan sistem.",
       });
     } finally {
       setLoading(false);

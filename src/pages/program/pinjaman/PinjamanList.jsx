@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect, useMemo } from "react";
 import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -68,7 +69,7 @@ const PinjamanList = () => {
         setPendingApprovals(programPending);
       }
     } catch (err) {
-      console.error("Gagal mengambil data pinjaman:", err);
+      /* console.error: "Gagal mengambil data pinjaman:", err */
     } finally {
       setLoading(false);
     }

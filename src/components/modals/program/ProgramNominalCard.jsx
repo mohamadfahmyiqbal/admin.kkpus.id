@@ -1,4 +1,4 @@
-import React from "react";
+
 import { CurrencyCircleDollar } from "phosphor-react";
 
 const ProgramNominalCard = ({ amount, formatCurrency }) => (

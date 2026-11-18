@@ -1,4 +1,4 @@
-import React from "react";
+
 import { CurrencyDollar } from "phosphor-react";
 
 const JualBeliNominalHeader = ({ totalDisplay, formatCurrency }) => {

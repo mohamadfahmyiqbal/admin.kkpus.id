@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
 
@@ -20,7 +20,7 @@ const SimpananConfigPage = () => {
         });
       }
     } catch (err) {
-      console.error("Gagal mengambil data konfigurasi simpanan:", err);
+      /* console.error: "Gagal mengambil data konfigurasi simpanan:", err */
     } finally {
       setLoading(false);
     }

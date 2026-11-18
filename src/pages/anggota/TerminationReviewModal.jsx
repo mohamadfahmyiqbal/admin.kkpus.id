@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Row, Col } from "react-bootstrap";
 import { UserMinus } from "phosphor-react";
 import Swal from "sweetalert2";

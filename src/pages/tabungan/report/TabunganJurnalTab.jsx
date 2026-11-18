@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Table, Spinner } from "react-bootstrap";
 
 const TabunganJurnalTab = ({ summaryData = {}, loading, formatRupiah }) => (

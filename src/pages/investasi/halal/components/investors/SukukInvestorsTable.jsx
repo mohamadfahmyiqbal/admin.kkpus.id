@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Table, Form, Spinner } from "react-bootstrap";
 import { SmileyMeh } from "phosphor-react";
 import SukukInvestorRow from "./SukukInvestorRow";

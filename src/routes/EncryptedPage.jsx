@@ -1,4 +1,5 @@
-import React, { Suspense, useMemo } from "react";
+import React from "react";
+import { Suspense, useMemo } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import PAGE_COMPONENTS from "./PageRoutes";
 import { jwtDecodePage } from "../utils/helpers";
@@ -23,7 +24,7 @@ export const EncryptedPage = React.memo(function EncryptedPage() {
     try {
       return jwtDecodePage(token);
     } catch (error) {
-      console.error("Failed to decode token:", error);
+      /* console.error: "Failed to decode token:", error */
       return null;
     }
   }, [token]);

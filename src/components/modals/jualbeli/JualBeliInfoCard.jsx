@@ -1,4 +1,4 @@
-import React from "react";
+
 import { ListGroup, Badge } from "react-bootstrap";
 import { Info, User, Tag, CurrencyDollar, Clock } from "phosphor-react";
 

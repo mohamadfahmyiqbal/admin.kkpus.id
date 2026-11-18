@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { WifiSlash } from "phosphor-react";
 
 export const OfflineIndicator = () => {

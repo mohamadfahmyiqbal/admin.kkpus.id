@@ -1,7 +1,7 @@
-import React from "react";
+
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { Alert, Button } from "react-bootstrap";
-import { ArrowClockwise, WifiSlash } from "phosphor-react";
+import { ArrowClockwise } from "phosphor-react";
 
 export const PwaUpdatePrompt = () => {
   const {
@@ -12,12 +12,12 @@ export const PwaUpdatePrompt = () => {
       if (registration) {
         // Optional: periodic check for service worker updates (every 1 hour)
         setInterval(() => {
-          registration.update().catch((err) => console.warn("PWA update check failed:", err));
+          registration.update().catch(() => {});
         }, 60 * 60 * 1000);
       }
     },
-    onRegisterError(error) {
-      console.warn("Service Worker registration error:", error);
+    onRegisterError() {
+      // Service Worker registration failed silently
     },
   });
 

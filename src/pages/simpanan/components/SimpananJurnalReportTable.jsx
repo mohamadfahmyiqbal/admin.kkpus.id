@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Table, Spinner } from "react-bootstrap";
 import { formatRupiah } from "./reportConstants";
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import api from "../../../../utils/api/common";
@@ -74,7 +74,7 @@ const SukukIssueModal = ({ show, onHide, data, onSuccess }) => {
       if (onSuccess) onSuccess();
       onHide();
     } catch (err) {
-      console.error(err);
+      /* console.error: err */
       Swal.fire(
         "Gagal",
         err?.response?.data?.message || "Terjadi kesalahan",

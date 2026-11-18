@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
@@ -32,7 +33,7 @@ const GenericImportModal = ({
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Gagal mendownload template:", err);
+      /* console.error: "Gagal mendownload template:", err */
       const apiOrigin =
         import.meta.env.VITE_API_ORIGIN ||
         (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445");
@@ -110,7 +111,7 @@ const GenericImportModal = ({
         setErrorMsg(res.data?.message || "Gagal mengimpor file Excel.");
       }
     } catch (err) {
-      console.error("Import error:", err);
+      /* console.error: "Import error:", err */
       setErrorMsg(
         err.response?.data?.message ||
           err.message ||

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Card, Nav, Tab } from "react-bootstrap";
 import api from "../../../utils/api/common";
 import exportToExcel from "../../../utils/helpers/exportToExcel";
@@ -22,7 +22,7 @@ const InvestasiReportPage = () => {
         setSummaryData(res.data.data.jurnal || {});
       }
     } catch (err) {
-      console.error("Failed to fetch investasi report data:", err);
+      /* console.error: "Failed to fetch investasi report data:", err */
     } finally {
       setLoading(false);
     }

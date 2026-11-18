@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Table, Badge, Form, Pagination, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Eye, Coins, CheckCircle, X, ArrowsDownUp, CaretUp, CaretDown, ArrowsClockwise, Trash } from "phosphor-react";
+import { Eye, Coins, CheckCircle, X, ArrowsDownUp, CaretUp, CaretDown, Trash } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";
 
 const JualBeliTable = ({

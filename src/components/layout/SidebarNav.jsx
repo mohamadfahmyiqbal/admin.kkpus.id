@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo, useEffect, useRef } from "react";
+import { memo, useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaChartPie,

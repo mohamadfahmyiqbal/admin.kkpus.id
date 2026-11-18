@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Check } from "phosphor-react";
 import ApprovalPlaceholder from "../../ui/ApprovalPlaceholder";
 

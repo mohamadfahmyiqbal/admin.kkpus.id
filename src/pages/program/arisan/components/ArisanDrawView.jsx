@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import { Modal, Table, Button, Badge, Spinner, Form, Card } from "react-bootstrap";
 import { ArrowLeft, Confetti, Check, Eye } from "phosphor-react";
 import Swal from "sweetalert2";
@@ -21,7 +22,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
         setDraws(res.data.data || []);
       }
     } catch (err) {
-      console.error("Error fetching draws:", err);
+      /* console.error: "Error fetching draws:", err */
       Swal.fire("Error", "Gagal mengambil data kocokan", "error");
     } finally {
       setLoading(false);
@@ -69,7 +70,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
           fetchDraws();
         }
       } catch (err) {
-        console.error("Error conducting draw:", err);
+        /* console.error: "Error conducting draw:", err */
         const msg = err.response?.data?.message || "Gagal melakukan kocokan";
         Swal.fire("Error", msg, "error");
       }
@@ -104,7 +105,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
         fetchDraws();
       }
     } catch (err) {
-      console.error("Error updating draw status:", err);
+      /* console.error: "Error updating draw status:", err */
       Swal.fire("Error", "Gagal mengupdate status pencairan.", "error");
     } finally {
       setUploading(false);

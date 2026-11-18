@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Button, Spinner } from "react-bootstrap";
 import { ArrowRight } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useDeferredValue, Suspense, lazy } from "react";
+import { useState, useEffect, useMemo, useCallback, useDeferredValue, Suspense, lazy } from "react";
 import { Card } from "react-bootstrap";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
@@ -50,7 +50,7 @@ const MembersPage = () => {
         setMembers(res.data.data.members || []);
       }
     } catch (err) {
-      console.error("Error fetching members:", err);
+      /* console.error: "Error fetching members:", err */
       Swal.fire("Error", "Gagal mengambil data anggota", "error");
     } finally {
       setLoading(false);
@@ -344,7 +344,7 @@ const MembersPage = () => {
           fetchMembers();
         }
       } catch (err) {
-        console.error("Batch delete error:", err);
+        /* console.error: "Batch delete error:", err */
         Swal.fire(
           "Gagal",
           err.response?.data?.message || "Gagal menghapus anggota terpilih",

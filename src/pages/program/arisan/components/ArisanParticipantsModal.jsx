@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect, useMemo } from "react";
 import { Modal, Card } from "react-bootstrap";
 import Swal from "sweetalert2";
 import jualBeliService from "../../../../utils/api/UJualBeli";
@@ -51,7 +52,7 @@ const ArisanParticipantsModal = ({ batchId, onBack }) => {
         setParticipants(res.data.data || []);
       }
     } catch (err) {
-      console.error("Error fetching participants:", err);
+      /* console.error: "Error fetching participants:", err */
       Swal.fire("Error", "Gagal mengambil data peserta", "error");
     } finally {
       setLoading(false);
@@ -78,7 +79,7 @@ const ArisanParticipantsModal = ({ batchId, onBack }) => {
         setInstallments([]);
       }
     } catch (err) {
-      console.error(err);
+      /* console.error: err */
       Swal.fire("Error", "Gagal mengambil data setoran", "error");
       setInstallments([]);
     } finally {

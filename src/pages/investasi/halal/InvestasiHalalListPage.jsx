@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { FileXls } from "phosphor-react";
 import SukukCatalogTab from "./components/SukukCatalogTab";
@@ -57,7 +57,7 @@ const InvestasiHalalListPage = () => {
         exportToExcel(exportRows, `Manajemen_Investasi_Halal_${new Date().toISOString().split("T")[0]}`);
       }
     } catch (err) {
-      console.error("Export error:", err);
+      /* console.error: "Export error:", err */
       Swal.fire("Error", "Gagal melakukan export data investasi", "error");
     } finally {
       setIsExporting(false);

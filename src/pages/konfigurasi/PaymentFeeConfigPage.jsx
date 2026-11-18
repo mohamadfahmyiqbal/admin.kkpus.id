@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button, Alert, Card, Spinner, Form, Table, Badge } from "react-bootstrap";
 import { FaSyncAlt, FaSave } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -21,7 +21,7 @@ const PaymentFeeConfigPage = () => {
         setError(res.data?.message || "Failed to fetch configurations.");
       }
     } catch (err) {
-      console.error(err);
+      /* console.error: err */
       setError("Gagal mengambil data konfigurasi. Pastikan server berjalan.");
     } finally {
       setLoading(false);
@@ -57,7 +57,7 @@ const PaymentFeeConfigPage = () => {
         });
       }
     } catch (err) {
-      console.error(err);
+      /* console.error: err */
       Swal.fire({
         icon: "error",
         title: "Error",

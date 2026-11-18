@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Modal, Button, Badge } from "react-bootstrap";
 import { Printer, DownloadSimple } from "phosphor-react";
 

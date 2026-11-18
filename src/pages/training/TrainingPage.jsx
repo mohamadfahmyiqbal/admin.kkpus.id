@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Tab,
   Nav,
@@ -47,7 +47,7 @@ const CurriculumTab = ({ onEdit }) => {
         setData(res.data.data);
       }
     } catch (err) {
-      console.error("Failed to load curriculums", err);
+      /* console.error: "Failed to load curriculums", err */
     } finally {
       setLoading(false);
     }
@@ -176,7 +176,7 @@ const MaterialTab = ({ onEdit }) => {
         setData(res.data.data);
       }
     } catch (err) {
-      console.error("Failed to load materials", err);
+      /* console.error: "Failed to load materials", err */
     } finally {
       setLoading(false);
     }
@@ -287,7 +287,7 @@ const EvaluationTab = ({ onEdit }) => {
         setData(res.data.data);
       }
     } catch (err) {
-      console.error("Failed to load evaluations", err);
+      /* console.error: "Failed to load evaluations", err */
     } finally {
       setLoading(false);
     }
@@ -398,7 +398,7 @@ const RankingTab = () => {
         setData(res.data.data);
       }
     } catch (err) {
-      console.error("Failed to load rankings", err);
+      /* console.error: "Failed to load rankings", err */
     } finally {
       setLoading(false);
     }
@@ -647,7 +647,7 @@ const MaterialModal = ({ show, onHide, material, onSuccess }) => {
       const res = await trainingService.getCurriculums();
       if (res.data?.status) setCurriculums(res.data.data);
     } catch (err) {
-      console.error(err);
+      /* console.error: err */
     }
   };
 
@@ -835,7 +835,7 @@ const EvaluationModal = ({ show, onHide, evaluation, onSuccess }) => {
       const res = await trainingService.getMaterials();
       if (res.data?.status) setMaterials(res.data.data);
     } catch (err) {
-      console.error(err);
+      /* console.error: err */
     }
   };
 

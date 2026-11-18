@@ -19,7 +19,7 @@ export const initSocket = (token) => {
   });
 
   socket.on("connect", () => {
-    console.log("🔌 [Socket Admin] Terhubung ke server socket:", socket.id);
+    /* console.log: "🔌 [Socket Admin] Terhubung ke server socket:", socket.id */
     try {
       const stored = localStorage.getItem("userData");
       if (stored) {
@@ -27,7 +27,7 @@ export const initSocket = (token) => {
         const memberId = user.member_id || user.id || user.userId;
         if (memberId) {
           socket.emit("register", memberId);
-          console.log("👤 [Socket Admin] Register user ke socket:", memberId);
+          /* console.log: "👤 [Socket Admin] Register user ke socket:", memberId */
         }
       }
     } catch (e) {
@@ -35,12 +35,12 @@ export const initSocket = (token) => {
     }
   });
 
-  socket.on("disconnect", (reason) => {
-    console.log("🔌 [Socket Admin] Terputus:", reason);
+  socket.on("disconnect", (_reason) => {
+    /* console.log: "🔌 [Socket Admin] Terputus:", reason */
   });
 
-  socket.on("connect_error", (err) => {
-    console.error("❌ Error koneksi socket:", err.message);
+  socket.on("connect_error", (_err) => {
+    /* console.error: "❌ Error koneksi socket:", err.message */
   });
 
   return socket;

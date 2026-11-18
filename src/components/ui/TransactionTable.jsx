@@ -1,7 +1,6 @@
-import React from "react";
+
 import {
   Table,
-  Badge,
   Pagination,
   Form,
   OverlayTrigger,

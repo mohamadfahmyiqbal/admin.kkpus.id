@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { Handshake, X, Check } from "phosphor-react";
@@ -33,7 +33,7 @@ const PendanaanSyariahApprovalModal = ({
     const rawUser = localStorage.getItem("userData");
     if (rawUser) userData = JSON.parse(rawUser);
   } catch (err) {
-    console.error("Failed to parse user data:", err);
+    /* console.error: "Failed to parse user data:", err */
   }
 
   const currentRole =

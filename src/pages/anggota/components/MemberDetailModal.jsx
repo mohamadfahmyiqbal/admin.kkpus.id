@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import { Modal, Row, Col, Button, Badge, Nav, Tab, Card } from "react-bootstrap";
 import {
   User,
@@ -16,8 +17,6 @@ import {
   Coins,
   Receipt,
   FileImage,
-  ShieldCheck,
-  CheckCircle,
 } from "phosphor-react";
 import { getMediaUrl, SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
 

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Card, Row, Col } from "react-bootstrap";
 import { Wallet, ChartLineUp, CheckCircle } from "phosphor-react";
 

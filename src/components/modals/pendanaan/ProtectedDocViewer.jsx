@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import api from "../../../utils/api/common";
 
@@ -17,7 +17,7 @@ const ProtectedDocViewer = ({ url, title }) => {
           currentBlob = URL.createObjectURL(res.data);
           setBlobUrl(currentBlob);
         } catch (err) {
-          console.error("Failed to load protected file:", err);
+          /* console.error: "Failed to load protected file:", err */
           setError(err);
         } finally {
           setLoading(false);

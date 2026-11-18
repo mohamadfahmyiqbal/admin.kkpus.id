@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Card } from "react-bootstrap";
 
 const TerminationReasonSection = ({ reason, supportingDocumentPath, getMediaUrl }) => {

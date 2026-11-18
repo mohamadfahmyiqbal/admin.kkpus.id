@@ -1,5 +1,6 @@
-// PATH: src/components/modals/jualbeli/JualBeliModalHeader.jsx
 import React from "react";
+// PATH: src/components/modals/jualbeli/JualBeliModalHeader.jsx
+
 import { Modal } from "react-bootstrap";
 import { ShoppingCart } from "phosphor-react";
 

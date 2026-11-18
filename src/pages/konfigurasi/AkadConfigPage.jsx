@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
 
@@ -16,7 +16,7 @@ const AkadConfigPage = () => {
       if (prodRes.data?.status) setProducts(prodRes.data.data);
       if (featRes.data?.status) setFeatures(featRes.data.data);
     } catch (err) {
-      console.error("Gagal mengambil data produk simpanan atau fitur:", err);
+      /* console.error: "Gagal mengambil data produk simpanan atau fitur:", err */
     } finally {
       setLoading(false);
     }

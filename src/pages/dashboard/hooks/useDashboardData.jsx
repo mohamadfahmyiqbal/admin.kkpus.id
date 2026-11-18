@@ -1,5 +1,5 @@
 // PATH: src/pages/dashboard/hooks/useDashboardData.jsx
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Users,
   Wallet,
@@ -52,7 +52,7 @@ export const useDashboardData = () => {
         setPendingRegistrations(regRes.data.data);
       }
     } catch (err) {
-      console.error("Gagal memuat data dashboard admin:", err);
+      /* console.error: "Gagal memuat data dashboard admin:", err */
     } finally {
       setLoading(false);
     }
@@ -64,7 +64,7 @@ export const useDashboardData = () => {
     if (socket) {
       let lastToastTime = 0;
       const refreshHandler = (payload) => {
-        console.log("🔔 [Dashboard] Socket event received:", payload);
+        /* console.log: "🔔 [Dashboard] Socket event received:", payload */
         fetchData();
 
         const now = Date.now();

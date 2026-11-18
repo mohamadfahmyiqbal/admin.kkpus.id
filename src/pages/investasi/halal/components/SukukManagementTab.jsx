@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Table, Button, Badge, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import api from "../../../../utils/api/common";
@@ -27,7 +27,7 @@ const SukukManagementTab = () => {
         setData([]);
       }
     } catch (err) {
-      console.error("Gagal mengambil data manajemen investasi:", err);
+      /* console.error: "Gagal mengambil data manajemen investasi:", err */
       setData([]);
     } finally {
       setLoading(false);

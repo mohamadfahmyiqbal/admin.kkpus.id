@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Table, Pagination } from "react-bootstrap";
+import { useState } from "react";
+import { Pagination } from "react-bootstrap";
 import { Users, Info } from "phosphor-react";
 import EmptyState from "../../../components/ui/EmptyState";
 import {

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { memo, useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Bell,
@@ -151,7 +151,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
         setUnreadCount(unread);
       }
     } catch (err) {
-      console.error("Gagal memuat notifikasi:", err);
+      /* console.error: "Gagal memuat notifikasi:", err */
     } finally {
       setLoading(false);
     }
@@ -231,7 +231,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (err) {
-      console.error("Gagal tandai dibaca:", err);
+      /* console.error: "Gagal tandai dibaca:", err */
     }
   };
 
@@ -241,7 +241,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
       setNotifications((prev) => prev.map((n) => ({ ...n, status: 2 })));
       setUnreadCount(0);
     } catch (err) {
-      console.error("Gagal tandai semua dibaca:", err);
+      /* console.error: "Gagal tandai semua dibaca:", err */
     }
   };
 
@@ -256,7 +256,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
           );
           setUnreadCount((prev) => Math.max(0, prev - 1));
         } catch (err) {
-          console.error("Gagal tandai dibaca:", err);
+          /* console.error: "Gagal tandai dibaca:", err */
         }
       }
       setIsOpen(false);

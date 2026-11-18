@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Row, Col, Card, Button, Form, Tab, Nav, Breadcrumb } from "react-bootstrap";
+import React from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { Row, Col, Card, Button, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {
   Wallet,
@@ -9,7 +10,6 @@ import {
   ArrowClockwise,
   UploadSimple,
   FileXls,
-  X,
 } from "phosphor-react";
 import savingsService from "../../utils/api/USavings";
 import { exportToExcel } from "../../utils/helpers/exportToExcel";
@@ -162,7 +162,7 @@ const SimpananDashboard = () => {
         setSummary(data);
       }
     } catch (err) {
-      console.error("Gagal mengambil summary simpanan:", err);
+      /* console.error: "Gagal mengambil summary simpanan:", err */
     }
   };
 
@@ -183,7 +183,7 @@ const SimpananDashboard = () => {
         setPagination(res.data.data.pagination);
       }
     } catch (err) {
-      console.error("Gagal mengambil transaksi simpanan:", err);
+      /* console.error: "Gagal mengambil transaksi simpanan:", err */
     } finally {
       setLoading(false);
     }
@@ -330,7 +330,7 @@ const SimpananDashboard = () => {
       const today = new Date().toISOString().split("T")[0];
       exportToExcel(formattedData, `Transaksi_Simpanan_${typeLabel}_${today}`);
     } catch (err) {
-      console.error("Gagal export transaksi simpanan:", err);
+      /* console.error: "Gagal export transaksi simpanan:", err */
       alert("Terjadi kesalahan saat mengekspor data simpanan.");
     } finally {
       setExporting(false);
@@ -363,7 +363,7 @@ const SimpananDashboard = () => {
     }
   };
 
-  const isFiltered = Boolean(searchTerm || statusFilter);
+  const _unused = Boolean(searchTerm || statusFilter); // eslint-disable-line no-unused-vars
 
   return (
     <div className="pb-5">

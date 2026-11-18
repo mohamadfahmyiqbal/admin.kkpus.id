@@ -31,7 +31,7 @@ api.interceptors.response.use(
 
     if (!response) {
       // Network error or server unreachable
-      console.error("[API] Network error:", error.message);
+      /* console.error: "[API] Network error:", error.message */
       return Promise.reject(error);
     }
 
@@ -47,18 +47,18 @@ api.interceptors.response.use(
 
       case 403:
         // Forbidden — role/permission denied
-        console.warn("[API] Access denied (403):", response.data?.message || "Insufficient permissions");
+        /* console.warn: "[API] Access denied (403):", response.data?.message || "Insufficient permissions" */
         break;
 
       case 429:
         // Rate limited — show user-friendly message
-        console.warn("[API] Rate limited (429):", response.data?.message || "Too many requests, please try again later");
+        /* console.warn: "[API] Rate limited (429):", response.data?.message || "Too many requests, please try again later" */
         break;
 
       default:
         // Other errors — log but don't redirect
         if (response.status >= 500) {
-          console.error("[API] Server error:", response.status, response.data?.message);
+          /* console.error: "[API] Server error:", response.status, response.data?.message */
         }
         break;
     }

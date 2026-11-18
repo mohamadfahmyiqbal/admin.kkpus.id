@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Table, Button, Badge, Form, Spinner } from "react-bootstrap";
 import { Eye, Users, SmileyMeh } from "phosphor-react";
 import api from "../../../../utils/api/common";
@@ -71,7 +71,7 @@ const SukukCatalogTab = () => {
         setData([]);
       }
     } catch (err) {
-      console.error("Gagal mengambil data investasi:", err);
+      /* console.error: "Gagal mengambil data investasi:", err */
       setData([]);
     } finally {
       setLoading(false);

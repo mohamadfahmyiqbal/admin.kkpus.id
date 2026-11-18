@@ -8,13 +8,13 @@ export const useNavigation = () => {
   const navigateTo = useCallback(
     (pageName, options = {}) => {
       if (!navigate) {
-        console.warn("Navigation not available - Router context missing");
+        /* console.warn: "Navigation not available - Router context missing" */
         return;
       }
       try {
         navigate(`/${jwtEncode({ page: pageName })}`, options);
       } catch (err) {
-        console.error("Navigation error:", err);
+        /* console.error: "Navigation error:", err */
         navigate(`/${pageName}`, options);
       }
     },

@@ -1,4 +1,4 @@
-import React from "react";
+
 import Swal from "sweetalert2";
 import { CheckCircle, XCircle, UserCircle, ShieldCheck } from "phosphor-react";
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import savingsService from "../../utils/api/USavings";
@@ -54,7 +54,7 @@ const SimpananReportPage = () => {
         );
       }
     } catch (err) {
-      console.error("Failed to fetch report data:", err);
+      /* console.error: "Failed to fetch report data:", err */
     } finally {
       setLoading(false);
     }

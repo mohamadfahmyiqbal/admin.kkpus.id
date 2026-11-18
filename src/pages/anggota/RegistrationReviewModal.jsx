@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { User } from "phosphor-react";
 import { jwtDecodePage, getMediaUrl } from "../../utils/helpers";

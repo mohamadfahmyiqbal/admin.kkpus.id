@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
@@ -23,7 +23,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Gagal mendownload template:", err);
+      /* console.error: "Gagal mendownload template:", err */
       // Fallback direct URL if blob request fails
       const apiOrigin =
         import.meta.env.VITE_API_ORIGIN ||

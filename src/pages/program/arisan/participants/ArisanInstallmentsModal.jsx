@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Modal, Table, Button, Badge, Spinner, Card } from "react-bootstrap";
 import { Receipt } from "phosphor-react";
 

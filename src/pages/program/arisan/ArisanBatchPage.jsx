@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Container, Button, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FileArrowDown, Plus } from "phosphor-react";
@@ -47,7 +47,7 @@ const ArisanBatchPage = () => {
         setBatches(res.data.data || []);
       }
     } catch (err) {
-      console.error("Error fetching batches:", err);
+      /* console.error: "Error fetching batches:", err */
     } finally {
       setLoading(false);
     }
@@ -90,7 +90,7 @@ const ArisanBatchPage = () => {
         );
       }
     } catch (err) {
-      console.error("Error saving batch:", err);
+      /* console.error: "Error saving batch:", err */
       Swal.fire("Error", "Gagal menyimpan data", "error");
     }
   };
@@ -135,7 +135,7 @@ const ArisanBatchPage = () => {
           fetchBatches();
         }
       } catch (err) {
-        console.error("Error deleting batch:", err);
+        /* console.error: "Error deleting batch:", err */
         Swal.fire("Error", "Gagal menghapus data", "error");
       }
     }

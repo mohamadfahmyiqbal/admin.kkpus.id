@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { ShieldCheck } from "phosphor-react";
@@ -32,7 +32,7 @@ const InvestasiHalalApprovalModal = ({
     const rawUser = localStorage.getItem("userData");
     if (rawUser) userData = JSON.parse(rawUser);
   } catch (err) {
-    console.error("Failed to parse user data:", err);
+    /* console.error: "Failed to parse user data:", err */
   }
 
   const currentRole =

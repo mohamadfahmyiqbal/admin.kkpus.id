@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Modal, Button } from "react-bootstrap";
 import { Info } from "phosphor-react";
 

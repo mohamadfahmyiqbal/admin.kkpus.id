@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Spinner } from "react-bootstrap";
 import investasiService from "../../../utils/api/UInvestasi";
 import PendanaanSyariahApprovalModal from "../../../components/modals/PendanaanSyariahApprovalModal";
@@ -30,7 +30,7 @@ const PendanaanSyariahListPage = () => {
         setTransactions(res.data.data.transactions || res.data.data || []);
       }
     } catch (err) {
-      console.error("Failed to fetch transactions", err);
+      /* console.error: "Failed to fetch transactions", err */
     } finally {
       setLoading(false);
     }

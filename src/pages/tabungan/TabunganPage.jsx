@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Container, Button, Tab, Nav, Row, Col, Card, Breadcrumb, Table, Badge } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Button, Tab, Nav, Row, Col, Card, Breadcrumb, Table, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {
   FileArrowDown,
@@ -80,7 +80,7 @@ const TabunganPage = () => {
         );
       }
     } catch (err) {
-      console.error("Gagal mengambil data tabungan:", err);
+      /* console.error: "Gagal mengambil data tabungan:", err */
     } finally {
       setLoadingSummary(false);
     }
@@ -94,7 +94,7 @@ const TabunganPage = () => {
         setMasterPrograms(res.data.data || []);
       }
     } catch (err) {
-      console.error("Gagal mengambil program tabungan:", err);
+      /* console.error: "Gagal mengambil program tabungan:", err */
     } finally {
       setLoadingPrograms(false);
     }
@@ -112,9 +112,9 @@ const TabunganPage = () => {
     }
 
     const exportRows = [];
-    tableData.forEach((program, pIdx) => {
+    tableData.forEach((program, _pIdx) => {
       if (program.members && program.members.length > 0) {
-        program.members.forEach((m, mIdx) => {
+        program.members.forEach((m, _mIdx) => {
           exportRows.push({
             No: exportRows.length + 1,
             "Program Tabungan": program.nama || "-",

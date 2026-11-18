@@ -1,4 +1,4 @@
-import React from "react";
+
 import { User, Handshake, CurrencyCircleDollar, CalendarBlank } from "phosphor-react";
 
 const ProgramInfoSection = ({ transaction, formatCurrency }) => {

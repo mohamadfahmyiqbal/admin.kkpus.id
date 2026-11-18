@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo, memo } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect, useMemo, memo } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { Coins } from "phosphor-react";
 import jualBeliService from "../../utils/api/UJualBeli";
@@ -41,7 +42,7 @@ const JualBeliSetoranModal = memo(function JualBeliSetoranModal(
           );
         }
       } catch (err) {
-        console.error("Failed to fetch installments", err);
+        /* console.error: "Failed to fetch installments", err */
       } finally {
         setLoading(false);
       }

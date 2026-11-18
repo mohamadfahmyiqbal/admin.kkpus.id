@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Card, Tab, Nav } from "react-bootstrap";
 import tabunganService from "../../utils/api/UTabungan";
 import exportToExcel from "../../utils/helpers/exportToExcel";
@@ -81,7 +81,7 @@ const TabunganReportPage = () => {
         setSummaryData(summary);
       }
     } catch (err) {
-      console.error("Failed to fetch tabungan report data:", err);
+      /* console.error: "Failed to fetch tabungan report data:", err */
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Row, Col, Card } from "react-bootstrap";
 import { Handshake, TrendUp, Bank, Clock } from "phosphor-react";
 

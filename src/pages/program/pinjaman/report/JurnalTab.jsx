@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Table } from "react-bootstrap";
 
 export const JurnalTab = ({ jurnal, formatRupiah }) => (

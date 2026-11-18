@@ -19,7 +19,7 @@ export const jwtEncode = (payload, options = {}) => {
     const header = { alg: "none", typ: "JWT", ver: "1.0" };
     return `${encode(header)}.${encode(data)}.`;
   } catch (err) {
-    console.error("jwtEncode Error:", err);
+    /* console.error: "jwtEncode Error:", err */
     return "";
   }
 };
@@ -38,7 +38,7 @@ export const jwtDecodePage = (token) => {
     const obj = JSON.parse(decodeURIComponent(decoded));
     return obj;
   } catch (err) {
-    console.warn("Token decode failed:", err.message);
+    /* console.warn: "Token decode failed:", err.message */
     return null;
   }
 };

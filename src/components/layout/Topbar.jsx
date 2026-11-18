@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import SidebarToggleButton from "./SidebarToggleButton";
 import { jwtEncode } from "../../utils/helpers";

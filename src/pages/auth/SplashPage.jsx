@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { jwtEncode } from "../../utils/helpers";
@@ -60,7 +61,7 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
         // 2. Bersihkan sessionStorage
         sessionStorage.clear();
       } catch (err) {
-        console.warn("[SplashPage] Gagal membersihkan cookie dan sessionStorage:", err);
+        /* console.warn: "[SplashPage] Gagal membersihkan cookie dan sessionStorage:", err */
       }
     };
 

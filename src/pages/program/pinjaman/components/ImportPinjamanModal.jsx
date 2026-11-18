@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner, Nav } from "react-bootstrap";
 import { UploadSimple, DownloadSimple, Coins, Receipt } from "phosphor-react";
 import Swal from "sweetalert2";

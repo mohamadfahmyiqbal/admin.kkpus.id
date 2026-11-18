@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { List, X } from "phosphor-react";
 
 export const SidebarToggleButton = memo(function SidebarToggleButton({ sidebarShown, onClick }) {

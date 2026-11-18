@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Alert, Badge } from "react-bootstrap";
-import { ShieldCheck, UserGear } from "phosphor-react";
+import { UserGear } from "phosphor-react";
 import Swal from "sweetalert2";
 import api from "../../../utils/api/common";
 
@@ -21,7 +22,7 @@ const EditRoleModal = ({ show, onHide, member, onSuccess }) => {
             setRoles(res.data.data || []);
           }
         } catch (err) {
-          console.error("Gagal mengambil roles:", err);
+          /* console.error: "Gagal mengambil roles:", err */
         } finally {
           setLoadingRoles(false);
         }
@@ -83,7 +84,7 @@ const EditRoleModal = ({ show, onHide, member, onSuccess }) => {
         onSuccess?.();
       }
     } catch (err) {
-      console.error("Update role error:", err);
+      /* console.error: "Update role error:", err */
       Swal.fire(
         "Gagal",
         err.response?.data?.message || "Terjadi kesalahan saat merubah role.",

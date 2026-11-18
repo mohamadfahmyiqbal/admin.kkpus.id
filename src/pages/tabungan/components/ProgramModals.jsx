@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, Table, Button, Badge, Pagination } from "react-bootstrap";
 import { Users, Info, Receipt } from "phosphor-react";
-import EmptyState from "../../../components/ui/EmptyState";
 import {
   MemberInfoModal,
   MemberTransactionsModal,

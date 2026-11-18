@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Modal, Button, Table, Badge } from "react-bootstrap";
 import { CalendarBlank, Coins, X } from "phosphor-react";
 

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Card, Pagination } from "react-bootstrap";
 
 const ArisanBatchPagination = ({

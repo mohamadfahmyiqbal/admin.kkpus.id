@@ -1,5 +1,6 @@
-// PATH: src/components/modals/jualbeli/JualBeliModalFooter.jsx
 import React from "react";
+// PATH: src/components/modals/jualbeli/JualBeliModalFooter.jsx
+
 import { Modal, Button } from "react-bootstrap";
 import { Check, X } from "phosphor-react";
 

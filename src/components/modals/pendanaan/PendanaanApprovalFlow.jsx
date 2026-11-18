@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Handshake } from "phosphor-react";
 import ApprovalPlaceholder from "../../ui/ApprovalPlaceholder";
 

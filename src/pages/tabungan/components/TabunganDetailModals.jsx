@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect, useMemo } from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { Receipt } from "phosphor-react";
 import tabunganService from "../../../utils/api/UTabungan";
@@ -40,7 +41,7 @@ export const MemberTransactionsModal = ({
       );
       setBills(res.data?.data || []);
     } catch (err) {
-      console.error("Gagal mengambil transaksi:", err);
+      /* console.error: "Gagal mengambil transaksi:", err */
     } finally {
       setLoading(false);
     }

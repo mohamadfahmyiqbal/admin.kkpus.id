@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Button, Spinner, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Coins, CalendarBlank, UploadSimple, FileText } from "phosphor-react";
 import { SukukInvestorStatusBadge, formatCurrency } from "./SukukInvestorStatusBadge";

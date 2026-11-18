@@ -1,5 +1,5 @@
 // PATH: src/pages/dashboard/components/DashboardApprovalModals.jsx
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { Spinner } from "react-bootstrap";
 import savingsService from "../../../utils/api/USavings";
 import tabunganService from "../../../utils/api/UTabungan";

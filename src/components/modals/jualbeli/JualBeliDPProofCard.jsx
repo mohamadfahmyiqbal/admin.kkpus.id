@@ -1,7 +1,7 @@
 // PATH: src/components/modals/jualbeli/JualBeliDPProofCard.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, Badge, Modal, Row, Col } from "react-bootstrap";
-import { FileImage, ShieldCheck, WarningCircle, Eye } from "phosphor-react";
+import { ShieldCheck, WarningCircle, Eye } from "phosphor-react";
 
 const JualBeliDPProofCard = ({
   downPayment,

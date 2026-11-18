@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Table, Button, Badge, Tab, Nav, Row, Col, Spinner } from "react-bootstrap";
 import { ArrowClockwise, FilePdf, FileXls } from "phosphor-react";
 import investasiService from "../../../utils/api/UInvestasi";
@@ -23,7 +23,7 @@ const PendanaanSyariahReportPage = () => {
         setReportData(res.data.data);
       }
     } catch (err) {
-      console.error("Failed to fetch pendanaan report", err);
+      /* console.error: "Failed to fetch pendanaan report", err */
     } finally {
       setLoading(false);
     }

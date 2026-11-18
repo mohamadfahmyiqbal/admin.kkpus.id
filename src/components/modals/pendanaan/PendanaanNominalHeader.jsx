@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Coins } from "phosphor-react";
 
 const PendanaanNominalHeader = ({ amount, formatCurrency }) => {

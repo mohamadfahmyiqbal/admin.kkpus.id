@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   Table,
   Button,
@@ -11,7 +11,6 @@ import {
 } from "react-bootstrap";
 import {
   Receipt,
-  Eye,
   Coins,
   User,
   X,

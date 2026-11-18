@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import jualBeliService from "../../../utils/api/UJualBeli";
@@ -49,7 +49,7 @@ const PinjamanReport = () => {
         if (d.aktivaTetapData) setAktivaTetapData(d.aktivaTetapData);
       }
     } catch (err) {
-      console.error("Failed to fetch report data", err);
+      /* console.error: "Failed to fetch report data", err */
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Row, Col, Card } from "react-bootstrap";
 import { ArrowDownLeft, ArrowUpRight } from "phosphor-react";
 

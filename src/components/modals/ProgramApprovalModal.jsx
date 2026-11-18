@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { CheckCircle } from "phosphor-react";
 import Swal from "sweetalert2";

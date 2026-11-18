@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import jualBeliService from "../../utils/api/UJualBeli";
@@ -23,7 +23,7 @@ const JualBeliReport = () => {
         setReportData(res.data.data || []);
       }
     } catch (err) {
-      console.error("Failed to fetch data", err);
+      /* console.error: "Failed to fetch data", err */
     } finally {
       setLoading(false);
     }

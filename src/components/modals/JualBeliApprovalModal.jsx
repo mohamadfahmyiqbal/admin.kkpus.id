@@ -1,5 +1,6 @@
-// PATH: src/components/modals/JualBeliApprovalModal.jsx
 import React from "react";
+// PATH: src/components/modals/JualBeliApprovalModal.jsx
+
 import { Modal } from "react-bootstrap";
 import JualBeliModalHeader from "./jualbeli/JualBeliModalHeader";
 import JualBeliNominalHeader from "./jualbeli/JualBeliNominalHeader";

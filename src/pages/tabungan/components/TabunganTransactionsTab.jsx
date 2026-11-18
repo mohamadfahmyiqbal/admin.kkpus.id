@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, Button, Form } from "react-bootstrap";
 import { MagnifyingGlass, ArrowClockwise } from "phosphor-react";
 import tabunganService from "../../../utils/api/UTabungan";
@@ -37,7 +37,7 @@ const TabunganTransactionsTab = () => {
         setPagination(res.data.data.pagination);
       }
     } catch (err) {
-      console.error("Gagal mengambil transaksi tabungan:", err);
+      /* console.error: "Gagal mengambil transaksi tabungan:", err */
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Modal } from "react-bootstrap";
 import api from "../../../../utils/api/common";
 import SukukScheduleModal from "./SukukScheduleModal";
@@ -48,7 +49,7 @@ const SukukInvestorsModal = ({ show, onHide, transaction }) => {
         setMembers([]);
       }
     } catch (err) {
-      console.error("Gagal mengambil data anggota sukuk:", err);
+      /* console.error: "Gagal mengambil data anggota sukuk:", err */
       setMembers([]);
     } finally {
       setLoading(false);

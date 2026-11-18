@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Button, Form, Row, Col, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, FloppyDisk } from "phosphor-react";
@@ -85,7 +85,7 @@ const PinjamanInputModal = () => {
         });
       }
     } catch (err) {
-      console.error("Submit Error:", err);
+      /* console.error: "Submit Error:", err */
       Swal.fire({
         icon: "error",
         title: "Terjadi Kesalahan",

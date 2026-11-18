@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Receipt } from "phosphor-react";
 
 const InvestasiNominalHeader = ({ amount, formatCurrency }) => (

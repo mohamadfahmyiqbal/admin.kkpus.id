@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Topbar from "./Topbar";
 import SidebarNav from "./SidebarNav";
@@ -8,7 +8,7 @@ const DESKTOP_WIDTH = 768;
 
 const LayoutGlobal = ({ children, pageName }) => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(() => {
+  const [userData] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("userData") || "{}");
     } catch {
