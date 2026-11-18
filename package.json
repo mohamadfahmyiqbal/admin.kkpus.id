@@ -7,7 +7,9 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext js,jsx --report-unused-disable-directives",
+    "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext js,jsx --fix"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -35,6 +37,9 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "sharp": "^0.35.5",
     "vite": "^8.0.14",
     "vite-plugin-pwa": "^2.0.0"
