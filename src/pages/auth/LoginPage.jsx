@@ -13,7 +13,7 @@ import {
   FaSignInAlt,
   FaArrowRight,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { jwtEncode } from "../../utils/helpers";
 import "./LoginPage.css";
 
@@ -93,7 +93,7 @@ const LoginPage = () => {
         <Container fluid="lg">
           <div className="pbs-topbar-wrap py-3 d-flex justify-content-between align-items-center">
             <div className="pbs-topbar-brand">
-              <a href="/" className="d-flex align-items-center gap-3 text-decoration-none">
+              <Link to="/" className="d-flex align-items-center gap-3 text-decoration-none">
                 <img
                   src="/assets/icons/PUSlogo.png"
                   alt="PUS Logo"
@@ -221,12 +221,13 @@ const LoginPage = () => {
                     <Form onSubmit={handleLogin} noValidate>
                       <Row className="g-4">
                         <Col md={12}>
-                          <Form.Label>Username atau Email Admin</Form.Label>
+                          <Form.Label htmlFor="emailHp">Username atau Email Admin</Form.Label>
                           <InputGroup>
                             <InputGroup.Text>
                               <FaUser />
                             </InputGroup.Text>
                             <Form.Control
+                              id="emailHp"
                               value={emailHp}
                               onChange={(e) => setEmailHp(e.target.value)}
                               isInvalid={emailHpInvalid}
@@ -240,20 +241,22 @@ const LoginPage = () => {
 
                         <Col md={12}>
                           <div className="d-flex justify-content-between align-items-center mb-2">
-                            <Form.Label className="mb-0">Password</Form.Label>
+                            <Form.Label htmlFor="password" className="mb-0">Password</Form.Label>
                           </div>
                           <InputGroup>
                             <InputGroup.Text>
                               <FaLock />
                             </InputGroup.Text>
                             <Form.Control
-                              value={password}
+                              id="password"
+                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
                               isInvalid={passwordInvalid}
                               type={showPassword ? "text" : "password"}
                               placeholder="••••••••"
                             />
                             <Button
+                              aria-label={showPassword ? "Hide password" : "Show password"}
                               variant="light"
                               className="border border-start-0 text-muted pbs-password-eye-btn"
                               onClick={() => setShowPassword(!showPassword)}
