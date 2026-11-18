@@ -61,3 +61,10 @@ jspm_packages
 # Test artifacts
 playwright-report/
 test-results/
+
+# Environment variables (never commit real .env files)
+.env
+.env.*
+!.env.sample
+!.env.development.sample
+!.env.production.sample
