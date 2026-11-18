@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import { jwtEncode } from "../../utils/helpers";
+import api from "../../utils/api/common";
 import "./LoginPage.css";
 
 const LoginPage = () => {
@@ -45,17 +46,13 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const apiBase =
-        import.meta.env.VITE_API_BASE_URL ||
-        (import.meta.env.PROD ? "https://api.kkpus.id/api" : "https://localhost:3445/api");
-      const response = await fetch(`${apiBase}/auth/accountLogin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emailHp: cleanEmail, password: cleanPass }),
+      const response = await api.post("/auth/accountLogin", {
+        emailHp: cleanEmail,
+        password: cleanPass,
       });
-      const data = await response.json();
+      const data = response.data;
 
-      if (response.ok && data.success) {
+      if (data.success) {
         const roles = data.data.user.roles || [];
         const allowedRoles = ["pengawas", "ketua", "bendahara", "admin"];
         const hasAccess = roles.some((r) =>
@@ -80,8 +77,18 @@ const LoginPage = () => {
         );
       }
     } catch (err) {
-      console.error("Login Error:", err);
-      setError("Terjadi kesalahan jaringan atau server tidak merespon.");
+      const status = err.response?.status;
+      const msg = err.response?.data?.message;
+
+      if (status === 429) {
+        setError(msg || "Terlalu banyak percobaan login. Silakan coba lagi nanti.");
+      } else if (status === 401 || status === 400) {
+        setError(msg || "Kredensial tidak valid. Email/Nomor HP atau Password salah.");
+      } else if (!err.response) {
+        setError("Terjadi kesalahan jaringan atau server tidak merespon.");
+      } else {
+        setError(msg || "Terjadi kesalahan. Silakan coba lagi.");
+      }
     } finally {
       setLoading(false);
     }
@@ -105,7 +112,7 @@ const LoginPage = () => {
                     Paguyuban Usaha Sukses
                   </strong>
                 </div>
-              </a>
+              </Link>
             </div>
             <div className="pbs-topbar-login d-flex align-items-center gap-3">
               <span className="d-none d-sm-inline text-white-50 small">
