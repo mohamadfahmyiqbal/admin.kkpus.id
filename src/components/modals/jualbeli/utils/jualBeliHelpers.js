@@ -17,7 +17,9 @@ export const formatCurrency = (val, formatRp) => {
   if (formatRp) {
     try {
       return formatRp(num);
-    } catch {}
+    } catch {
+      // Ignore format errors, fall through to default formatter
+    }
   }
   return new Intl.NumberFormat("id-ID", {
     style: "currency",

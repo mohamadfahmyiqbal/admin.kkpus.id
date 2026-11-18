@@ -5,7 +5,7 @@ import { jwtEncode } from "../../utils/helpers";
 import { UserCircle, SignOut } from "phosphor-react";
 import NotificationDropdown from "./NotificationDropdown";
 
-export const Topbar = memo(({ user, logout, handleToggleSidebar, isSidebarShown, isDesktop }) => {
+export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, isSidebarShown, isDesktop }) {
   const navigate = useNavigate();
 
   const handleNav = useCallback(

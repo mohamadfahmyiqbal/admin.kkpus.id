@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { List, X } from "phosphor-react";
 
-export const SidebarToggleButton = memo(({ sidebarShown, onClick }) => {
+export const SidebarToggleButton = memo(function SidebarToggleButton({ sidebarShown, onClick }) {
   return (
     <button
       className={`sidebar-toggle-btn mobile-sidebar-toggle btn btn-link p-0 text-white ${

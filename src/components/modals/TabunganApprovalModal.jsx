@@ -29,11 +29,15 @@ const TabunganApprovalModal = ({
         const parsed = JSON.parse(stored);
         if (parsed) return parsed;
       }
-    } catch (e) {}
+    } catch (e) {
+      // Ignore JSON parse errors for invalid stored data
+    }
     try {
       const token = localStorage.getItem("token");
       if (token) return jwtDecodePage(token)?.userData || jwtDecodePage(token) || null;
-    } catch (e) {}
+    } catch (e) {
+      // Ignore JWT decode errors
+    }
     return null;
   })();
 
@@ -87,7 +91,9 @@ const TabunganApprovalModal = ({
     if (formatRp) {
       try {
         return formatRp(num);
-      } catch {}
+      } catch {
+        // Ignore format errors, fall through to default formatter
+      }
     }
     return new Intl.NumberFormat("id-ID", {
       style: "currency",

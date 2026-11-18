@@ -14,8 +14,8 @@ const initialFilterState = {
   status: "",
 };
 
-const JualBeliSetoranModal = memo(
-  ({ show, onHide, transaction, formatRp, onVerificationSuccess }) => {
+const JualBeliSetoranModal = memo(function JualBeliSetoranModal(
+  { show, onHide, transaction, formatRp, onVerificationSuccess }) {
     const [loading, setLoading] = useState(false);
     const [installments, setInstallments] = useState([]);
     const [selectedInvoice, setSelectedInvoice] = useState(null);

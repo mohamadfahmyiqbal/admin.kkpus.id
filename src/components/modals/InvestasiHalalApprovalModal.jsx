@@ -84,7 +84,7 @@ const InvestasiHalalApprovalModal = ({
     if (formatRp) {
       try {
         return formatRp(num);
-      } catch (e) {}
+      } catch (e) { /* ignore */ }
     }
     return new Intl.NumberFormat("id-ID", {
       style: "currency",

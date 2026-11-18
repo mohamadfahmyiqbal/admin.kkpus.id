@@ -128,7 +128,7 @@ const getCategoryMeta = (item) => {
   };
 };
 
-export const NotificationDropdown = memo(({ user }) => {
+export const NotificationDropdown = memo(function NotificationDropdown({ user }) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);

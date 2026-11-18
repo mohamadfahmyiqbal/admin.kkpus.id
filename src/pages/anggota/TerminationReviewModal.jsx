@@ -33,11 +33,11 @@ function TerminationReviewModal({
         const parsed = JSON.parse(stored);
         if (parsed) return parsed;
       }
-    } catch (e) {}
+    } catch (e) { /* ignore */ }
     try {
       const token = localStorage.getItem("token");
       if (token) return jwtDecodePage(token)?.userData || jwtDecodePage(token) || null;
-    } catch (e) {}
+    } catch (e) { /* ignore */ }
     return null;
   })();
 

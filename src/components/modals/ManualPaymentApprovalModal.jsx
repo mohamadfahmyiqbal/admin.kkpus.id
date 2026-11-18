@@ -47,7 +47,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
         try {
           const parsed = JSON.parse(trimmed);
           if (Array.isArray(parsed) && parsed.length > 0) return resolveProofPath(parsed[0]);
-        } catch (e) {}
+        } catch (e) { /* ignore */ }
       }
       if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
         try {
@@ -60,7 +60,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
             parsed.filename ||
             null
           );
-        } catch (e) {}
+        } catch (e) { /* ignore */ }
       }
       return trimmed;
     }

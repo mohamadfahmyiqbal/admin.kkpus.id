@@ -30,7 +30,9 @@ export const initSocket = (token) => {
           console.log("👤 [Socket Admin] Register user ke socket:", memberId);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      // Ignore JSON parse errors for invalid stored data
+    }
   });
 
   socket.on("disconnect", (reason) => {

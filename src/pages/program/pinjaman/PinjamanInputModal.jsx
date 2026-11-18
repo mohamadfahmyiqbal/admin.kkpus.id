@@ -41,7 +41,7 @@ const PinjamanInputModal = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "jumlah") {
-      let raw = value.replace(/\D/g, "");
+      const raw = value.replace(/\D/g, "");
       const formatted = raw
         ? new Intl.NumberFormat("id-ID").format(Number(raw))
         : "";

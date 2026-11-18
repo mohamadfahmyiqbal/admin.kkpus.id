@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import { jwtEncode } from "../../utils/helpers";
 
-const MenuItem = memo(({ item, currentPage, openKeys, onDropdownToggle, onNavigate }) => {
+const MenuItem = memo(function MenuItem({ item, currentPage, openKeys, onDropdownToggle, onNavigate }) {
   const hasChildren = Boolean(item.children && item.children.length);
   const key = item.key;
   const isOpen = Boolean(openKeys[key]);

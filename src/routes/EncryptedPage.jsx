@@ -12,7 +12,7 @@ const PageLoader = () => (
   </div>
 );
 
-export const EncryptedPage = React.memo(() => {
+export const EncryptedPage = React.memo(function EncryptedPage() {
   const { token } = useParams();
 
   React.useEffect(() => {
