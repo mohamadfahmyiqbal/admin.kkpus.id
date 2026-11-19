@@ -34,8 +34,8 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run Tests
-        run: npm run test:ci 2>&1 || true  # Non-blocking until tests are added (M6)
+      - name: Tests (none configured)
+        run: echo "admin.kkpus.id has no test runner (no vitest/jest); skipping unit tests"
 
       - name: Run npm audit (non-blocking - tracked in M5)
         run: |
