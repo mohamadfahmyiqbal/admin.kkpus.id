@@ -68,4 +68,4 @@ test-results/
 !.env.sample
 !.env.development.sample
 !.env.production.sample
-QA_Report_*.md
+
