@@ -178,4 +178,32 @@
 
 .pbs-password-eye-btn {
   border-radius: 0 12px 12px 0 !important;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* WCAG 2.3.3: Animation on Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .pbs-login-v2 * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* WCAG 2.4.7: Focus visible for keyboard navigation */
+.pbs-login-v2 a:focus-visible,
+.pbs-login-v2 button:focus-visible,
+.pbs-login-v2 input:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* WCAG 2.5.5: Touch targets minimum 44×44 px */
+.pbs-back-btn {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }

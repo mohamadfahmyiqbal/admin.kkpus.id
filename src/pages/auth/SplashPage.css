@@ -161,3 +161,81 @@
   margin-top: 3.5rem;
   font-size: 12px;
 }
+
+/* Control buttons (Pause/Play + Skip) */
+.splashx-controls {
+  margin-top: 1.5rem;
+}
+
+.splashx-control-btn {
+  color: #fff9;
+  font-size: 13px;
+  background: #ffffff0f;
+  border: 1px solid #ffffff26;
+  border-radius: 20px;
+  padding: 8px 16px;
+  transition: all 0.3s;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splashx-control-btn:hover {
+  color: #fff;
+  background: #ffffff26;
+}
+
+.splashx-control-btn:focus-visible {
+  outline: 2px solid #00d9a6;
+  outline-offset: 2px;
+}
+
+.splashx-skip-btn {
+  color: #fff9;
+  font-size: 13px;
+  background: #ffffff0f;
+  border: 1px solid #ffffff26;
+  border-radius: 20px;
+  padding: 8px 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splashx-skip-btn:hover {
+  color: #fff;
+  background: #ffffff26;
+}
+
+.splashx-skip-btn:focus-visible {
+  outline: 2px solid #00d9a6;
+  outline-offset: 2px;
+}
+
+/* WCAG 2.3.3: Animation on Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .splashx-stars {
+    animation: none;
+  }
+  
+  .splashx-orb-left,
+  .splashx-orb-right {
+    animation: none;
+  }
+  
+  .splashx-loading-progress {
+    animation: none;
+    width: 100%;
+  }
+  
+  .splashx-title-green {
+    animation: none;
+  }
+}

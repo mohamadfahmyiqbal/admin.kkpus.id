@@ -12,18 +12,43 @@ const LOADING_MESSAGES = [
   "Hampir selesai...",
 ];
 
-const SplashPage = ({ delay = 3000, className = "" }) => {
+const SplashPage = ({ delay = 1500, className = "" }) => {
   const [imageError, setImageError] = useState(false);
   const [msgIndex, setMsgIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const navigate = useNavigate();
   const timerRef = useRef(null);
+  const intervalRef = useRef(null);
 
   const handleSkip = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (intervalRef.current) clearInterval(intervalRef.current);
     navigate(`/${jwtEncode({ page: "authLogin" })}`, { replace: true });
   }, [navigate]);
 
+  const handlePauseToggle = useCallback(() => {
+    setIsPaused((prev) => {
+      const next = !prev;
+      if (next) {
+        // Pause message rotation
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      } else {
+        // Resume message rotation
+        if (!intervalRef.current) {
+          intervalRef.current = setInterval(() => {
+            setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+          }, 1200);
+        }
+      }
+      return next;
+    });
+  }, []);
+
   useEffect(() => {
+    // Kurangi delay dari 3000ms ke 1500ms (menghormati Doherty Threshold)
     timerRef.current = setTimeout(handleSkip, delay);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -31,42 +56,23 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
   }, [delay, handleSkip]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
-    }, 1200);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Reset cookie domain dan sessionStorage pada saat splash screen
-  useEffect(() => {
-    const purgeCacheAndCookies = async () => {
-      try {
-        // 1. Bersihkan Cookies Domain
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i];
-          const eqPos = cookie.indexOf("=");
-          const name = (eqPos > -1 ? cookie.substr(0, eqPos) : cookie).trim();
-          if (name) {
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname};`;
-            const parts = window.location.hostname.split(".");
-            if (parts.length > 1) {
-              const root = parts.slice(-2).join(".");
-              document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${root};`;
-            }
-          }
-        }
-
-        // 2. Bersihkan sessionStorage
-        sessionStorage.clear();
-      } catch (err) {
-        /* console.warn: "[SplashPage] Gagal membersihkan cookie dan sessionStorage:", err */
+    // Rotasi pesan loading - bisa di-pause (WCAG 2.2.2 Timing Adjustable)
+    if (!isPaused) {
+      intervalRef.current = setInterval(() => {
+        setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+      }, 1200);
+    }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
+  }, [isPaused]);
 
-    purgeCacheAndCookies();
-  }, []);
+  // HAPUS: purgeCacheAndCookies - melanggar privasi pengguna
+  // Cookie dan sessionStorage tidak boleh dihapus tanpa izin eksplisit
+  // Pengguna sudah login harus tetap dalam sesi (session persistence)
 
   return (
     <main
@@ -107,23 +113,35 @@ const SplashPage = ({ delay = 3000, className = "" }) => {
             )}
           </div>
 
-          <div className="splashx-loading-container" role="progressbar">
+          <div className="splashx-loading-container" role="progressbar" aria-label="Progress pemuatan">
             <div className="splashx-loading-bar">
               <div className="splashx-loading-progress" aria-hidden="true" />
             </div>
-            <p className="splashx-loading-text">
+            <p className="splashx-loading-text" aria-live="polite" aria-atomic="true">
               {LOADING_MESSAGES[msgIndex]}
             </p>
           </div>
 
-          <button
-            type="button"
-            className="splashx-skip-btn"
-            onClick={handleSkip}
-            aria-label="Lewati halaman pembuka"
-          >
-            Lewati
-          </button>
+          <div className="splashx-controls d-flex gap-2 justify-content-center mb-3">
+            <button
+              type="button"
+              className="splashx-control-btn"
+              onClick={handlePauseToggle}
+              aria-label={isPaused ? "Lanjutkan animasi" : "Jeda animasi"}
+              aria-pressed={isPaused}
+            >
+              {isPaused ? "▶ Lanjutkan" : "⏸ Jeda"}
+            </button>
+
+            <button
+              type="button"
+              className="splashx-skip-btn"
+              onClick={handleSkip}
+              aria-label="Lewati halaman pembuka dan langsung ke login"
+            >
+              Lewati →
+            </button>
+          </div>
 
           <p className="splashx-copyright">
             © 2025 Paguyuban Usaha Sukses. All rights reserved.

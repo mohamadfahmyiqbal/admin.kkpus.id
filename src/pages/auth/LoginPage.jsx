@@ -122,6 +122,13 @@ const LoginPage = () => {
               </Link>
             </div>
             <div className="pbs-topbar-login d-flex align-items-center gap-3">
+              <Link
+                to="/"
+                className="btn btn-outline-light btn-sm d-flex align-items-center gap-2 pbs-back-btn"
+                aria-label="Kembali ke halaman utama"
+              >
+                ← Kembali
+              </Link>
               <span className="d-none d-sm-inline text-white-50 small">
                 Backoffice System
               </span>
@@ -207,6 +214,7 @@ const LoginPage = () => {
                 transition={{ duration: 0.5 }}
                 className="w-100"
               >
+                {/* WCAG 2.3.3: Motion is reduced via CSS @media (prefers-reduced-motion) */}
                 <Card className="pbs-login-card-v2 w-100 border-0 shadow-sm">
                   <div className="pbs-login-card-body p-4 p-md-5">
                     <div className="text-center mb-4">
@@ -270,12 +278,20 @@ const LoginPage = () => {
                               placeholder="••••••••"
                             />
                             <Button
-                              aria-label={showPassword ? "Hide password" : "Show password"}
+                              aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
                               variant="light"
                               className="border border-start-0 text-muted pbs-password-eye-btn"
                               onClick={() => setShowPassword(!showPassword)}
+                              style={{
+                                minWidth: "44px",
+                                minHeight: "44px",
+                                padding: "8px 12px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
                             >
-                              {showPassword ? <FaEyeSlash /> : <FaEye />}
+                              {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                             </Button>
                             <Form.Control.Feedback type="invalid">
                               Password wajib diisi

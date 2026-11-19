@@ -48,6 +48,15 @@ const LayoutGlobal = ({ children, pageName }) => {
         isDesktop || isSidebarOpen ? "show-sidebar fix-sidebar" : ""
       }`}
     >
+      {/* WCAG 2.4.1: Skip Link for keyboard navigation */}
+      <a
+        href="#main-content"
+        className="skip-link"
+        aria-label="Skip to main content"
+      >
+        Skip to main content
+      </a>
+
       <Topbar
         user={userData}
         logout={handleLogout}
@@ -83,8 +92,10 @@ const LayoutGlobal = ({ children, pageName }) => {
         }}
       >
         <main
+          id="main-content"
           className="container-fluid flex-grow-1 fade-in px-3 px-md-4 py-3"
           role="main"
+          tabIndex={-1}
         >
           {children}
         </main>
