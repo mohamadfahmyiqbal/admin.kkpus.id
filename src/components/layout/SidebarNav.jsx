@@ -264,10 +264,10 @@ export const SidebarNav = ({ user, currentPage, onClose, isDesktop, isSidebarOpe
               </div>
               <div className="d-flex flex-column min-w-0">
                 <span className="fw-bold text-dark text-truncate sidebar-user-name">
-                  {user.full_name || "Admin"}
+                  {user.full_name || "Pengguna"}
                 </span>
                 <span className="text-muted text-truncate sidebar-user-role">
-                  {user.roles ? user.roles.join(", ") : "Administrator"}
+                  {user.roles ? user.roles.join(", ") : "Pengguna"}
                 </span>
               </div>
             </div>

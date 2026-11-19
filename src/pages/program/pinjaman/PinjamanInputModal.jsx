@@ -33,7 +33,7 @@ const PinjamanInputModal = () => {
         userData.name ||
         userData.full_name ||
         userData.username ||
-        "Admin";
+        "Pengguna";
       setFormData((prev) => ({ ...prev, pic: name }));
     }
   }, [userData]);
@@ -71,7 +71,7 @@ const PinjamanInputModal = () => {
             userData?.name ||
             userData?.full_name ||
             userData?.username ||
-            "Admin",
+            "Pengguna",
           keperluan: "",
           jenis: "DEBET",
           jumlah: "",

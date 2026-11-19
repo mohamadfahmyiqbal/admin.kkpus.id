@@ -203,7 +203,7 @@ export const TransactionDetailModal = ({
             </div>
             <div className="d-flex justify-content-between mb-2">
               <span className="text-muted small">Kasir / Teller</span>
-              <span className="fw-semibold text-dark small">Sistem / Admin</span>
+              <span className="fw-semibold text-dark small">Sistem</span>
             </div>
           </div>
 

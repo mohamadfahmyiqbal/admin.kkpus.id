@@ -54,7 +54,7 @@ const LoginPage = () => {
 
       if (data.success) {
         const roles = data.data.user.roles || [];
-        const allowedRoles = ["pengawas", "ketua", "bendahara", "admin"];
+        const allowedRoles = ["pengawas", "ketua", "bendahara"];
         const hasAccess = roles.some((r) =>
           allowedRoles.includes(r.toLowerCase())
         );
@@ -206,9 +206,9 @@ const LoginPage = () => {
                       <div className="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle pbs-card-icon-container bg-primary bg-opacity-10 text-primary" style={{ width: "64px", height: "64px" }}>
                         <FaSignInAlt size={30} />
                       </div>
-                      <h3 className="fw-bold text-dark mb-1">Login Admin</h3>
+                      <h3 className="fw-bold text-dark mb-1">Masuk</h3>
                       <p className="text-muted small">
-                        Masukkan kredensial admin Anda
+                        Masukkan kredensial Anda
                       </p>
                     </div>
 
@@ -228,7 +228,7 @@ const LoginPage = () => {
                     <Form onSubmit={handleLogin} noValidate>
                       <Row className="g-4">
                         <Col md={12}>
-                          <Form.Label htmlFor="emailHp">Username atau Email Admin</Form.Label>
+                          <Form.Label htmlFor="emailHp">Username atau Email</Form.Label>
                           <InputGroup>
                             <InputGroup.Text>
                               <FaUser />
@@ -238,7 +238,7 @@ const LoginPage = () => {
                               value={emailHp}
                               onChange={(e) => setEmailHp(e.target.value)}
                               isInvalid={emailHpInvalid}
-                              placeholder="admin@koperasi.com"
+                              placeholder="pengguna@koperasi.com"
                             />
                             <Form.Control.Feedback type="invalid">
                               Email atau Nomor HP wajib diisi

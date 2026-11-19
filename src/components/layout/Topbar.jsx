@@ -75,10 +75,10 @@ export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, 
               </div>
               <div className="d-none d-md-flex flex-column text-start" style={{ maxWidth: "160px" }}>
                 <span className="small fw-bold text-white text-truncate leading-none">
-                  {user?.full_name || "Admin"}
+                  {user?.full_name || "Pengguna"}
                 </span>
                 <span className="text-white-50 extra-small text-truncate mt-1">
-                  {user?.roles ? (Array.isArray(user.roles) ? user.roles.join(", ") : user.roles) : "Administrator"}
+                  {user?.roles ? (Array.isArray(user.roles) ? user.roles.join(", ") : user.roles) : "Pengguna"}
                 </span>
               </div>
             </li>
