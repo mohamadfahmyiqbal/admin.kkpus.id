@@ -100,7 +100,7 @@ const SetoranInstallmentsTable = ({
             <tr>
               <td colSpan="6" className="text-center py-4 text-muted small">
                 <div className="d-flex flex-column align-items-center">
-                  <Eye size={24} className="mb-2 opacity-50" />
+                  <Eye size={24} className="mb-2 opacity-50" aria-hidden="true" />
                   Belum ada data setoran yang cocok.
                 </div>
               </td>
@@ -190,7 +190,7 @@ const SetoranInstallmentsTable = ({
                         onClick={() => onViewInvoice(item)}
                         className="d-inline-flex align-items-center rounded-pill px-3"
                       >
-                        <Receipt size={16} className="me-1" /> Invoice
+                        <Receipt size={16} className="me-1" aria-hidden="true" /> Invoice
                       </Button>
                     </div>
                   </td>

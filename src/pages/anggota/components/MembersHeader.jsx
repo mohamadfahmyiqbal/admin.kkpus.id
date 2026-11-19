@@ -25,7 +25,7 @@ const MembersHeader = ({
             className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm animate__animated animate__fadeIn"
             onClick={onDeleteBatch}
           >
-            <Trash size={18} weight="bold" />
+            <Trash size={18} weight="bold" aria-hidden="true" />
             Hapus ({selectedCount}) Anggota
           </Button>
         )}
@@ -34,7 +34,7 @@ const MembersHeader = ({
           className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm"
           onClick={onImport}
         >
-          <UploadSimple size={18} weight="bold" />
+          <UploadSimple size={18} weight="bold" aria-hidden="true" />
           Import Excel
         </Button>
         <Button
@@ -43,7 +43,7 @@ const MembersHeader = ({
           onClick={onExport}
           disabled={disableExport}
         >
-          <DownloadSimple size={18} weight="bold" />
+          <DownloadSimple size={18} weight="bold" aria-hidden="true" />
           Export Excel
         </Button>
       </Col>

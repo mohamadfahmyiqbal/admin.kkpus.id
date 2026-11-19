@@ -36,7 +36,7 @@ const SetoranInvoiceModal = ({
     >
       <Modal.Header closeButton className="border-bottom pb-3">
         <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-2">
-          <Receipt size={28} className="text-primary" weight="fill" />
+          <Receipt size={28} className="text-primary" weight="fill" aria-hidden="true" />
           Invoice Setoran
         </Modal.Title>
       </Modal.Header>

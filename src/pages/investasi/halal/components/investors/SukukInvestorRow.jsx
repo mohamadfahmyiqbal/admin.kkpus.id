@@ -33,7 +33,7 @@ const SukukInvestorRow = ({
                 transition: "all 0.2s",
               }}
             >
-              <Coins size={18} />
+              <Coins size={18} aria-hidden="true" />
             </Button>
           </OverlayTrigger>
 
@@ -52,7 +52,7 @@ const SukukInvestorRow = ({
                 transition: "all 0.2s",
               }}
             >
-              <CalendarBlank size={18} />
+              <CalendarBlank size={18} aria-hidden="true" />
             </Button>
           </OverlayTrigger>
 
@@ -76,7 +76,7 @@ const SukukInvestorRow = ({
                 {isUploading ? (
                   <Spinner size="sm" animation="border" />
                 ) : (
-                  <UploadSimple size={16} />
+                  <UploadSimple size={16} aria-hidden="true" />
                 )}
               </Button>
             </OverlayTrigger>
@@ -103,7 +103,7 @@ const SukukInvestorRow = ({
                   transition: "all 0.2s",
                 }}
               >
-                <FileText size={16} />
+                <FileText size={16} aria-hidden="true" />
               </Button>
             </OverlayTrigger>
           )}

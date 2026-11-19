@@ -12,7 +12,7 @@ export const MemberInvoiceModal = ({
   <Modal show={show} onHide={onHide} size="md" centered>
     <Modal.Header closeButton className="border-0 pb-0">
       <Modal.Title className="fw-bold d-flex align-items-center gap-2">
-        <Receipt size={24} className="text-primary" weight="fill" />
+        <Receipt size={24} className="text-primary" weight="fill" aria-hidden="true" />
         Invoice Tabungan
       </Modal.Title>
     </Modal.Header>

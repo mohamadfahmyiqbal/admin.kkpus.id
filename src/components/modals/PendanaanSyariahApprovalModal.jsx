@@ -234,7 +234,7 @@ const PendanaanSyariahApprovalModal = ({
       <Modal.Header closeButton className="border-0 px-4 pt-4 pb-2">
         <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-3">
           <div className="bg-primary bg-opacity-10 p-2 rounded-3 d-flex">
-            <Handshake size={24} className="text-primary" weight="fill" />
+            <Handshake size={24} className="text-primary" weight="fill" aria-hidden="true" />
           </div>
           Persetujuan Pendanaan Syariah
         </Modal.Title>
@@ -287,7 +287,7 @@ const PendanaanSyariahApprovalModal = ({
                   <Spinner size="sm" />
                 ) : (
                   <>
-                    <X className="me-2" /> Tolak
+                    <X className="me-2" aria-hidden="true" /> Tolak
                   </>
                 )}
               </Button>
@@ -302,7 +302,7 @@ const PendanaanSyariahApprovalModal = ({
                   <Spinner size="sm" />
                 ) : (
                   <>
-                    <Check className="me-2" /> Terima & Lanjutkan
+                    <Check className="me-2" aria-hidden="true" /> Terima & Lanjutkan
                   </>
                 )}
               </Button>

@@ -227,7 +227,7 @@ const TabunganPage = () => {
                 disabled={loadingSummary || tableData.length === 0}
                 title="Export Data Peserta Tabungan ke Excel"
               >
-                <FileXls size={18} weight="bold" className="text-success" />
+                <FileXls size={18} weight="bold" className="text-success" aria-hidden="true" />
                 <span>Export Excel</span>
               </Button>
               <Button
@@ -236,7 +236,7 @@ const TabunganPage = () => {
                 className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
                 size="sm"
               >
-                <FileArrowDown size={18} weight="bold" />
+                <FileArrowDown size={18} weight="bold" aria-hidden="true" />
                 <span>Import Excel</span>
               </Button>
             </>
@@ -251,7 +251,7 @@ const TabunganPage = () => {
                 disabled={loadingPrograms || masterPrograms.length === 0}
                 title="Export Master Program Tabungan ke Excel"
               >
-                <FileXls size={18} weight="bold" className="text-success" />
+                <FileXls size={18} weight="bold" className="text-success" aria-hidden="true" />
                 <span>Export Excel</span>
               </Button>
               <Button
@@ -263,7 +263,7 @@ const TabunganPage = () => {
                 className="fw-medium d-inline-flex align-items-center gap-1 gap-sm-2 px-3 py-2 shadow-sm rounded-3 text-nowrap flex-grow-1 flex-sm-grow-0 justify-content-center"
                 size="sm"
               >
-                <Plus size={18} weight="bold" />
+                <Plus size={18} weight="bold" aria-hidden="true" />
                 <span>Buat Program</span>
               </Button>
             </>
@@ -331,7 +331,7 @@ const TabunganPage = () => {
                             className="me-3 bg-light rounded-circle d-flex align-items-center justify-content-center text-primary flex-shrink-0"
                             style={{ width: "46px", height: "46px" }}
                           >
-                            <Coins size={22} weight="bold" />
+                            <Coins size={22} weight="bold" aria-hidden="true" />
                           </div>
                           <div className="overflow-hidden">
                             <h6 className="text-muted fw-semibold mb-1 extra-small text-uppercase text-truncate">
@@ -384,7 +384,7 @@ const TabunganPage = () => {
                         <tr>
                           <td colSpan="4" className="text-center py-5">
                             <div className="text-muted mb-3">
-                              <FolderOpen size={48} className="text-light mb-2 opacity-50" />
+                              <FolderOpen size={48} className="text-light mb-2 opacity-50" aria-hidden="true" />
                               <br />
                               Belum ada master program tabungan.
                             </div>
@@ -422,7 +422,7 @@ const TabunganPage = () => {
                                   }}
                                   title="Edit Program"
                                 >
-                                  <PencilSimple size={18} />
+                                  <PencilSimple size={18} aria-hidden="true" />
                                 </Button>
                                 <Button
                                   variant="light"
@@ -432,7 +432,7 @@ const TabunganPage = () => {
                                   onClick={() => handleDeleteProgram(p.saving_target_id)}
                                   title="Hapus Program"
                                 >
-                                  <Trash size={18} />
+                                  <Trash size={18} aria-hidden="true" />
                                 </Button>
                               </div>
                             </td>

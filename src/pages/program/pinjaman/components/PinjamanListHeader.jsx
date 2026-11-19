@@ -29,8 +29,7 @@ const PinjamanListHeader = ({
             <ArrowClockwise
               size={15}
               weight="bold"
-              className={loading ? "animate-spin" : ""}
-            />
+              className={loading ? "animate-spin" : ""} aria-hidden="true" />
             <span className="d-none d-sm-inline">
               {loading ? "Memuat..." : "Refresh"}
             </span>
@@ -44,7 +43,7 @@ const PinjamanListHeader = ({
           disabled={!hasData}
           title="Export Data Pinjaman ke Excel"
         >
-          <FileXls size={15} weight="bold" className="text-success" />
+          <FileXls size={15} weight="bold" className="text-success" aria-hidden="true" />
           <span>Export Excel</span>
         </Button>
         <Button
@@ -54,7 +53,7 @@ const PinjamanListHeader = ({
           onClick={onOpenImport}
           title="Import Data Pinjaman dari Excel"
         >
-          <FileArrowDown size={15} weight="bold" />
+          <FileArrowDown size={15} weight="bold" aria-hidden="true" />
           <span>Import Excel</span>
         </Button>
       </div>

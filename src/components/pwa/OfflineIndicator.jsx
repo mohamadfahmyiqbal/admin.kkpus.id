@@ -44,7 +44,7 @@ export const OfflineIndicator = () => {
         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
       }}
     >
-      <WifiSlash size={18} weight="bold" />
+      <WifiSlash size={18} weight="bold" aria-hidden="true" />
       <span>
         Koneksi Internet Terputus. Anda saat ini dalam mode offline. Data transaksi online memerlukan jaringan.
       </span>

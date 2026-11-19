@@ -41,7 +41,7 @@ const PendanaanTable = ({
               <td colSpan="10" className="text-center py-5 text-muted">
                 <div className="d-flex flex-column align-items-center">
                   <span className="mb-3 p-3 bg-light rounded-circle text-muted">
-                    <SmileyMeh size={32} />
+                    <SmileyMeh size={32} aria-hidden="true" />
                   </span>
                   <h6 className="fw-semibold">Tidak ada transaksi</h6>
                   <small>Belum ada data transaksi Pendanaan Syariah.</small>
@@ -61,7 +61,7 @@ const PendanaanTable = ({
                       title="Lihat Detail"
                       onClick={() => onDetail(item)}
                     >
-                      <Eye size={16} weight="bold" />
+                      <Eye size={16} weight="bold" aria-hidden="true" />
                     </button>
                     <button
                       className="btn btn-sm btn-outline-success rounded-circle p-2 d-flex align-items-center justify-content-center"
@@ -76,7 +76,7 @@ const PendanaanTable = ({
                         title="Proses Approval"
                         onClick={() => onApproval(item)}
                       >
-                        <CheckCircle size={16} weight="bold" />
+                        <CheckCircle size={16} weight="bold" aria-hidden="true" />
                       </button>
                     )}
                   </div>

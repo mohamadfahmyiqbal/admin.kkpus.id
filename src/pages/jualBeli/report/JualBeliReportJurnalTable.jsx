@@ -73,12 +73,12 @@ const JualBeliReportJurnalTable = ({
 
   const renderSortIcon = (key) => {
     if (sortConfig.key !== key) {
-      return <ArrowsDownUp size={12} className="text-muted ms-1 opacity-50" />;
+      return <ArrowsDownUp size={12} className="text-muted ms-1 opacity-50" aria-hidden="true" />;
     }
     return sortConfig.direction === "asc" ? (
-      <CaretUp size={12} className="text-primary ms-1" weight="bold" />
+      <CaretUp size={12} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     ) : (
-      <CaretDown size={12} className="text-primary ms-1" weight="bold" />
+      <CaretDown size={12} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     );
   };
 
@@ -199,7 +199,7 @@ const JualBeliReportJurnalTable = ({
                     onClick={handleResetFilters}
                     title="Reset Semua Filter"
                   >
-                    <X size={14} weight="bold" />
+                    <X size={14} weight="bold" aria-hidden="true" />
                   </Button>
                 )}
               </div>

@@ -6,7 +6,7 @@ export const SukukInvestorsModalHeader = ({ issueName }) => (
   <Modal.Header className="border-0 px-4 pt-4 pb-3" closeButton>
     <Modal.Title className="fw-bold fs-5 d-flex align-items-center gap-3">
       <div className="bg-primary text-white p-2 rounded-3 shadow-sm d-flex">
-        <Users size={24} />
+        <Users size={24} aria-hidden="true" />
       </div>
       <div>
         <div className="text-dark">Investor Sukuk</div>

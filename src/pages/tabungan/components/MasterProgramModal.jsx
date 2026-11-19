@@ -59,7 +59,7 @@ const MasterProgramModal = ({ show, onHide, program, onSuccess }) => {
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton className="border-0 pb-0">
           <Modal.Title className="fw-bold d-flex align-items-center gap-2">
-            <Money size={24} className="text-primary" weight="fill" />
+            <Money size={24} className="text-primary" weight="fill" aria-hidden="true" />
             {isEditing ? "Edit Program Tabungan" : "Buat Program Tabungan"}
           </Modal.Title>
         </Modal.Header>

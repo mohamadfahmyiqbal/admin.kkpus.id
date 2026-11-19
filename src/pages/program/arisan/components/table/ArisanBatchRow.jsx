@@ -71,7 +71,7 @@ const ArisanBatchRow = ({
             onClick={() => onViewParticipant(batch.arisan_batch_id)}
             title="Kelola Peserta"
           >
-            <Users size={18} />
+            <Users size={18} aria-hidden="true" />
           </Button>
           <Button
             variant="light"
@@ -80,7 +80,7 @@ const ArisanBatchRow = ({
             onClick={() => onViewDraw(batch)}
             title="Pencairan/Kocokan"
           >
-            <Confetti size={18} />
+            <Confetti size={18} aria-hidden="true" />
           </Button>
           <Button
             variant="light"
@@ -89,7 +89,7 @@ const ArisanBatchRow = ({
             onClick={() => onEdit(batch)}
             title="Edit Batch"
           >
-            <PencilSimple size={18} />
+            <PencilSimple size={18} aria-hidden="true" />
           </Button>
           <Button
             variant="light"
@@ -98,7 +98,7 @@ const ArisanBatchRow = ({
             onClick={() => onDelete(batch.arisan_batch_id)}
             title="Hapus Batch"
           >
-            <Trash size={18} />
+            <Trash size={18} aria-hidden="true" />
           </Button>
         </div>
       </td>
@@ -125,7 +125,7 @@ const ArisanBatchRow = ({
           text="dark"
           className="border px-2 py-1 rounded-pill fw-medium"
         >
-          <Users size={14} className="me-1 text-primary" />
+          <Users size={14} className="me-1 text-primary" aria-hidden="true" />
           <span className="text-primary">
             {batch.participant_count || 0}
           </span>{" "}

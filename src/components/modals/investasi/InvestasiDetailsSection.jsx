@@ -8,7 +8,7 @@ const InvestasiDetailsSection = ({ transaction, formatCurrency }) => {
       {/* Member Info */}
       <div className="mb-4">
         <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-          <User size={18} className="text-muted" weight="fill" />
+          <User size={18} className="text-muted" weight="fill" aria-hidden="true" />
           Informasi Anggota
         </h6>
         <ListGroup
@@ -40,7 +40,7 @@ const InvestasiDetailsSection = ({ transaction, formatCurrency }) => {
       {/* Transaction Detail */}
       <div className="mb-4">
         <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-          <ClockCounterClockwise size={18} className="text-muted" weight="fill" />
+          <ClockCounterClockwise size={18} className="text-muted" weight="fill" aria-hidden="true" />
           Rincian Transaksi
         </h6>
         <ListGroup
@@ -81,7 +81,7 @@ const InvestasiDetailsSection = ({ transaction, formatCurrency }) => {
       {/* Sukuk Detail */}
       <div className="mb-4">
         <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-          <Receipt size={18} className="text-muted" weight="fill" />
+          <Receipt size={18} className="text-muted" weight="fill" aria-hidden="true" />
           Detail Sukuk
         </h6>
         <ListGroup

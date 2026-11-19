@@ -71,12 +71,12 @@ const JualBeliTable = ({
 
   const renderSortIcon = (key) => {
     if (sortConfig.key !== key) {
-      return <ArrowsDownUp size={13} className="text-muted ms-1 opacity-50" />;
+      return <ArrowsDownUp size={13} className="text-muted ms-1 opacity-50" aria-hidden="true" />;
     }
     return sortConfig.direction === "asc" ? (
-      <CaretUp size={13} className="text-primary ms-1" weight="bold" />
+      <CaretUp size={13} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     ) : (
-      <CaretDown size={13} className="text-primary ms-1" weight="bold" />
+      <CaretDown size={13} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     );
   };
 
@@ -348,7 +348,7 @@ const JualBeliTable = ({
                     onClick={handleResetFilters}
                     title="Reset Semua Pencarian Kolom"
                   >
-                    <X size={15} weight="bold" />
+                    <X size={15} weight="bold" aria-hidden="true" />
                     <span style={{ fontSize: "11px" }}>Reset</span>
                   </Button>
                 ) : (
@@ -566,7 +566,7 @@ const JualBeliTable = ({
                             className="btn-action-table text-primary bg-primary bg-opacity-10 hover-bg-primary border-0"
                             onClick={() => onViewDetail(tx)}
                           >
-                            <Eye size={16} weight="bold" />
+                            <Eye size={16} weight="bold" aria-hidden="true" />
                           </Button>
                         </OverlayTrigger>
 
@@ -580,7 +580,7 @@ const JualBeliTable = ({
                             className="btn-action-table text-success bg-success bg-opacity-10 hover-bg-success border-0"
                             onClick={() => onViewSetoran(tx)}
                           >
-                            <Coins size={16} weight="bold" />
+                            <Coins size={16} weight="bold" aria-hidden="true" />
                           </Button>
                         </OverlayTrigger>
 
@@ -595,7 +595,7 @@ const JualBeliTable = ({
                               className="btn-action-table text-warning bg-warning bg-opacity-15 hover-bg-warning border-0"
                               onClick={() => onApprove(tx)}
                             >
-                              <CheckCircle size={16} weight="bold" />
+                              <CheckCircle size={16} weight="bold" aria-hidden="true" />
                             </Button>
                           </OverlayTrigger>
                         )}
@@ -611,7 +611,7 @@ const JualBeliTable = ({
                               className="btn-action-table text-danger bg-danger bg-opacity-10 hover-bg-danger border-0"
                               onClick={() => onDelete(tx)}
                             >
-                              <Trash size={16} weight="bold" />
+                              <Trash size={16} weight="bold" aria-hidden="true" />
                             </Button>
                           </OverlayTrigger>
                         )}

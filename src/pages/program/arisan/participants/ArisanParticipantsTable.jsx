@@ -174,7 +174,7 @@ const ArisanParticipantsTable = ({
                         title="Informasi Pendaftaran"
                         onClick={() => onOpenApproval(item)}
                       >
-                        <Info size={18} />
+                        <Info size={18} aria-hidden="true" />
                       </Button>
                       <Button
                         variant="light"
@@ -183,7 +183,7 @@ const ArisanParticipantsTable = ({
                         title="Daftar Setoran"
                         onClick={() => onOpenInstallments(item)}
                       >
-                        <Receipt size={18} />
+                        <Receipt size={18} aria-hidden="true" />
                       </Button>
                     </div>
                   </td>

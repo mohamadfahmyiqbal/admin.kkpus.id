@@ -124,7 +124,7 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
         <Modal.Title className="fs-5 fw-bold text-dark">
           <div className="d-flex align-items-center gap-2">
             <div className="bg-primary bg-opacity-10 p-2 rounded">
-              <UploadSimple size={20} weight="bold" className="text-primary" />
+              <UploadSimple size={20} weight="bold" className="text-primary" aria-hidden="true" />
             </div>
             Import Data Tabungan
           </div>
@@ -145,7 +145,7 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
                   eventKey="master"
                   className="px-3 py-2 rounded-2 fw-medium d-flex align-items-center gap-2"
                 >
-                  <Coins size={16} weight="bold" />
+                  <Coins size={16} weight="bold" aria-hidden="true" />
                   <span>Master Akun & Saldo Awal</span>
                 </Nav.Link>
               </Nav.Item>
@@ -154,7 +154,7 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
                   eventKey="transaksi"
                   className="px-3 py-2 rounded-2 fw-medium d-flex align-items-center gap-2"
                 >
-                  <Receipt size={16} weight="bold" />
+                  <Receipt size={16} weight="bold" aria-hidden="true" />
                   <span>Transaksi Setoran Tabungan</span>
                 </Nav.Link>
               </Nav.Item>
@@ -184,7 +184,7 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
                     className="mt-3 d-inline-flex align-items-center gap-2 fw-semibold"
                     onClick={handleDownloadTemplate}
                   >
-                    <DownloadSimple size={16} weight="bold" />
+                    <DownloadSimple size={16} weight="bold" aria-hidden="true" />
                     Unduh Template Master
                   </Button>
                 </div>
@@ -215,7 +215,7 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
                     className="mt-3 d-inline-flex align-items-center gap-2 fw-semibold"
                     onClick={handleDownloadTemplate}
                   >
-                    <DownloadSimple size={16} weight="bold" />
+                    <DownloadSimple size={16} weight="bold" aria-hidden="true" />
                     Unduh Template Transaksi
                   </Button>
                 </div>

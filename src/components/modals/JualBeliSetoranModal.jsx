@@ -97,7 +97,7 @@ const JualBeliSetoranModal = memo(function JualBeliSetoranModal(
         >
           <Modal.Header closeButton className="border-0 pb-0">
             <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-2">
-              <Coins size={28} className="text-success" weight="fill" />
+              <Coins size={28} className="text-success" weight="fill" aria-hidden="true" />
               Tabel Setoran
             </Modal.Title>
           </Modal.Header>

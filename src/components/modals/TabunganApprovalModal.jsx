@@ -193,7 +193,7 @@ const TabunganApprovalModal = ({
       <Modal.Header closeButton className="border-0 px-4 pt-4 pb-2">
         <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-3">
           <div className="bg-warning bg-opacity-10 p-2 rounded-3 d-flex">
-            <Coins size={24} className="text-warning" weight="fill" />
+            <Coins size={24} className="text-warning" weight="fill" aria-hidden="true" />
           </div>
           Persetujuan Tabungan
         </Modal.Title>
@@ -224,13 +224,12 @@ const TabunganApprovalModal = ({
               opacity: 0.05,
               transform: "rotate(-10deg)",
             }}
-            weight="fill"
-          />
+            weight="fill" aria-hidden="true" />
         </div>
 
         <div className="mb-4">
           <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-            <WarningCircle size={18} className="text-muted" />
+            <WarningCircle size={18} className="text-muted" aria-hidden="true" />
             Informasi Pengajuan
           </h6>
           <ListGroup
@@ -244,7 +243,7 @@ const TabunganApprovalModal = ({
                   className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
                   style={{ width: "36px", height: "36px" }}
                 >
-                  <User size={18} weight="fill" />
+                  <User size={18} weight="fill" aria-hidden="true" />
                 </div>
                 <span className="text-muted small fw-medium">Nama Anggota</span>
               </div>
@@ -264,7 +263,7 @@ const TabunganApprovalModal = ({
                   className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
                   style={{ width: "36px", height: "36px" }}
                 >
-                  <Coins size={18} weight="fill" />
+                  <Coins size={18} weight="fill" aria-hidden="true" />
                 </div>
                 <span className="text-muted small fw-medium">Kategori Tabungan</span>
               </div>
@@ -281,7 +280,7 @@ const TabunganApprovalModal = ({
                   className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
                   style={{ width: "36px", height: "36px" }}
                 >
-                  <Calendar size={18} weight="fill" />
+                  <Calendar size={18} weight="fill" aria-hidden="true" />
                 </div>
                 <span className="text-muted small fw-medium">Durasi Target</span>
               </div>
@@ -299,7 +298,7 @@ const TabunganApprovalModal = ({
 
         <div className="mb-4">
           <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-            <Coins size={18} className="text-muted" />
+            <Coins size={18} className="text-muted" aria-hidden="true" />
             Tindakan Persetujuan
           </h6>
           <div className="border border-light rounded-4 p-4 bg-white shadow-sm">
@@ -395,7 +394,7 @@ const TabunganApprovalModal = ({
                 onClick={handleReject}
                 disabled={loading}
               >
-                {loading ? <Spinner size="sm" /> : <><X className="me-2" /> Tolak</>}
+                {loading ? <Spinner size="sm" /> : <><X className="me-2" aria-hidden="true" /> Tolak</>}
               </Button>
               <Button
                 variant="success"
@@ -404,7 +403,7 @@ const TabunganApprovalModal = ({
                 disabled={loading}
                 style={{ backgroundColor: "#10b981" }}
               >
-                {loading ? <Spinner size="sm" /> : <><Check className="me-2" /> Terima & Lanjutkan</>}
+                {loading ? <Spinner size="sm" /> : <><Check className="me-2" aria-hidden="true" /> Terima & Lanjutkan</>}
               </Button>
             </>
           ) : (

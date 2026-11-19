@@ -131,7 +131,7 @@ const ImportPinjamanModal = ({ show, onHide, onSuccess }) => {
         <Modal.Title className="fs-5 fw-bold text-dark">
           <div className="d-flex align-items-center gap-2">
             <div className="bg-primary bg-opacity-10 p-2 rounded">
-              <UploadSimple size={20} weight="bold" className="text-primary" />
+              <UploadSimple size={20} weight="bold" className="text-primary" aria-hidden="true" />
             </div>
             Import Data Pinjaman
           </div>
@@ -156,7 +156,7 @@ const ImportPinjamanModal = ({ show, onHide, onSuccess }) => {
                 eventKey="master"
                 className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-nowrap"
               >
-                <Coins size={18} />
+                <Coins size={18} aria-hidden="true" />
                 1. Import Data Pinjaman (Kontrak)
               </Nav.Link>
             </Nav.Item>
@@ -165,7 +165,7 @@ const ImportPinjamanModal = ({ show, onHide, onSuccess }) => {
                 eventKey="transaksi"
                 className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-nowrap"
               >
-                <Receipt size={18} />
+                <Receipt size={18} aria-hidden="true" />
                 2. Import Data Transaksi (Cicilan)
               </Nav.Link>
             </Nav.Item>
@@ -221,7 +221,7 @@ const ImportPinjamanModal = ({ show, onHide, onSuccess }) => {
                 window.location.href = getTemplateDownloadUrl();
               }}
             >
-              <DownloadSimple size={16} weight="bold" />
+              <DownloadSimple size={16} weight="bold" aria-hidden="true" />
               Unduh Template{" "}
               {activeTab === "master"
                 ? "Data Pinjaman"

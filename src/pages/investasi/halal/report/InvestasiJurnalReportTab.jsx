@@ -36,7 +36,7 @@ const InvestasiJurnalReportTab = ({ summaryData, loading, formatRupiah }) => {
           >
             <Card.Body className="p-4 d-flex align-items-center">
               <div className="bg-primary bg-opacity-10 text-primary p-3 rounded-circle me-4">
-                <Wallet size={32} />
+                <Wallet size={32} aria-hidden="true" />
               </div>
               <div>
                 <p
@@ -62,7 +62,7 @@ const InvestasiJurnalReportTab = ({ summaryData, loading, formatRupiah }) => {
           >
             <Card.Body className="p-4 d-flex align-items-center">
               <div className="bg-info bg-opacity-10 text-info p-3 rounded-circle me-4">
-                <ChartLineUp size={32} />
+                <ChartLineUp size={32} aria-hidden="true" />
               </div>
               <div>
                 <p
@@ -88,7 +88,7 @@ const InvestasiJurnalReportTab = ({ summaryData, loading, formatRupiah }) => {
           >
             <Card.Body className="p-4 d-flex align-items-center">
               <div className="bg-white bg-opacity-25 text-white p-3 rounded-circle me-4">
-                <CheckCircle size={32} />
+                <CheckCircle size={32} aria-hidden="true" />
               </div>
               <div>
                 <p

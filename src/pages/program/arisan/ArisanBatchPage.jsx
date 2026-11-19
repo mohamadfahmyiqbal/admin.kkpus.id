@@ -245,14 +245,14 @@ const ArisanBatchPage = () => {
               className="d-flex align-items-center gap-2"
               onClick={() => setShowImportModal(true)}
             >
-              <FileArrowDown size={20} /> Import Excel
+              <FileArrowDown size={20} aria-hidden="true" /> Import Excel
             </Button>
             <Button
               variant="primary"
               className="d-flex align-items-center gap-2"
               onClick={handleOpenNewBatch}
             >
-              <Plus size={20} /> Buat Batch Baru
+              <Plus size={20} aria-hidden="true" /> Buat Batch Baru
             </Button>
           </div>
         </div>

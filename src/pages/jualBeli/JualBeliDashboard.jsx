@@ -284,8 +284,7 @@ const JualBeliDashboard = () => {
                     <MagnifyingGlass
                       size={18}
                       className="position-absolute top-50 translate-middle-y text-muted"
-                      style={{ left: "12px" }}
-                    />
+                      style={{ left: "12px" }} aria-hidden="true" />
                     <input
                       type="text"
                       className="form-control ps-5 py-2 rounded-pill bg-light border-0"

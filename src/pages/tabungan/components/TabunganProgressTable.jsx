@@ -135,7 +135,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                           setShowMembersModal(true);
                         }}
                       >
-                        <Users size={18} />
+                        <Users size={18} aria-hidden="true" />
                       </button>
                       <button
                         className="btn btn-sm btn-light text-info border-0 rounded-circle d-flex align-items-center justify-content-center"
@@ -146,7 +146,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                           setShowDetailModal(true);
                         }}
                       >
-                        <Info size={18} />
+                        <Info size={18} aria-hidden="true" />
                       </button>
                     </div>
                   </td>

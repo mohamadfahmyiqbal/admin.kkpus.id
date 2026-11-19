@@ -338,8 +338,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
           size={20}
           weight={unreadCount > 0 ? "fill" : "bold"}
           color="#ffffff"
-          style={{ color: "#ffffff", display: "block" }}
-        />
+          style={{ color: "#ffffff", display: "block" }} aria-hidden="true" />
         {unreadCount > 0 && (
           <span
             className="position-absolute"
@@ -393,7 +392,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
                   title="Refresh Notifikasi"
                   disabled={loading}
                 >
-                  <ArrowClockwise size={14} className={loading ? "spin" : ""} weight="bold" />
+                  <ArrowClockwise size={14} className={loading ? "spin" : ""} weight="bold" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -411,7 +410,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
                   onClick={handleMarkAllAsRead}
                   title="Tandai semua notifikasi sudah dibaca"
                 >
-                  <Checks size={14} weight="bold" />
+                  <Checks size={14} weight="bold" aria-hidden="true" />
                   <span>Tandai semua dibaca</span>
                 </button>
               )}
@@ -459,7 +458,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
               </div>
             ) : filteredNotifications.length === 0 ? (
               <div className="text-center py-5 px-4 text-muted">
-                <Tray size={36} className="text-muted opacity-50 mb-2" weight="light" />
+                <Tray size={36} className="text-muted opacity-50 mb-2" weight="light" aria-hidden="true" />
                 <div className="small fw-semibold text-dark mb-1">
                   {activeTab === "unread"
                     ? "Tidak ada notifikasi baru"
@@ -511,7 +510,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
                             )}
                           </div>
                           <span className="notif-item-time">
-                            <Clock size={11} />
+                            <Clock size={11} aria-hidden="true" />
                             {formatRelativeTime(item.sent_at)}
                           </span>
                         </div>
@@ -521,7 +520,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
 
                         <div className="d-flex align-items-center justify-content-between mt-2 pt-1 border-top border-light-subtle">
                           <span className="notif-action-link">
-                            Lihat Detail <ArrowRight size={11} weight="bold" />
+                            Lihat Detail <ArrowRight size={11} weight="bold" aria-hidden="true" />
                           </span>
                           {isUnread && (
                             <button
@@ -530,7 +529,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
                               title="Tandai sudah dibaca"
                               onClick={(e) => handleMarkAsRead(item, e)}
                             >
-                              <Check size={12} weight="bold" />
+                              <Check size={12} weight="bold" aria-hidden="true" />
                               <span>Tandai dibaca</span>
                             </button>
                           )}
@@ -550,7 +549,7 @@ export const NotificationDropdown = memo(function NotificationDropdown({ user })
               className="btn btn-sm btn-light w-100 fw-semibold text-primary d-flex align-items-center justify-content-center gap-1.5 py-1.5 rounded-pill border shadow-none"
               onClick={handleGoToDashboard}
             >
-              <ShieldCheck size={16} weight="bold" />
+              <ShieldCheck size={16} weight="bold" aria-hidden="true" />
               <span className="small">Buka Antrian Persetujuan</span>
             </button>
           </div>

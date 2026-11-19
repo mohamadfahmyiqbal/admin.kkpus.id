@@ -18,8 +18,7 @@ const ProgramNominalCard = ({ amount, formatCurrency }) => (
       size={80}
       className="position-absolute text-primary opacity-5"
       style={{ right: -10, bottom: -10 }}
-      weight="fill"
-    />
+      weight="fill" aria-hidden="true" />
   </div>
 );
 

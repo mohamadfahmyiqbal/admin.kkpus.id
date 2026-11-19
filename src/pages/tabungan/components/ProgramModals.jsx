@@ -15,7 +15,7 @@ export const ProgramDetailModal = ({
   <Modal show={show} onHide={onHide} size="md" centered>
     <Modal.Header closeButton className="border-0 pb-0">
       <Modal.Title className="fw-bold d-flex align-items-center gap-2">
-        <Info size={24} className="text-info" weight="fill" />
+        <Info size={24} className="text-info" weight="fill" aria-hidden="true" />
         Informasi Program Tabungan
       </Modal.Title>
     </Modal.Header>
@@ -119,7 +119,7 @@ export const ProgramMembersModal = ({
       <Modal show={show} onHide={onHide} size="xl" centered>
         <Modal.Header closeButton className="border-0 pb-0">
           <Modal.Title className="fw-bold d-flex align-items-center gap-2">
-            <Users size={24} className="text-primary" weight="fill" />
+            <Users size={24} className="text-primary" weight="fill" aria-hidden="true" />
             Daftar Anggota - {selectedRow?.nama}
           </Modal.Title>
         </Modal.Header>
@@ -249,7 +249,7 @@ export const ProgramMembersModal = ({
                             title="Informasi Pendaftaran"
                             style={{ width: "32px", height: "32px" }}
                           >
-                            <Info size={18} weight="bold" />
+                            <Info size={18} weight="bold" aria-hidden="true" />
                           </button>
                           <button
                             onClick={() => {
@@ -260,7 +260,7 @@ export const ProgramMembersModal = ({
                             title="Riwayat Transaksi"
                             style={{ width: "32px", height: "32px" }}
                           >
-                            <Receipt size={18} weight="bold" />
+                            <Receipt size={18} weight="bold" aria-hidden="true" />
                           </button>
                         </div>
                       </td>

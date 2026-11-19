@@ -11,7 +11,7 @@ const PendanaanInfoCard = ({
   return (
     <div className="mb-4">
       <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-        <ClockCounterClockwise size={18} className="text-muted" />
+        <ClockCounterClockwise size={18} className="text-muted" aria-hidden="true" />
         Informasi Pendanaan
       </h6>
       <ListGroup

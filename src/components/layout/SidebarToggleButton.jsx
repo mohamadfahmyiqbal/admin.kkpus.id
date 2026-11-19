@@ -21,7 +21,7 @@ export const SidebarToggleButton = memo(function SidebarToggleButton({ sidebarSh
         justifyContent: "center",
       }}
     >
-      {sidebarShown ? <X size={22} weight="bold" /> : <List size={22} weight="bold" />}
+      {sidebarShown ? <X size={22} weight="bold" aria-hidden="true" /> : <List size={22} weight="bold" aria-hidden="true" />}
     </button>
   );
 });

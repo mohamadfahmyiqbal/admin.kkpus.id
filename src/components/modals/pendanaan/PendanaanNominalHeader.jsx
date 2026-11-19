@@ -30,8 +30,7 @@ const PendanaanNominalHeader = ({ amount, formatCurrency }) => {
           opacity: 0.05,
           transform: "rotate(-10deg)",
         }}
-        weight="fill"
-      />
+        weight="fill" aria-hidden="true" />
     </div>
   );
 };

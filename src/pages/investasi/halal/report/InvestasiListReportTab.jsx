@@ -15,7 +15,7 @@ const InvestasiListReportTab = ({
     <div className="d-flex justify-content-between align-items-center mb-3">
       <h6 className="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
         <div className="bg-primary bg-opacity-10 text-primary p-2 rounded-circle">
-          <FunnelSimple size={18} />
+          <FunnelSimple size={18} aria-hidden="true" />
         </div>
         Filter Data Laporan
       </h6>
@@ -48,7 +48,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <div className="input-group input-group-sm">
                 <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
+                  <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
                 <Form.Control
                   type="text"
@@ -62,7 +62,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <div className="input-group input-group-sm">
                 <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
+                  <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
                 <Form.Control
                   type="text"
@@ -76,7 +76,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <div className="input-group input-group-sm">
                 <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
+                  <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
                 <Form.Control
                   type="text"
@@ -90,7 +90,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <div className="input-group input-group-sm">
                 <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
+                  <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
                 <Form.Control
                   type="text"
@@ -104,7 +104,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <div className="input-group input-group-sm">
                 <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
+                  <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
                 <Form.Control
                   type="text"
@@ -118,7 +118,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <div className="input-group input-group-sm">
                 <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
+                  <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
                 <Form.Control
                   type="text"
@@ -132,7 +132,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <div className="input-group input-group-sm">
                 <span className="input-group-text bg-light border-light text-muted">
-                  <MagnifyingGlass size={14} />
+                  <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
                 <Form.Control
                   type="text"
@@ -175,7 +175,7 @@ const InvestasiListReportTab = ({
             <tr>
               <td colSpan="9" className="text-center py-5">
                 <div className="bg-light rounded-circle d-inline-flex p-4 mb-3 shadow-sm">
-                  <SmileyMeh size={40} className="text-secondary" />
+                  <SmileyMeh size={40} className="text-secondary" aria-hidden="true" />
                 </div>
                 <h6 className="fw-bold text-dark fs-5">Data Kosong</h6>
                 <p className="text-muted mb-0">

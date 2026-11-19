@@ -106,7 +106,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
               className="rounded-circle bg-white text-primary shadow-sm d-flex align-items-center justify-content-center"
               style={{ width: "64px", height: "64px", flexShrink: 0 }}
             >
-              <User size={32} weight="bold" />
+              <User size={32} weight="bold" aria-hidden="true" />
             </div>
             <div>
               <h5 className="fw-bold text-dark mb-1">{member.full_name}</h5>
@@ -205,7 +205,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                 {/* 1. Biodata */}
                 <div>
                   <h6 className="fw-bold text-dark mb-2.5 small text-uppercase d-flex align-items-center gap-1.5">
-                    <User size={16} className="text-primary" /> Biodata & Kontak Anggota
+                    <User size={16} className="text-primary" aria-hidden="true" /> Biodata & Kontak Anggota
                   </h6>
                   <Row className="g-3">
                     <InfoCard
@@ -266,7 +266,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                 {/* 2. Pekerjaan & Rekening */}
                 <div>
                   <h6 className="fw-bold text-dark mb-2.5 small text-uppercase d-flex align-items-center gap-1.5">
-                    <Buildings size={16} className="text-primary" /> Pekerjaan, Rekening & Usaha
+                    <Buildings size={16} className="text-primary" aria-hidden="true" /> Pekerjaan, Rekening & Usaha
                   </h6>
                   <Row className="g-3">
                     <InfoCard
@@ -313,7 +313,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                 {/* 3. Finansial */}
                 <div>
                   <h6 className="fw-bold text-dark mb-2.5 small text-uppercase d-flex align-items-center gap-1.5">
-                    <Wallet size={16} className="text-primary" /> Simpanan & Finansial Koperasi
+                    <Wallet size={16} className="text-primary" aria-hidden="true" /> Simpanan & Finansial Koperasi
                   </h6>
                   {fin ? (
                     <div>
@@ -392,7 +392,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                 {(reg?.ktp_photo_path || reg?.selfie_photo_path) && (
                   <div>
                     <h6 className="fw-bold text-dark mb-2.5 small text-uppercase d-flex align-items-center gap-1.5">
-                      <FileImage size={16} className="text-primary" /> Dokumen Registrasi
+                      <FileImage size={16} className="text-primary" aria-hidden="true" /> Dokumen Registrasi
                     </h6>
                     <Row className="g-3">
                       {reg.ktp_photo_path && (
@@ -561,7 +561,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                 </div>
               ) : (
                 <div className="text-center py-4 text-muted bg-light rounded-3">
-                  <Wallet size={32} className="mb-2 text-muted opacity-50" />
+                  <Wallet size={32} className="mb-2 text-muted opacity-50" aria-hidden="true" />
                   <p className="mb-0 small">Belum ada data ringkasan finansial untuk anggota ini.</p>
                 </div>
               )}
@@ -656,7 +656,7 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
           className="d-flex align-items-center gap-2 fw-semibold shadow-none"
           onClick={() => onDelete(member?.member_id)}
         >
-          <Trash size={16} /> Hapus Anggota Ini
+          <Trash size={16} aria-hidden="true" /> Hapus Anggota Ini
         </Button>
         <Button variant="secondary" className="px-4" onClick={onHide}>
           Tutup

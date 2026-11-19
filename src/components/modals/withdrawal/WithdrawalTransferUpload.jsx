@@ -10,7 +10,7 @@ export const WithdrawalTransferUpload = ({
   return (
     <div className="border-top pt-4 mb-3">
       <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-        <UploadSimple size={18} className="text-primary" />
+        <UploadSimple size={18} className="text-primary" aria-hidden="true" />
         Upload Bukti Transfer Bank
       </h6>
       <Form.Group className="mb-3">
@@ -49,11 +49,11 @@ export const WithdrawalTransferUpload = ({
                 <p className="mb-0 fw-bold text-success small">Bukti Terpilih</p>
                 <p className="mb-0 text-muted extra-small">{file?.name}</p>
               </div>
-              <CheckCircle size={24} className="text-success ms-auto" weight="fill" />
+              <CheckCircle size={24} className="text-success ms-auto" weight="fill" aria-hidden="true" />
             </div>
           ) : (
             <div className="py-2">
-              <UploadSimple size={32} className="text-primary opacity-50 mb-2" />
+              <UploadSimple size={32} className="text-primary opacity-50 mb-2" aria-hidden="true" />
               <p className="mb-0 fw-bold text-dark small">Klik untuk Unggah Bukti Transfer</p>
               <p className="mb-0 text-muted extra-small">Format JPG, PNG atau PDF (Maks. 2MB)</p>
             </div>

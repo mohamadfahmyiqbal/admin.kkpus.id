@@ -165,7 +165,7 @@ const MemberApprovalWorkflowSection = ({
                     onClick={() => onReject(data?.registration_id, currentStep?.step_id, note)}
                     disabled={processing}
                   >
-                    {processing ? <Spinner size="sm" /> : <><X className="me-2" /> Tolak</>}
+                    {processing ? <Spinner size="sm" /> : <><X className="me-2" aria-hidden="true" /> Tolak</>}
                   </Button>
                 </Col>
                 <Col md={6} className="pe-0 ps-2">
@@ -176,7 +176,7 @@ const MemberApprovalWorkflowSection = ({
                     disabled={processing}
                     style={{ backgroundColor: "#10b981" }}
                   >
-                    {processing ? <Spinner size="sm" /> : <><Check className="me-2" /> Terima & Lanjutkan</>}
+                    {processing ? <Spinner size="sm" /> : <><Check className="me-2" aria-hidden="true" /> Terima & Lanjutkan</>}
                   </Button>
                 </Col>
               </>

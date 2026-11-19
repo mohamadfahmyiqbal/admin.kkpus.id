@@ -5,14 +5,14 @@ const ProgramInfoSection = ({ transaction, formatCurrency }) => {
   return (
     <div className="mb-4">
       <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-        <User size={18} className="text-muted" />
+        <User size={18} className="text-muted" aria-hidden="true" />
         Informasi Pengajuan
       </h6>
       <div className="list-group list-group-flush border rounded-4 overflow-hidden shadow-sm">
         <div className="list-group-item px-4 py-3 d-flex justify-content-between align-items-center bg-white">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <User size={18} weight="bold" />
+              <User size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Nama Anggota</span>
           </div>
@@ -29,7 +29,7 @@ const ProgramInfoSection = ({ transaction, formatCurrency }) => {
         <div className="list-group-item px-4 py-3 d-flex justify-content-between align-items-center bg-white">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <Handshake size={18} weight="bold" />
+              <Handshake size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Tujuan Program</span>
           </div>
@@ -43,7 +43,7 @@ const ProgramInfoSection = ({ transaction, formatCurrency }) => {
         <div className="list-group-item px-4 py-3 d-flex justify-content-between align-items-center bg-white">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <CurrencyCircleDollar size={18} weight="bold" />
+              <CurrencyCircleDollar size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Pencairan</span>
           </div>
@@ -67,7 +67,7 @@ const ProgramInfoSection = ({ transaction, formatCurrency }) => {
         <div className="list-group-item px-4 py-3 d-flex justify-content-between align-items-center bg-white border-0">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <CalendarBlank size={18} weight="bold" />
+              <CalendarBlank size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Tenor</span>
           </div>

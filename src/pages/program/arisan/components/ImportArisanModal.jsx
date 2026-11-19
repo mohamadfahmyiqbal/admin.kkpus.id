@@ -89,7 +89,7 @@ const ImportArisanModal = ({ show, onHide, onSuccess }) => {
         <Modal.Title className="fs-5 fw-bold text-dark">
           <div className="d-flex align-items-center gap-2">
             <div className="bg-primary bg-opacity-10 p-2 rounded">
-              <UploadSimple size={20} weight="bold" className="text-primary" />
+              <UploadSimple size={20} weight="bold" className="text-primary" aria-hidden="true" />
             </div>
             Import Data Arisan
           </div>
@@ -121,7 +121,7 @@ const ImportArisanModal = ({ show, onHide, onSuccess }) => {
                 window.location.href = `${apiOrigin}/api/program/arisan/template-import`;
               }}
             >
-              <DownloadSimple size={16} weight="bold" />
+              <DownloadSimple size={16} weight="bold" aria-hidden="true" />
               Unduh Template
             </Button>
           </div>

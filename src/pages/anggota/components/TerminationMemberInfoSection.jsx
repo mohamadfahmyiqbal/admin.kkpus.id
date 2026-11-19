@@ -22,7 +22,7 @@ const TerminationMemberInfoSection = ({ data }) => {
             className="rounded-circle text-danger d-flex align-items-center justify-content-center me-3"
             style={{ width: "60px", height: "60px", backgroundColor: "#fee2e2" }}
           >
-            <User size={28} />
+            <User size={28} aria-hidden="true" />
           </div>
           <div>
             <h5 className="fw-bold mb-1">{memberName}</h5>

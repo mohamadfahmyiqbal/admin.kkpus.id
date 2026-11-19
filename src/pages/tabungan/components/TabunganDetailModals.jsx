@@ -101,7 +101,7 @@ export const MemberTransactionsModal = ({
       <Modal show={show} onHide={onHide} size="xl" centered>
         <Modal.Header closeButton className="border-0 pb-0">
           <Modal.Title className="fw-bold d-flex align-items-center gap-2">
-            <Receipt size={24} className="text-primary" weight="fill" />
+            <Receipt size={24} className="text-primary" weight="fill" aria-hidden="true" />
             Riwayat Transaksi - {member?.nama}
           </Modal.Title>
         </Modal.Header>

@@ -6,7 +6,7 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
   return (
     <div className="mb-4">
       <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-        <Info size={18} className="text-muted" />
+        <Info size={18} className="text-muted" aria-hidden="true" />
         Informasi Pengajuan
       </h6>
       <ListGroup
@@ -20,7 +20,7 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
               className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
               style={{ width: "36px", height: "36px" }}
             >
-              <User size={18} weight="fill" />
+              <User size={18} weight="fill" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Nama Anggota</span>
           </div>
@@ -42,7 +42,7 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
               className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
               style={{ width: "36px", height: "36px" }}
             >
-              <Tag size={18} weight="fill" />
+              <Tag size={18} weight="fill" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Nama Barang</span>
           </div>
@@ -68,7 +68,7 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
               className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
               style={{ width: "36px", height: "36px" }}
             >
-              <CurrencyDollar size={18} weight="fill" />
+              <CurrencyDollar size={18} weight="fill" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Harga & DP</span>
           </div>
@@ -88,7 +88,7 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
               className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
               style={{ width: "36px", height: "36px" }}
             >
-              <CurrencyDollar size={18} weight="fill" />
+              <CurrencyDollar size={18} weight="fill" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">
               Biaya Operasional
@@ -108,7 +108,7 @@ const JualBeliInfoCard = ({ transaction, formatCurrency, isPelunasan }) => {
                 className="bg-light p-2 rounded-circle text-secondary d-flex align-items-center justify-content-center"
                 style={{ width: "36px", height: "36px" }}
               >
-                <Clock size={18} weight="fill" />
+                <Clock size={18} weight="fill" aria-hidden="true" />
               </div>
               <span className="text-muted small fw-medium">Tenor</span>
             </div>

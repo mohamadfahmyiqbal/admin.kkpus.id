@@ -45,7 +45,7 @@ const JualBeliModalFooter = ({
                 <span className="spinner-border spinner-border-sm" />
               ) : (
                 <>
-                  <X className="me-2" /> Tolak
+                  <X className="me-2" aria-hidden="true" /> Tolak
                 </>
               )}
             </Button>
@@ -60,7 +60,7 @@ const JualBeliModalFooter = ({
                 <span className="spinner-border spinner-border-sm" />
               ) : (
                 <>
-                  <Check className="me-2" /> Terima & Lanjutkan
+                  <Check className="me-2" aria-hidden="true" /> Terima & Lanjutkan
                 </>
               )}
             </Button>

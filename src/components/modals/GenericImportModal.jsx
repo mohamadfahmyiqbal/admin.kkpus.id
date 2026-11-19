@@ -263,7 +263,7 @@ const GenericImportModal = ({
         <Modal.Title className="fs-5 fw-bold text-dark">
           <div className="d-flex align-items-center gap-2">
             <div className="bg-primary bg-opacity-10 p-2 rounded">
-              <UploadSimple size={20} weight="bold" className="text-primary" />
+              <UploadSimple size={20} weight="bold" className="text-primary" aria-hidden="true" />
             </div>
             {title}
           </div>
@@ -348,7 +348,7 @@ const GenericImportModal = ({
                         {downloading ? (
                           <Spinner animation="border" size="sm" />
                         ) : (
-                          <DownloadSimple size={16} weight="bold" />
+                          <DownloadSimple size={16} weight="bold" aria-hidden="true" />
                         )}
                         Unduh Template {tab.shortLabel}
                       </Button>

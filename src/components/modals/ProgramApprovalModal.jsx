@@ -204,7 +204,7 @@ const ProgramApprovalModal = ({
     <Modal show={show} onHide={onHide} centered size="md" className="border-0 shadow-lg">
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-2">
-          <CheckCircle size={28} className="text-primary" weight="fill" />
+          <CheckCircle size={28} className="text-primary" weight="fill" aria-hidden="true" />
           Detail & Approval Program
         </Modal.Title>
       </Modal.Header>

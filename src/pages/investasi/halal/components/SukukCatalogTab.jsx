@@ -229,7 +229,7 @@ const SukukCatalogTab = () => {
                     <td colSpan="10" className="text-center py-5 text-muted">
                       <div className="d-flex flex-column align-items-center">
                         <div className="bg-light rounded-circle p-3 mb-3">
-                          <SmileyMeh size={32} className="text-secondary" />
+                          <SmileyMeh size={32} className="text-secondary" aria-hidden="true" />
                         </div>
                         <h6 className="fw-semibold text-dark">Katalog Kosong</h6>
                         <p className="mb-0 small">
@@ -243,7 +243,7 @@ const SukukCatalogTab = () => {
                     <td colSpan="10" className="text-center py-5 text-muted">
                       <div className="d-flex flex-column align-items-center">
                         <div className="bg-light rounded-circle p-3 mb-3">
-                          <SmileyMeh size={32} className="text-secondary" />
+                          <SmileyMeh size={32} className="text-secondary" aria-hidden="true" />
                         </div>
                         <h6 className="fw-semibold text-dark">
                           Data Tidak Ditemukan
@@ -271,7 +271,7 @@ const SukukCatalogTab = () => {
                               setShowDetail(true);
                             }}
                           >
-                            <Eye size={18} />
+                            <Eye size={18} aria-hidden="true" />
                           </Button>
                           <Button
                             variant="outline-primary"
@@ -284,7 +284,7 @@ const SukukCatalogTab = () => {
                               setShowInvestors(true);
                             }}
                           >
-                            <Users size={18} />
+                            <Users size={18} aria-hidden="true" />
                           </Button>
                         </div>
                       </td>

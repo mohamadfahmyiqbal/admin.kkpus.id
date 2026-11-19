@@ -9,7 +9,7 @@ const JualBeliModalHeader = () => {
     <Modal.Header closeButton className="border-0 px-4 pt-4 pb-2">
       <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-3">
         <div className="bg-primary bg-opacity-10 p-2 rounded-3 d-flex">
-          <ShoppingCart size={24} className="text-primary" weight="fill" />
+          <ShoppingCart size={24} className="text-primary" weight="fill" aria-hidden="true" />
         </div>
         Persetujuan Jual Beli
       </Modal.Title>

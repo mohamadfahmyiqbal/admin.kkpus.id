@@ -80,7 +80,7 @@ const TabunganTransactionsTab = () => {
       <div className="table-filter-bar px-3 px-md-4 py-3">
         <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 gap-sm-3">
           <div className="search-input-group d-flex align-items-center bg-light px-3 py-2 rounded-3 flex-grow-1" style={{ maxWidth: "360px" }}>
-            <MagnifyingGlass className="search-icon text-muted me-2" size={18} />
+            <MagnifyingGlass className="search-icon text-muted me-2" size={18} aria-hidden="true" />
             <Form.Control
               type="text"
               placeholder="Cari anggota..."
@@ -95,7 +95,7 @@ const TabunganTransactionsTab = () => {
               className="rounded-3 border-0 bg-light d-inline-flex align-items-center gap-1 gap-sm-2 text-muted fw-medium small px-3 py-2"
               onClick={fetchTransactions}
             >
-              <ArrowClockwise size={16} /> <span>Refresh</span>
+              <ArrowClockwise size={16} aria-hidden="true" /> <span>Refresh</span>
             </Button>
           </div>
         </div>

@@ -75,7 +75,7 @@ const InvestasiHalalListPage = () => {
             onClick={handleExport}
             disabled={isExporting}
           >
-            <FileXls size={18} className="text-success" />
+            <FileXls size={18} className="text-success" aria-hidden="true" />
             {isExporting ? "Exporting..." : `Export Excel (${activeTab === "katalog" ? "Katalog" : "Manajemen"})`}
           </Button>
           <Button

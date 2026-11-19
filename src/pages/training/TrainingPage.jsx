@@ -135,7 +135,7 @@ const CurriculumTab = ({ onEdit }) => {
                       className="text-primary rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
                     >
-                      <PencilSimple size={16} />
+                      <PencilSimple size={16} aria-hidden="true" />
                     </Button>
                     <Button
                       variant="light"
@@ -144,7 +144,7 @@ const CurriculumTab = ({ onEdit }) => {
                       className="text-danger rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
                     >
-                      <Trash size={16} />
+                      <Trash size={16} aria-hidden="true" />
                     </Button>
                   </div>
                 </td>
@@ -246,7 +246,7 @@ const MaterialTab = ({ onEdit }) => {
                       className="text-primary rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
                     >
-                      <PencilSimple size={16} />
+                      <PencilSimple size={16} aria-hidden="true" />
                     </Button>
                     <Button
                       variant="light"
@@ -255,7 +255,7 @@ const MaterialTab = ({ onEdit }) => {
                       className="text-danger rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
                     >
-                      <Trash size={16} />
+                      <Trash size={16} aria-hidden="true" />
                     </Button>
                   </div>
                 </td>
@@ -357,7 +357,7 @@ const EvaluationTab = ({ onEdit }) => {
                       className="text-primary rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
                     >
-                      <PencilSimple size={16} />
+                      <PencilSimple size={16} aria-hidden="true" />
                     </Button>
                     <Button
                       variant="light"
@@ -366,7 +366,7 @@ const EvaluationTab = ({ onEdit }) => {
                       className="text-danger rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
                     >
-                      <Trash size={16} />
+                      <Trash size={16} aria-hidden="true" />
                     </Button>
                   </div>
                 </td>
@@ -1011,7 +1011,7 @@ const TrainingPage = () => {
             }}
             className="fw-medium d-flex align-items-center gap-2 px-3 shadow-sm rounded-3"
           >
-            <Plus size={18} weight="bold" /> Tambah Kurikulum
+            <Plus size={18} weight="bold" aria-hidden="true" /> Tambah Kurikulum
           </Button>
         )}
         {activeTab === "materi" && (
@@ -1023,7 +1023,7 @@ const TrainingPage = () => {
             }}
             className="fw-medium d-flex align-items-center gap-2 px-3 shadow-sm rounded-3"
           >
-            <Plus size={18} weight="bold" /> Tambah Materi
+            <Plus size={18} weight="bold" aria-hidden="true" /> Tambah Materi
           </Button>
         )}
         {activeTab === "evaluasi" && (
@@ -1035,7 +1035,7 @@ const TrainingPage = () => {
             }}
             className="fw-medium d-flex align-items-center gap-2 px-3 shadow-sm rounded-3"
           >
-            <Plus size={18} weight="bold" /> Tambah Soal Evaluasi
+            <Plus size={18} weight="bold" aria-hidden="true" /> Tambah Soal Evaluasi
           </Button>
         )}
       </div>

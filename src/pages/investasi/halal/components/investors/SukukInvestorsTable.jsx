@@ -136,7 +136,7 @@ const SukukInvestorsTable = ({
               <td colSpan="7" className="text-center py-5 text-muted">
                 <div className="d-flex flex-column align-items-center">
                   <div className="bg-light rounded-circle p-4 mb-3 shadow-sm">
-                    <SmileyMeh size={36} className="text-secondary" />
+                    <SmileyMeh size={36} className="text-secondary" aria-hidden="true" />
                   </div>
                   <h6 className="fw-bold text-dark fs-5">
                     {members.length === 0

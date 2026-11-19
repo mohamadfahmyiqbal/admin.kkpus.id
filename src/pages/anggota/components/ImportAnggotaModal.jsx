@@ -116,7 +116,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
         <Modal.Title className="fs-5 fw-bold text-dark">
           <div className="d-flex align-items-center gap-2">
             <div className="bg-primary bg-opacity-10 p-2 rounded">
-              <UploadSimple size={20} weight="bold" className="text-primary" />
+              <UploadSimple size={20} weight="bold" className="text-primary" aria-hidden="true" />
             </div>
             Import Data Anggota Koperasi
           </div>
@@ -141,7 +141,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
               className="mt-3 d-flex align-items-center gap-2 fw-semibold"
               onClick={handleDownloadTemplate}
             >
-              <DownloadSimple size={16} weight="bold" />
+              <DownloadSimple size={16} weight="bold" aria-hidden="true" />
               Unduh Template Excel
             </Button>
           </div>

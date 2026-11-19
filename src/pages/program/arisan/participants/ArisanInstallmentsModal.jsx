@@ -107,7 +107,7 @@ const ArisanInstallmentsModal = ({
                                     title="Verifikasi Pembayaran"
                                     onClick={() => onVerify && onVerify(inst)}
                                   >
-                                    <Receipt size={18} />
+                                    <Receipt size={18} aria-hidden="true" />
                                   </Button>
                                 )}
                                 <Button
@@ -117,7 +117,7 @@ const ArisanInstallmentsModal = ({
                                   title="Lihat Invoice"
                                   onClick={() => onOpenInvoice(inst)}
                                 >
-                                  <Receipt size={18} />
+                                  <Receipt size={18} aria-hidden="true" />
                                 </Button>
                               </div>
                             </td>

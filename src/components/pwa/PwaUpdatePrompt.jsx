@@ -46,7 +46,7 @@ export const PwaUpdatePrompt = () => {
         }}
       >
         <div className="d-flex align-items-center gap-2">
-          <ArrowClockwise size={22} className="text-warning flex-shrink-0" />
+          <ArrowClockwise size={22} className="text-warning flex-shrink-0" aria-hidden="true" />
           <div>
             <strong className="d-block" style={{ fontSize: "14px" }}>
               Pembaruan Sistem Tersedia

@@ -127,7 +127,7 @@ function TerminationReviewModal({
               backgroundColor: "#fee2e2",
             }}
           >
-            <UserMinus size={18} />
+            <UserMinus size={18} aria-hidden="true" />
           </div>
           <div>
             <div>Review Berhenti Keanggotaan</div>

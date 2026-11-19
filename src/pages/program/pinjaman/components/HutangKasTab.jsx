@@ -66,7 +66,7 @@ const HutangKasTab = ({ loading, hutangData, formatRupiah, refreshData }) => {
           onClick={() => setShowModal(true)}
           className="d-flex align-items-center"
         >
-          <Plus className="me-1" /> Tambah Transaksi
+          <Plus className="me-1" aria-hidden="true" /> Tambah Transaksi
         </Button>
       </div>
 

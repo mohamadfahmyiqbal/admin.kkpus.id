@@ -26,7 +26,7 @@ const JualBeliHeader = ({
             className="shadow-sm d-flex align-items-center gap-1 gap-sm-2 fw-medium px-2 px-sm-3 animate-fade-in"
             onClick={onDeleteSelected}
           >
-            <Trash size={16} weight="bold" />
+            <Trash size={16} weight="bold" aria-hidden="true" />
             <span>Hapus ({selectedCount})</span>
           </Button>
         )}
@@ -38,7 +38,7 @@ const JualBeliHeader = ({
           disabled={loading}
           title="Refresh Data"
         >
-          <ArrowClockwise size={16} weight="bold" className={loading ? "animate-spin" : ""} />
+          <ArrowClockwise size={16} weight="bold" className={loading ? "animate-spin" : ""} aria-hidden="true" />
           <span className="d-none d-sm-inline">{loading ? "Refreshing..." : "Refresh"}</span>
         </Button>
         <Button
@@ -48,7 +48,7 @@ const JualBeliHeader = ({
           onClick={onExport}
           title="Export Laporan Excel"
         >
-          <FileArrowDown size={16} weight="bold" />
+          <FileArrowDown size={16} weight="bold" aria-hidden="true" />
           <span>Export<span className="d-none d-sm-inline"> Laporan</span></span>
         </Button>
         <Button
@@ -58,7 +58,7 @@ const JualBeliHeader = ({
           onClick={onOpenImport}
           title="Import Data Excel"
         >
-          <UploadSimple size={16} weight="bold" />
+          <UploadSimple size={16} weight="bold" aria-hidden="true" />
           <span>Import<span className="d-none d-sm-inline"> Excel</span></span>
         </Button>
       </div>

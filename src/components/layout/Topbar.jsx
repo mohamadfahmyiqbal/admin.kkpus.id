@@ -71,7 +71,7 @@ export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, 
                 className="topbar-avatar rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0"
                 style={{ width: "36px", height: "36px" }}
               >
-                <UserCircle size={22} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} />
+                <UserCircle size={22} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} aria-hidden="true" />
               </div>
               <div className="d-none d-md-flex flex-column text-start" style={{ maxWidth: "160px" }}>
                 <span className="small fw-bold text-white text-truncate leading-none">
@@ -91,7 +91,7 @@ export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, 
                 title="Keluar"
                 aria-label="Keluar dari akun"
               >
-                <SignOut size={16} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} />
+                <SignOut size={16} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} aria-hidden="true" />
                 <span className="d-none d-sm-inline fw-semibold">Keluar</span>
               </button>
             </li>

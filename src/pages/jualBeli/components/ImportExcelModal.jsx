@@ -120,7 +120,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
         <Modal.Title className="fs-5 fw-bold text-dark">
           <div className="d-flex align-items-center gap-2">
             <div className="bg-primary bg-opacity-10 p-2 rounded">
-              <UploadSimple size={20} weight="bold" className="text-primary" />
+              <UploadSimple size={20} weight="bold" className="text-primary" aria-hidden="true" />
             </div>
             Import Data Jual Beli
           </div>
@@ -141,7 +141,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
                 eventKey="kontrak"
                 className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-nowrap"
               >
-                <ShoppingCart size={18} />
+                <ShoppingCart size={18} aria-hidden="true" />
                 1. Import Kontrak Jual Beli
               </Nav.Link>
             </Nav.Item>
@@ -150,7 +150,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
                 eventKey="cicilan"
                 className="rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 text-nowrap"
               >
-                <Receipt size={18} />
+                <Receipt size={18} aria-hidden="true" />
                 2. Import Riwayat Cicilan / Setoran
               </Nav.Link>
             </Nav.Item>
@@ -188,7 +188,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
                 window.location.href = getTemplateDownloadUrl();
               }}
             >
-              <DownloadSimple size={16} weight="bold" />
+              <DownloadSimple size={16} weight="bold" aria-hidden="true" />
               Unduh Template {activeTab === "kontrak" ? "Kontrak Jual Beli" : "Riwayat Cicilan"}
             </Button>
           </div>

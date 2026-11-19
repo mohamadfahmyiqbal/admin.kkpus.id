@@ -87,13 +87,13 @@ const PendanaanSyariahReportPage = () => {
             className="border shadow-sm d-flex align-items-center gap-2 fw-medium text-muted"
             onClick={fetchReport}
           >
-            <ArrowClockwise size={18} /> Refresh
+            <ArrowClockwise size={18} aria-hidden="true" /> Refresh
           </Button>
           <Button
             variant="danger"
             className="shadow-sm d-flex align-items-center gap-2 fw-medium"
           >
-            <FilePdf size={18} /> Export PDF
+            <FilePdf size={18} aria-hidden="true" /> Export PDF
           </Button>
           <Button
             variant="success"
@@ -101,7 +101,7 @@ const PendanaanSyariahReportPage = () => {
             onClick={handleExportExcel}
             disabled={!reportData?.listData}
           >
-            <FileXls size={18} /> Export Excel
+            <FileXls size={18} aria-hidden="true" /> Export Excel
           </Button>
         </div>
       </div>

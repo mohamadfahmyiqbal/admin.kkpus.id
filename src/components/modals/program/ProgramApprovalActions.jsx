@@ -63,7 +63,7 @@ export const ProgramApprovalFooter = ({
                 <Spinner size="sm" />
               ) : (
                 <>
-                  <X className="me-2" /> Tolak
+                  <X className="me-2" aria-hidden="true" /> Tolak
                 </>
               )}
             </Button>
@@ -80,7 +80,7 @@ export const ProgramApprovalFooter = ({
                 <Spinner size="sm" />
               ) : (
                 <>
-                  <CheckCircle className="me-2" /> Terima & Lanjutkan
+                  <CheckCircle className="me-2" aria-hidden="true" /> Terima & Lanjutkan
                 </>
               )}
             </Button>

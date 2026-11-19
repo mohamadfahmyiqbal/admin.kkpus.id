@@ -141,7 +141,7 @@ const ImportFailureTable = ({
     <div className="text-start mt-3">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
         <div className="fw-semibold small text-danger d-flex align-items-center gap-2">
-          <WarningCircle size={16} weight="fill" />
+          <WarningCircle size={16} weight="fill" aria-hidden="true" />
           Daftar Baris Gagal ({rows.length})
         </div>
         <Button
@@ -150,14 +150,14 @@ const ImportFailureTable = ({
           className="d-inline-flex align-items-center gap-2"
           onClick={handleDownload}
         >
-          <DownloadSimple size={14} weight="bold" />
+          <DownloadSimple size={14} weight="bold" aria-hidden="true" />
           Unduh CSV
         </Button>
       </div>
 
       <InputGroup size="sm" className="mb-2">
         <InputGroup.Text className="bg-white">
-          <MagnifyingGlass size={14} weight="bold" />
+          <MagnifyingGlass size={14} weight="bold" aria-hidden="true" />
         </InputGroup.Text>
         <Form.Control
           placeholder="Cari baris, no. anggota, nama, atau penyebab..."
@@ -174,17 +174,17 @@ const ImportFailureTable = ({
           <thead className="sticky-top bg-light">
             <tr>
               <th style={{ width: 70 }} className="py-2">
-                <Rows size={13} className="me-1" />
+                <Rows size={13} className="me-1" aria-hidden="true" />
                 Baris
               </th>
               {hasAccountColumn && (
                 <>
                   <th style={{ width: 140 }} className="py-2">
-                    <IdentificationCard size={13} className="me-1" />
+                    <IdentificationCard size={13} className="me-1" aria-hidden="true" />
                     No. Anggota
                   </th>
                   <th className="py-2">
-                    <User size={13} className="me-1" />
+                    <User size={13} className="me-1" aria-hidden="true" />
                     Nama
                   </th>
                 </>

@@ -21,7 +21,7 @@ const TerminationFinancialSummarySection = ({ financialSummary = {}, formatRp })
         {/* Hak / Aset Anggota */}
         <div className="mb-4">
           <div className="d-flex align-items-center mb-3">
-            <ArrowDownLeft className="text-success me-2" size={20} />
+            <ArrowDownLeft className="text-success me-2" size={20} aria-hidden="true" />
             <h6 className="fw-bold mb-0 text-success">Aset / Hak Anggota (Akan Dikembalikan)</h6>
           </div>
           <div className="bg-success bg-opacity-10 p-3 rounded-3">
@@ -54,7 +54,7 @@ const TerminationFinancialSummarySection = ({ financialSummary = {}, formatRp })
         {/* Kewajiban / Tagihan */}
         <div>
           <div className="d-flex align-items-center mb-3">
-            <ArrowUpRight className="text-danger me-2" size={20} />
+            <ArrowUpRight className="text-danger me-2" size={20} aria-hidden="true" />
             <h6 className="fw-bold mb-0 text-danger">Kewajiban / Tagihan (Harus Dilunasi)</h6>
           </div>
           <div className="bg-danger bg-opacity-10 p-3 rounded-3">

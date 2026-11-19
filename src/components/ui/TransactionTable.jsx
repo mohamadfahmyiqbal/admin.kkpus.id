@@ -85,12 +85,12 @@ export const TransactionTable = ({
 
   const renderSortIcon = (key) => {
     if (!sortConfig || sortConfig.key !== key) {
-      return <ArrowsDownUp size={12} className="text-muted ms-1 opacity-50" />;
+      return <ArrowsDownUp size={12} className="text-muted ms-1 opacity-50" aria-hidden="true" />;
     }
     return sortConfig.direction === "asc" ? (
-      <CaretUp size={12} className="text-primary ms-1" weight="bold" />
+      <CaretUp size={12} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     ) : (
-      <CaretDown size={12} className="text-primary ms-1" weight="bold" />
+      <CaretDown size={12} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     );
   };
 
@@ -138,7 +138,7 @@ export const TransactionTable = ({
   return (
     <>
       <div className="table-responsive">
-        <Table align="middle" className="mb-0 custom-table-admin table-hover" hover>
+        <Table align="middle" className="mb-0 custom-table-admin table-hover" hover aria-label="Tabel transaksi simpanan">
           <thead className="table-light">
             <tr>
               <th
@@ -311,7 +311,7 @@ export const TransactionTable = ({
                       onClick={onResetFilter}
                       title="Reset Semua Pencarian Kolom"
                     >
-                      <X size={13} weight="bold" />
+                      <X size={13} weight="bold" aria-hidden="true" />
                       <span>Reset</span>
                     </Button>
                   )}
@@ -368,7 +368,7 @@ export const TransactionTable = ({
                       <div className="d-flex flex-column">
                         <span className="text-dark fw-bold small">{day}</span>
                         <span className="text-muted extra-small d-flex align-items-center gap-1 mt-0.5">
-                          <Clock size={11} /> {time}
+                          <Clock size={11} aria-hidden="true" /> {time}
                         </span>
                       </div>
                     </td>
@@ -402,9 +402,9 @@ export const TransactionTable = ({
                           }`}
                         >
                           {isDeposit ? (
-                            <ArrowDownLeft size={11} weight="bold" />
+                            <ArrowDownLeft size={11} weight="bold" aria-hidden="true" />
                           ) : (
-                            <ArrowUpRight size={11} weight="bold" />
+                            <ArrowUpRight size={11} weight="bold" aria-hidden="true" />
                           )}
                           {tx.type || (isDeposit ? "Setoran" : "Pencairan")}
                         </span>
@@ -453,7 +453,7 @@ export const TransactionTable = ({
                               onClick={() => onApprove && onApprove(tx)}
                               aria-label="Verifikasi Pembayaran Manual"
                             >
-                              <CheckCircle size={16} weight="bold" />
+                              <CheckCircle size={16} weight="bold" aria-hidden="true" />
                             </button>
                           </OverlayTrigger>
                         ) : isWithdrawalPending ? (
@@ -470,8 +470,9 @@ export const TransactionTable = ({
                               className="btn-action-table action-approve border-0"
                               onClick={() => onApprove && onApprove(tx)}
                               aria-label="Proses Persetujuan Pencairan"
+                              style={{ minWidth: '44px', minHeight: '44px' }}
                             >
-                              <CheckCircle size={16} weight="bold" />
+                              <CheckCircle size={16} weight="bold" aria-hidden="true" />
                             </button>
                           </OverlayTrigger>
                         ) : null}
@@ -489,8 +490,9 @@ export const TransactionTable = ({
                             className="btn-action-table action-view border-0"
                             onClick={() => onView && onView(tx)}
                             aria-label="Lihat Detail Transaksi"
+                            style={{ minWidth: '44px', minHeight: '44px' }}
                           >
-                            <Eye size={16} weight="bold" />
+                            <Eye size={16} weight="bold" aria-hidden="true" />
                           </button>
                         </OverlayTrigger>
                       </div>
@@ -540,6 +542,7 @@ export const TransactionTable = ({
                   style={{ width: "70px", fontSize: "0.775rem" }}
                   value={pageSize || pagination.per_page || 10}
                   onChange={(e) => onPageSizeChange(Number(e.target.value))}
+                  aria-label="Pilih jumlah baris per halaman"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>

@@ -21,7 +21,7 @@ const JualBeliDPProofCard = ({
   return (
     <div className="mb-4">
       <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-        <ShieldCheck size={18} className="text-primary" weight="fill" />
+        <ShieldCheck size={18} className="text-primary" weight="fill" aria-hidden="true" />
         Uang Tanda Keseriusan (DP)
       </h6>
 
@@ -74,13 +74,13 @@ const JualBeliDPProofCard = ({
                 className="position-absolute bottom-0 start-0 end-0 text-center py-1 text-white bg-dark bg-opacity-50 small d-flex align-items-center justify-content-center gap-1"
                 style={{ fontSize: "12px" }}
               >
-                <Eye size={14} /> Klik untuk perbesar
+                <Eye size={14} aria-hidden="true" /> Klik untuk perbesar
               </div>
             </div>
           </div>
         ) : (
           <div className="alert alert-warning py-2 px-3 small mb-0 rounded-3 text-center d-flex align-items-center gap-2">
-            <WarningCircle size={20} className="text-warning flex-shrink-0" weight="fill" />
+            <WarningCircle size={20} className="text-warning flex-shrink-0" weight="fill" aria-hidden="true" />
             <div className="text-start">
               <strong>Belum Ada Bukti Pembayaran:</strong> Anggota belum mengunggah bukti transfer Uang Tanda Keseriusan.
               {isBendaharaStep && (

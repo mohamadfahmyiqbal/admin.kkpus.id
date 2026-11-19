@@ -130,7 +130,7 @@ const PinjamanInputModal = () => {
           onClick={() => window.history.back()}
           style={{ borderRadius: "8px" }}
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={18} aria-hidden="true" />
           Kembali
         </Button>
       </div>
@@ -245,7 +245,7 @@ const PinjamanInputModal = () => {
                 className="btn-lg d-flex justify-content-center align-items-center gap-2"
                 style={{ borderRadius: "8px", fontWeight: 500 }}
               >
-                <FloppyDisk size={20} />
+                <FloppyDisk size={20} aria-hidden="true" />
                 {loading ? "Menyimpan..." : "Simpan Modal"}
               </Button>
             </div>

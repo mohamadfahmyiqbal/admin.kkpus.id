@@ -92,13 +92,12 @@ export const ApprovalPlaceholder = ({
             style={{ bottom: "-2px", right: "-2px", lineHeight: 0 }}
           >
             {isRejected ? (
-              <XCircle size={20} className="text-danger" weight="fill" />
+              <XCircle size={20} className="text-danger" weight="fill" aria-hidden="true" />
             ) : (
               <CheckCircle
                 size={20}
                 className={isReadyToPay ? "text-primary" : "text-success"}
-                weight="fill"
-              />
+                weight="fill" aria-hidden="true" />
             )}
           </div>
         )}

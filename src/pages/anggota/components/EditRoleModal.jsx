@@ -104,7 +104,7 @@ const EditRoleModal = ({ show, onHide, member, onSuccess }) => {
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton className="border-0 px-4 pt-4 pb-2">
           <Modal.Title className="fw-bold fs-5 d-flex align-items-center gap-2">
-            <UserGear size={24} className="text-primary" weight="bold" />
+            <UserGear size={24} className="text-primary" weight="bold" aria-hidden="true" />
             <span>Ubah Role / Peran Anggota</span>
           </Modal.Title>
         </Modal.Header>

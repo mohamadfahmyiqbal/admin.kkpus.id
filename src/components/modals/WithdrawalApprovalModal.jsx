@@ -193,7 +193,7 @@ export const WithdrawalApprovalModal = ({
     <Modal show={show} onHide={onHide} centered size="lg" className="border-0 shadow-lg">
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-2">
-          <CheckCircle size={28} className="text-primary" weight="fill" />
+          <CheckCircle size={28} className="text-primary" weight="fill" aria-hidden="true" />
           Detail & Approval Pencairan
         </Modal.Title>
       </Modal.Header>
@@ -211,8 +211,7 @@ export const WithdrawalApprovalModal = ({
             size={90}
             className="position-absolute text-primary opacity-5"
             style={{ right: -15, bottom: -15 }}
-            weight="fill"
-          />
+            weight="fill" aria-hidden="true" />
         </div>
 
         {/* Informasi Pengajuan Lengkap */}
@@ -271,7 +270,7 @@ export const WithdrawalApprovalModal = ({
                   onClick={() => handleAction("reject")}
                   disabled={processing}
                 >
-                  {processing ? <Spinner size="sm" /> : <><XCircle size={18} /> Tolak</>}
+                  {processing ? <Spinner size="sm" /> : <><XCircle size={18} aria-hidden="true" /> Tolak</>}
                 </Button>
               </Col>
               <Col md={6} className="pe-0 ps-2">
@@ -286,7 +285,7 @@ export const WithdrawalApprovalModal = ({
                     <Spinner size="sm" />
                   ) : (
                     <>
-                      <CheckCircle size={18} weight="bold" />
+                      <CheckCircle size={18} weight="bold" aria-hidden="true" />
                       {isCurrentStepTreasurer ? "Kirim & Setujui" : "Terima & Lanjutkan"}
                     </>
                   )}

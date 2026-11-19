@@ -41,7 +41,7 @@ export const InvestasiApprovalActions = ({
             <Spinner size="sm" />
           ) : (
             <>
-              <X className="me-2" /> Tolak
+              <X className="me-2" aria-hidden="true" /> Tolak
             </>
           )}
         </Button>
@@ -56,7 +56,7 @@ export const InvestasiApprovalActions = ({
             <Spinner size="sm" />
           ) : (
             <>
-              <Check className="me-2" /> Terima & Lanjutkan
+              <Check className="me-2" aria-hidden="true" /> Terima & Lanjutkan
             </>
           )}
         </Button>

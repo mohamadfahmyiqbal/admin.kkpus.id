@@ -17,9 +17,9 @@ const SukukScheduleModal = ({ show, onHide, type, member, issueName }) => {
     ? "Jadwal Pengembalian Pokok"
     : "Jadwal Imbal Hasil";
   const icon = isPrincipal ? (
-    <Coins size={24} />
+    <Coins size={24} aria-hidden="true" />
   ) : (
-    <CalendarBlank size={24} />
+    <CalendarBlank size={24} aria-hidden="true" />
   );
 
   const schedules = (() => {
@@ -92,7 +92,7 @@ const SukukScheduleModal = ({ show, onHide, type, member, issueName }) => {
             style={{ width: "32px", height: "32px", border: "none" }}
             onClick={onHide}
           >
-            <X size={18} className="text-muted" />
+            <X size={18} className="text-muted" aria-hidden="true" />
           </Button>
         </div>
       </div>

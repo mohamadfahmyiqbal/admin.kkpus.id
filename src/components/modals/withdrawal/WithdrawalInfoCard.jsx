@@ -10,14 +10,14 @@ export const WithdrawalInfoCard = ({
   return (
     <div className="mb-4">
       <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-        <FileText size={18} className="text-muted" />
+        <FileText size={18} className="text-muted" aria-hidden="true" />
         Informasi Pengajuan Lengkap
       </h6>
       <ListGroup variant="flush" className="border rounded-4 overflow-hidden shadow-sm">
         <ListGroup.Item className="px-4 py-3 d-flex justify-content-between align-items-center bg-white">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <User size={18} weight="bold" />
+              <User size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Nama Anggota</span>
           </div>
@@ -34,7 +34,7 @@ export const WithdrawalInfoCard = ({
         <ListGroup.Item className="px-4 py-3 d-flex justify-content-between align-items-center bg-white">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <Calendar size={18} weight="bold" />
+              <Calendar size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Tanggal Pengajuan</span>
           </div>
@@ -46,7 +46,7 @@ export const WithdrawalInfoCard = ({
         <ListGroup.Item className="px-4 py-3 d-flex justify-content-between align-items-center bg-white">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <Bank size={18} weight="bold" />
+              <Bank size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Rekening Tujuan</span>
           </div>
@@ -64,7 +64,7 @@ export const WithdrawalInfoCard = ({
         <ListGroup.Item className="px-4 py-3 d-flex justify-content-between align-items-center bg-white">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <Money size={18} weight="bold" />
+              <Money size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Kategori Simpanan</span>
           </div>
@@ -76,7 +76,7 @@ export const WithdrawalInfoCard = ({
         <ListGroup.Item className="px-4 py-3 d-flex justify-content-between align-items-center bg-white border-0">
           <div className="d-flex align-items-center gap-3">
             <div className="bg-light p-2 rounded-3 text-muted">
-              <Clock size={18} weight="bold" />
+              <Clock size={18} weight="bold" aria-hidden="true" />
             </div>
             <span className="text-muted small fw-medium">Status Permohonan</span>
           </div>

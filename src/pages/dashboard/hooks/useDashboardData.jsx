@@ -107,7 +107,7 @@ export const useDashboardData = () => {
     };
     return (dashboardData.stats || []).map((s) => ({
       ...s,
-      icon: iconMap[s.icon] || s.icon || <Wallet size={28} />,
+      icon: iconMap[s.icon] || s.icon || <Wallet size={28} aria-hidden="true" />,
     }));
   }, [dashboardData.stats]);
 

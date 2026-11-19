@@ -11,7 +11,7 @@ const ProgramApprovalFlow = ({
   return (
     <div className="mb-4">
       <h6 className="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
-        <ShieldCheck size={18} className="text-muted" />
+        <ShieldCheck size={18} className="text-muted" aria-hidden="true" />
         Tindakan Persetujuan
       </h6>
       <div className="border rounded-4 p-4 bg-white shadow-sm">

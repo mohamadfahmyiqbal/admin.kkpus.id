@@ -235,7 +235,7 @@ export const TransactionDetailModal = ({
             className="fw-medium px-3 d-flex align-items-center gap-2"
             title="Download / Simpan sebagai PDF"
           >
-            <DownloadSimple size={18} />
+            <DownloadSimple size={18} aria-hidden="true" />
             <span>PDF</span>
           </Button>
           <Button
@@ -243,7 +243,7 @@ export const TransactionDetailModal = ({
             onClick={handlePrint}
             className="fw-medium px-4 d-flex align-items-center gap-2"
           >
-            <Printer size={18} /> Cetak Invoice
+            <Printer size={18} aria-hidden="true" /> Cetak Invoice
           </Button>
         </div>
       </Modal.Footer>

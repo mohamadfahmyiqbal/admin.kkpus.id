@@ -120,7 +120,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
           onClick={onBack}
           className="p-2 rounded-circle border shadow-sm"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={20} aria-hidden="true" />
         </Button>
         <div className="flex-grow-1">
           <h4 className="fw-bold text-dark mb-1">
@@ -135,7 +135,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
           className="d-flex align-items-center gap-2"
           onClick={handleConductDraw}
         >
-          <Confetti size={20} /> Kocok Bulan Selanjutnya
+          <Confetti size={20} aria-hidden="true" /> Kocok Bulan Selanjutnya
         </Button>
       </div>
 
@@ -205,12 +205,12 @@ const ArisanDrawView = ({ batch, onBack }) => {
                           className="text-primary d-flex align-items-center gap-1 mx-auto border shadow-sm"
                           onClick={() => handleOpenProofModal(d)}
                         >
-                          <Check size={16} /> Tandai Cair
+                          <Check size={16} aria-hidden="true" /> Tandai Cair
                         </Button>
                       ) : (
                         <div className="d-flex flex-column align-items-center gap-1">
                           <span className="text-muted small d-flex align-items-center">
-                            <Check size={16} className="text-success me-1" /> Selesai
+                            <Check size={16} className="text-success me-1" aria-hidden="true" /> Selesai
                           </span>
                           {d.transfer_proof && (
                             <a
@@ -219,7 +219,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
                               rel="noreferrer"
                               className="text-primary small text-decoration-none d-flex align-items-center gap-1"
                             >
-                              <Eye size={14} /> Lihat Bukti
+                              <Eye size={14} aria-hidden="true" /> Lihat Bukti
                             </a>
                           )}
                         </div>

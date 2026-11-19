@@ -210,7 +210,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
         <Modal.Header closeButton className="border-0 pb-0">
           <Modal.Title className="fw-bold fs-5 text-dark d-flex align-items-center gap-2">
             <div className="bg-primary bg-opacity-10 text-primary p-2 rounded-3 d-flex">
-              <CheckCircle size={22} weight="fill" />
+              <CheckCircle size={22} weight="fill" aria-hidden="true" />
             </div>
             Verifikasi Setoran Pembayaran Manual
           </Modal.Title>
@@ -258,7 +258,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                         />
                       ) : (
                         <div className="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-danger">
-                          <FilePdf size={48} weight="fill" />
+                          <FilePdf size={48} weight="fill" aria-hidden="true" />
                           <span className="small mt-2 fw-semibold">Dokumen PDF</span>
                         </div>
                       )}
@@ -266,14 +266,14 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                         className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-dark bg-opacity-25 text-white"
                         style={{ backdropFilter: "blur(1px)" }}
                       >
-                        <Eye size={28} weight="bold" />
+                        <Eye size={28} weight="bold" aria-hidden="true" />
                         <span className="small fw-semibold mt-1">Klik untuk Lihat PDF</span>
                       </div>
                     </div>
 
                     <div className="d-flex align-items-center justify-content-between w-100 mt-2 px-1">
                       <div className="d-flex align-items-center gap-1 text-danger small fw-semibold">
-                        <FilePdf size={18} weight="fill" /> Dokumen PDF
+                        <FilePdf size={18} weight="fill" aria-hidden="true" /> Dokumen PDF
                       </div>
                       <div className="d-flex gap-1">
                         <Button
@@ -282,7 +282,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                           className="py-1 px-2 rounded-2 extra-small d-flex align-items-center gap-1"
                           onClick={() => setShowFullProof(true)}
                         >
-                          <Eye size={14} /> Lihat
+                          <Eye size={14} aria-hidden="true" /> Lihat
                         </Button>
                         <a
                           href={activeDisplayUrl}
@@ -290,7 +290,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                           rel="noopener noreferrer"
                           className="btn btn-outline-secondary btn-sm py-1 px-2 rounded-2 extra-small d-flex align-items-center gap-1"
                         >
-                          <ArrowSquareOut size={14} /> Buka Tab
+                          <ArrowSquareOut size={14} aria-hidden="true" /> Buka Tab
                         </a>
                       </div>
                     </div>
@@ -309,7 +309,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                     >
                       {imageError ? (
                         <div className="py-4 text-center text-muted">
-                          <FileImage size={40} className="text-secondary opacity-50 mb-2" />
+                          <FileImage size={40} className="text-secondary opacity-50 mb-2" aria-hidden="true" />
                           <p className="extra-small mb-1 text-danger">Gambar tidak dapat dimuat langsung.</p>
                           <a
                             href={activeDisplayUrl}
@@ -318,7 +318,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                             className="btn btn-sm btn-outline-primary py-1 px-2 mt-1 extra-small"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <ArrowSquareOut size={13} className="me-1" /> Coba Buka Link Gambar
+                            <ArrowSquareOut size={13} className="me-1" aria-hidden="true" /> Coba Buka Link Gambar
                           </a>
                         </div>
                       ) : (
@@ -337,7 +337,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                         style={{ cursor: "pointer" }}
                         onClick={() => setShowFullProof(true)}
                       >
-                        <FileImage size={16} /> Klik untuk perbesar
+                        <FileImage size={16} aria-hidden="true" /> Klik untuk perbesar
                       </div>
                       <a
                         href={activeDisplayUrl}
@@ -346,7 +346,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                         className="btn btn-outline-secondary btn-sm py-1 px-2 rounded-2 extra-small d-flex align-items-center gap-1"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <ArrowSquareOut size={14} /> Tab Baru
+                        <ArrowSquareOut size={14} aria-hidden="true" /> Tab Baru
                       </a>
                     </div>
                   </div>
@@ -354,7 +354,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
               ) : (
                 <div className="border rounded-4 p-4 bg-light text-muted small text-center" style={{ minHeight: "260px" }}>
                   <div className="d-flex flex-column align-items-center justify-content-center h-100 py-5">
-                    <FileImage size={40} className="text-secondary opacity-50 mb-2" />
+                    <FileImage size={40} className="text-secondary opacity-50 mb-2" aria-hidden="true" />
                     <span>Bukti transfer tidak tersedia</span>
                   </div>
                 </div>
@@ -382,13 +382,13 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
 
               <div className="border rounded-4 p-3 bg-white mb-3 shadow-sm">
                 <div className="d-flex align-items-center gap-2 mb-2">
-                  <User size={16} className="text-primary" />
+                  <User size={16} className="text-primary" aria-hidden="true" />
                   <span className="text-muted small">Nama Anggota:</span>
                   <span className="fw-semibold text-dark small ms-auto">{transaction.name}</span>
                 </div>
                 {transaction.sender_bank && (
                   <div className="d-flex align-items-center gap-2 mb-2">
-                    <Wallet size={16} className="text-primary" />
+                    <Wallet size={16} className="text-primary" aria-hidden="true" />
                     <span className="text-muted small">Bank Pengirim:</span>
                     <span className="fw-semibold text-dark small ms-auto">
                       {transaction.sender_bank} ({transaction.sender_account_no || "-"})
@@ -396,7 +396,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                   </div>
                 )}
                 <div className="d-flex align-items-center gap-2">
-                  <CalendarBlank size={16} className="text-primary" />
+                  <CalendarBlank size={16} className="text-primary" aria-hidden="true" />
                   <span className="text-muted small">Waktu Unggah:</span>
                   <span className="fw-semibold text-dark small ms-auto">
                     {transaction.date ? new Date(transaction.date).toLocaleString("id-ID") : "-"}
@@ -427,7 +427,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
               onClick={() => handleAction("REJECT")}
               disabled={loading}
             >
-              {loading ? <Spinner size="sm" /> : <><XCircle size={18} /> Tolak</>}
+              {loading ? <Spinner size="sm" /> : <><XCircle size={18} aria-hidden="true" /> Tolak</>}
             </Button>
             <Button
               variant="success"
@@ -436,7 +436,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
               onClick={() => handleAction("APPROVE")}
               disabled={loading}
             >
-              {loading ? <Spinner size="sm" /> : <><CheckCircle size={18} /> Setujui & Bukukan</>}
+              {loading ? <Spinner size="sm" /> : <><CheckCircle size={18} aria-hidden="true" /> Setujui & Bukukan</>}
             </Button>
           </div>
         </Modal.Footer>
@@ -455,12 +455,12 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
               <Modal.Title className="fs-6 fw-bold d-flex align-items-center gap-2 mb-0">
                 {isPdf ? (
                   <>
-                    <FilePdf size={22} className="text-danger" weight="fill" />
+                    <FilePdf size={22} className="text-danger" weight="fill" aria-hidden="true" />
                     Bukti Transfer (Dokumen PDF)
                   </>
                 ) : (
                   <>
-                    <FileImage size={22} className="text-primary" weight="fill" />
+                    <FileImage size={22} className="text-primary" weight="fill" aria-hidden="true" />
                     Bukti Transfer Asli (Gambar)
                   </>
                 )}
@@ -472,14 +472,14 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
                   rel="noopener noreferrer"
                   className="btn btn-sm btn-outline-primary py-1 px-2 d-flex align-items-center gap-1"
                 >
-                  <ArrowSquareOut size={16} /> Buka di Tab Baru
+                  <ArrowSquareOut size={16} aria-hidden="true" /> Buka di Tab Baru
                 </a>
                 <a
                   href={activeDisplayUrl}
                   download={`bukti-transfer-${transaction.id || "transaksi"}.${isPdf ? "pdf" : "jpg"}`}
                   className="btn btn-sm btn-outline-secondary py-1 px-2 d-flex align-items-center gap-1"
                 >
-                  <DownloadSimple size={16} /> Unduh
+                  <DownloadSimple size={16} aria-hidden="true" /> Unduh
                 </a>
               </div>
             </div>

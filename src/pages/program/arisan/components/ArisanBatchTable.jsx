@@ -100,7 +100,7 @@ const ArisanBatchTable = ({
               <tr>
                 <td colSpan="10" className="text-center py-5">
                   <div className="text-muted mb-3">
-                    <Users size={48} className="text-light mb-2 opacity-50" />
+                    <Users size={48} className="text-light mb-2 opacity-50" aria-hidden="true" />
                     <br />
                     Data tidak ditemukan atau belum ada batch arisan.
                   </div>

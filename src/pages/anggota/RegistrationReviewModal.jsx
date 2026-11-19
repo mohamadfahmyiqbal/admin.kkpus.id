@@ -118,7 +118,7 @@ function RegistrationReviewModal({
               backgroundColor: "#e0e7ff",
             }}
           >
-            <User size={18} />
+            <User size={18} aria-hidden="true" />
           </div>
           <div>
             <div>Review Pendaftaran Anggota</div>

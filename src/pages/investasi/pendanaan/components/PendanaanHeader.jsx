@@ -16,7 +16,7 @@ const PendanaanHeader = ({ onImport, onExport, onRefresh, loading, hasData }) =>
         size="sm"
         className="d-flex align-items-center gap-2"
       >
-        <FunnelSimple size={14} /> Filter
+        <FunnelSimple size={14} aria-hidden="true" /> Filter
       </Button>
       {onExport && (
         <Button
@@ -26,7 +26,7 @@ const PendanaanHeader = ({ onImport, onExport, onRefresh, loading, hasData }) =>
           onClick={onExport}
           disabled={!hasData}
         >
-          <FileXls size={16} className="text-success" /> Export Excel
+          <FileXls size={16} className="text-success" aria-hidden="true" /> Export Excel
         </Button>
       )}
       <Button
@@ -35,7 +35,7 @@ const PendanaanHeader = ({ onImport, onExport, onRefresh, loading, hasData }) =>
         className="d-flex align-items-center gap-2 text-white"
         onClick={onImport}
       >
-        <UploadSimple size={14} /> Import Excel
+        <UploadSimple size={14} aria-hidden="true" /> Import Excel
       </Button>
       <Button
         variant="white"
@@ -45,8 +45,7 @@ const PendanaanHeader = ({ onImport, onExport, onRefresh, loading, hasData }) =>
       >
         <ArrowClockwise
           size={18}
-          className={loading ? "animate-spin" : ""}
-        />
+          className={loading ? "animate-spin" : ""} aria-hidden="true" />
         {loading ? "Refreshing..." : "Refresh"}
       </Button>
     </div>

@@ -17,7 +17,7 @@ const JualBeliSummaryCards = ({ summary, formatRp }) => {
                 className="d-flex align-items-center justify-content-center rounded-3 bg-primary bg-opacity-10 text-primary"
                 style={{ width: "36px", height: "36px" }}
               >
-                <Handshake size={20} weight="fill" />
+                <Handshake size={20} weight="fill" aria-hidden="true" />
               </div>
             </div>
             <div>
@@ -44,7 +44,7 @@ const JualBeliSummaryCards = ({ summary, formatRp }) => {
                 className="d-flex align-items-center justify-content-center rounded-3 bg-success bg-opacity-10 text-success"
                 style={{ width: "36px", height: "36px" }}
               >
-                <TrendUp size={20} weight="bold" />
+                <TrendUp size={20} weight="bold" aria-hidden="true" />
               </div>
             </div>
             <div>
@@ -71,7 +71,7 @@ const JualBeliSummaryCards = ({ summary, formatRp }) => {
                 className="d-flex align-items-center justify-content-center rounded-3 bg-info bg-opacity-10 text-info"
                 style={{ width: "36px", height: "36px" }}
               >
-                <Bank size={20} weight="fill" />
+                <Bank size={20} weight="fill" aria-hidden="true" />
               </div>
             </div>
             <div>
@@ -100,7 +100,7 @@ const JualBeliSummaryCards = ({ summary, formatRp }) => {
                 className="d-flex align-items-center justify-content-center rounded-3 bg-warning bg-opacity-20 text-warning"
                 style={{ width: "36px", height: "36px" }}
               >
-                <Clock size={20} weight="bold" />
+                <Clock size={20} weight="bold" aria-hidden="true" />
               </div>
             </div>
             <div>

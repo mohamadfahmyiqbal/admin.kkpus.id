@@ -200,7 +200,7 @@ const InvestasiHalalApprovalModal = ({
       <Modal.Header closeButton className="border-0 px-4 pt-4 pb-2">
         <Modal.Title className="fw-bold text-dark d-flex align-items-center gap-3">
           <div className="bg-success bg-opacity-10 p-2 rounded-3 d-flex">
-            <ShieldCheck size={24} className="text-success" weight="fill" />
+            <ShieldCheck size={24} className="text-success" weight="fill" aria-hidden="true" />
           </div>
           Persetujuan Investasi
         </Modal.Title>

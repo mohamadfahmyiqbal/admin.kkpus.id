@@ -6,7 +6,7 @@ export const MemberInfoModal = ({ show, onHide, member, formatRupiah }) => (
   <Modal show={show} onHide={onHide} size="md" centered>
     <Modal.Header closeButton className="border-0 pb-0">
       <Modal.Title className="fw-bold d-flex align-items-center gap-2">
-        <Info size={24} className="text-info" weight="fill" />
+        <Info size={24} className="text-info" weight="fill" aria-hidden="true" />
         Informasi Pendaftaran Anggota
       </Modal.Title>
     </Modal.Header>

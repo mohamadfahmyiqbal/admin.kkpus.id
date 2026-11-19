@@ -143,7 +143,7 @@ export const MemberBillsTable = ({
                           title="Verifikasi Pembayaran"
                           style={{ width: "32px", height: "32px" }}
                         >
-                          <CheckCircle size={16} weight="bold" />
+                          <CheckCircle size={16} weight="bold" aria-hidden="true" />
                         </button>
                       )}
                       <button
@@ -152,7 +152,7 @@ export const MemberBillsTable = ({
                         title="Detail Tagihan"
                         style={{ width: "32px", height: "32px" }}
                       >
-                        <Eye size={16} weight="bold" />
+                        <Eye size={16} weight="bold" aria-hidden="true" />
                       </button>
                     </div>
                   </td>

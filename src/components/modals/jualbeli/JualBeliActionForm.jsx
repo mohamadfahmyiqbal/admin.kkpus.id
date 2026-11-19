@@ -74,7 +74,7 @@ const JualBeliActionForm = ({
                 />
               </div>
               <Form.Text className="text-muted mt-2 d-flex align-items-center gap-1">
-                <Info size={14} /> Diskon ini akan mengurangi total pembayaran pelunasan.
+                <Info size={14} aria-hidden="true" /> Diskon ini akan mengurangi total pembayaran pelunasan.
               </Form.Text>
             </Form.Group>
           )}

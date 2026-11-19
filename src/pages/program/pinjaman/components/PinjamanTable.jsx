@@ -68,12 +68,12 @@ const PinjamanTable = ({
 
   const renderSortIcon = (key) => {
     if (sortConfig.key !== key) {
-      return <ArrowsDownUp size={12} className="text-muted ms-1 opacity-50" />;
+      return <ArrowsDownUp size={12} className="text-muted ms-1 opacity-50" aria-hidden="true" />;
     }
     return sortConfig.direction === "asc" ? (
-      <CaretUp size={12} className="text-primary ms-1" weight="bold" />
+      <CaretUp size={12} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     ) : (
-      <CaretDown size={12} className="text-primary ms-1" weight="bold" />
+      <CaretDown size={12} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     );
   };
 
@@ -360,7 +360,7 @@ const PinjamanTable = ({
                       onClick={handleResetFilters}
                       aria-label="Reset Semua Filter"
                     >
-                      <X size={14} weight="bold" />
+                      <X size={14} weight="bold" aria-hidden="true" />
                     </Button>
                   </OverlayTrigger>
                 )}
@@ -518,7 +518,7 @@ const PinjamanTable = ({
                             onClick={() => onViewInvoice(tx)}
                             aria-label="Lihat Detail Invoice"
                           >
-                            <Receipt size={16} weight="bold" />
+                            <Receipt size={16} weight="bold" aria-hidden="true" />
                           </Button>
                         </OverlayTrigger>
 
@@ -539,7 +539,7 @@ const PinjamanTable = ({
                             onClick={() => onViewTransaksi(tx)}
                             aria-label="Kartu Setoran & Cicilan"
                           >
-                            <Coins size={16} weight="bold" />
+                            <Coins size={16} weight="bold" aria-hidden="true" />
                           </Button>
                         </OverlayTrigger>
                       </div>
@@ -550,7 +550,7 @@ const PinjamanTable = ({
                           className="bg-light rounded-circle p-2 text-secondary d-flex align-items-center justify-content-center"
                           style={{ width: "34px", height: "34px" }}
                         >
-                          <User size={18} />
+                          <User size={18} aria-hidden="true" />
                         </div>
                         <div>
                           <div className="fw-medium text-dark">
