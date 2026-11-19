@@ -46,10 +46,17 @@ const LoginPage = () => {
 
     setLoading(true);
     try {
-      const response = await api.post("/auth/accountLogin", {
-        emailHp: cleanEmail,
-        password: cleanPass,
-      });
+      const response = await api.post(
+        "/auth/accountLogin",
+        {
+          emailHp: cleanEmail,
+          password: cleanPass,
+        },
+        {
+          // Kredensial salah bukan berarti sesi berakhir; biarkan form menampilkan error.
+          skipAuthRedirect: true,
+        }
+      );
       const data = response.data;
 
       if (data.success) {

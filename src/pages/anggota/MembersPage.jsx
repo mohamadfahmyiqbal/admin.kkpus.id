@@ -281,6 +281,8 @@ const MembersPage = () => {
       try {
         const res = await api.delete(`/anggota/${memberId}`, {
           data: { password },
+          // 401 pada konfirmasi password = sesi tetap valid; jangan logout paksa.
+          skipAuthRedirect: true,
         });
         if (res.data?.success) {
           Swal.fire("Terhapus!", res.data.message || "Anggota berhasil dihapus permanen.", "success");
@@ -329,10 +331,17 @@ const MembersPage = () => {
 
     if (isConfirmed && password) {
       try {
-        const res = await api.post("/anggota/batch-delete", {
-          member_ids: selectedMemberIds,
-          password,
-        });
+        const res = await api.post(
+          "/anggota/batch-delete",
+          {
+            member_ids: selectedMemberIds,
+            password,
+          },
+          {
+            // 401 pada konfirmasi password = sesi tetap valid; jangan logout paksa.
+            skipAuthRedirect: true,
+          }
+        );
 
         if (res.data?.success) {
           Swal.fire(

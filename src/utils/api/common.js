@@ -1,4 +1,5 @@
 import axios from "axios";
+import { jwtEncode } from "../helpers";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
@@ -23,11 +24,32 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Rute login memakai token halaman (lihat routes/RouterConfig.jsx: "/" dan "/:token"),
+// bukan path "/login". Redirect ke "/login" akan jatuh ke Navigate "/" -> SplashPage.
+const AUTH_LOGIN_PATH = `/${jwtEncode({ page: "authLogin" })}`;
+
+let isRedirecting = false;
+
+/**
+ * Membersihkan sesi lalu mengarahkan pengguna ke halaman login (sekali saja).
+ * Dipakai hanya untuk 401 yang benar-benar berarti token tidak valid/kedaluwarsa.
+ */
+const clearSessionAndRedirect = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("userData");
+
+  if (isRedirecting) return;
+  if (window.location.pathname === AUTH_LOGIN_PATH) return;
+
+  isRedirecting = true;
+  window.location.replace(AUTH_LOGIN_PATH);
+};
+
 // Response interceptor for global error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const { response } = error;
+    const { response, config } = error;
 
     if (!response) {
       // Network error or server unreachable
@@ -37,11 +59,12 @@ api.interceptors.response.use(
 
     switch (response.status) {
       case 401:
-        // Unauthorized — clear session and redirect to login
-        localStorage.removeItem("token");
-        localStorage.removeItem("userData");
-        if (window.location.pathname !== "/login" && !window.location.pathname.includes("/auth/")) {
-          window.location.href = "/login";
+        // Unauthorized — clear session and redirect to login.
+        // Permintaan yang menandai dirinya `skipAuthRedirect` (mis. login,
+        // konfirmasi password) tidak boleh menghapus sesi: kegagalan di sana
+        // bukan berarti token kedaluwarsa.
+        if (!config?.skipAuthRedirect) {
+          clearSessionAndRedirect();
         }
         break;
 
