@@ -36,6 +36,7 @@ export const TransactionDetailModal = ({
   const handlePrint = () => {
     if (!printRef.current) return;
     const printContents = printRef.current.innerHTML;
+    const invoiceId = transaction.id || "transaksi";
 
     const printWindow = window.open("", "_blank", "width=800,height=800");
     if (!printWindow) {
@@ -43,101 +44,59 @@ export const TransactionDetailModal = ({
       return;
     }
 
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Invoice-${transaction.id || "transaksi"}</title>
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-          <style>
-            body {
-              background-color: #fff;
-              padding: 20px;
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            }
-            .invoice-container {
-              max-width: 500px;
-              margin: 0 auto;
-              border: 1px solid #e2e8f0;
-              padding: 28px;
-              border-radius: 12px;
-            }
-            .border-dashed {
-              border-style: dashed !important;
-            }
-            @media print {
-              body { padding: 0; }
-              .invoice-container { border: none; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="invoice-container">
-            ${printContents}
-          </div>
-          <script>
-            window.onload = function() {
-              window.focus();
-              window.print();
-              setTimeout(function() { window.close(); }, 500);
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    // Gunakan DOM manipulation untuk menghindari XSS (bukan document.write)
+    const doc = printWindow.document;
+    doc.open();
+    doc.write(`<!DOCTYPE html><html><head><title>Invoice-${invoiceId}</title>`);
+    doc.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">');
+    doc.write('<style>');
+    doc.write('body{background-color:#fff;padding:20px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}');
+    doc.write('.invoice-container{max-width:500px;margin:0 auto;border:1px solid #e2e8f0;padding:28px;border-radius:12px;}');
+    doc.write('.border-dashed{border-style:dashed!important;}@media print{body{padding:0;}.invoice-container{border:none;}}');
+    doc.write('</style></head><body>');
+    doc.write('<div class="invoice-container">');
+    // Sanitize: escape script tags untuk mencegah XSS
+    const sanitizedContent = printContents
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+      .replace(/javascript:/gi, '');
+    doc.write(sanitizedContent);
+    doc.write('</div>');
+    doc.write('<script>window.onload=function(){window.focus();window.print();setTimeout(function(){window.close();},500);};<\/script>');
+    doc.write('</body></html>');
+    doc.close();
   };
 
   // Fungsi Download PDF Invoice
   const handleDownloadPdf = () => {
     if (!printRef.current) return;
     const printContents = printRef.current.innerHTML;
+    const invoiceId = transaction.id || "transaksi";
 
     const printWindow = window.open("", "_blank", "width=800,height=800");
     if (!printWindow) return;
 
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Invoice-${transaction.id || "transaksi"}</title>
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-          <style>
-            body {
-              background-color: #fff;
-              padding: 24px;
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            }
-            .invoice-container {
-              max-width: 550px;
-              margin: 0 auto;
-              border: 1px solid #cbd5e1;
-              padding: 32px;
-              border-radius: 12px;
-            }
-            .border-dashed {
-              border-style: dashed !important;
-            }
-            @media print {
-              body { padding: 0; }
-              .invoice-container { border: none; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="invoice-container">
-            ${printContents}
-          </div>
-          <script>
-            window.onload = function() {
-              window.focus();
-              window.print();
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    // Gunakan DOM manipulation untuk menghindari XSS (bukan document.write)
+    const doc = printWindow.document;
+    doc.open();
+    doc.write(`<!DOCTYPE html><html><head><title>Invoice-${invoiceId}</title>`);
+    doc.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">');
+    doc.write('<style>');
+    doc.write('body{background-color:#fff;padding:24px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}');
+    doc.write('.invoice-container{max-width:550px;margin:0 auto;border:1px solid #cbd5e1;padding:32px;border-radius:12px;}');
+    doc.write('.border-dashed{border-style:dashed!important;}@media print{body{padding:0;}.invoice-container{border:none;}}');
+    doc.write('</style></head><body>');
+    doc.write('<div class="invoice-container">');
+    // Sanitize: escape script tags untuk mencegah XSS
+    const sanitizedContent = printContents
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+      .replace(/javascript:/gi, '');
+    doc.write(sanitizedContent);
+    doc.write('</div>');
+    doc.write('<script>window.onload=function(){window.focus();window.print();};<\/script>');
+    doc.write('</body></html>');
+    doc.close();
   };
 
   return (

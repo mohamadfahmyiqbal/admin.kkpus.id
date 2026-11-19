@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
-import router from "./routes/RouterConfig";
 import { ToastContainer } from "react-toastify";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
+import { APP } from "./constants/app";
+import router from "./routes/RouterConfig";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/admin-theme.css";
@@ -33,12 +35,12 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <ErrorBoundary>
       <OfflineIndicator />
       <PwaUpdatePrompt />
       <ToastContainer
         position="top-right"
-        autoClose={4000}
+        autoClose={APP.TOAST_AUTO_CLOSE_MS}
         hideProgressBar={false}
         newestOnTop
         closeOnClick
@@ -49,7 +51,7 @@ const App = () => {
         theme="colored"
       />
       <RouterProvider router={router} />
-    </>
+    </ErrorBoundary>
   );
 };
 
