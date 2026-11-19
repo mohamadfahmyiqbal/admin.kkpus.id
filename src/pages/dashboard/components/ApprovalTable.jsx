@@ -70,9 +70,10 @@ const ApprovalTable = ({
                   <Button
                     variant="light"
                     size="sm"
-                    className="rounded-pill px-3 py-1 shadow-sm border text-primary"
-                    style={{ fontWeight: 600 }}
+                    className="rounded-pill px-3 py-2 shadow-sm border text-primary"
+                    style={{ fontWeight: 600, minHeight: "36px" }}
                     onClick={() => onAction(item)}
+                    aria-label={`Review ${item[titleField] || item.full_name || item.item || item.name || "transaksi"}`}
                   >
                     {item.is_manual_payment ? "Proses" : item.registration_id ? "Review" : "Proses"}
                   </Button>
@@ -89,8 +90,9 @@ const ApprovalTable = ({
           variant="link"
           className="text-decoration-none extra-small fw-bold p-0 d-inline-flex align-items-center gap-1"
           onClick={() => onSeeAll(seeAllPage)}
+          aria-label={`Lihat semua ${seeAllPage || "data"} antrian persetujuan`}
         >
-          Lihat Semua <ArrowRight size={14} />
+          Lihat Semua <ArrowRight size={16} weight="bold" aria-hidden="true" />
         </Button>
       </div>
     )}

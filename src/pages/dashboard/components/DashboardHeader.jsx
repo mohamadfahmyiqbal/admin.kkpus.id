@@ -14,8 +14,9 @@ const DashboardHeader = ({ onOpenLogs }) => (
       variant="primary"
       className="rounded-pill px-4 shadow-sm d-flex align-items-center gap-2"
       onClick={onOpenLogs}
+      aria-label="Buka log aktivitas sistem"
     >
-      <ListDashes size={18} /> Log Aktivitas
+      <ListDashes size={20} weight="bold" aria-hidden="true" /> Log Aktivitas
     </Button>
   </div>
 );

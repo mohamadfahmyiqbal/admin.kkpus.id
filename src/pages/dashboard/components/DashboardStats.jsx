@@ -19,9 +19,10 @@ const DashboardStats = ({ stats = [] }) => (
     {stats.map((s, idx) => (
       <Col md={4} lg={4} className="mb-3" key={idx}>
         <MotionCard>
-          <div className="card-body d-flex align-items-center p-3">
+          <div className="card-body d-flex align-items-center p-3" role="article" aria-label={`Statistik ${s.title}: ${s.value}`}>
             <div
               className={`p-2 rounded-3 bg-${s.color} bg-opacity-10 text-${s.color} me-2 flex-shrink-0`}
+              aria-hidden="true"
             >
               {s.icon}
             </div>

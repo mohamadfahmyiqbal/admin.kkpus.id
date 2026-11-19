@@ -98,12 +98,12 @@ export const useDashboardData = () => {
 
   const statsList = useMemo(() => {
     const iconMap = {
-      Users: <Users size={28} />,
-      Wallet: <Wallet size={28} />,
-      Heart: <Heart size={28} />,
-      ShoppingCart: <ShoppingCart size={28} />,
-      Bank: <Bank size={28} />,
-      TrendUp: <TrendUp size={28} />,
+      Users: <Users size={28} weight="bold" aria-hidden="true" />,
+      Wallet: <Wallet size={28} weight="bold" aria-hidden="true" />,
+      Heart: <Heart size={28} weight="bold" aria-hidden="true" />,
+      ShoppingCart: <ShoppingCart size={28} weight="bold" aria-hidden="true" />,
+      Bank: <Bank size={28} weight="bold" aria-hidden="true" />,
+      TrendUp: <TrendUp size={28} weight="bold" aria-hidden="true" />,
     };
     return (dashboardData.stats || []).map((s) => ({
       ...s,

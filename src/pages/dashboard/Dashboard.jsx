@@ -1,5 +1,5 @@
 // PATH: src/pages/dashboard/Dashboard.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { jwtEncode } from "../../utils/helpers";
@@ -25,6 +25,19 @@ const Dashboard = () => {
     notifications,
     fetchData,
   } = useDashboardData();
+
+  // Auto-switch to first available tab if current tab is empty (WCAG: Reduce cognitive load)
+  useEffect(() => {
+    if (!categorizedData || loading) return;
+    
+    const availableTabs = Object.keys(categorizedData).filter(
+      (key) => categorizedData[key] && categorizedData[key].length > 0
+    );
+    
+    if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
+      setActiveTab(availableTabs[0]);
+    }
+  }, [categorizedData, loading, activeTab]);
 
   const modalState = useDashboardModals(fetchData);
 

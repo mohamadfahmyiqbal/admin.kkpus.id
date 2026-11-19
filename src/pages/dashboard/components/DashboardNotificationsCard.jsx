@@ -25,8 +25,9 @@ const DashboardNotificationsCard = ({
               <div className="d-flex align-items-start gap-2">
                 <div
                   className={`p-1 rounded-circle bg-${n.type || "primary"} bg-opacity-10 text-${n.type || "primary"} flex-shrink-0`}
+                  aria-hidden="true"
                 >
-                  <Clock size={14} />
+                  <Clock size={16} weight="bold" aria-hidden="true" />
                 </div>
                 <div className="flex-grow-1 overflow-hidden">
                   <div className="d-flex justify-content-between align-items-center mb-0">
@@ -49,8 +50,10 @@ const DashboardNotificationsCard = ({
           <Button
             variant="link"
             size="sm"
-            className="w-100 fw-bold extra-small text-decoration-none p-0"
+            className="w-100 fw-bold extra-small text-decoration-none py-2"
             onClick={onOpenNotifications}
+            aria-label="Buka semua notifikasi sistem"
+            style={{ minHeight: "44px" }}
           >
             Buka Semua Notifikasi
           </Button>
