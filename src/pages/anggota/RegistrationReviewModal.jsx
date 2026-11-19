@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { User } from "phosphor-react";
-import { jwtDecodePage, getMediaUrl } from "../../utils/helpers";
+import { jwtDecodePage } from "../../utils/helpers";
 import MemberIdentitySection from "./components/MemberIdentitySection";
 import MemberPaymentProofSection from "./components/MemberPaymentProofSection";
 import MemberDetailsSection from "./components/MemberDetailsSection";
@@ -129,13 +129,12 @@ function RegistrationReviewModal({
 
       <Modal.Body className="bg-light p-4">
         {/* 1. Identitas & Berkas KTP/Swafoto */}
-        <MemberIdentitySection data={data} getMediaUrl={getMediaUrl} />
+        <MemberIdentitySection data={data} />
 
         {/* 2. Informasi Pembayaran & Bukti Transfer */}
         <MemberPaymentProofSection
           pendingPayment={pendingPayment}
           fullName={full_name}
-          getMediaUrl={getMediaUrl}
         />
 
         {/* 3 - 5. Informasi Akun, Pekerjaan & Bank */}

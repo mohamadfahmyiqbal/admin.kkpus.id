@@ -54,15 +54,23 @@ export const formatRupiah = (value) => {
   }).format(num);
 };
 
-export const getMediaUrl = (path) => {
+/**
+ * Path yang dipakai untuk mengambil dokumen terproteksi lewat axios.
+ * `api` (src/utils/api/common.js) memakai baseURL `<origin>/api` dan
+ * menyisipkan header Authorization, jadi nilai yang dikembalikan harus
+ * relatif terhadap baseURL tersebut.
+ *
+ *   "uploads/anggota/x.jpg" -> "/files/uploads/anggota/x.jpg"
+ *   -> GET <origin>/api/files/uploads/anggota/x.jpg  (butuh Bearer token)
+ *
+ * URL absolut (http/https), data:, dan blob: diteruskan apa adanya karena
+ * tidak perlu diambil lewat API.
+ */
+export const toProtectedFileRequestPath = (path) => {
   if (!path) return "";
-  const cleanPath = path.replace(/\\/g, "/");
-  if (cleanPath.startsWith("http") || cleanPath.startsWith("data:")) return cleanPath;
-  const base = (
-    import.meta.env.VITE_API_ORIGIN ||
-    (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
-  ).replace(/\/$/, "");
-  return `${base}${cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`}`;
+  const clean = String(path).replace(/\\/g, "/");
+  if (/^(https?:|data:|blob:)/i.test(clean)) return clean;
+  return `/files/${clean.replace(/^\/+/, "")}`;
 };
 
 export const SVG_FALLBACK_IMAGE =
@@ -72,6 +80,6 @@ export default {
   jwtEncode,
   jwtDecodePage,
   formatRupiah,
-  getMediaUrl,
+  toProtectedFileRequestPath,
   SVG_FALLBACK_IMAGE,
 };

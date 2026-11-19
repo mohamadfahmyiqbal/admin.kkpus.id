@@ -18,7 +18,7 @@ import {
   Receipt,
   FileImage,
 } from "phosphor-react";
-import { getMediaUrl, SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
+import { ProtectedImage } from "../../../components/ui/ProtectedImage";
 
 const InfoCard = ({ icon: Icon, label, value, subValue, colProps = { md: 6 } }) => (
   <Col {...colProps}>
@@ -399,18 +399,14 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                         <Col md={6}>
                           <Card className="border shadow-none text-center p-3 h-100">
                             <small className="fw-bold text-muted mb-2 d-block">Foto KTP</small>
-                            <a href={getMediaUrl(reg.ktp_photo_path)} target="_blank" rel="noopener noreferrer">
-                              <img
-                                src={getMediaUrl(reg.ktp_photo_path)}
-                                alt="Foto KTP"
-                                className="img-fluid rounded border shadow-sm"
-                                style={{ maxHeight: "180px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = "https://placehold.co/400x300?text=KTP+Tidak+Ditemukan";
-                                }}
-                              />
-                            </a>
+                            <ProtectedImage
+                              path={reg.ktp_photo_path}
+                              asLink
+                              fallback="https://placehold.co/400x300?text=KTP+Tidak+Ditemukan"
+                              alt="Foto KTP"
+                              className="img-fluid rounded border shadow-sm"
+                              style={{ maxHeight: "180px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
+                            />
                           </Card>
                         </Col>
                       )}
@@ -418,18 +414,14 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                         <Col md={6}>
                           <Card className="border shadow-none text-center p-3 h-100">
                             <small className="fw-bold text-muted mb-2 d-block">Swafoto (Selfie)</small>
-                            <a href={getMediaUrl(reg.selfie_photo_path)} target="_blank" rel="noopener noreferrer">
-                              <img
-                                src={getMediaUrl(reg.selfie_photo_path)}
-                                alt="Swafoto"
-                                className="img-fluid rounded border shadow-sm"
-                                style={{ maxHeight: "180px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = "https://placehold.co/400x300?text=Swafoto+Tidak+Ditemukan";
-                                }}
-                              />
-                            </a>
+                            <ProtectedImage
+                              path={reg.selfie_photo_path}
+                              asLink
+                              fallback="https://placehold.co/400x300?text=Swafoto+Tidak+Ditemukan"
+                              alt="Swafoto"
+                              className="img-fluid rounded border shadow-sm"
+                              style={{ maxHeight: "180px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
+                            />
                           </Card>
                         </Col>
                       )}
@@ -627,18 +619,13 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                     <Col md={6}>
                       <Card className="border shadow-none text-center p-3 h-100">
                         <small className="fw-bold text-muted mb-2 d-block">Foto KTP Anggota</small>
-                        <a href={getMediaUrl(reg.ktp_photo_path)} target="_blank" rel="noopener noreferrer">
-                          <img
-                            src={getMediaUrl(reg.ktp_photo_path)}
-                            alt="Foto KTP"
-                            className="img-fluid rounded border shadow-sm"
-                            style={{ maxHeight: "200px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = SVG_FALLBACK_IMAGE;
-                            }}
-                          />
-                        </a>
+                        <ProtectedImage
+                          path={reg.ktp_photo_path}
+                          asLink
+                          alt="Foto KTP"
+                          className="img-fluid rounded border shadow-sm"
+                          style={{ maxHeight: "200px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
+                        />
                       </Card>
                     </Col>
                   )}
@@ -646,18 +633,13 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                     <Col md={6}>
                       <Card className="border shadow-none text-center p-3 h-100">
                         <small className="fw-bold text-muted mb-2 d-block">Swafoto (Selfie) Anggota</small>
-                        <a href={getMediaUrl(reg.selfie_photo_path)} target="_blank" rel="noopener noreferrer">
-                          <img
-                            src={getMediaUrl(reg.selfie_photo_path)}
-                            alt="Swafoto"
-                            className="img-fluid rounded border shadow-sm"
-                            style={{ maxHeight: "200px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = SVG_FALLBACK_IMAGE;
-                            }}
-                          />
-                        </a>
+                        <ProtectedImage
+                          path={reg.selfie_photo_path}
+                          asLink
+                          alt="Swafoto"
+                          className="img-fluid rounded border shadow-sm"
+                          style={{ maxHeight: "200px", objectFit: "contain", width: "100%", cursor: "zoom-in" }}
+                        />
                       </Card>
                     </Col>
                   )}

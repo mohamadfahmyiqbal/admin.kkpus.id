@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Row, Col } from "react-bootstrap";
 import { UserMinus } from "phosphor-react";
 import Swal from "sweetalert2";
-import { jwtDecodePage, getMediaUrl } from "../../utils/helpers";
+import { jwtDecodePage } from "../../utils/helpers";
 import TerminationMemberInfoSection from "./components/TerminationMemberInfoSection";
 import TerminationReasonSection from "./components/TerminationReasonSection";
 import TerminationFinancialSummarySection from "./components/TerminationFinancialSummarySection";
@@ -144,7 +144,6 @@ function TerminationReviewModal({
             <TerminationReasonSection
               reason={reason}
               supportingDocumentPath={supporting_document_path}
-              getMediaUrl={getMediaUrl}
             />
           </Col>
 

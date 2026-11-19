@@ -1,9 +1,9 @@
 
 import { Row, Col, Card } from "react-bootstrap";
 import { User } from "phosphor-react";
-import { SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
+import { ProtectedImage } from "../../../components/ui/ProtectedImage";
 
-const MemberIdentitySection = ({ data, getMediaUrl }) => {
+const MemberIdentitySection = ({ data }) => {
   const {
     full_name,
     nik_ktp,
@@ -73,8 +73,8 @@ const MemberIdentitySection = ({ data, getMediaUrl }) => {
             <Col md={6}>
               <div className="text-center p-3 border rounded-3 bg-light shadow-sm">
                 <p className="small fw-bold text-muted mb-2">Foto KTP</p>
-                <img
-                  src={getMediaUrl(ktp_photo_path)}
+                <ProtectedImage
+                  path={ktp_photo_path}
                   className="img-fluid rounded border shadow-sm"
                   alt="KTP"
                   style={{
@@ -83,18 +83,14 @@ const MemberIdentitySection = ({ data, getMediaUrl }) => {
                     width: "100%",
                     backgroundColor: "#fff",
                   }}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = SVG_FALLBACK_IMAGE;
-                  }}
                 />
               </div>
             </Col>
             <Col md={6}>
               <div className="text-center p-3 border rounded-3 bg-light shadow-sm">
                 <p className="small fw-bold text-muted mb-2">Swafoto</p>
-                <img
-                  src={getMediaUrl(selfie_photo_path)}
+                <ProtectedImage
+                  path={selfie_photo_path}
                   className="img-fluid rounded border shadow-sm"
                   alt="Selfie"
                   style={{
@@ -102,10 +98,6 @@ const MemberIdentitySection = ({ data, getMediaUrl }) => {
                     objectFit: "contain",
                     width: "100%",
                     backgroundColor: "#fff",
-                  }}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = SVG_FALLBACK_IMAGE;
                   }}
                 />
               </div>

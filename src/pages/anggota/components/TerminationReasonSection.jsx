@@ -1,7 +1,10 @@
-
 import { Card } from "react-bootstrap";
+import { ProtectedImage } from "../../../components/ui/ProtectedImage";
+import { ProtectedFileLink } from "../../../components/ui/ProtectedFileLink";
 
-const TerminationReasonSection = ({ reason, supportingDocumentPath, getMediaUrl }) => {
+const FALLBACK_DOC_IMAGE = "https://placehold.co/400x300?text=File+Bukan+Gambar";
+
+const TerminationReasonSection = ({ reason, supportingDocumentPath }) => {
   return (
     <>
       <h6 className="fw-bold mb-3 text-dark mt-4">2. Alasan Berhenti</h6>
@@ -11,25 +14,20 @@ const TerminationReasonSection = ({ reason, supportingDocumentPath, getMediaUrl 
           <div className="border-top pt-3">
             <h6 className="fw-bold mb-3 text-dark">Dokumen Pendukung</h6>
             <div className="text-center p-3 border rounded-3 bg-light shadow-sm d-inline-block">
-              <img
-                src={getMediaUrl(supportingDocumentPath)}
+              <ProtectedImage
+                path={supportingDocumentPath}
+                fallback={FALLBACK_DOC_IMAGE}
                 className="img-fluid rounded border shadow-sm"
                 alt="Dokumen Pendukung"
                 style={{ maxHeight: "200px", objectFit: "contain", backgroundColor: "#fff" }}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://placehold.co/400x300?text=File+Bukan+Gambar";
-                }}
               />
               <div className="mt-2">
-                <a
-                  href={getMediaUrl(supportingDocumentPath)}
-                  target="_blank"
-                  rel="noreferrer"
+                <ProtectedFileLink
+                  path={supportingDocumentPath}
                   className="btn btn-sm btn-outline-primary"
                 >
                   Lihat Dokumen
-                </a>
+                </ProtectedFileLink>
               </div>
             </div>
           </div>

@@ -1,8 +1,8 @@
 
 import { Row, Col, Card } from "react-bootstrap";
-import { SVG_FALLBACK_IMAGE } from "../../../utils/helpers";
+import { ProtectedImage } from "../../../components/ui/ProtectedImage";
 
-const MemberPaymentProofSection = ({ pendingPayment, fullName, getMediaUrl }) => {
+const MemberPaymentProofSection = ({ pendingPayment, fullName }) => {
   if (!pendingPayment) {
     return (
       <>
@@ -67,24 +67,19 @@ const MemberPaymentProofSection = ({ pendingPayment, fullName, getMediaUrl }) =>
         <div className="mt-3 text-center">
           <p className="small fw-bold text-muted mb-2">Bukti Struk Transfer:</p>
           {proofUrl ? (
-            <a href={getMediaUrl(proofUrl)} target="_blank" rel="noopener noreferrer">
-              <img
-                src={getMediaUrl(proofUrl)}
-                className="img-fluid rounded border shadow-sm"
-                alt="Bukti Transfer"
-                style={{
-                  maxHeight: "260px",
-                  objectFit: "contain",
-                  width: "100%",
-                  backgroundColor: "#fff",
-                  cursor: "pointer",
-                }}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = SVG_FALLBACK_IMAGE;
-                }}
-              />
-            </a>
+            <ProtectedImage
+              path={proofUrl}
+              asLink
+              className="img-fluid rounded border shadow-sm"
+              alt="Bukti Transfer"
+              style={{
+                maxHeight: "260px",
+                objectFit: "contain",
+                width: "100%",
+                backgroundColor: "#fff",
+                cursor: "pointer",
+              }}
+            />
           ) : (
             <div className="alert alert-warning py-2 px-3 small mb-0 rounded-3 text-center">
               ⚠️ Anggota belum mengunggah struk/screenshot bukti transfer.

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Card, Badge, Modal, Row, Col } from "react-bootstrap";
 import { ShieldCheck, WarningCircle, Eye } from "phosphor-react";
+import { ProtectedImage } from "../../ui/ProtectedImage";
 
 const JualBeliDPProofCard = ({
   downPayment,
@@ -15,18 +16,7 @@ const JualBeliDPProofCard = ({
 
   if (!downPayment || downPayment <= 0) return null;
 
-  const getMediaUrl = (path) => {
-    if (!path) return "";
-    const cleanPath = path.replace(/\\/g, "/");
-    if (cleanPath.startsWith("http") || cleanPath.startsWith("data:")) return cleanPath;
-    const base = (
-      import.meta.env.VITE_API_ORIGIN ||
-      (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
-    ).replace(/\/$/, "");
-    return `${base}${cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`}`;
-  };
-
-  const fullProofUrl = dpProofUrl ? getMediaUrl(dpProofUrl) : null;
+  const proofPath = dpProofUrl || null;
 
   return (
     <div className="mb-4">
@@ -41,7 +31,7 @@ const JualBeliDPProofCard = ({
           <span className="fw-bold text-primary fs-6">{formatCurrency(downPayment)}</span>
         </div>
 
-        {hasUploadedDP && fullProofUrl ? (
+        {hasUploadedDP && proofPath ? (
           <div>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small">Status Bukti Transfer:</span>
@@ -73,15 +63,12 @@ const JualBeliDPProofCard = ({
               onClick={() => setShowImageModal(true)}
               title="Klik untuk memperbesar gambar"
             >
-              <img
-                src={fullProofUrl}
+              <ProtectedImage
+                path={proofPath}
                 alt="Bukti Transfer DP"
                 className="img-fluid"
                 style={{ maxHeight: "160px", objectFit: "contain" }}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://placehold.co/400x250?text=Bukti+Transfer";
-                }}
+                fallback="https://placehold.co/400x250?text=Bukti+Transfer"
               />
               <div
                 className="position-absolute bottom-0 start-0 end-0 text-center py-1 text-white bg-dark bg-opacity-50 small d-flex align-items-center justify-content-center gap-1"
@@ -107,14 +94,14 @@ const JualBeliDPProofCard = ({
       </Card>
 
       {/* Modal Preview Full Image */}
-      {fullProofUrl && (
+      {proofPath && (
         <Modal show={showImageModal} onHide={() => setShowImageModal(false)} centered size="lg">
           <Modal.Header closeButton className="border-0">
             <Modal.Title className="fs-6 fw-bold">Bukti Transfer Uang Tanda Keseriusan</Modal.Title>
           </Modal.Header>
           <Modal.Body className="p-2 text-center bg-dark">
-            <img
-              src={fullProofUrl}
+            <ProtectedImage
+              path={proofPath}
               alt="Bukti Transfer Penuh"
               className="img-fluid rounded"
               style={{ maxHeight: "80vh" }}

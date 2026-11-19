@@ -15,6 +15,7 @@ import {
 import Swal from "sweetalert2";
 import billingService from "../../utils/api/UBilling";
 import api from "../../utils/api/common";
+import { toProtectedFileRequestPath } from "../../utils/helpers";
 
 const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -75,6 +76,8 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
 
   const rawProof = resolveProofPath(rawProofCandidate);
 
+  // Path relatif terhadap baseURL `/api` (mis. "/files/uploads/...") agar
+  // permintaan membawa header Authorization dari interceptor axios.
   const getFullUrl = (path) => {
     if (!path || typeof path !== "string") return null;
     const cleanPath = path.replace(/\\/g, "/").trim();
@@ -86,12 +89,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
     ) {
       return cleanPath;
     }
-    const normalized = cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
-    const base = (
-      import.meta.env.VITE_API_ORIGIN ||
-      (import.meta.env.PROD ? "https://api.kkpus.id" : "https://localhost:3445")
-    ).replace(/\/$/, "");
-    return `${base}${normalized}`;
+    return toProtectedFileRequestPath(cleanPath);
   };
 
   const proofUrl = getFullUrl(rawProof);
@@ -133,8 +131,8 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
           setBlobUrl(activeBlob);
         })
         .catch(() => {
-          /* console.error: "Gagal mengambil berkas bukti via blob:", err */
-          setBlobUrl(proofUrl);
+          /* console.error: "Gagal mengambil berkas bukti via blob" */
+          setFileError(true);
         })
         .finally(() => {
           setFileLoading(false);
