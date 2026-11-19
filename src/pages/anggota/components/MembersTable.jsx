@@ -34,14 +34,24 @@ const MembersTable = ({
     paginatedMembers.some((m) => selectedMemberIds.includes(m.member_id)) &&
     !isCurrentPageAllSelected;
 
-  const renderSortIcon = useCallback((key) => {
-    if (!sortConfig || sortConfig.key !== key) {
-      return <ArrowsDownUp size={13} className="text-muted ms-1 opacity-50" />;
+  const renderSortIcon = useCallback((key, columnName) => {
+    const isSorted = sortConfig && sortConfig.key === key;
+    const direction = isSorted ? sortConfig.direction : "unsorted";
+    
+    if (!isSorted) {
+      return (
+        <ArrowsDownUp 
+          size={16} 
+          className="text-muted ms-1 opacity-50" 
+          weight="bold"
+          aria-hidden="true"
+        />
+      );
     }
-    return sortConfig.direction === "asc" ? (
-      <CaretUp size={13} className="text-primary ms-1" weight="bold" />
+    return direction === "asc" ? (
+      <CaretUp size={16} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     ) : (
-      <CaretDown size={13} className="text-primary ms-1" weight="bold" />
+      <CaretDown size={16} className="text-primary ms-1" weight="bold" aria-hidden="true" />
     );
   }, [sortConfig]);
 
@@ -91,47 +101,62 @@ const MembersTable = ({
                 Aksi
               </th>
               <th
-                role="button"
+                role="columnheader"
+                aria-sort={sortConfig?.key === "member_no" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
                 style={{ width: "18%" }}
                 onClick={() => onSort?.("member_no")}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSort?.("member_no"); }}
               >
-                No. Anggota / NIK {renderSortIcon("member_no")}
+                No. Anggota / NIK {renderSortIcon("member_no", "No. Anggota")}
               </th>
               <th
-                role="button"
+                role="columnheader"
+                aria-sort={sortConfig?.key === "full_name" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
                 style={{ width: "22%" }}
                 onClick={() => onSort?.("full_name")}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSort?.("full_name"); }}
               >
-                Nama & Kontak {renderSortIcon("full_name")}
+                Nama & Kontak {renderSortIcon("full_name", "Nama")}
               </th>
               <th
-                role="button"
+                role="columnheader"
+                aria-sort={sortConfig?.key === "member_type" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
                 style={{ width: "14%" }}
                 onClick={() => onSort?.("member_type")}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSort?.("member_type"); }}
               >
-                Jenis Anggota {renderSortIcon("member_type")}
+                Jenis Anggota {renderSortIcon("member_type", "Jenis Anggota")}
               </th>
-              <th style={{ width: "13%" }} className="text-nowrap">
+              <th role="columnheader" style={{ width: "13%" }} className="text-nowrap">
                 Peran / Role
               </th>
               <th
-                role="button"
+                role="columnheader"
+                aria-sort={sortConfig?.key === "join_date" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
                 style={{ width: "12%" }}
                 onClick={() => onSort?.("join_date")}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSort?.("join_date"); }}
               >
-                Bergabung {renderSortIcon("join_date")}
+                Bergabung {renderSortIcon("join_date", "Tanggal Bergabung")}
               </th>
               <th
-                role="button"
+                role="columnheader"
+                aria-sort={sortConfig?.key === "status" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
                 style={{ width: "11%" }}
                 onClick={() => onSort?.("status")}
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onSort?.("status"); }}
               >
-                Status {renderSortIcon("status")}
+                Status {renderSortIcon("status", "Status")}
               </th>
             </tr>
 
@@ -145,11 +170,13 @@ const MembersTable = ({
                   <Button
                     variant="outline-danger"
                     size="sm"
-                    className="p-1 px-2 border-0"
+                    className="border-0"
                     onClick={onResetFilters}
                     title="Reset Semua Pencarian Kolom"
+                    aria-label="Reset semua filter pencarian"
+                    style={{ minWidth: "44px", minHeight: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                   >
-                    <X size={15} weight="bold" />
+                    <X size={20} weight="bold" aria-hidden="true" />
                   </Button>
                 )}
               </th>
@@ -157,6 +184,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Cari No/NIK..."
+                  aria-label="Filter nomor anggota atau NIK"
                   value={filters.memberNo || ""}
                   onChange={(e) => onFilterChange?.("memberNo", e.target.value)}
                   className="bg-white border-1"
@@ -166,6 +194,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Cari Nama/HP/Email..."
+                  aria-label="Filter nama, nomor telepon, atau email anggota"
                   value={filters.nameOrContact || ""}
                   onChange={(e) => onFilterChange?.("nameOrContact", e.target.value)}
                   className="bg-white border-1"
@@ -175,6 +204,7 @@ const MembersTable = ({
                 <Form.Select
                   size="sm"
                   value={filters.type || ""}
+                  aria-label="Filter jenis anggota"
                   onChange={(e) => onFilterChange?.("type", e.target.value)}
                   className="bg-white border-1"
                 >
@@ -187,6 +217,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Filter Peran..."
+                  aria-label="Filter peran atau role anggota"
                   value={filters.role || ""}
                   onChange={(e) => onFilterChange?.("role", e.target.value)}
                   className="bg-white border-1"
@@ -196,6 +227,7 @@ const MembersTable = ({
                 <Form.Control
                   size="sm"
                   placeholder="Cari Thn/Bln..."
+                  aria-label="Filter tahun atau bulan bergabung"
                   value={filters.joinDate || ""}
                   onChange={(e) => onFilterChange?.("joinDate", e.target.value)}
                   className="bg-white border-1"
@@ -205,6 +237,7 @@ const MembersTable = ({
                 <Form.Select
                   size="sm"
                   value={filters.status || ""}
+                  aria-label="Filter status anggota"
                   onChange={(e) => onFilterChange?.("status", e.target.value)}
                   className="bg-white border-1"
                 >
@@ -263,24 +296,28 @@ const MembersTable = ({
                       />
                     </td>
                     <td className="text-center">
-                      <div className="d-flex align-items-center justify-content-center gap-1">
+                      <div className="d-flex align-items-center justify-content-center gap-2">
                         <Button
                           variant="light"
                           size="sm"
-                          className="rounded-circle p-2 text-primary border shadow-none"
+                          className="rounded-circle text-primary border shadow-none"
                           onClick={() => onSelectMember(m)}
                           title="Lihat Detail Profil Lengkap"
+                          aria-label={`Lihat detail profil ${m.full_name || "anggota"}`}
+                          style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                         >
-                          <Eye size={15} />
+                          <Eye size={20} weight="bold" aria-hidden="true" />
                         </Button>
                         <Button
                           variant="light"
                           size="sm"
-                          className="rounded-circle p-2 text-warning border shadow-none"
+                          className="rounded-circle text-warning border shadow-none"
                           onClick={() => onEditRole?.(m)}
                           title="Ubah Role / Peran Anggota"
+                          aria-label={`Ubah role atau peran ${m.full_name || "anggota"}`}
+                          style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
                         >
-                          <UserGear size={15} />
+                          <UserGear size={20} weight="bold" aria-hidden="true" />
                         </Button>
                       </div>
                     </td>
@@ -290,7 +327,7 @@ const MembersTable = ({
                       </div>
                       {m.nik_ktp && (
                         <small className="text-muted d-flex align-items-center gap-1">
-                          <IdentificationCard size={13} /> {m.nik_ktp}
+                          <IdentificationCard size={14} weight="bold" aria-hidden="true" /> {m.nik_ktp}
                         </small>
                       )}
                     </td>
@@ -299,7 +336,7 @@ const MembersTable = ({
                       <div className="d-flex flex-wrap align-items-center gap-2 text-muted small">
                         {m.phone_number && (
                           <span className="d-inline-flex align-items-center gap-1">
-                            <Phone size={12} /> {m.phone_number}
+                            <Phone size={13} weight="bold" aria-hidden="true" /> {m.phone_number}
                           </span>
                         )}
                         {m.email && (
@@ -307,7 +344,7 @@ const MembersTable = ({
                             className="d-inline-flex align-items-center gap-1 text-truncate"
                             style={{ maxWidth: "160px" }}
                           >
-                            <EnvelopeSimple size={12} /> {m.email}
+                            <EnvelopeSimple size={13} weight="bold" aria-hidden="true" /> {m.email}
                           </span>
                         )}
                       </div>
