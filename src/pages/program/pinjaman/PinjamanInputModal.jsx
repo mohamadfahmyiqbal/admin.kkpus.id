@@ -159,7 +159,7 @@ const PinjamanInputModal = () => {
                   <Form.Label className="fw-medium text-dark">
                     No Transaksi
                   </Form.Label>
-                  <Form.Control
+                  <Form.Control aria-label="Filter Auto-generate jika kosong"
                     type="text"
                     name="noTransaksi"
                     value={formData.noTransaksi}
@@ -189,7 +189,7 @@ const PinjamanInputModal = () => {
               <Form.Label className="fw-medium text-dark">
                 Keperluan <span className="text-danger">*</span>
               </Form.Label>
-              <Form.Control
+              <Form.Control aria-label="Filter Contoh: Penambahan modal awal"
                 as="textarea"
                 rows={3}
                 name="keperluan"
@@ -224,7 +224,7 @@ const PinjamanInputModal = () => {
                   <Form.Label className="fw-medium text-dark">
                     Jumlah (Rp) <span className="text-danger">*</span>
                   </Form.Label>
-                  <Form.Control
+                  <Form.Control aria-label="Filter 0"
                     type="text"
                     name="jumlah"
                     value={formData.jumlah}

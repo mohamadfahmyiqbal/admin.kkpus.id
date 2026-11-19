@@ -84,7 +84,7 @@ const TerminationApprovalWorkflowSection = ({
         <div className="mt-3">
           <Form.Group>
             <Form.Label className="small fw-bold text-dark">Catatan / Pesan</Form.Label>
-            <Form.Control
+            <Form.Control aria-label="Filter Tambahkan catatan persetujuan atau penolakan"
               as="textarea"
               rows={3}
               placeholder="Tambahkan catatan persetujuan atau penolakan..."

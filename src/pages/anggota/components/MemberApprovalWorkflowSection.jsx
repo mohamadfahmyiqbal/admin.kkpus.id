@@ -133,7 +133,7 @@ const MemberApprovalWorkflowSection = ({
         <div className="mt-3">
           <Form.Group>
             <Form.Label className="small fw-bold text-dark">Catatan / Pesan</Form.Label>
-            <Form.Control
+            <Form.Control aria-label="Filter Tambahkan catatan untuk anggota, pengawas, ketua, atau bendahara"
               as="textarea"
               rows={3}
               placeholder="Tambahkan catatan untuk anggota, pengawas, ketua, atau bendahara..."

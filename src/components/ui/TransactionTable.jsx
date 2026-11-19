@@ -277,7 +277,7 @@ export const TransactionTable = ({
                   />
                 </th>
                 <th className="py-2 px-3">
-                  <Form.Control
+                  <Form.Control aria-label="Filter Cari nominal"
                     type="text"
                     placeholder="Cari nominal..."
                     size="sm"
@@ -368,7 +368,7 @@ export const TransactionTable = ({
                       <div className="d-flex flex-column">
                         <span className="text-dark fw-bold small">{day}</span>
                         <span className="text-muted extra-small d-flex align-items-center gap-1 mt-0.5">
-                          <Clock size={11} aria-hidden="true" /> {time}
+                          <Clock size={11} weight="bold" aria-hidden="true" /> {time}
                         </span>
                       </div>
                     </td>
@@ -554,14 +554,32 @@ export const TransactionTable = ({
           </div>
 
           {pagination.total_pages > 1 && (
-            <Pagination className="mb-0 custom-pagination" size="sm">
+            <Pagination className="mb-0 custom-pagination" size="sm" style={{ gap: '4px' }} >
               <Pagination.First
                 disabled={pagination.current_page === 1}
                 onClick={() => onPageChange?.(1)}
+                role="button"
+                tabIndex={0}
+                aria-label="Pergi ke halaman pertama"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onPageChange?.(1);
+                  }
+                }}
               />
               <Pagination.Prev
                 disabled={pagination.current_page === 1}
                 onClick={() => onPageChange?.(pagination.current_page - 1)}
+                role="button"
+                tabIndex={0}
+                aria-label="Pergi ke halaman sebelumnya"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onPageChange?.(pagination.current_page - 1);
+                  }
+                }}
               />
               {getPaginationRange(pagination.current_page, pagination.total_pages).map(
                 (p, idx) =>
@@ -572,6 +590,15 @@ export const TransactionTable = ({
                       key={p}
                       active={p === pagination.current_page}
                       onClick={() => onPageChange?.(p)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Halaman ${p}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onPageChange?.(p);
+                        }
+                      }}
                     >
                       {p}
                     </Pagination.Item>
@@ -580,10 +607,28 @@ export const TransactionTable = ({
               <Pagination.Next
                 disabled={pagination.current_page === pagination.total_pages}
                 onClick={() => onPageChange?.(pagination.current_page + 1)}
+                role="button"
+                tabIndex={0}
+                aria-label="Pergi ke halaman berikutnya"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onPageChange?.(pagination.current_page + 1);
+                  }
+                }}
               />
               <Pagination.Last
                 disabled={pagination.current_page === pagination.total_pages}
                 onClick={() => onPageChange?.(pagination.total_pages)}
+                role="button"
+                tabIndex={0}
+                aria-label="Pergi ke halaman terakhir"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onPageChange?.(pagination.total_pages);
+                  }
+                }}
               />
             </Pagination>
           )}

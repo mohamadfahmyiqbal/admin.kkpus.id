@@ -168,7 +168,7 @@ const AktivaTetapTab = ({ loading, aktivaTetapData, formatRupiah, refreshData })
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>No Transaksi</Form.Label>
-              <Form.Control
+              <Form.Control aria-label="Filter AKT-001"
                 type="text"
                 name="no_transaksi"
                 value={form.no_transaksi}
@@ -179,7 +179,7 @@ const AktivaTetapTab = ({ loading, aktivaTetapData, formatRupiah, refreshData })
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>PIC</Form.Label>
-              <Form.Control
+              <Form.Control aria-label="Filter Nama Penanggung Jawab"
                 type="text"
                 name="pic"
                 value={form.pic}

@@ -167,7 +167,7 @@ const PinjamanApprovalTable = ({
             {/* Filter row */}
             <tr className="bg-light bg-opacity-75">
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari anggota / item"
                   size="sm"
                   placeholder="Cari anggota / item..."
                   value={colFilters.rincian}
@@ -179,7 +179,7 @@ const PinjamanApprovalTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari nominal"
                   size="sm"
                   placeholder="Cari nominal..."
                   value={colFilters.nominal}
@@ -191,7 +191,7 @@ const PinjamanApprovalTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari tanggal"
                   size="sm"
                   placeholder="Cari tanggal..."
                   value={colFilters.waktu}

@@ -84,7 +84,7 @@ const MasterProgramModal = ({ show, onHide, program, onSuccess }) => {
             <Form.Label className="fw-medium text-dark small">
               Nama Program (opsional)
             </Form.Label>
-            <Form.Control
+            <Form.Control aria-label="Filter Contoh: Tabungan Qurban 2026"
               type="text"
               value={form.target_name}
               onChange={(e) =>

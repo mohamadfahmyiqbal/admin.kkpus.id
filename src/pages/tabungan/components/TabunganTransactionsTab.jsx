@@ -81,7 +81,7 @@ const TabunganTransactionsTab = () => {
         <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 gap-sm-3">
           <div className="search-input-group d-flex align-items-center bg-light px-3 py-2 rounded-3 flex-grow-1" style={{ maxWidth: "360px" }}>
             <MagnifyingGlass className="search-icon text-muted me-2" size={18} aria-hidden="true" />
-            <Form.Control
+            <Form.Control aria-label="Filter Cari anggota"
               type="text"
               placeholder="Cari anggota..."
               className="rounded-3 shadow-none border-0 bg-transparent p-0"

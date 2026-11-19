@@ -370,7 +370,7 @@ const TabunganApprovalModal = ({
               <Form.Label className="small fw-bold text-muted mb-2 d-flex align-items-center gap-1">
                 Catatan (Opsional)
               </Form.Label>
-              <Form.Control
+              <Form.Control aria-label="Filter Tambahkan catatan persetujuan di sini"
                 as="textarea"
                 rows={3}
                 placeholder="Tambahkan catatan persetujuan di sini..."

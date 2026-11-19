@@ -40,7 +40,7 @@ const ArisanBatchModal = ({
                   <Form.Label className="fw-medium text-dark small">
                     Nama Program
                   </Form.Label>
-                  <Form.Control
+                  <Form.Control aria-label="Filter Contoh: Arisan Umrah Keluarga"
                     type="text"
                     value={formData.program_name}
                     onChange={(e) =>
@@ -56,7 +56,7 @@ const ArisanBatchModal = ({
                   <Form.Label className="fw-medium text-dark small">
                     Kategori
                   </Form.Label>
-                  <Form.Control
+                  <Form.Control aria-label="Filter Contoh: Umrah"
                     type="text"
                     value={formData.category}
                     onChange={(e) =>
@@ -72,7 +72,7 @@ const ArisanBatchModal = ({
                   <Form.Label className="fw-medium text-dark small">
                     Nama Batch
                   </Form.Label>
-                  <Form.Control
+                  <Form.Control aria-label="Filter Contoh: Batch 1 2026"
                     type="text"
                     value={formData.batch_name}
                     onChange={(e) =>

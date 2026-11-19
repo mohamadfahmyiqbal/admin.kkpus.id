@@ -158,7 +158,7 @@ const SukukIssueModal = ({ show, onHide, data, onSuccess }) => {
             <Col md={6}>
               <Form.Group>
                 <Form.Label>Proyeksi Imbal Hasil (Kupon)</Form.Label>
-                <Form.Control
+                <Form.Control aria-label="Filter Cth: 8.0% p.a."
                   type="text"
                   name="coupon"
                   placeholder="Cth: 8.0% p.a."

@@ -406,7 +406,7 @@ const ManualPaymentApprovalModal = ({ show, onHide, transaction, onSuccess }) =>
 
               <Form.Group className="mb-2">
                 <Form.Label className="small fw-bold text-muted">Catatan Bendahara (Opsional)</Form.Label>
-                <Form.Control
+                <Form.Control aria-label="Filter Tambahkan catatan atau alasan jika ditolak"
                   as="textarea"
                   rows={2}
                   placeholder="Tambahkan catatan atau alasan jika ditolak..."

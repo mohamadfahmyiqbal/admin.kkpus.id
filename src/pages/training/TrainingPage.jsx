@@ -544,7 +544,7 @@ const CurriculumModal = ({ show, onHide, curriculum, onSuccess }) => {
             <Form.Label className="fw-medium text-dark small">
               Nama Kurikulum <span className="text-danger">*</span>
             </Form.Label>
-            <Form.Control
+            <Form.Control aria-label="Filter Masukkan nama kurikulum"
               type="text"
               name="curriculum_name"
               value={form.curriculum_name}
@@ -571,7 +571,7 @@ const CurriculumModal = ({ show, onHide, curriculum, onSuccess }) => {
             <Form.Label className="fw-medium text-dark small">
               Deskripsi
             </Form.Label>
-            <Form.Control
+            <Form.Control aria-label="Filter Masukkan deskripsi kurikulum"
               as="textarea"
               rows={3}
               name="description"
@@ -714,7 +714,7 @@ const MaterialModal = ({ show, onHide, material, onSuccess }) => {
                 <Form.Label className="fw-medium text-dark small">
                   Judul Materi <span className="text-danger">*</span>
                 </Form.Label>
-                <Form.Control
+                <Form.Control aria-label="Filter Judul Materi"
                   type="text"
                   name="material_name"
                   value={form.material_name}
@@ -760,7 +760,7 @@ const MaterialModal = ({ show, onHide, material, onSuccess }) => {
             <Form.Label className="fw-medium text-dark small">
               URL Media (Video/Doc)
             </Form.Label>
-            <Form.Control
+            <Form.Control aria-label="Filter https://youtube.com/"
               type="text"
               name="media_url"
               value={form.media_url}
@@ -772,7 +772,7 @@ const MaterialModal = ({ show, onHide, material, onSuccess }) => {
             <Form.Label className="fw-medium text-dark small">
               Konten Materi
             </Form.Label>
-            <Form.Control
+            <Form.Control aria-label="Filter Teks atau format HTML"
               as="textarea"
               rows={5}
               name="content"

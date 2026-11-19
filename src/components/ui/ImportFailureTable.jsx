@@ -159,7 +159,7 @@ const ImportFailureTable = ({
         <InputGroup.Text className="bg-white">
           <MagnifyingGlass size={14} weight="bold" aria-hidden="true" />
         </InputGroup.Text>
-        <Form.Control
+        <Form.Control aria-label="Filter Cari baris, no. anggota, nama, atau penyebab"
           placeholder="Cari baris, no. anggota, nama, atau penyebab..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}

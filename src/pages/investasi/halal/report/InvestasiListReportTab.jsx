@@ -50,7 +50,7 @@ const InvestasiListReportTab = ({
                 <span className="input-group-text bg-light border-light text-muted">
                   <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari"
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary"
@@ -64,7 +64,7 @@ const InvestasiListReportTab = ({
                 <span className="input-group-text bg-light border-light text-muted">
                   <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari"
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary"
@@ -78,7 +78,7 @@ const InvestasiListReportTab = ({
                 <span className="input-group-text bg-light border-light text-muted">
                   <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari"
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary"
@@ -92,7 +92,7 @@ const InvestasiListReportTab = ({
                 <span className="input-group-text bg-light border-light text-muted">
                   <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari"
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary"
@@ -106,7 +106,7 @@ const InvestasiListReportTab = ({
                 <span className="input-group-text bg-light border-light text-muted">
                   <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari"
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary text-end"
@@ -120,7 +120,7 @@ const InvestasiListReportTab = ({
                 <span className="input-group-text bg-light border-light text-muted">
                   <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari"
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary text-end"
@@ -134,7 +134,7 @@ const InvestasiListReportTab = ({
                 <span className="input-group-text bg-light border-light text-muted">
                   <MagnifyingGlass size={14} aria-hidden="true" />
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari"
                   type="text"
                   placeholder="Cari..."
                   className="bg-light border-light shadow-none focus-ring-primary text-end"

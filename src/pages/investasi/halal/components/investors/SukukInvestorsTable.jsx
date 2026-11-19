@@ -33,7 +33,7 @@ const SukukInvestorsTable = ({
             </th>
             <th className="py-3 border-0" style={{ width: "18%" }}>
               Nama Anggota
-              <Form.Control
+              <Form.Control aria-label="Filter Cari nama"
                 size="sm"
                 placeholder="Cari nama..."
                 className="mt-2 text-lowercase rounded-3 shadow-none border-light focus-ring-primary"
@@ -48,7 +48,7 @@ const SukukInvestorsTable = ({
               style={{ width: "10%" }}
             >
               Lembar
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 placeholder="Cari..."
                 className="mt-2 text-lowercase text-center rounded-3 shadow-none border-light focus-ring-primary"
@@ -60,7 +60,7 @@ const SukukInvestorsTable = ({
             </th>
             <th className="py-3 text-end border-0" style={{ width: "16%" }}>
               Nominal Investasi
-              <Form.Control
+              <Form.Control aria-label="Filter Cari nominal"
                 size="sm"
                 placeholder="Cari nominal..."
                 className="mt-2 text-lowercase text-end rounded-3 shadow-none border-light focus-ring-primary"
@@ -72,7 +72,7 @@ const SukukInvestorsTable = ({
             </th>
             <th className="py-3 text-end border-0" style={{ width: "16%" }}>
               Pengembalian Pokok
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 placeholder="Cari..."
                 className="mt-2 text-lowercase text-end rounded-3 shadow-none border-light focus-ring-primary"
@@ -84,7 +84,7 @@ const SukukInvestorsTable = ({
             </th>
             <th className="py-3 text-end border-0" style={{ width: "16%" }}>
               Estimasi Imbal Hasil
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 placeholder="Cari..."
                 className="mt-2 text-lowercase text-end rounded-3 shadow-none border-light focus-ring-primary"

@@ -248,7 +248,7 @@ const LoginPage = () => {
                             <InputGroup.Text>
                               <FaUser />
                             </InputGroup.Text>
-                            <Form.Control
+                            <Form.Control aria-label="Filter pengguna@koperasi.com"
                               id="emailHp"
                               value={emailHp}
                               onChange={(e) => setEmailHp(e.target.value)}
@@ -269,7 +269,7 @@ const LoginPage = () => {
                             <InputGroup.Text>
                               <FaLock />
                             </InputGroup.Text>
-                            <Form.Control
+                            <Form.Control aria-label="Filter ••••••••"
                               id="password"
                                value={password}
                               onChange={(e) => setPassword(e.target.value)}

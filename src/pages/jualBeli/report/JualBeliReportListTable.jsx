@@ -277,7 +277,7 @@ const JualBeliReportListTable = ({
                 )}
               </th>
               <th className="py-2 px-2 position-sticky bg-light" style={{ left: "50px", zIndex: 3, borderRight: "2px solid #dee2e6" }}>
-                <Form.Control
+                <Form.Control aria-label="Filter Cari nama"
                   size="sm"
                   type="text"
                   placeholder="Cari nama..."
@@ -289,51 +289,51 @@ const JualBeliReportListTable = ({
               </th>
               {/* Tahun Ini */}
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Total..." value={colFilters.iniTotal} onChange={(e) => handleFilterChange("iniTotal", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Total" size="sm" type="text" placeholder="Total..." value={colFilters.iniTotal} onChange={(e) => handleFilterChange("iniTotal", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Pokok..." value={colFilters.iniPokok} onChange={(e) => handleFilterChange("iniPokok", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Pokok" size="sm" type="text" placeholder="Pokok..." value={colFilters.iniPokok} onChange={(e) => handleFilterChange("iniPokok", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="DP..." value={colFilters.iniDp} onChange={(e) => handleFilterChange("iniDp", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter DP" size="sm" type="text" placeholder="DP..." value={colFilters.iniDp} onChange={(e) => handleFilterChange("iniDp", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Margin..." value={colFilters.iniMargin} onChange={(e) => handleFilterChange("iniMargin", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Margin" size="sm" type="text" placeholder="Margin..." value={colFilters.iniMargin} onChange={(e) => handleFilterChange("iniMargin", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1" style={{ borderRight: "2px solid #dee2e6" }}>
-                <Form.Control size="sm" type="text" placeholder="Cicilan..." value={colFilters.iniCicilan} onChange={(e) => handleFilterChange("iniCicilan", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Cicilan" size="sm" type="text" placeholder="Cicilan..." value={colFilters.iniCicilan} onChange={(e) => handleFilterChange("iniCicilan", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               {/* Tahun Lalu */}
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Total..." value={colFilters.laluTotal} onChange={(e) => handleFilterChange("laluTotal", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Total" size="sm" type="text" placeholder="Total..." value={colFilters.laluTotal} onChange={(e) => handleFilterChange("laluTotal", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Pokok..." value={colFilters.laluPokok} onChange={(e) => handleFilterChange("laluPokok", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Pokok" size="sm" type="text" placeholder="Pokok..." value={colFilters.laluPokok} onChange={(e) => handleFilterChange("laluPokok", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="DP..." value={colFilters.laluDp} onChange={(e) => handleFilterChange("laluDp", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter DP" size="sm" type="text" placeholder="DP..." value={colFilters.laluDp} onChange={(e) => handleFilterChange("laluDp", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Margin..." value={colFilters.laluMargin} onChange={(e) => handleFilterChange("laluMargin", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Margin" size="sm" type="text" placeholder="Margin..." value={colFilters.laluMargin} onChange={(e) => handleFilterChange("laluMargin", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1" style={{ borderRight: "2px solid #dee2e6" }}>
-                <Form.Control size="sm" type="text" placeholder="Cicilan..." value={colFilters.laluCicilan} onChange={(e) => handleFilterChange("laluCicilan", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Cicilan" size="sm" type="text" placeholder="Cicilan..." value={colFilters.laluCicilan} onChange={(e) => handleFilterChange("laluCicilan", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               {/* 2 Tahun Lalu */}
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Total..." value={colFilters.lalu2Total} onChange={(e) => handleFilterChange("lalu2Total", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Total" size="sm" type="text" placeholder="Total..." value={colFilters.lalu2Total} onChange={(e) => handleFilterChange("lalu2Total", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Pokok..." value={colFilters.lalu2Pokok} onChange={(e) => handleFilterChange("lalu2Pokok", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Pokok" size="sm" type="text" placeholder="Pokok..." value={colFilters.lalu2Pokok} onChange={(e) => handleFilterChange("lalu2Pokok", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="DP..." value={colFilters.lalu2Dp} onChange={(e) => handleFilterChange("lalu2Dp", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter DP" size="sm" type="text" placeholder="DP..." value={colFilters.lalu2Dp} onChange={(e) => handleFilterChange("lalu2Dp", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Margin..." value={colFilters.lalu2Margin} onChange={(e) => handleFilterChange("lalu2Margin", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Margin" size="sm" type="text" placeholder="Margin..." value={colFilters.lalu2Margin} onChange={(e) => handleFilterChange("lalu2Margin", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
               <th className="py-2 px-1">
-                <Form.Control size="sm" type="text" placeholder="Cicilan..." value={colFilters.lalu2Cicilan} onChange={(e) => handleFilterChange("lalu2Cicilan", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
+                <Form.Control aria-label="Filter Cicilan" size="sm" type="text" placeholder="Cicilan..." value={colFilters.lalu2Cicilan} onChange={(e) => handleFilterChange("lalu2Cicilan", e.target.value)} className="rounded-2 shadow-none text-end" style={{ minWidth: "85px", fontSize: "11px" }} />
               </th>
             </tr>
           </thead>

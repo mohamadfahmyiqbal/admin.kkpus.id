@@ -182,7 +182,7 @@ const JualBeliReportJurnalTable = ({
           <tr className="bg-light bg-opacity-75">
             <th className="py-2 px-2">
               <div className="d-flex align-items-center gap-1">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari akun"
                   size="sm"
                   type="text"
                   placeholder="Cari akun..."
@@ -205,7 +205,7 @@ const JualBeliReportJurnalTable = ({
               </div>
             </th>
             <th className="py-2 px-2">
-              <Form.Control
+              <Form.Control aria-label="Filter Cari deskripsi"
                 size="sm"
                 type="text"
                 placeholder="Cari deskripsi..."
@@ -218,7 +218,7 @@ const JualBeliReportJurnalTable = ({
               />
             </th>
             <th className="py-2 px-2">
-              <Form.Control
+              <Form.Control aria-label="Filter Cari debet"
                 size="sm"
                 type="text"
                 placeholder="Cari debet..."
@@ -229,7 +229,7 @@ const JualBeliReportJurnalTable = ({
               />
             </th>
             <th className="py-2 px-2">
-              <Form.Control
+              <Form.Control aria-label="Filter Cari kredit"
                 size="sm"
                 type="text"
                 placeholder="Cari kredit..."

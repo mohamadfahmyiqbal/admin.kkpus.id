@@ -136,7 +136,7 @@ const SukukCatalogTab = () => {
                 <tr>
                   <th className="py-2 px-2 border-0 bg-light" />
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.type}
@@ -144,7 +144,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.issue_name}
@@ -152,7 +152,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.issuer}
@@ -160,7 +160,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.min_investment}
@@ -168,7 +168,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.total_amount}
@@ -176,7 +176,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.tenor}
@@ -184,7 +184,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.coupon}
@@ -192,7 +192,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.price}
@@ -200,7 +200,7 @@ const SukukCatalogTab = () => {
                     />
                   </th>
                   <th className="py-2 px-1 border-0 bg-light">
-                    <Form.Control
+                    <Form.Control aria-label="Filter Cari"
                       size="sm"
                       placeholder="Cari..."
                       value={filters.status}

@@ -356,7 +356,7 @@ const JualBeliTable = ({
                 )}
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari anggota"
                   size="sm"
                   type="text"
                   placeholder="Cari anggota..."
@@ -367,7 +367,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari type"
                   size="sm"
                   type="text"
                   placeholder="Cari type..."
@@ -378,7 +378,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari barang"
                   size="sm"
                   type="text"
                   placeholder="Cari barang..."
@@ -389,7 +389,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Total"
                   size="sm"
                   type="text"
                   placeholder="Total..."
@@ -400,7 +400,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter DP"
                   size="sm"
                   type="text"
                   placeholder="DP..."
@@ -411,7 +411,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Tenor"
                   size="sm"
                   type="text"
                   placeholder="Tenor..."
@@ -422,7 +422,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Sisa"
                   size="sm"
                   type="text"
                   placeholder="Sisa..."
@@ -433,7 +433,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cicilan"
                   size="sm"
                   type="text"
                   placeholder="Cicilan..."
@@ -444,7 +444,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Piutang"
                   size="sm"
                   type="text"
                   placeholder="Piutang..."
@@ -455,7 +455,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Diskon"
                   size="sm"
                   type="text"
                   placeholder="Diskon..."
@@ -466,7 +466,7 @@ const JualBeliTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Sisa"
                   size="sm"
                   type="text"
                   placeholder="Sisa..."

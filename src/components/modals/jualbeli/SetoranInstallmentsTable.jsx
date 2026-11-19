@@ -20,7 +20,7 @@ const SetoranInstallmentsTable = ({
           <tr>
             <th className="py-3 px-3 text-muted fw-bold small">
               Periode
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 type="text"
                 placeholder="Cari..."
@@ -31,7 +31,7 @@ const SetoranInstallmentsTable = ({
             </th>
             <th className="py-3 px-3 text-muted fw-bold small">
               Tanggal Setor
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 type="text"
                 placeholder="Cari..."
@@ -42,7 +42,7 @@ const SetoranInstallmentsTable = ({
             </th>
             <th className="py-3 px-3 text-muted fw-bold small">
               Nama Setoran
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 type="text"
                 placeholder="Cari..."
@@ -53,7 +53,7 @@ const SetoranInstallmentsTable = ({
             </th>
             <th className="py-3 px-3 text-muted fw-bold small text-end">
               <div className="text-end">Jumlah</div>
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 type="text"
                 placeholder="Cari..."
@@ -64,7 +64,7 @@ const SetoranInstallmentsTable = ({
             </th>
             <th className="py-3 px-3 text-muted fw-bold small text-center">
               <div className="text-center">Status</div>
-              <Form.Control
+              <Form.Control aria-label="Filter Cari"
                 size="sm"
                 type="text"
                 placeholder="Cari..."

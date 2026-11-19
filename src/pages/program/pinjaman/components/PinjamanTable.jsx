@@ -366,7 +366,7 @@ const PinjamanTable = ({
                 )}
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari anggota / ID"
                   size="sm"
                   placeholder="Cari anggota / ID..."
                   value={filters.anggota}
@@ -378,7 +378,7 @@ const PinjamanTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari jenis"
                   size="sm"
                   placeholder="Cari jenis..."
                   value={filters.jenis_pinjaman}
@@ -390,7 +390,7 @@ const PinjamanTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cari jumlah"
                   size="sm"
                   placeholder="Cari jumlah..."
                   value={filters.jumlah_pinjaman}
@@ -402,7 +402,7 @@ const PinjamanTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Tenor"
                   size="sm"
                   placeholder="Tenor..."
                   value={filters.tenor}
@@ -412,7 +412,7 @@ const PinjamanTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Cicilan"
                   size="sm"
                   placeholder="Cicilan..."
                   value={filters.cicilan}
@@ -424,7 +424,7 @@ const PinjamanTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Control
+                <Form.Control aria-label="Filter Piutang"
                   size="sm"
                   placeholder="Piutang..."
                   value={filters.piutang}

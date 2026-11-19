@@ -246,7 +246,7 @@ export const WithdrawalApprovalModal = ({
               <Form.Label className="small fw-bold text-muted">
                 Catatan Persetujuan / Penolakan (Opsional)
               </Form.Label>
-              <Form.Control
+              <Form.Control aria-label="Filter Tambahkan catatan persetujuan atau alasan"
                 as="textarea"
                 rows={2}
                 placeholder="Tambahkan catatan persetujuan atau alasan..."

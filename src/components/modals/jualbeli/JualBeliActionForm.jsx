@@ -27,7 +27,7 @@ const JualBeliActionForm = ({
                 <span className="input-group-text bg-light border-0 text-muted fw-bold">
                   Rp
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter 0 (Gunakan '-' untuk pengurang)"
                   type="text"
                   placeholder="0 (Gunakan '-' untuk pengurang)"
                   className="border-0 shadow-none bg-white py-2"
@@ -59,7 +59,7 @@ const JualBeliActionForm = ({
                 <span className="input-group-text bg-light border-0 text-muted fw-bold">
                   Rp
                 </span>
-                <Form.Control
+                <Form.Control aria-label="Filter 0"
                   type="text"
                   placeholder="0"
                   className="border-0 shadow-none bg-white py-2"
@@ -85,7 +85,7 @@ const JualBeliActionForm = ({
         <Form.Label className="small fw-bold text-muted mb-2 d-flex align-items-center gap-1">
           Catatan (Opsional)
         </Form.Label>
-        <Form.Control
+        <Form.Control aria-label="Filter Tambahkan catatan persetujuan di sini"
           as="textarea"
           rows={3}
           placeholder="Tambahkan catatan persetujuan di sini..."
