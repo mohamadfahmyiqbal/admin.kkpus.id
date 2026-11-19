@@ -76,10 +76,38 @@ export const toProtectedFileRequestPath = (path) => {
 export const SVG_FALLBACK_IMAGE =
   "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22400%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23f1f5f9%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%20fill%3D%22%2394a3b8%22%3EDokumen%20Tidak%20Ditemukan%3C%2Ftext%3E%3C%2Fsvg%3E";
 
+/**
+ * Batas ukuran file impor Excel (byte). SAMAKAN dengan `multer({ limits: { fileSize } })`
+ * di backend (routes/*.js) — bila backend berubah, ubah di sini juga.
+ */
+export const MAX_IMPORT_FILE_BYTES = 5 * 1024 * 1024; // 5 MB
+
+/**
+ * Validasi file impor Excel di sisi klien agar pengguna mendapat umpan balik dini
+ * (tanpa menunggu unggahan). Validasi sebenarnya tetap dilakukan server.
+ *
+ * @param {File} file
+ * @returns {string} pesan error, atau "" bila valid.
+ */
+export const validateImportFile = (file) => {
+  if (!file) return "Pilih file Excel terlebih dahulu.";
+  const validTypes = [
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-excel",
+  ];
+  const name = (file.name || "").toLowerCase();
+  const isExcel = validTypes.includes(file.type) || name.endsWith(".xlsx") || name.endsWith(".xls");
+  if (!isExcel) return "Harap pilih file Excel yang valid (.xlsx atau .xls)";
+  if (file.size > MAX_IMPORT_FILE_BYTES) return "Ukuran file terlalu besar (maks. 5MB).";
+  return "";
+};
+
 export default {
   jwtEncode,
   jwtDecodePage,
   formatRupiah,
   toProtectedFileRequestPath,
   SVG_FALLBACK_IMAGE,
+  MAX_IMPORT_FILE_BYTES,
+  validateImportFile,
 };

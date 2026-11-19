@@ -3,6 +3,7 @@ import { Modal, Button, Form, Alert, Spinner, Nav } from "react-bootstrap";
 import { UploadSimple, DownloadSimple, Receipt, ShoppingCart } from "phosphor-react";
 import Swal from "sweetalert2";
 import jualBeliService from "../../../utils/api/UJualBeli";
+import { validateImportFile } from "../../../utils/helpers";
 
 const ImportExcelModal = ({ show, onHide, onSuccess }) => {
   const [activeTab, setActiveTab] = useState("kontrak"); // "kontrak" atau "cicilan"
@@ -62,15 +63,9 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
     setErrorMsg("");
     const selected = e.target.files[0];
     if (selected) {
-      if (
-        ![
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          "application/vnd.ms-excel",
-        ].includes(selected.type) &&
-        !selected.name.endsWith(".xlsx") &&
-        !selected.name.endsWith(".xls")
-      ) {
-        setErrorMsg("Harap pilih file Excel yang valid (.xlsx atau .xls)");
+      const validationError = validateImportFile(selected);
+      if (validationError) {
+        setErrorMsg(validationError);
         setFile(null);
         e.target.value = null;
         return;
@@ -189,7 +184,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
               <div className="text-danger small mt-2">{errorMsg}</div>
             )}
             <Form.Text className="text-muted small">
-              Format yang didukung: .xlsx, .xls
+              Format yang didukung: .xlsx, .xls (Maks. 5MB)
             </Form.Text>
           </Form.Group>
 

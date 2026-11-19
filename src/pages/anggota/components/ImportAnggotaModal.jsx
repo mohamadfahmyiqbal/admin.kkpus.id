@@ -3,6 +3,7 @@ import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
 import api from "../../../utils/api/common";
+import { validateImportFile } from "../../../utils/helpers";
 
 const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
   const [file, setFile] = useState(null);
@@ -87,15 +88,9 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
     setErrorMsg("");
     const selected = e.target.files[0];
     if (selected) {
-      if (
-        ![
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          "application/vnd.ms-excel",
-        ].includes(selected.type) &&
-        !selected.name.endsWith(".xlsx") &&
-        !selected.name.endsWith(".xls")
-      ) {
-        setErrorMsg("Harap pilih file Excel yang valid (.xlsx atau .xls)");
+      const validationError = validateImportFile(selected);
+      if (validationError) {
+        setErrorMsg(validationError);
         setFile(null);
         e.target.value = null;
         return;
