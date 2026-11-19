@@ -21,16 +21,22 @@ class SavingsService {
     return api.get("/savings/summary");
   }
 
-  getAdminSavingsSummary() {
-    return api.get("/savings/admin-summary");
+  getAdminSavingsSummary(effectiveFrom) {
+    return api.get("/savings/admin-summary", {
+      params: effectiveFrom ? { effectiveFrom } : undefined,
+    });
   }
 
-  getAdminSavingsTransactions(params) {
-    return api.get("/savings/admin-transactions", { params });
+  getAdminSavingsTransactions(params, effectiveFrom) {
+    const queryParams = { ...params };
+    if (effectiveFrom) queryParams.effectiveFrom = effectiveFrom;
+    return api.get("/savings/admin-transactions", { params: queryParams });
   }
 
-  getAdminSavingsReport(params) {
-    return api.get("/savings/admin-report", { params });
+  getAdminSavingsReport(params, effectiveFrom) {
+    const queryParams = { ...params };
+    if (effectiveFrom) queryParams.effectiveFrom = effectiveFrom;
+    return api.get("/savings/admin-report", { params: queryParams });
   }
 
   importSimpanan(formData) {

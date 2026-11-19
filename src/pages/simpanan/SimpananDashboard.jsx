@@ -150,7 +150,7 @@ const SimpananDashboard = () => {
 
   const fetchSummary = async () => {
     try {
-      const res = await savingsService.getAdminSavingsSummary();
+      const res = await savingsService.getAdminSavingsSummary(undefined);
       if (res.data?.status) {
         const data = res.data.data;
         if (data.bills && Array.isArray(data.bills)) {
@@ -177,7 +177,7 @@ const SimpananDashboard = () => {
         search: debouncedSearch,
         status: statusFilter || undefined,
       };
-      const res = await savingsService.getAdminSavingsTransactions(params);
+      const res = await savingsService.getAdminSavingsTransactions(params, undefined);
       if (res.data?.status) {
         setTransactions(res.data.data.transactions || []);
         setPagination(res.data.data.pagination);
@@ -282,7 +282,7 @@ const SimpananDashboard = () => {
         status: statusFilter || undefined,
       };
 
-      const res = await savingsService.getAdminSavingsTransactions(params);
+      const res = await savingsService.getAdminSavingsTransactions(params, undefined);
       const dataToProcess =
         res.data?.data?.transactions && res.data.data.transactions.length > 0
           ? res.data.data.transactions

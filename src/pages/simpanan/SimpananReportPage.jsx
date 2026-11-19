@@ -41,7 +41,7 @@ const SimpananReportPage = () => {
   const fetchReport = async () => {
     setLoading(true);
     try {
-      const res = await savingsService.getAdminSavingsReport();
+      const res = await savingsService.getAdminSavingsReport(undefined);
       if (res.data?.status) {
         setReportList(res.data.data.list || []);
         setSummary(

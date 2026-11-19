@@ -5,13 +5,17 @@ import api from "../../utils/api/common";
 const SimpananConfigPage = () => {
   const [configs, setConfigs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [originalConfigs, setOriginalConfigs] = useState([]);
 
   const fetchConfigs = async () => {
     try {
       setLoading(true);
       const res = await api.get("/simpanan/config");
       if (res.data?.success) {
-        setConfigs(res.data.data);
+        const data = res.data.data;
+        setConfigs(data);
+        // Simpan snapshot asli untuk deteksi perubahan
+        setOriginalConfigs(JSON.parse(JSON.stringify(data)));
       } else {
         Swal.fire({
           icon: "error",
@@ -54,7 +58,7 @@ const SimpananConfigPage = () => {
     );
   };
 
-  const handleSave = async (billTypeId, amount) => {
+  const handleSave = async (billTypeId, amount, effectiveDate = "") => {
     if (!amount || amount < 0) {
       Swal.fire({
         icon: "warning",
@@ -64,8 +68,18 @@ const SimpananConfigPage = () => {
       return;
     }
     try {
+      // Ambil data existing untuk billTypeId
+      const existingItems = configs.filter(item => item.bill_type_id === billTypeId);
+      const newItem = {
+        bill_type_id: billTypeId,
+        type_name: existingItems.find(i => i.bill_type_id === billTypeId) ? i.type_name : "Tidak diketahui",
+        type_code: existingItems.find(i => i.bill_type_id === billTypeId) ? i.type_code : "",
+        default_amount: amount,
+        effective_date: effectiveDate ? new Date(effectiveDate).toISOString().split('T')[0] : undefined,
+      };
+      const newConfigs = [...configs, newItem];
       const res = await api.put("/simpanan/config", {
-        configs: [{ bill_type_id: billTypeId, default_amount: amount }],
+        configs: newConfigs,
       });
       if (res.data?.success) {
         Swal.fire({
