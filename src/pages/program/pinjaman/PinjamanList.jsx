@@ -15,6 +15,7 @@ import PinjamanTable from "./components/PinjamanTable";
 import PinjamanApprovalTable from "./components/PinjamanApprovalTable";
 import { jwtEncode } from "../../../utils/helpers";
 import exportToExcel from "../../../utils/helpers/exportToExcel";
+import { maxZero, subtractAmounts, toDecimal, toNumber } from "../../../utils/money";
 
 const PinjamanList = () => {
   const navigate = useNavigate();
@@ -88,16 +89,15 @@ const PinjamanList = () => {
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((item) => {
-      const totalRequired =
-        Number(item.amount_requested || 0) +
-        Number(item.margin_amount || 0) -
-        Number(item.down_payment || 0);
-      const remainingDebt = Math.max(
-        0,
-        totalRequired - Number(item.paid_amount || 0)
+      const totalRequired = toDecimal(item.amount_requested)
+        .plus(item.margin_amount)
+        .minus(item.down_payment);
+      const paidAmount = toDecimal(item.paid_amount);
+      const remainingDebt = toNumber(
+        maxZero(subtractAmounts(totalRequired, paidAmount))
       );
       const isPaidOff =
-        Number(item.paid_amount || 0) >= totalRequired && totalRequired > 0
+        paidAmount.gte(totalRequired) && totalRequired.gt(0)
           ? "Lunas"
           : "Belum Lunas";
 
@@ -228,16 +228,15 @@ const PinjamanList = () => {
     }
 
     const exportRows = targetData.map((item, idx) => {
-      const totalRequired =
-        Number(item.amount_requested || 0) +
-        Number(item.margin_amount || 0) -
-        Number(item.down_payment || 0);
-      const remainingDebt = Math.max(
-        0,
-        totalRequired - Number(item.paid_amount || 0)
+      const totalRequired = toDecimal(item.amount_requested)
+        .plus(item.margin_amount)
+        .minus(item.down_payment);
+      const paidAmount = toDecimal(item.paid_amount);
+      const remainingDebt = toNumber(
+        maxZero(subtractAmounts(totalRequired, paidAmount))
       );
       const isPaidOff =
-        Number(item.paid_amount || 0) >= totalRequired && totalRequired > 0
+        paidAmount.gte(totalRequired) && totalRequired.gt(0)
           ? "Lunas"
           : "Belum Lunas";
 
@@ -252,7 +251,7 @@ const PinjamanList = () => {
         "Cicilan / Bulan": Number(
           item.monthly_installment || item.installment_amount || 0
         ),
-        "Total Tagihan": totalRequired,
+        "Total Tagihan": toNumber(totalRequired),
         "Total Terbayar": Number(item.paid_amount || 0),
         "Sisa Piutang": remainingDebt,
         "Status Cicilan": isPaidOff,

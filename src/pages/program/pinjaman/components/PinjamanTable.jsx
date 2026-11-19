@@ -19,6 +19,7 @@ import {
   CaretDown,
 } from "phosphor-react";
 import { renderApprovalBadge } from "./PinjamanApprovalBadge";
+import { maxZero, subtractAmounts, toDecimal, toNumber } from "../../../../utils/money";
 
 const PinjamanTable = ({
   loading,
@@ -81,16 +82,15 @@ const PinjamanTable = ({
   // 1. Filtered rows with robust numeric matching
   const processedList = useMemo(() => {
     return transactions.filter((item) => {
-      const totalRequired =
-        Number(item.amount_requested || 0) +
-        Number(item.margin_amount || 0) -
-        Number(item.down_payment || 0);
-      const remainingDebt = Math.max(
-        0,
-        totalRequired - Number(item.paid_amount || 0)
+      const totalRequired = toDecimal(item.amount_requested)
+        .plus(item.margin_amount)
+        .minus(item.down_payment);
+      const paidAmount = toDecimal(item.paid_amount);
+      const remainingDebt = toNumber(
+        maxZero(subtractAmounts(totalRequired, paidAmount))
       );
       const isPaidOff =
-        Number(item.paid_amount || 0) >= totalRequired && totalRequired > 0
+        paidAmount.gte(totalRequired) && totalRequired.gt(0)
           ? "Lunas"
           : "Belum Lunas";
 
@@ -490,17 +490,14 @@ const PinjamanTable = ({
               </tr>
             ) : (
               paginatedList.map((tx) => {
-                const totalRequired =
-                  Number(tx.amount_requested || 0) +
-                  Number(tx.margin_amount || 0) -
-                  Number(tx.down_payment || 0);
-                const remainingDebt = Math.max(
-                  0,
-                  totalRequired - Number(tx.paid_amount || 0)
+                const totalRequired = toDecimal(tx.amount_requested)
+                  .plus(tx.margin_amount)
+                  .minus(tx.down_payment);
+                const paidAmount = toDecimal(tx.paid_amount);
+                const remainingDebt = toNumber(
+                  maxZero(subtractAmounts(totalRequired, paidAmount))
                 );
-                const isPaid =
-                  Number(tx.paid_amount || 0) >= totalRequired &&
-                  totalRequired > 0;
+                const isPaid = paidAmount.gte(totalRequired) && totalRequired.gt(0);
 
                 return (
                   <tr key={tx.id || tx.financing_id}>
