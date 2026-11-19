@@ -41,10 +41,10 @@ const SummaryCard = ({ summary = {} }) => {
     <Row className="g-3 mb-4">
       {cards.map((c, idx) => (
         <Col md={3} sm={6} key={idx}>
-          <Card className="border-0 shadow-sm rounded-4 h-100">
+          <Card role="article" aria-label={`Summary card: ${c.title} ${formatRupiah(c.value || 0)}`} className="border-0 shadow-sm rounded-4 h-100">
             <Card.Body className="p-3 d-flex align-items-center">
               <div className={`bg-${c.color} bg-opacity-10 p-3 rounded-4 me-3 flex-shrink-0`}>
-                <c.icon size={24} className={`text-${c.color}`} weight="fill" />
+                <c.icon size={24} className={`text-${c.color}`} weight="bold" aria-hidden="true" />
               </div>
               <div className="overflow-hidden">
                 <p className="text-muted fw-semibold mb-0 text-truncate small text-uppercase">
@@ -368,11 +368,12 @@ const SimpananDashboard = () => {
   return (
     <div className="pb-5">
       {/* Breadcrumb */}
-      <div className="mb-2">
+      <div className="mb-2" aria-label="Navigasi utama">
         <Breadcrumb className="mb-0" style={{ fontSize: "12px" }}>
           <Breadcrumb.Item
             onClick={() => navigate(`/${jwtEncode({ page: "dashboard" })}`)}
             style={{ cursor: "pointer" }}
+            aria-current="page"
           >
             Dashboard
           </Breadcrumb.Item>
@@ -387,7 +388,7 @@ const SimpananDashboard = () => {
       </div>
 
       {/* Header Actions */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3" role="toolbar" aria-label="Aksi Dashboard Simpanan">
         <div>
           <h4 className="fw-bold text-dark mb-1">Dashboard Simpanan</h4>
           <p className="text-muted small mb-0">
@@ -406,8 +407,10 @@ const SimpananDashboard = () => {
             }}
             disabled={loading}
             title="Refresh Data Transaksi"
+            aria-label="Refresh data transaksi simpanan"
+            style={{ minWidth: "44px", minHeight: "44px", display: "inline-flex", alignItems: "center", gap: "8px" }}
           >
-            <ArrowClockwise size={16} weight="bold" className={loading ? "spin" : ""} />
+            <ArrowClockwise size={16} weight="bold" className={loading ? "spin" : ""} aria-hidden="true" />
             <span>{loading ? "Memuat..." : "Refresh"}</span>
           </Button>
 
@@ -418,8 +421,10 @@ const SimpananDashboard = () => {
             onClick={handleExportTransactions}
             disabled={exporting || loading}
             title="Export Data Transaksi Simpanan ke Excel"
+            aria-label="Export data transaksi simpanan ke Excel"
+            style={{ minWidth: "44px", minHeight: "44px", display: "inline-flex", alignItems: "center", gap: "8px" }}
           >
-            <FileXls size={16} weight="bold" className="text-success" />
+            <FileXls size={16} weight="bold" className="text-success" aria-hidden="true" />
             <span>{exporting ? "Mengekspor..." : "Export Excel"}</span>
           </Button>
 
@@ -429,8 +434,10 @@ const SimpananDashboard = () => {
             className="shadow-sm d-flex align-items-center gap-1.5 fw-medium text-white px-3"
             onClick={() => setShowImportModal(true)}
             title="Import Data Simpanan Excel"
+            aria-label="Import data simpanan dari Excel"
+            style={{ minWidth: "44px", minHeight: "44px", display: "inline-flex", alignItems: "center", gap: "8px" }}
           >
-            <UploadSimple size={16} weight="bold" />
+            <UploadSimple size={16} weight="bold" aria-hidden="true" />
             <span>Import Excel</span>
           </Button>
         </div>
@@ -458,20 +465,22 @@ const SimpananDashboard = () => {
                 <Nav
                   variant="pills"
                   className="global-tabs border-0 flex-nowrap"
+                  role="tablist"
+                  aria-label="Kategori Simpanan"
                   style={{
                     display: "inline-flex",
                     width: "max-content",
                     minWidth: "max-content",
                   }}
                 >
-                  <Nav.Item>
-                    <Nav.Link eventKey="POKOK">Simpanan Pokok</Nav.Link>
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="POKOK" role="tab" aria-controls="pane-simpanan-pokok">Simpanan Pokok</Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="WAJIB">Simpanan Wajib</Nav.Link>
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="WAJIB" role="tab" aria-controls="pane-simpanan-wajib">Simpanan Wajib</Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="SUKARELA">Simpanan Sukarela</Nav.Link>
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="SUKARELA" role="tab" aria-controls="pane-simpanan-sukarela">Simpanan Sukarela</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </div>
@@ -493,8 +502,12 @@ const SimpananDashboard = () => {
                           setActiveSukarelaCategory("SETORAN");
                           setPage(1);
                         }}
+                        aria-label="Tampilkan transaksi setoran simpanan"
+                        aria-pressed={activeSukarelaCategory === "SETORAN"}
+                        aria-label="Tampilkan setoran sukarela"
+                        style={{ minWidth: '44px', minHeight: '44px', padding: '8px 1rem' }}
                       >
-                        <ArrowDownLeft size={13} className="text-success" weight="bold" />
+                        <ArrowDownLeft size={14} className="text-success" weight="bold" aria-hidden="true" />
                         Setoran
                       </button>
                       <button
@@ -508,8 +521,11 @@ const SimpananDashboard = () => {
                           setActiveSukarelaCategory("PENCAIRAN");
                           setPage(1);
                         }}
+                        aria-label="Tampilkan pencairan sukarela"
+                        aria-pressed={activeSukarelaCategory === "PENCAIRAN"}
+                        style={{ minWidth: '44px', minHeight: '44px', padding: '8px 1rem' }}
                       >
-                        <ArrowUpRight size={13} className="text-danger" weight="bold" />
+                        <ArrowUpRight size={14} className="text-danger" weight="bold" aria-hidden="true" />
                         Pencairan
                       </button>
                     </div>

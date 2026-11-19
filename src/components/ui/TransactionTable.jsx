@@ -142,8 +142,18 @@ export const TransactionTable = ({
           <thead className="table-light">
             <tr>
               <th
+                role="columnheader"
+                aria-sort={sortConfig.key === 'date' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
+                aria-label="Urutkan waktu transaksi"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase user-select-none"
                 style={{ width: "175px", cursor: onSort ? "pointer" : "default" }}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSort?.('date');
+                  }
+                }}
                 onClick={() => onSort?.("date")}
               >
                 <div className="d-flex align-items-center gap-1">
@@ -153,8 +163,18 @@ export const TransactionTable = ({
               </th>
 
               <th
+                role="columnheader"
+                aria-sort={sortConfig.key === 'member' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
+                aria-label="Urutkan nama anggota"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase user-select-none"
                 style={{ cursor: onSort ? "pointer" : "default" }}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSort?.('member');
+                  }
+                }}
                 onClick={() => onSort?.("member")}
               >
                 <div className="d-flex align-items-center gap-1">
@@ -163,13 +183,23 @@ export const TransactionTable = ({
                 </div>
               </th>
 
-              <th className="py-3 px-4 text-muted small fw-bold text-uppercase" style={{ minWidth: "160px" }}>
+              <th className="py-3 px-4 text-muted small fw-bold text-uppercase" role="columnheader" style={{ minWidth: "160px" }}>
                 Jenis Simpanan
               </th>
 
               <th
+                role="columnheader"
+                aria-sort={sortConfig.key === 'amount' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
+                aria-label="Urutkan nominal"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase text-end user-select-none"
                 style={{ cursor: onSort ? "pointer" : "default", width: "150px" }}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSort?.('amount');
+                  }
+                }}
                 onClick={() => onSort?.("amount")}
               >
                 <div className="d-flex align-items-center justify-content-end gap-1">
@@ -179,8 +209,18 @@ export const TransactionTable = ({
               </th>
 
               <th
+                role="columnheader"
+                aria-sort={sortConfig.key === 'status' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
+                aria-label="Urutkan status"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase text-center user-select-none"
                 style={{ width: "175px", cursor: onSort ? "pointer" : "default" }}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSort?.('status');
+                  }
+                }}
                 onClick={() => onSort?.("status")}
               >
                 <div className="d-flex align-items-center justify-content-center gap-1">
@@ -190,6 +230,7 @@ export const TransactionTable = ({
               </th>
 
               <th
+                role="columnheader"
                 className="py-3 px-3 text-muted small fw-bold text-uppercase text-center text-nowrap"
                 style={{ width: "110px", minWidth: "110px" }}
               >
@@ -208,6 +249,7 @@ export const TransactionTable = ({
                     style={{ fontSize: "0.82rem" }}
                     value={searchFilters.date || ""}
                     onChange={(e) => onSearchChange?.("date", e.target.value)}
+                    aria-label="Filter waktu transaksi"
                   />
                 </th>
                 <th className="py-2 px-3">
@@ -219,6 +261,7 @@ export const TransactionTable = ({
                     style={{ fontSize: "0.82rem" }}
                     value={searchFilters.member || ""}
                     onChange={(e) => onSearchChange?.("member", e.target.value)}
+                    aria-label="Filter nama atau nomor anggota"
                   />
                 </th>
                 <th className="py-2 px-3">
@@ -230,6 +273,7 @@ export const TransactionTable = ({
                     style={{ fontSize: "0.82rem" }}
                     value={searchFilters.type || ""}
                     onChange={(e) => onSearchChange?.("type", e.target.value)}
+                    aria-label="Filter jenis simpanan"
                   />
                 </th>
                 <th className="py-2 px-3">
