@@ -597,10 +597,8 @@ const SimpananDashboard = () => {
             importEndpoint="/savings/import"
             templateFileName="Template_Import_Simpanan.xlsx"
             instructionNotes={[
-              "Gunakan template resmi yang telah diunduh dari tombol 'Unduh Template' di atas.",
               "Pastikan kolom 'No. Anggota' sesuai dengan nomor anggota yang terdaftar di sistem.",
-              "Pilihan Jenis Simpanan: POKOK, WAJIB, atau SUKARELA.",
-              "Nominal diisi nominal transaksi tanpa titik/koma (misal: 100000). Baris dengan nominal kosong atau 0 akan otomatis dilewati.",
+              "Nominal diisi nominal transaksi tanpa titik/koma (contoh: 100000). Baris dengan nominal kosong atau 0 akan otomatis dilewati.",
               "Format Tanggal Transaksi: YYYY-MM-DD (contoh: 2026-10-29).",
             ]}
           />

@@ -1,20 +1,22 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner, Nav } from "react-bootstrap";
 import { UploadSimple, DownloadSimple, Receipt, ShoppingCart } from "phosphor-react";
 import Swal from "sweetalert2";
 import jualBeliService from "../../../utils/api/UJualBeli";
-import { validateImportFile } from "../../../utils/helpers";
+import ImportFailureTable from "../../../components/ui/ImportFailureTable";
 
 const ImportExcelModal = ({ show, onHide, onSuccess }) => {
   const [activeTab, setActiveTab] = useState("kontrak"); // "kontrak" atau "cicilan"
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [importResult, setImportResult] = useState(null);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setFile(null);
     setErrorMsg("");
+    setImportResult(null);
   };
 
   const handleSubmit = async (e) => {
@@ -25,6 +27,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
     }
     setUploading(true);
     setErrorMsg("");
+    setImportResult(null);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -37,10 +40,29 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
       }
 
       if (res.data?.success) {
+        const totalImported = res.data.data?.totalImported || 0;
+        const totalFailed = res.data.data?.totalFailed || 0;
+        const errors = res.data.data?.errors || [];
+
+        if (errors.length > 0 || totalFailed > 0) {
+          setImportResult({
+            label:
+              activeTab === "kontrak"
+                ? "Kontrak Jual Beli"
+                : "Riwayat Cicilan Jual Beli",
+            totalImported,
+            totalFailed,
+            errors,
+          });
+          setFile(null);
+          if (onSuccess) onSuccess({ totalImported, totalFailed });
+          return;
+        }
+
         Swal.fire({
-          icon: "success",
+          icon: totalImported > 0 ? "success" : "warning",
           title: "Import Berhasil",
-          html: `Berhasil import: <b>${res.data.data.totalImported}</b> data<br/>Gagal import: <b>${res.data.data.totalFailed}</b> data`,
+          html: `Berhasil import: <b>${totalImported}</b> data<br/>Gagal import: <b>${totalFailed}</b> data`,
           confirmButtonColor: "#28a745",
         }).then(() => {
           setFile(null);
@@ -63,9 +85,15 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
     setErrorMsg("");
     const selected = e.target.files[0];
     if (selected) {
-      const validationError = validateImportFile(selected);
-      if (validationError) {
-        setErrorMsg(validationError);
+      if (
+        ![
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.ms-excel",
+        ].includes(selected.type) &&
+        !selected.name.endsWith(".xlsx") &&
+        !selected.name.endsWith(".xls")
+      ) {
+        setErrorMsg("Harap pilih file Excel yang valid (.xlsx atau .xls)");
         setFile(null);
         e.target.value = null;
         return;
@@ -166,6 +194,48 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
           </div>
         </Alert>
 
+        {importResult && (
+          <div className="mt-3">
+            <Alert
+              variant={importResult.totalImported > 0 ? "success" : "danger"}
+              className="border-0"
+            >
+              <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                  <strong className="d-block">
+                    Import {importResult.label}:{" "}
+                    {importResult.totalImported > 0
+                      ? "Selesai Sebagian"
+                      : "Gagal"}
+                  </strong>
+                  <small>
+                    Berhasil import:{" "}
+                    <b className="text-success">{importResult.totalImported}</b>{" "}
+                    data · Gagal import:{" "}
+                    <b className="text-danger">{importResult.totalFailed}</b> data
+                  </small>
+                </div>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => {
+                    setImportResult(null);
+                    onSuccess?.();
+                    onHide();
+                  }}
+                >
+                  Tutup
+                </Button>
+              </div>
+            </Alert>
+            <ImportFailureTable
+              errors={importResult.errors}
+              failedCount={importResult.totalFailed}
+              filename={`Data_Gagal_Import_JualBeli_${activeTab}`}
+            />
+          </div>
+        )}
+
         <Form onSubmit={handleSubmit} className="mt-4">
           <Form.Group>
             <Form.Label className="fw-semibold small mb-2 text-dark">
@@ -184,7 +254,7 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
               <div className="text-danger small mt-2">{errorMsg}</div>
             )}
             <Form.Text className="text-muted small">
-              Format yang didukung: .xlsx, .xls (Maks. 5MB)
+              Format yang didukung: .xlsx, .xls
             </Form.Text>
           </Form.Group>
 

@@ -1,14 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
 import api from "../../../utils/api/common";
-import { validateImportFile } from "../../../utils/helpers";
+import ImportFailureTable from "../../../components/ui/ImportFailureTable";
 
 const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [importResult, setImportResult] = useState(null);
 
   const handleDownloadTemplate = async () => {
     try {
@@ -24,7 +25,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      /* console.error: "Gagal mendownload template:", err */
+      console.error("Gagal mendownload template:", err);
       // Fallback direct URL if blob request fails
       const apiOrigin =
         import.meta.env.VITE_API_ORIGIN ||
@@ -41,6 +42,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
     }
     setUploading(true);
     setErrorMsg("");
+    setImportResult(null);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -49,23 +51,26 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.data?.success) {
-        const { totalImported, totalFailed, errors } = res.data.data || {};
-        let detailsHtml = `Berhasil diimpor: <b>${totalImported || 0}</b> anggota<br/>Gagal: <b>${totalFailed || 0}</b> anggota`;
-        if (errors && errors.length > 0) {
-          detailsHtml += `<hr/><div style="max-height: 120px; overflow-y: auto; text-align: left; font-size: 12px;">`;
-          errors.slice(0, 5).forEach((err) => {
-            detailsHtml += `Baris ${err.row}: ${err.reason}<br/>`;
+        const { totalImported = 0, totalFailed = 0, errors = [] } =
+          res.data.data || {};
+
+        // Ada baris gagal -> tampilkan tabel rincian di dalam modal
+        // agar admin bisa melihat akun mana yang gagal + penyebabnya.
+        if (errors.length > 0 || totalFailed > 0) {
+          setImportResult({
+            totalImported,
+            totalFailed,
+            errors,
           });
-          if (errors.length > 5) {
-            detailsHtml += `... dan ${errors.length - 5} kesalahan lainnya.`;
-          }
-          detailsHtml += `</div>`;
+          setFile(null);
+          onSuccess?.({ totalImported, totalFailed });
+          return;
         }
 
         Swal.fire({
           icon: totalImported > 0 ? "success" : "warning",
           title: "Import Selesai",
-          html: detailsHtml,
+          html: `Berhasil diimpor: <b>${totalImported}</b> anggota<br/>Gagal: <b>${totalFailed}</b> anggota`,
           confirmButtonColor: "#28a745",
         }).then(() => {
           setFile(null);
@@ -88,9 +93,15 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
     setErrorMsg("");
     const selected = e.target.files[0];
     if (selected) {
-      const validationError = validateImportFile(selected);
-      if (validationError) {
-        setErrorMsg(validationError);
+      if (
+        ![
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.ms-excel",
+        ].includes(selected.type) &&
+        !selected.name.endsWith(".xlsx") &&
+        !selected.name.endsWith(".xls")
+      ) {
+        setErrorMsg("Harap pilih file Excel yang valid (.xlsx atau .xls)");
         setFile(null);
         e.target.value = null;
         return;
@@ -135,6 +146,49 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
             </Button>
           </div>
         </Alert>
+
+        {importResult && (
+          <div className="mt-3">
+            <Alert
+              variant={importResult.totalImported > 0 ? "success" : "danger"}
+              className="border-0"
+            >
+              <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                  <strong className="d-block">
+                    Import Anggota:{" "}
+                    {importResult.totalImported > 0
+                      ? "Selesai Sebagian"
+                      : "Gagal"}
+                  </strong>
+                  <small>
+                    Berhasil diimpor:{" "}
+                    <b className="text-success">{importResult.totalImported}</b>{" "}
+                    anggota · Gagal:{" "}
+                    <b className="text-danger">{importResult.totalFailed}</b>{" "}
+                    anggota
+                  </small>
+                </div>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => {
+                    setImportResult(null);
+                    onSuccess?.(importResult);
+                    onHide();
+                  }}
+                >
+                  Tutup
+                </Button>
+              </div>
+            </Alert>
+            <ImportFailureTable
+              errors={importResult.errors}
+              failedCount={importResult.totalFailed}
+              filename="Data_Gagal_Import_Anggota"
+            />
+          </div>
+        )}
 
         <Form onSubmit={handleSubmit} className="mt-4">
           <Form.Group>
