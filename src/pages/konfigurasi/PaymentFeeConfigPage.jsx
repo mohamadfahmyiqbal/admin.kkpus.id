@@ -134,6 +134,7 @@ const PaymentFeeConfigPage = () => {
                       </td>
                       <td>
                         <Form.Select
+                          aria-label="Tipe biaya"
                           value={item.fee_type}
                           onChange={(e) =>
                             handleChange(item.id, "fee_type", e.target.value)
@@ -150,6 +151,7 @@ const PaymentFeeConfigPage = () => {
                       <td>
                         <Form.Control
                           type="number"
+                          aria-label="Biaya flat (nominal tetap)"
                           value={item.flat_fee}
                           onChange={(e) =>
                             handleChange(item.id, "flat_fee", e.target.value)
@@ -162,6 +164,7 @@ const PaymentFeeConfigPage = () => {
                         <Form.Control
                           type="number"
                           step="0.01"
+                          aria-label="Biaya persentase (%)"
                           value={item.percentage_fee}
                           onChange={(e) =>
                             handleChange(item.id, "percentage_fee", e.target.value)

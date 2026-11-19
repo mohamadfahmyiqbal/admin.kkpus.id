@@ -40,8 +40,8 @@ const SummaryCard = ({ summary = {} }) => {
   return (
     <Row className="g-3 mb-4">
       {cards.map((c, idx) => (
-        <Col md={3} sm={6} key={idx}>
-          <Card role="article" aria-label={`Summary card: ${c.title} ${formatRupiah(c.value || 0)}`} className="border-0 shadow-sm rounded-4 h-100">
+        <Col md={3} sm={6} key={idx} role="article" aria-label={`${c.title}: ${formatRupiah(c.value || 0)}`}>
+          <Card className="border-0 shadow-sm rounded-4 h-100">
             <Card.Body className="p-3 d-flex align-items-center">
               <div className={`bg-${c.color} bg-opacity-10 p-3 rounded-4 me-3 flex-shrink-0`}>
                 <c.icon size={24} className={`text-${c.color}`} weight="bold" aria-hidden="true" />

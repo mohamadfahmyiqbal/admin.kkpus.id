@@ -436,7 +436,7 @@ const PinjamanTable = ({
                 />
               </th>
               <th className="py-2 px-2">
-                <Form.Select
+                <Form.Select aria-label="Filter status cicilan"
                   size="sm"
                   value={filters.status_cicilan}
                   onChange={(e) =>
@@ -451,7 +451,7 @@ const PinjamanTable = ({
                 </Form.Select>
               </th>
               <th className="py-2 px-2">
-                <Form.Select
+                <Form.Select aria-label="Filter status approval"
                   size="sm"
                   value={filters.status_approval}
                   onChange={(e) =>
@@ -623,7 +623,7 @@ const PinjamanTable = ({
             dari <strong>{totalItems}</strong> data pinjaman
           </div>
           <div className="d-flex align-items-center gap-2">
-            <Form.Select
+            <Form.Select aria-label="Jumlah baris per halaman"
               size="sm"
               value={pageSize}
               onChange={(e) => {

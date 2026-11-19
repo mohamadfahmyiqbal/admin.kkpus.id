@@ -942,6 +942,7 @@ const EvaluationModal = ({ show, onHide, evaluation, onSuccess }) => {
                   <span className="me-2 fw-bold">{opt}.</span>
                   <Form.Control
                     type="text"
+                    aria-label={`Opsi ${opt + 1}`}
                     value={form.options[opt]}
                     onChange={(e) => handleOptionChange(opt, e.target.value)}
                     required

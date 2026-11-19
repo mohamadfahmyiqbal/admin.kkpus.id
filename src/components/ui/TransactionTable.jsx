@@ -290,6 +290,7 @@ export const TransactionTable = ({
                 <th className="py-2 px-3">
                   <Form.Select
                     size="sm"
+                    aria-label="Filter status transaksi"
                     className="bg-white border-1 rounded-3 shadow-none text-center"
                     style={{ fontSize: "0.82rem" }}
                     value={searchFilters.status || ""}
@@ -334,6 +335,7 @@ export const TransactionTable = ({
                           type="button"
                           className="btn btn-sm btn-outline-secondary rounded-pill px-3 mt-2"
                           onClick={onResetFilter}
+                          style={{ minWidth: '44px', minHeight: '44px', padding: '0.5rem 1rem' }}
                         >
                           Reset Filter
                         </button>

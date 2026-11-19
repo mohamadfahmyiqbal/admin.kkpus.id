@@ -479,6 +479,7 @@ const JualBeliTable = ({
               <th className="py-2 px-2">
                 <Form.Select
                   size="sm"
+                  aria-label="Filter status transaksi"
                   value={colFilters.status}
                   onChange={(e) => handleFilterChange("status", e.target.value)}
                   className="rounded-2 shadow-none border-secondary border-opacity-25"
@@ -727,7 +728,7 @@ const JualBeliTable = ({
             dari <strong>{totalItems}</strong> data
           </div>
           <div className="d-flex align-items-center gap-2">
-            <Form.Select
+            <Form.Select aria-label="Jumlah baris per halaman"
               size="sm"
               value={pageSize}
               onChange={(e) => {

@@ -99,7 +99,7 @@ const SukukInvestorsTable = ({
               style={{ width: "14%" }}
             >
               Status
-              <Form.Select
+              <Form.Select aria-label="Filter status"
                 size="sm"
                 className="mt-2 rounded-3 shadow-none border-light focus-ring-primary text-center"
                 value={filters.status}

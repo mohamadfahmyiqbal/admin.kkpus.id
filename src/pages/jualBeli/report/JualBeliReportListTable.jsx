@@ -505,7 +505,7 @@ const JualBeliReportListTable = ({
             dari <strong>{totalItems}</strong> data anggota
           </div>
           <div className="d-flex align-items-center gap-2">
-            <Form.Select
+            <Form.Select aria-label="Jumlah baris per halaman"
               size="sm"
               value={pageSize}
               onChange={(e) => {

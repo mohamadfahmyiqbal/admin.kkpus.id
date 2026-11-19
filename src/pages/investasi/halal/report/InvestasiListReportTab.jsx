@@ -146,6 +146,7 @@ const InvestasiListReportTab = ({
             <th className="p-2 border-0">
               <Form.Select
                 size="sm"
+                aria-label="Filter status investasi"
                 className="bg-light border-light shadow-none focus-ring-primary"
                 value={searchFilters[8]}
                 onChange={(e) => handleSearchChange(8, e.target.value)}

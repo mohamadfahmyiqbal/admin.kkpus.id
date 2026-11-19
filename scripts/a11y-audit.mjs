@@ -88,7 +88,7 @@ for (const filePath of jsxFiles) {
   // A Form.Control/Select/Checkbox is OK if it has aria-label, or id (+ htmlFor exists elsewhere),
   // or is inside a Form.Group that also contains a Form.Label with matching htmlFor,
   // or the Form.Group has controlId (react-bootstrap associates via controlId).
-  const controlRe = /<Form\.(Control|Select|Checkbox)\b/g;
+  const controlRe = /<Form\.(Control|Select|Checkbox)(?![.\w])/g;
   let cM;
   while ((cM = controlRe.exec(content))) {
     const tagStart = cM.index;
