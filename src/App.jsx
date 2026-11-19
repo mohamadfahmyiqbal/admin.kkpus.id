@@ -14,16 +14,13 @@ import OfflineIndicator from "./components/pwa/OfflineIndicator";
 
 const App = () => {
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      initSocket(token);
-    }
+    // Token sekarang di HttpOnly cookie (browser otomatis kirim)
+    // Init socket tanpa manual token - socket.js akan handle cookie
+    initSocket();
 
     const handleStorage = () => {
-      const currentToken = localStorage.getItem("token");
-      if (currentToken) {
-        initSocket(currentToken);
-      }
+      // userData change (UI data only) - socket tetap pakai cookie
+      // Tidak perlu re-init socket untuk token change
     };
 
     window.addEventListener("storage", handleStorage);

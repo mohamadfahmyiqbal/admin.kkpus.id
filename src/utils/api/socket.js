@@ -10,12 +10,15 @@ export const initSocket = (token) => {
     return socket;
   }
 
+  // Token dari HttpOnly cookie (browser otomatis kirim dengan credentials: true)
+  // Fallback ke localStorage untuk backward compatibility
   const effectiveToken = token || localStorage.getItem("token");
 
   socket = io(SOCKET_URL, {
     auth: { token: effectiveToken },
     transports: ["websocket", "polling"],
     timeout: 20000,
+    withCredentials: true, // Cookie otomatis dikirim
   });
 
   socket.on("connect", () => {
@@ -48,10 +51,15 @@ export const initSocket = (token) => {
 
 export const getSocket = () => {
   if (!socket || !socket.connected) {
+    // Token di HttpOnly cookie (browser otomatis kirim)
+    // Fallback ke localStorage untuk backward compatibility
     const token = localStorage.getItem("token");
     if (token) {
       return initSocket(token);
     }
+    // Jika tidak ada token di localStorage, init tanpa token
+    // (cookie akan otomatis dikirim)
+    return initSocket();
   }
   return socket;
 };

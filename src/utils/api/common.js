@@ -13,12 +13,11 @@ const api = axios.create({
   },
 });
 
+// Token otomatis dikirim via HttpOnly cookie (withCredentials: true)
+// Tidak perlu manual attach token dari localStorage
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // Cookie otomatis attach oleh browser
     return config;
   },
   (error) => Promise.reject(error)
@@ -33,9 +32,13 @@ let isRedirecting = false;
 /**
  * Membersihkan sesi lalu mengarahkan pengguna ke halaman login (sekali saja).
  * Dipakai hanya untuk 401 yang benar-benar berarti token tidak valid/kedaluwarsa.
+ * 
+ * Note: Token sekarang di HttpOnly cookie (backend clear via /logout endpoint).
+ * Frontend hanya clear userData (UI data).
  */
 const clearSessionAndRedirect = () => {
-  localStorage.removeItem("token");
+  // Token di HttpOnly cookie - backend yang clear via logout endpoint
+  // Frontend hanya clear userData (UI data)
   localStorage.removeItem("userData");
 
   if (isRedirecting) return;
