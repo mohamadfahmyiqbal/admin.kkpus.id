@@ -17,10 +17,6 @@ const App = () => {
     // Token sekarang di HttpOnly cookie (browser otomatis kirim)
     // Init socket tanpa manual token - socket.js akan handle cookie
     initSocket();
-    // Clear login flag after a reload triggered by login
-    if (sessionStorage.getItem('justLoggedIn')) {
-      sessionStorage.removeItem('justLoggedIn');
-    }
 
     const handleStorage = () => {
       // userData change (UI data only) - socket tetap pakai cookie

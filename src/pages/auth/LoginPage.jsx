@@ -76,13 +76,7 @@ const LoginPage = () => {
 
         localStorage.setItem("userData", JSON.stringify(data.data.user));
         window.dispatchEvent(new Event("storage_sync"));
-        // Store a flag so we know a login just happened
-        sessionStorage.setItem('justLoggedIn', 'true');
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
-        // Reload shortly after navigation to ensure the HttpOnly cookie is present
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
 
       } else {
         setError(
