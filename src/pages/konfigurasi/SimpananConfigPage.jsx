@@ -70,10 +70,11 @@ const SimpananConfigPage = () => {
     try {
       // Ambil data existing untuk billTypeId
       const existingItems = configs.filter(item => item.bill_type_id === billTypeId);
+      const existing = existingItems[0];
       const newItem = {
         bill_type_id: billTypeId,
-        type_name: existingItems.find(i => i.bill_type_id === billTypeId) ? i.type_name : "Tidak diketahui",
-        type_code: existingItems.find(i => i.bill_type_id === billTypeId) ? i.type_code : "",
+        type_name: existing ? existing.type_name : "Tidak diketahui",
+        type_code: existing ? existing.type_code : "",
         default_amount: amount,
         effective_date: effectiveDate ? new Date(effectiveDate).toISOString().split('T')[0] : undefined,
       };

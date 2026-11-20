@@ -219,7 +219,7 @@ const GenericImportModal = ({
           return;
         }
 
-        let detailsHtml = `
+        const detailsHtml = `
           <div style="text-align:left;">
             <p class="mb-1">Jenis Simpanan: <b>${activeConfig.label}</b></p>
             <p class="mb-1">Berhasil diimpor: <b style="color:#198754;">${totalImported}</b> data</p>

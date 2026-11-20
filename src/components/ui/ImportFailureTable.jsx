@@ -41,8 +41,8 @@ const normalizeRows = (errors = [], failedCount = 0) => {
     // Contoh: "Anggota dengan No. A009 tidak ditemukan", "No. Anggota A010 sudah terdaftar".
     const fromReason =
       reason.match(/Anggota\s+dengan\s+No\.?\s*([A-Za-z0-9._-]+)/i) ||
-      reason.match(/No\.?\s*Anggota\s*[:\-]?\s*([A-Za-z0-9._-]+)/i) ||
-      reason.match(/No\.?\s*[:\-]\s*([A-Za-z0-9._-]+)/i) ||
+      reason.match(/No\.?\s*Anggota\s*[-: ]?\s*([A-Za-z0-9._-]+)/i) ||
+      reason.match(/No\.?\s*[-: ]\s*([A-Za-z0-9._-]+)/i) ||
       null;
 
     const finalAccount = account || (fromReason ? fromReason[1] : "");

@@ -62,7 +62,7 @@ export const TransactionDetailModal = ({
       .replace(/javascript:/gi, '');
     doc.write(sanitizedContent);
     doc.write('</div>');
-    doc.write('<script>window.onload=function(){window.focus();window.print();setTimeout(function(){window.close();},500);};<\/script>');
+    doc.write('<script>window.onload=function(){window.focus();window.print();setTimeout(function(){window.close();},500);};</' + 'script>');
     doc.write('</body></html>');
     doc.close();
   };
@@ -94,7 +94,7 @@ export const TransactionDetailModal = ({
       .replace(/javascript:/gi, '');
     doc.write(sanitizedContent);
     doc.write('</div>');
-    doc.write('<script>window.onload=function(){window.focus();window.print();};<\/script>');
+    doc.write('<script>window.onload=function(){window.focus();window.print();};</' + 'script>');
     doc.write('</body></html>');
     doc.close();
   };
