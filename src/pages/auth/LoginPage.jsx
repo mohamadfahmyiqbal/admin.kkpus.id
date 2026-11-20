@@ -76,18 +76,13 @@ const LoginPage = () => {
 
         localStorage.setItem("userData", JSON.stringify(data.data.user));
         window.dispatchEvent(new Event("storage_sync"));
+        // Store a flag so we know a login just happened
+        sessionStorage.setItem('justLoggedIn', 'true');
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
-        // If a new Service Worker is waiting, activate it and reload once.
+        // Reload shortly after navigation to ensure the HttpOnly cookie is present
         setTimeout(() => {
-          if (navigator.serviceWorker) {
-            navigator.serviceWorker.getRegistration().then((reg) => {
-              if (reg && reg.waiting) {
-                reg.waiting.postMessage({ type: "SKIP_WAITING" });
-                window.location.reload();
-              }
-            });
-          }
-        }, 500);
+          window.location.reload();
+        }, 1000);
 
       } else {
         setError(
