@@ -1,5 +1,9 @@
 # UI/UX Audit Checklist — Jual Beli Dashboard
 
+> **PERHATIAN:** File ini masih template kosong. Audit lengkap Jual Beli Dashboard tersedia di **`06-jual-beli-page-audit.md`** (skor 27/80, status: 🟡 Perbaikan Besar).
+>
+> File audit ini (`07-jual-beli-dashboard-audit.md`) dibuat secara otomatis oleh index generator namun tidak terisi. Gunakan `06-jual-beli-page-audit.md` sebagai referensi utama.
+
 ## Informasi Audit
 
 | Field | Isi |

@@ -113,9 +113,9 @@ const SplashPage = ({ delay = 1500, className = "" }) => {
             )}
           </div>
 
-          <div className="splashx-loading-container" role="progressbar" aria-label="Progress pemuatan">
-            <div className="splashx-loading-bar">
-              <div className="splashx-loading-progress" aria-hidden="true" />
+          <div className="splashx-loading-container" role="status" aria-label="Memuat aplikasi Paguyuban Usaha Sukses">
+            <div className="splashx-loading-bar" aria-hidden="true">
+              <div className="splashx-loading-progress" />
             </div>
             <p className="splashx-loading-text" aria-live="polite" aria-atomic="true">
               {LOADING_MESSAGES[msgIndex]}

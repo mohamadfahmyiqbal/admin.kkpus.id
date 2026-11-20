@@ -1,5 +1,9 @@
 # UI/UX Audit Checklist — Simpanan Dashboard
 
+> **PERHATIAN:** File ini masih template kosong. Audit lengkap Simpanan Dashboard tersedia di **`05-simpanan-page-audit.md`** (skor 27/80, status: 🟡 Perbaikan Besar → Perbaikan Diterapkan).
+>
+> File audit ini (`05-simpanan-dashboard-audit.md`) dibuat secara otomatis oleh index generator namun tidak terisi. Gunakan `05-simpanan-page-audit.md` sebagai referensi utama.
+
 ## Informasi Audit
 
 | Field | Isi |

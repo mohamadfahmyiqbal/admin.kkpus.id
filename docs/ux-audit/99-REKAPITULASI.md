@@ -12,13 +12,13 @@
 
 | No | Halaman | File Audit | Status Audit | Skor | Hasil |
 |----|---------|------------|:------------:|:----:|-------|
-| 1 | Splash Page | `01-auth-splash-page-audit.md` | ✅ Selesai | **14/80** | 🔴 Tidak Lulus |
+| 1 | Splash Page | `01-auth-splash-page-audit.md` | ✅ Selesai (Perbaikan Diterapkan) | **14/80** | 🔴 Tidak Lulus → 🟡 Perbaikan Diterapkan |
 | 2 | Login Page | `02-auth-login-page-audit.md` | ✅ Selesai | **28/80** | 🟡 Perbaikan Besar |
 | 3 | Dashboard | `03-dashboard-page-audit.md` | ✅ Selesai | **27/80** | 🟡 Perbaikan Besar |
 | 4 | Members (Anggota) | `04-members-page-audit.md` | ✅ Selesai (Perbaikan Diterapkan) | **27/80** | 🟡 Perbaikan Besar |
-| 5 | Simpanan Dashboard | `05-simpanan-dashboard-audit.md` | ⬜ Pending | — | — |
+| 5 | Simpanan Dashboard | `05-simpanan-page-audit.md` | ✅ Selesai (Perbaikan Diterapkan) | **27/80** | 🟡 Perbaikan Besar |
 | 6 | Simpanan Report | `06-simpanan-report-page-audit.md` | ⬜ Pending | — | — |
-| 7 | Jual Beli Dashboard | `07-jual-beli-dashboard-audit.md` | ⬜ Pending | — | — |
+| 7 | Jual Beli Dashboard | `06-jual-beli-page-audit.md` | ✅ Selesai | **27/80** | 🟡 Perbaikan Besar |
 | 8 | Jual Beli Report | `08-jual-beli-report-page-audit.md` | ⬜ Pending | — | — |
 | 9 | Akad Config | `09-akad-config-page-audit.md` | ⬜ Pending | — | — |
 | 10 | Simpanan Config | `10-simpanan-config-page-audit.md` | ⬜ Pending | — | — |
@@ -36,20 +36,24 @@
 | 22 | Pendanaan Syariah Report | `22-pendanaan-syariah-report-page-audit.md` | ⬜ Pending | — | — |
 | 23 | Training Page | `23-training-page-audit.md` | ⬜ Pending | — | — |
 
-**Progres:** 4 dari 23 halaman selesai (17%)
+**Progres:** 6 dari 23 halaman selesai (26%)
+
+**Catatan penamaan file:**
+- Baris 5 (Simpanan): audit lengkap berada di `05-simpanan-page-audit.md`; file `05-simpanan-dashboard-audit.md` masih template kosong.
+- Baris 7 (Jual Beli): audit lengkap berada di `06-jual-beli-page-audit.md`; file `07-jual-beli-dashboard-audit.md` masih template kosong.
 
 ---
 
 ## 2. Ringkasan Hasil Audit yang Selesai
 
-### 2.1 Splash Page (14/80) — 🔴 Tidak Lulus
+### 2.1 Splash Page (14/80) — 🔴 Tidak Lulus → 🟡 Perbaikan Diterapkan
 
-**Temuan Kritis (3 item):**
+**Temuan Awal (sebelum perbaikan):**
 
 | # | Masalah | Dampak |
 |---|---------|--------|
-| 1 | Membersihkan cookie & `sessionStorage` tanpa izin pengguna saat splash dimuat | Pelanggaran privasi (Kritis) |
-| 2 | Auto-redirect 3000 ms melanggu Doherty Threshold & kontrol pengguna | UX buruk, memaksa menunggu |
+| 1 | Membersihkan `localStorage`, `sessionStorage`, dan Cache Storage tanpa izin pengguna saat splash dimuat | Pelanggaran privasi (Kritis) |
+| 2 | Auto-redirect 3000 ms melanggar Doherty Threshold & kontrol pengguna | UX buruk, memaksa menunggu |
 | 3 | Pesan berubah otomatis setiap 1200 ms tanpa opsi pause | WCAG 2.2 Timing Adjustable dilanggar |
 
 **Temuan Tinggi (3 item):**
@@ -57,10 +61,16 @@
 - Tidak ada indikasi fokus keyboard
 - Efek animasi tanpa `prefers-reduced-motion`
 
-**Rekomendasi Utama:**
-1. Hapus `purgeCacheAndCookies` otomatis atau tambahkan persetujuan
-2. Kurangi delay redirect / pertimbangkan apakah splash diperlukan
-3. Tambahkan opsi pause animasi & ARIA attributes
+**Perbaikan yang Telah Diterapkan (20 Nov 2026):**
+1. ✅ Hapus `purgeCacheAndCookies` — cookie/sessionStorage tidak lagi dihapus diam-diam
+2. ✅ Delay redirect 3000 ms → 1500 ms
+3. ✅ Tombol Jeda/Lanjut rotasi pesan (WCAG 2.2.2)
+4. ✅ Tombol "Lewati" + `:focus-visible` (CSS global)
+5. ✅ Touch target ≥ 44×44 px pada tombol kontrol
+6. ✅ `role="status"` + `aria-live` menggantikan progressbar tanpa ARIA
+7. ✅ `prefers-reduced-motion` di `SplashPage.css`
+
+**Backlog tersisa:** verifikasi kontras warna, uji usabilitas, handoff Figma.
 
 ---
 
@@ -105,7 +115,7 @@
 
 **Rekomendasi Utama:**
 1. Perbesar tombol aksi / tambahkan padding
-2. Tambahkan skip link & focus-visible
+2. Tambahkan skip link & focus-visible (sudah global, perlu verifikasi per halaman)
 3. Tambahkan aria-label pada ikon
 4. Kurangi informasi sekaligus (sembunyikan tab kosong)
 
@@ -161,140 +171,195 @@
 
 ---
 
-### 2.5 Simpanan Dashboard (20 Nov 2026) — 🟡 Perbaikan Diterapkan
+### 2.5 Simpanan Dashboard (27/80) — 🟡 Perbaikan Besar → 🟡 Perbaikan Diterapkan
 
-**Temuan Kritis (1 item):**
+**Sumber audit:** `05-simpanan-page-audit.md`
+
+**Temuan Kritis (4 item):**
+
 | # | Masalah | Dampak |
 |---|---------|--------|
-| 1 | Tabel transaksi tanpa `<caption>` dan `scope` pada header | WCAG 1.3.1 gagal |
+| 1 | Tombol aksi tabel (CheckCircle verifikasi, Eye detail) ukuran kecil kemungkinan < 44×44 px | Aksesibilitas gagal |
+| 2 | Filter input di header tabel tidak memiliki `<label>` yang terlihat dan terprogram | Aksesibilitas gagal |
+| 3 | Tidak ada skip link dan indikasi fokus keyboard yang terlihat jelas | Aksesibilitas gagal |
+| 4 | Tabel tanpa caption/summary dan th sort tanpa aria-sort/aria-label | WCAG 1.3.1 gagal |
 
-**Temuan Tinggi (2 item):**
-- Filter input tabel tanpa label terprogram yang terlihat
-- Ikon dekoratif tanpa `aria-hidden`
+**Temuan Tinggi (5 item):**
+- Warna & spacing hardcode (inline style)
+- Ikon phosphor-react tanpa aria-label / aria-hidden
+- `alert()` native untuk gagal export tidak di-announce ke screen reader
+- Nomor & nama anggota ditampilkan dalam tabel transaksi
+- 3 tab utama + 2 sub-tab + 6 filter kolom = risiko cognitive overload
 
 **Perbaikan yang Telah Diterapkan (20 Nov 2026):**
 1. ✅ `<caption className="visually-hidden">` pada tabel transaksi simpanan
 2. ✅ `scope="col"` pada semua `<th>` header tabel
-3. ✅ Filter input memiliki `aria-label` deskriptif
-4. ✅ Tombol aksi (verifikasi, approve, detail) sudah touch target ≥ 44×44 px
-5. ✅ Pagination & size selector memiliki `aria-label`
+3. ✅ `aria-sort` + `tabIndex` + `onKeyDown` pada header sortable
+4. ✅ Filter input memiliki `aria-label` deskriptif
+5. ✅ Tombol aksi (verifikasi, approve, detail) touch target ≥ 44×44 px
+6. ✅ Pagination & size selector memiliki `aria-label`
 
 **Masih Perlu Diperbaiki (Backlog):**
 - Verifikasi kontras warna pada badge status
+- Ganti `alert()` native dengan toast/SweetAlert2 yang accessible
+- Privasi nomor/nama anggota (maskir/otorisasi)
 - Migrasi inline style ke design token
 - Uji usabilitas & handoff
 
 ---
 
+### 2.6 Jual Beli Dashboard (27/80) — 🟡 Perbaikan Besar
+
+**Sumber audit:** `06-jual-beli-page-audit.md`
+
+**Temuan Kritis (4 item):**
+
+| # | Masalah | Dampak |
+|---|---------|--------|
+| 1 | Tombol aksi tabel (Eye, Coins, CheckCircle, X, Trash) ukuran kecil kemungkinan < 44×44 px | Aksesibilitas gagal |
+| 2 | Filter input di header tabel tidak memiliki `<label>` yang terlihat dan terprogram | Aksesibilitas gagal |
+| 3 | Tidak ada skip link dan indikasi fokus keyboard yang terlihat jelas | Aksesibilitas gagal |
+| 4 | Tabel tanpa caption/summary dan th sort tanpa aria-sort/aria-label | WCAG 1.3.1 gagal |
+
+**Temuan Tinggi (5 item):**
+- Warna & spacing hardcode (inline style)
+- Ikon phosphor-react tanpa aria-label / aria-hidden
+- `animate-fade-in` tanpa `prefers-reduced-motion`
+- Nama anggota & detail transaksi ditampilkan dalam tabel pembiayaan
+- 11 filter kolom dalam satu layar = risiko cognitive overload
+
+**Rekomendasi Utama:**
+1. Perbesar tombol aksi tabel / tambahkan padding (≥ 44×44 px)
+2. Tambahkan label/aria-label pada filter
+3. Tambahkan skip link & focus-visible (global sudah ada, perlu verifikasi)
+4. Tambahkan caption, `scope`, `aria-sort`
+5. Migrasi inline style ke design token
+6. Terapkan maskir data anggota sesuai otorisasi
+7. Sederhanakan filter atau kelompokkan
+
+---
+
 ## 3. Pola Masalah Umum (Cross-Page)
 
-Berdasarkan 4 halaman yang sudah diaudit (Splash, Login, Dashboard, Members), **pola masalah yang berulang** dan kemungkinan besar berlaku di 19 halaman lainnya:
+Berdasarkan 6 halaman yang sudah diaudit (Splash, Login, Dashboard, Members, Simpanan, Jual Beli), **pola masalah yang berulang** dan kemungkinan besar berlaku di 17 halaman lainnya.
 
 ### 3.1 Aksesibilitas (Tertinggi — Hampir Semua Halaman)
 
-| Masalah | Prevalensi | Severity |
-|---------|:----------:|----------|
-| Kontras teks perlu verifikasi (≥ 4.5:1) | 4/4 | Kritis |
-| Touch target < 44×44 px | 4/4 | Kritis |
-| Tidak ada indikasi fokus keyboard | 4/4 | Kritis |
-| Ikon tanpa aria-label / aria-hidden | 4/4 | Tinggi |
-| Animasi tanpa `prefers-reduced-motion` | 4/4 | Tinggi |
-| Progressbar / loading tanpa ARIA | 1/4 | Kritis |
-| Timing otomatis tanpa pause | 1/4 | Kritis |
-| Filter/input tanpa label terprogram | 1/4 | Kritis |
+| Masalah | Prevalensi | Severity | Status |
+|---------|:----------:|:--------:|--------|
+| Kontras teks perlu verifikasi (≥ 4.5:1) | 6/6 | Kritis | Terbuka |
+| Touch target < 44×44 px | 6/6 | Kritis | 3/6 diperbaiki (Splash, Members, Simpanan) |
+| Tidak ada indikasi fokus keyboard | 6/6 | Kritis | ✅ Fix global (`:focus-visible`) |
+| Ikon tanpa aria-label / aria-hidden | 6/6 | Tinggi | 2/6 diperbaiki (Members, Simpanan) |
+| Animasi tanpa `prefers-reduced-motion` | 6/6 | Tinggi | ✅ Fix global (`admin-theme.css`) |
+| Filter/input tanpa label terprogram | 3/6 | Kritis | 2/3 diperbaiki (Members, Simpanan) |
+| Progressbar / loading tanpa ARIA | 1/6 | Kritis | ✅ Diperbaiki (Splash) |
+| Timing otomatis tanpa pause | 1/6 | Kritis | ✅ Diperbaiki (Splash) |
+| `alert()` native / toast tanpa announcement | 2/6 | Tinggi | Terbuka (Simpanan, Dashboard) |
 
 ### 3.2 Design System (Tertinggi — Hampir Semua Halaman)
 
 | Masalah | Prevalensi | Severity |
-|---------|:----------:|----------|
-| Warna hardcode, belum design token | 4/4 | Tinggi |
-| Tipori hardcode | 4/4 | Tinggi |
-| Spacing hardcode | 4/4 | Tinggi |
-| Border-radius & shadow hardcode | 4/4 | Menengah |
-| Tidak ada skala tipografi terdefinisi | 4/4 | Menengah |
+|---------|:----------:|:--------:|
+| Warna hardcode, belum design token | 6/6 | Tinggi |
+| Tipografi hardcode | 6/6 | Tinggi |
+| Spacing hardcode | 6/6 | Tinggi |
+| Border-radius & shadow hardcode | 6/6 | Menengah |
+| Tidak ada skala tipografi terdefinisi | 6/6 | Menengah |
 
 ### 3.3 Responsivitas
 
 | Masalah | Prevalensi | Severity |
-|---------|:----------:|----------|
-| Hanya satu breakpoint (576px) | 1/4 | Tinggi |
-| Tidak jelas mobile-first | 2/4 | Tinggi |
+|---------|:----------:|:--------:|
+| Hanya satu breakpoint / breakpoint tidak terdokumentasi | 2/6 | Tinggi |
+| Tidak jelas mobile-first | 3/6 | Tinggi |
 
 ### 3.4 Proses & Dokumentasi (Semua Halaman)
 
 | Masalah | Prevalensi | Severity |
-|---------|:----------:|----------|
-| Tidak ada dokumentasi riset pengguna | 4/4 | Tinggi |
-| Tidak ada persona / user journey | 4/4 | Tinggi |
-| Tidak ada file Figma / design spec | 4/4 | Tinggi |
-| Tidak ada prototype interaktif | 4/4 | Tinggi |
-| Tidak ada uji usabilitas | 4/4 | Tinggi |
-| Tidak ada metrik sukses | 4/4 | Rendah |
+|---------|:----------:|:--------:|
+| Tidak ada dokumentasi riset pengguna | 6/6 | Tinggi |
+| Tidak ada persona / user journey | 6/6 | Tinggi |
+| Tidak ada file Figma / design spec | 6/6 | Tinggi |
+| Tidak ada prototype interaktif | 6/6 | Tinggi |
+| Tidak ada uji usabilitas | 6/6 | Tinggi |
+| Tidak ada metrik sukses | 6/6 | Rendah |
 
 ### 3.5 Etika & Anti Dark Pattern
 
-| Masalah | Prevalensi | Severity |
-|---------|:----------:|----------|
-| Privasi: membersihkan data tanpa izin | 1/4 | Kritis |
-| Privasi: data sensitif ditampilkan terbuka (Members) | 1/4 | Kritis |
-| Kontrol pengguna: auto-redirect tanpa izin | 1/4 | Kritis |
-| Tidak ada tombol batal/kembali | 1/4 | Kritis |
-| **Hard delete tanpa opsi soft delete/arsip** | 1/4 | Tinggi |
+| Masalah | Prevalensi | Severity | Status |
+|---------|:----------:|:--------:|--------|
+| Privasi: membersihkan data tanpa izin | 1/6 | Kritis | ✅ Diperbaiki (Splash) |
+| Privasi: data sensitif ditampilkan terbuka | 3/6 | Kritis/Tinggi | Terbuka (Members, Simpanan, Jual Beli) |
+| Kontrol pengguna: auto-redirect tanpa izin | 1/6 | Kritis | ✅ Diperbaiki (Splash) |
+| Tidak ada tombol batal/kembali | 1/6 | Kritis | Terbuka (Login) |
+| Hard delete tanpa opsi soft delete/arsip | 1/6 | Tinggi | ✅ Diperbaiki (Members) |
+| Cognitive overload (terlalu banyak opsi) | 4/6 | Tinggi | Terbuka (Dashboard, Members, Simpanan, Jual Beli) |
 
 ---
 
 ## 4. Prioritas Perbaikan Global
 
-Berdasarkan analisis, berikut adalah daftar perbaikan yang **sebaiknya dilakukan secara global** (berdampak ke 23 halaman):
+### ✅ Sudah Diterapkan (Global & per halaman)
 
-### 🔴 Prioritas 1 — Kritis (Harus Diperbaiki Sebelum Rilis)
+| # | Perbaikan | Cakupan |
+|---|-----------|---------|
+| 1 | Hapus `purgeCacheAndCookies` otomatis | Splash Page |
+| 2 | Skip link global (`LayoutGlobal.jsx`) | Semua halaman |
+| 3 | `:focus-visible` global (`admin-theme.css`) | Semua halaman |
+| 4 | `prefers-reduced-motion` global (`admin-theme.css`) | Semua halaman |
+| 5 | Touch target ≥ 44×44 px (CSS & komponen) | Semua halaman |
+| 6 | Members: label, caption/scope/aria-sort, aria-hidden, aria-label | Members |
+| 7 | Members: soft delete / restore / arsip (single & batch) | Members |
+| 8 | Simpanan: caption/scope/aria-sort, aria-label filter, touch target | Simpanan |
+
+### 🔴 Prioritas 1 — Kritis (Sisa, Harus Diperbaiki Sebelum Rilis)
 
 | # | Perbaikan | Dampak | Halaman Terdampak |
 |---|-----------|--------|-------------------|
-| 1 | Tambahkan `aria-label` / `aria-hidden` pada semua ikon SVG/Phosphor | Screen reader access | Semua |
-| 2 | Pastikan semua touch target ≥ 44×44 px | WCAG 2.5.5 | Semua |
-| 3 | Tambahkan `:focus-visible` yang terlihat di semua elemen interaktif | WCAG 2.4.7 | Semua |
-| 4 | Tambahkan skip link di layout utama | WCAG 2.4.1 | Semua |
-| 5 | Respek `prefers-reduced-motion` di semua animasi | WCAG 2.3.3 | Semua |
-| 6 | Hapus `purgeCacheAndCookies` otomatis di Splash | Privasi | Splash Page |
-| 7 | Verifikasi & perbaiki kontras warna (≥ 4.5:1 teks, ≥ 3:1 UI) | WCAG 1.4.3 | Semua |
+| 1 | Verifikasi & perbaiki kontras warna (≥ 4.5:1 teks, ≥ 3:1 UI) | WCAG 1.4.3 | Semua |
+| 2 | Lengkapi `aria-label` / `aria-hidden` pada ikon & tombol icon-only di halaman belum diaudit | Screen reader access | 17 halaman sisa |
+| 3 | Verifikasi touch target ≥ 44×44 px & atribut ARIA pada halaman belum diaudit | WCAG 2.5.5 | 17 halaman sisa |
 
 ### 🟡 Prioritas 2 — Tinggi (Perlu Perbaikan)
 
 | # | Perbaikan | Dampak | Halaman Terdampak |
 |---|-----------|--------|-------------------|
-| 8 | Definisikan design token (CSS variables) untuk warna, spacing, typography | Konsistensi | Semua |
-| 9 | Kurangi cognitive overload di Dashboard (sembunyikan tab kosong) | UX | Dashboard |
-| 10 | Tambahkan breakpoint tambahan (tablet) | Responsivitas | Login + lainnya |
-| 11 | Tambahkan tombol "Kembali" / navigasi keluar di halaman yang tidak ada | Kontrol pengguna | Login + lainnya |
-| 12 | Tambahkan ARIA attributes pada progressbar, modal, tab | WCAG | Semua |
-| 13 | Tambahkan tooltip / bantuan di area yang membingungkan | Nielsen #10 | Dashboard + Report |
+| 4 | Definisikan design token (CSS variables) untuk warna, spacing, typography | Konsistensi | Semua |
+| 5 | Kurangi cognitive overload (sembunyikan tab/filter kosong) | UX | Dashboard, Members, Simpanan, Jual Beli |
+| 6 | Tambahkan breakpoint tambahan (tablet) | Responsivitas | Login + lainnya |
+| 7 | Tambahkan tombol "Kembali" / navigasi keluar | Kontrol pengguna | Login + lainnya |
+| 8 | Tambahkan ARIA attributes pada progressbar, modal, tab | WCAG | Semua |
+| 9 | Ganti `alert()` native dengan toast/SweetAlert2 yang accessible | Aksesibilitas | Simpanan, Dashboard |
+| 10 | Terapkan maskir data sensitif / role-based access | Privasi | Members, Simpanan, Jual Beli |
+| 11 | Tambahkan tooltip / bantuan di area yang membingungkan | Nielsen #10 | Dashboard + Report |
 
 ### 🟢 Prioritas 3 — Menengah (Direkomendasikan)
 
 | # | Perbaikan | Dampak | Halaman Terdampak |
 |---|-----------|--------|-------------------|
-| 14 | Buat persona & user journey document | Proses desain | Proyek |
-| 15 | Buat design spec di Figma | Handoff | Proyek |
-| 16 | Jalankan uji usabilitas (minimal 5 user) | Validasi | Proyek |
-| 17 | Tetapkan metrik sukses (SUS, task success rate) | Pengukuran | Proyek |
-| 18 | Tambahkan "Ingat Saya" di Login | Efisiensi | Login Page |
+| 12 | Buat persona & user journey document | Proses desain | Proyek |
+| 13 | Buat design spec di Figma | Handoff | Proyek |
+| 14 | Jalankan uji usabilitas (minimal 5 user) | Validasi | Proyek |
+| 15 | Tetapkan metrik sukses (SUS, task success rate) | Pengukuran | Proyek |
+| 16 | Tambahkan "Ingat Saya" di Login | Efisiensi | Login Page |
 
 ---
 
-## 5. Estimasi Dampak Perbaikan
+## 5. Estimasi Dampak Perbaikan (Sisa)
 
 | Kategori | Perbaikan Kritis | Perbaikan Tinggi | Perbaikan Menengah |
 |----------|:----------------:|:----------------:|:-------------------:|
-| Aksesibilitas | 5 | 3 | 0 |
-| Design System | 0 | 4 | 1 |
-| Responsivitas | 0 | 1 | 1 |
-| Etika/Privasi | 2 | 0 | 0 |
-| Proses/Dokumentasi | 0 | 0 | 4 |
+| Aksesibilitas | 3 | 2 | 0 |
+| Design System | 0 | 1 | 0 |
+| Responsivitas | 0 | 1 | 0 |
+| UX / Heuristik | 0 | 2 | 1 |
+| Etika / Privasi | 0 | 2 | 0 |
+| Proses / Dokumentasi | 0 | 0 | 4 |
 
-**Total estimasi:**
-- **Kritis:** 7 item (harus sebelum rilis)
-- **Tinggi:** 9 item (sebaiknya segera)
+**Total estimasi (sisa):**
+- **Kritis:** 3 item (harus sebelum rilis)
+- **Tinggi:** 8 item (sebaiknya segera)
 - **Menengah:** 5 item (prioritas rendah)
 
 ---
@@ -302,10 +367,11 @@ Berdasarkan analisis, berikut adalah daftar perbaikan yang **sebaiknya dilakukan
 ## 6. Roadmap Audit & Perbaikan
 
 ```
-Minggu 1  → Audit 10 halaman prioritas (Simpanan, Tabungan, Pinjaman, Jual Beli)
-Minggu 2  → Audit 13 halaman sisanya
-Minggu 3  → Perbaiki item Kritis (7 item)
-Minggu 4  → Perbaiki item Tinggi (9 item)
+Minggu 1  → Selesaikan audit 17 halaman sisa (prioritas: Simpanan Report,
+            Tabungan, Pinjaman, Jual Beli Report, Arisan, Investasi, Config)
+Minggu 2  → Konsolidasi temuan lintas halaman & verifikasi regresi perbaikan
+Minggu 3  → Perbaiki item Kritis sisa (3 item)
+Minggu 4  → Perbaiki item Tinggi (8 item)
 Minggu 5  → Uji usabilitas + iterasi
 Minggu 6  → Audit ulang (regression)
 ```
@@ -316,16 +382,23 @@ Minggu 6  → Audit ulang (regression)
 
 | Prioritas | Halaman | Alasan |
 |:---------:|---------|--------|
-| 1 | Simpanan Dashboard | Data finansial utama |
+| 1 | Simpanan Report | Data finansial utama |
 | 2 | Simpanan Config | Perubahan nominal berdampak ke semua anggota |
 | 3 | Tabungan List | Kompleksitas tinggi (bills, approval) |
 | 4 | Pinjaman List | Approval bertahap, data sensitif |
-| 5 | Jual Beli Dashboard | Data transaksi + approval |
-| 6 | Dashboard Approval Queue | Alur keputusan finansial |
-| 7 | Arisan Batch | Interaksi kompleks |
-| 8 | Investasi Halal | Data finansial syariah |
-| 9 | Payment Fee Config | Konfigurasi biaya (dampak finansial) |
-| 10 | Jual Beli Report | Data transaksi laporan |
+| 5 | Jual Beli Report | Data transaksi laporan |
+| 6 | Arisan Batch | Interaksi kompleks |
+| 7 | Investasi Halal | Data finansial syariah |
+| 8 | Payment Fee Config | Konfigurasi biaya (dampak finansial) |
+| 9 | Pinjaman Report | Laporan approval & mutasi |
+| 10 | Akad Config | Konfigurasi akad |
+| 11 | Tabungan Report | Laporan tabungan |
+| 12 | Arisan Report | Laporan arisan |
+| 13 | Investasi Halal Report | Laporan investasi |
+| 14 | Pendanaan Syariah List | Data pendanaan |
+| 15 | Pendanaan Syariah Report | Laporan pendanaan |
+| 16 | Pinjaman Input Modal | Modal input data pinjaman |
+| 17 | Training Page | Halaman pelatihan |
 
 ---
 
@@ -333,20 +406,22 @@ Minggu 6  → Audit ulang (regression)
 
 **Status Overall:** 🟡 **Perlu Perbaikan Signifikan**
 
-Dari 4 halaman yang sudah diaudit:
+Dari 6 halaman yang sudah diaudit:
 - **0 halaman lulus** (skor minimal 70/80)
-- **1 halaman tidak lulus** (Splash Page — 14/80)
-- **3 halaman perlu perbaikan besar** (Login, Dashboard, Members — 27-28/80)
+- **1 halaman tidak lulus** (Splash Page — 14/80; perbaikan sudah diterapkan)
+- **5 halaman perlu perbaikan besar** (Login 28, Dashboard 27, Members 27, Simpanan 27, Jual Beli 27)
 - **1 halaman sudah diterapkan perbaikan aksesibilitas kritis** (Members Page)
+- **2 halaman sudah diterapkan sebagian perbaikan** (Splash, Simpanan)
 
-**Akibat:** 19 halaman lainnya kemungkinan besar memiliki masalah serupa (terutama aksesibilitas dan design system).
+**Akibat:** 17 halaman lainnya kemungkinan besar memiliki masalah serupa (terutama aksesibilitas dan design system).
 
 **Aksi segera:**
 1. **Global CSS fixes sudah diterapkan** (skip link, focus-visible, prefers-reduced-motion, touch target 44×44px) — dampak ke semua halaman
-2. Perbaiki sisa 7 item Kritis global (kontras warna, purgeCacheAndCookies di Splash)
-3. Lanjutkan audit 19 halaman sisanya
+2. Selesaikan 3 item Kritis sisa (kontras warna, aria-label ikon, verifikasi touch target/ARIA di 17 halaman)
+3. Lanjutkan audit 17 halaman sisanya
 4. Buat design token system sebagai fondasi perbaikan design system
 5. Jadwalkan uji usabilitas sebelum rilis produksi
+6. **Perbarui build assets** — `assets/SplashPage-*.js` (tracked) masih versi lama yang menghapus storage; rebuild atau keluarkan `assets/` dari tracking
 
 ---
 
@@ -366,5 +441,5 @@ Dari 4 halaman yang sudah diaudit:
 ---
 
 **Disusun oleh:** Senior UI/UX Designer — Skill `/uiux`  
-**Sumber data:** 23 file audit di `docs/ux-audit/`  
+**Sumber data:** 23 file audit di `docs/ux-audit/` (6 audit lengkap: 01, 02, 03, 04, 05-simpanan-page, 06-jual-beli-page)  
 **Terakhir diupdate:** 20 November 2026

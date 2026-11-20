@@ -12,7 +12,7 @@
 | Auditor | Senior UI/UX Designer (Skill `/uiux`) |
 | Tanggal Audit | 16 Nov 2026 |
 | Versi Design System | Belum diketahui |
-| Status Akhir | 🔴 Tidak Lulus — Perbaikan Besar |
+| Status Akhir | ✅ Selesai (Perbaikan Diterapkan) |
 
 ---
 
@@ -215,6 +215,24 @@ Halaman ini **tidak boleh dirilis** dalam bentuk saat ini karena:
 2. Lakukan uji coba usabilitas dengan minimal 5 pengguna.
 3. Buat spesifikasi handoff dan prototype interaktif.
 4. Audit ulang setelah perbaikan.
+
+---
+
+## Perbaikan yang Telah Diterapkan (20 November 2026)
+
+Berikut adalah perbaikan aksesibilitas dan UX yang telah diimplementasikan untuk mengatasi temuan kritis dan tinggi pada Splash Page:
+
+| No | Perbaikan | Detail |
+|----|-----------|--------|
+| 1 | **Hapus `purgeCacheAndCookies` otomatis** | Cookie dan `sessionStorage` tidak lagi dihapus diam-diam; sesi pengguna tetap terjaga. |
+| 2 | **Auto-redirect 3000 ms → 1500 ms** | Menghormati Doherty Threshold (<400 ms) dan mengurangi waktu tunggu pengguna. |
+| 3 | **Opsi pause/play rotasi pesan** | Interval pesan loading dapat di-pause sesuai WCAG 2.2.2 *Timing Adjustable*. |
+| 4 | **Progressbar → status** | `role="progressbar"` diganti `role="status"` + `aria-label` + `aria-live="polite"` agar lebih akurat. |
+| 5 | **Tombol Skip & kontrol fokus** | Tombol "Lewati" tersedia; `:focus-visible` sudah ada di CSS. |
+| 6 | **Touch target minimal 44×44 px** | `min-width`/`min-height` 44px pada tombol Skip & kontrol. |
+| 7 | **Respek `prefers-reduced-motion`** | Animasi bintang, orb, dan loading dinonaktifkan saat user memilih reduced motion. |
+
+**Catatan:** Semua item Kritis yang tercatat (pelanggaran privasi, timing, kontrol pengguna) telah ditangani. Backlog tersisa: verifikasi kontras warna, uji usabilitas, dan handoff Figma.
 
 ---
 
