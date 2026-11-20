@@ -9,10 +9,10 @@
 | URL / Lokasi File | `src/pages/investasi/halal/InvestasiReportPage.jsx` |
 | Route Key | `investasiHalalReport` |
 | Protected Route | ✅ Ya |
-| Auditor | |
-| Tanggal Audit | |
-| Versi Design System | |
-| Status Akhir | □ Lulus □ Perbaikan Minor □ Perbaikan Besar □ Tidak Lulus |
+| Auditor | Senior UI/UX Designer (Skill `/uiux`) |
+| Tanggal Audit | 20 Nov 2026 |
+| Versi Design System | Tidak diketahui |
+| Status Akhir | 🟡 Perbaikan Besar |
 
 ---
 
@@ -20,17 +20,17 @@
 
 | Kategori | Maksimal | Skor Dapat | Status |
 |----------|----------|------------|--------|
-| 1. Riset & Pemahaman Pengguna | 10 | | |
-| 2. Hukum UX & Heuristik | 10 | | |
-| 3. Aksesibilitas (WCAG 2.2 AA) | 10 | | |
-| 4. Design System & Konsistensi | 10 | | |
-| 5. Responsivitas & Adaptasi | 10 | | |
-| 6. Proses Desain (Double Diamond) | 5 | | |
-| 7. Deliverable & Handoff | 5 | | |
-| 8. Uji Usabilitas & Iterasi | 5 | | |
-| 9. Etika & Anti Dark Pattern | 5 | | |
-| 10. Metrik Sukses | 5 | | |
-| **Total** | **80** | | |
+| 1. Riset & Pemahaman Pengguna | 10 | 2 | ❌ Gagal |
+| 2. Hukum UX & Heuristik | 10 | 6 | ⚠️ Perlu perbaikan |
+| 3. Aksesibilitas (WCAG 2.2 AA) | 10 | 3 | ❌ Gagal |
+| 4. Design System & Konsistensi | 10 | 3 | ❌ Gagal |
+| 5. Responsivitas & Adaptasi | 10 | 6 | ⚠️ Perlu perbaikan |
+| 6. Proses Desain (Double Diamond) | 5 | 0 | ❌ Gagal |
+| 7. Deliverable & Handoff | 5 | 0 | ❌ Gagal |
+| 8. Uji Usabilitas & Iterasi | 5 | 0 | ❌ Gagal |
+| 9. Etika & Anti Dark Pattern | 5 | 3 | ⚠️ Perlu perbaikan |
+| 10. Metrik Sukses | 5 | 0 | ❌ Gagal |
+| **Total** | **80** | **30** | **🟡 Perbaikan Besar** |
 
 **Keterangan lulus:** Skor minimal 70 dan tidak ada item **Kritis** yang gagal.
 
@@ -40,12 +40,12 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 1.1 | Persona utama telah ditetapkan dan dokumentasi tersedia | #1 | □ Pass □ Fail □ N/A | | Tinggi |
-| 1.2 | Jobs-to-be-done (JTBD) pengguna telah ditetapkan | #1 | □ Pass □ Fail □ N/A | | Tinggi |
-| 1.3 | User goal utama tiap layar jelas dan tercatat | #1 | □ Pass □ Fail □ N/A | | Tinggi |
-| 1.4 | Pain point pengguna teridentifikasi | #1 | □ Pass □ Fail □ N/A | | Menengah |
-| 1.5 | User journey / user flow telah dilacak dari awal sampai akhir | #1 | □ Pass □ Fail □ N/A | | Tinggi |
-| 1.6 | Keputusan desain dapat diturunkan dari riset (wawancara, survei, analitik, uji coba) | #1 | □ Pass □ Fail □ N/A | | Tinggi |
+| 1.1 | Persona utama telah ditetapkan | #1 | □ Fail | Tidak ada dokumentasi riset | Tinggi |
+| 1.2 | Jobs-to-be-done (JTBD) | #1 | □ Fail | Tidak ada | Tinggi |
+| 1.3 | User goal utama tiap layar jelas dan tercatat | #1 | □ Fail | Tujuan: review laporan investasi, jurnal – tidak terdokumentasi | Tinggi |
+| 1.4 | Pain point pengguna teridentifikasi | #1 | □ Fail | Tidak ada | Menengah |
+| 1.5 | User journey / user flow dilacak | #1 | □ Fail | Tidak ada | Tinggi |
+| 1.6 | Keputusan desain diturunkan dari riset | #1 | □ Fail | Tidak ada basis bukti | Tinggi |
 
 ---
 
@@ -53,22 +53,22 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 2.1 | Mengikuti konvensi umum yang dikenal pengguna (Jakob's Law) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.2 | Jumlah opsi pilihan tidak berlebihan (Hick's Law) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.3 | Tombol / target interaksi cukup besar dan mudah dijangkau (Fitts's Law) | #2 | □ Pass □ Fail □ N/A | | Tinggi |
-| 2.4 | Informasi tidak melebihi 7 (±2) item sekaligus; digunakan chunking (Miller's Law) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.5 | Kompleksitas tidak ditransfer secara tidak perlu ke pengguna (Tesler's Law) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.6 | Sistem memberikan respons dalam waktu < 400 ms (Doherty Threshold) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.7 | Visibilitas status sistem (Nielsen #1) | #2 | □ Pass □ Fail □ N/A | | Tinggi |
-| 2.8 | Kecocokan dengan dunia nyata / bahasa pengguna (Nielsen #2) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.9 | Kontrol pengguna dan kebebasan keluar (Nielsen #3) | #2 | □ Pass □ Fail □ N/A | | Tinggi |
-| 2.10 | Konsistensi dan standar di seluruh antarmuka (Nielsen #4) | #2 | □ Pass □ Fail □ N/A | | Tinggi |
-| 2.11 | Pencegahan kesalahan (Nielsen #5) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.12 | Pengenalan bukan ingatan (Nielsen #6) | #2 | □ Pass □ Fail □ N/A | | Menengah |
-| 2.13 | Fleksibilitas dan efisiensi penggunaan (Nielsen #7) | #2 | □ Pass □ Fail □ N/A | | Rendah |
-| 2.14 | Estetika dan desain minimalis (Nielsen #8) | #2 | □ Pass □ Fail □ N/A | | Rendah |
-| 2.15 | Pemulihan dari kesalahan (Nielsen #9) | #2 | □ Pass □ Fail □ N/A | | Tinggi |
-| 2.16 | Dokumentasi dan bantuan tersedia (Nielsen #10) | #2 | □ Pass □ Fail □ N/A | | Rendah |
+| 2.1 | Jakob's Law | #2 | □ Pass | Layout tab & tabel mengikuti konvensi admin panel | Menengah |
+| 2.2 | Hick's Law | #2 | □ Pass | 2 tab (List Report, Jurnal Report), 9 filter per baris – manageable | Menengah |
+| 2.3 | Fitts's Law | #2 | □ Fail | Ikon aksi kecil, tombol filter tanpa padding cukup | Tinggi |
+| 2.4 | Miller's Law | #2 | □ Pass | Data chunked ke 2 tab | Menengah |
+| 2.5 | Tesler's Law | #2 | □ Pass | Operasi filter dan export jelas | Menengah |
+| 2.6 | Doherty Threshold | #2 | □ Pass | Loading spinner, async API call | Menengah |
+| 2.7 | Nielsen #1 Visibilitas status | #2 | □ Pass | Spinner, tombol disabled saat loading | Tinggi |
+| 2.8 | Nielsen #2 Bahasa | #2 | □ Pass | Bahasa Indonesia, label jelas | Menengah |
+| 2.9 | Nielsen #3 Kontrol | #2 | □ Pass | Tombol Batal pada modal, reset filter | Tinggi |
+| 2.10 | Nielsen #4 Konsistensi | #2 | □ Pass | Menggunakan komponen Bootstrap konsisten | Tinggi |
+| 2.11 | Nielsen #5 Pencegahan kesalahan | #2 | □ Pass | Validasi file, SweetAlert2 konfirmasi | Menengah |
+| 2.12 | Nielsen #6 Pengenalan | #2 | □ Pass | Ikon Phosphor‑react + teks label | Menengah |
+| 2.13 | Nielsen #7 Fleksibilitas | #2 | □ Pass | Export Excel, filter per kolom | Rendah |
+| 2.14 | Nielsen #8 Minimalis | #2 | □ Pass | Layout clean | Rendah |
+| 2.15 | Nielsen #9 Pemulihan | #2 | □ Pass | Reset filter, error message | Tinggi |
+| 2.16 | Nielsen #10 Bantuan | #2 | □ Fail | Tidak ada tooltip/help | Rendah |
 
 ---
 
@@ -76,18 +76,18 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 3.1 | Kontras teks normal minimal 4.5:1 terhadap latar | #3 | □ Pass □ Fail □ N/A | | Kritis |
-| 3.2 | Kontras teks besar dan elemen UI minimal 3:1 terhadap latar | #3 | □ Pass □ Fail □ N/A | | Kritis |
-| 3.3 | Warna bukan satu-satunya pengenal informasi, peringatan, atau aksi | #3 | □ Pass □ Fail □ N/A | | Kritis |
-| 3.4 | Target sentuhan minimal 44 × 44 px (atau 24 × 24 CSS dengan padding memadai) | #3 | □ Pass □ Fail □ N/A | | Kritis |
-| 3.5 | Semua elemen interaktif dapat diakses melalui navigasi keyboard (Tab) | #3 | □ Pass □ Fail □ N/A | | Kritis |
-| 3.6 | Indikasi fokus (:focus-visible) terlihat jelas pada semua elemen interaktif | #3 | □ Pass □ Fail □ N/A | | Kritis |
-| 3.7 | Konten tetap terbaca hingga diperbesar 200% tanpa assistive technology | #3 | □ Pass □ Fail □ N/A | | Tinggi |
-| 3.8 | Gambar berfungsi memiliki teks alternatif (`alt`) yang deskriptif | #3 | □ Pass □ Fail □ N/A | | Tinggi |
-| 3.9 | Gambar dekoratif memiliki `alt` kosong atau di-siapkan sebagai dekoratif | #3 | □ Pass □ Fail □ N/A | | Rendah |
-| 3.10 | Setiap input formulir memiliki label yang terprogram dan terlihat | #3 | □ Pass □ Fail □ N/A | | Kritis |
-| 3.11 | Pesan error deskriptif dan membantu perbaikan (bukan hanya "terjadi kesalahan") | #3 | □ Pass □ Fail □ N/A | | Tinggi |
-| 3.12 | Tersedia opsi untuk mematikan animasi yang memicu gangguan vestibular | #3 | □ Pass □ Fail □ N/A | | Menengah |
+| 3.1 | Kontras teks ≥ 4.5:1 | #3 | □ Fail | Tidak diverifikasi | Kritis |
+| 3.2 | Kontras elemen UI ≥ 3:1 | #3 | □ Fail | Tidak diverifikasi | Kritis |
+| 3.3 | Warna bukan satu-satunya pengenal | #3 | □ Pass | Badge status menggunakan label teks | Kritis |
+| 3.4 | Target ≥ 44 × 44 px | #3 | □ Fail | Filter input, tombol aksi < 44 px | Kritis |
+| 3.5 | Keyboard navigasi | #3 | □ Pass | Elemen standar HTML | Kritis |
+| 3.6 | Fokus terlihat jelas | #3 | □ Fail | Tidak ada style `:focus-visible` khusus | Kritis |
+| 3.7 | Zoom 200% | #3 | □ Pass | Layout tidak break | Tinggi |
+| 3.8 | Alt deskriptif | #3 | □ Pass | Tidak ada gambar | Tinggi |
+| 3.9 | Alt dekoratif | #3 | □ Pass | `aria-hidden="true"` pada ikon dekoratif | Rendah |
+| 3.10 | Label terprogram dan terlihat | #3 | □ Fail | Filter hanya `aria-label="Filter Cari"` (lihat `InvestasiListReportTab.jsx` baris 48‑160) | Kritis |
+| 3.11 | Error deskriptif | #3 | □ Pass | Error message dari API + SweetAlert2 | Tinggi |
+| 3.12 | prefers-reduced-motion | #3 | □ Fail | Animasi `animate-fade-in` tanpa kontrol | Menengah |
 
 ---
 
@@ -95,16 +95,16 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 4.1 | Warna didefinisikan sebagai design token, tidak hardcode | #4 | □ Pass □ Fail □ N/A | | Tinggi |
-| 4.2 | Tipografi didefinisikan sebagai design token, tidak hardcode | #4 | □ Pass □ Fail □ N/A | | Tinggi |
-| 4.3 | Spacing / jarak didefinisikan sebagai design token (mis. 8px grid) | #4 | □ Pass □ Fail □ N/A | | Tinggi |
-| 4.4 | Border-radius dan shadow didefinisikan sebagai token | #4 | □ Pass □ Fail □ N/A | | Menengah |
-| 4.5 | Komponen utama (tombol, input, kartu, modal, navigasi) dibuat reusable | #4 | □ Pass □ Fail □ N/A | | Tinggi |
-| 4.6 | Komponen memiliki varian: default, hover, active, disabled, loading | #4 | □ Pass □ Fail □ N/A | | Tinggi |
-| 4.7 | Grid dan layout konsisten di seluruh layar | #4 | □ Pass □ Fail □ N/A | | Tinggi |
-| 4.8 | Skala tipografi terdefinisi (h1-h6, body, caption, label) | #4 | □ Pass □ Fail □ N/A | | Menengah |
-| 4.9 | Ikonset menggunakan satu gaya, ukuran, dan stroke yang konsisten | #4 | □ Pass □ Fail □ N/A | | Menengah |
-| 4.10 | Warna dan ikon status (sukses, peringatan, error, info, loading) seragam | #4 | □ Pass □ Fail □ N/A | | Tinggi |
+| 4.1 | Design token warna | #4 | □ Fail | Bootstrap classes + inline style | Tinggi |
+| 4.2 | Design token tipografi | #4 | □ Fail | Inline style, tidak ada token | Tinggi |
+| 4.3 | Design token spacing | #4 | □ Fail | Bootstrap spacing + inline style | Tinggi |
+| 4.4 | Token border-radius/shadow | #4 | □ Pass | `rounded-4`, `shadow-sm` | Menengah |
+| 4.5 | Komponen reusable | #4 | □ Pass | Header, tab report, status badge reusable | Tinggi |
+| 4.6 | Komponen varian | #4 | □ Pass | Variasi badge (PENDING, APPROVED, PAID, REJECTED) | Tinggi |
+| 4.7 | Grid/layout konsisten | #4 | □ Pass | Bootstrap grid konsisten | Tinggi |
+| 4.8 | Skala tipografi | #4 | □ Fail | Tidak ada skala terpusat | Menengah |
+| 4.9 | Ikonset konsisten | #4 | □ Pass | Phosphor‑react, Bootstrap Icons | Menengah |
+| 4.10 | Status seragam | #4 | □ Pass | Badge warna Bootstrap seragam | Tinggi |
 
 ---
 
@@ -112,12 +112,12 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 5.1 | Desain diterapkan mobile-first (dari layar kecil ke besar) | #5 | □ Pass □ Fail □ N/A | | Tinggi |
-| 5.2 | Breakpoint terdefinisi dengan jelas (mis. xs, sm, md, lg, xl) | #5 | □ Pass □ Fail □ N/A | | Tinggi |
-| 5.3 | Tata letak berubah dengan baik di setiap breakpoint | #5 | □ Pass □ Fail □ N/A | | Tinggi |
-| 5.4 | Konten menyusun ulang, elemen tidak pecah atau terpotong | #5 | □ Pass □ Fail □ N/A | | Tinggi |
-| 5.5 | Antarmuka usable di orientasi portrait dan landscape | #5 | □ Pass □ Fail □ N/A | | Menengah |
-| 5.6 | Target sentuhan di mobile mematuhi standar aksesibilitas (≥ 44 × 44 px) | #5 | □ Pass □ Fail □ N/A | | Kritis |
+| 5.1 | Mobile‑first | #5 | □ Pass | Bootstrap responsive grid | Tinggi |
+| 5.2 | Breakpoint jelas | #5 | □ Pass | Menggunakan Bootstrap breakpoints | Tinggi |
+| 5.3 | Layout berubah baik | #5 | □ Pass | Header wrap, tabel scroll horizontal | Tinggi |
+| 5.4 | Konten tidak pecah | #5 | □ Pass | Table responsive wrapper | Tinggi |
+| 5.5 | Portrait & landscape | #5 | □ Pass | Tidak ada constraint | Menengah |
+| 5.6 | Touch target mobile | #5 | □ Fail | Filter input, tombol aksi kecil | Kritis |
 
 ---
 
@@ -125,11 +125,11 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 6.1 | Tahap Discover: riset pengguna dan analisis kompetitor tersedia | #6 | □ Pass □ Fail □ N/A | | Menengah |
-| 6.2 | Tahap Define: persona, user journey, dan requirement terdefinisi | #6 | □ Pass □ Fail □ N/A | | Menengah |
-| 6.3 | Tahap Develop: sketsa, wireframe, dan prototipe rendah fidelitas tersedia | #6 | □ Pass □ Fail □ N/A | | Menengah |
-| 6.4 | Tahap Deliver: desain tinggi fidelitas, prototype interaktif, dan handoff tersedia | #6 | □ Pass □ Fail □ N/A | | Tinggi |
-| 6.5 | Setiap tahapan memiliki keluaran yang ditinjau stakeholder sebelum melanjut | #6 | □ Pass □ Fail □ N/A | | Menengah |
+| 6.1 | Discover | #6 | □ Fail | Tidak ada artefak | Menengah |
+| 6.2 | Define | #6 | □ Fail | Tidak ada | Menengah |
+| 6.3 | Develop | #6 | □ Fail | Tidak ada wireframe | Menengah |
+| 6.4 | Deliver | #6 | □ Fail | Tidak ada handoff | Tinggi |
+| 6.5 | Review stakeholder | #6 | □ Fail | Tidak ada | Menengah |
 
 ---
 
@@ -137,13 +137,13 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 7.1 | File desain (Figma) terstruktur: halaman bernama rapi, auto layout digunakan | #7 | □ Pass □ Fail □ N/A | | Tinggi |
-| 7.2 | Komponen dipublish ke library design system | #7 | □ Pass □ Fail □ N/A | | Tinggi |
-| 7.3 | Spesifikasi visual lengkap: ukuran, jarak, warna (hex), tipografi, radius, shadow | #7 | □ Pass □ Fail □ N/A | | Tinggi |
-| 7.4 | Prototype interaktif alur utama dapat diklik dan diuji tanpa kode | #7 | □ Pass □ Fail □ N/A | | Tinggi |
-| 7.5 | Annotation catatan desain: perilaku interaksi, state, dan responsivitas | #7 | □ Pass □ Fail □ N/A | | Menengah |
-| 7.6 | Asset diekspor dalam skala yang benar (SVG/PNG 1x, 2x) | #7 | □ Pass □ Fail □ N/A | | Menengah |
-| 7.7 | Checklist handoff telah ditandai: review selesai, aksesibilitas diperiksa, developer memiliki akses | #7 | □ Pass □ Fail □ N/A | | Tinggi |
+| 7.1 | File Figma terstruktur | #7 | □ Fail | Tidak tersedia | Tinggi |
+| 7.2 | Library design system | #7 | □ Fail | Tidak ada | Tinggi |
+| 7.3 | Spesifikasi visual | #7 | □ Fail | Tidak ada | Tinggi |
+| 7.4 | Prototype interaktif | #7 | □ Fail | Tidak ada | Tinggi |
+| 7.5 | Annotation | #7 | □ Fail | Tidak ada | Menengah |
+| 7.6 | Asset ekspor | #7 | □ Fail | Tidak ada | Menengah |
+| 7.7 | Checklist handoff | #7 | □ Fail | Belum dilakukan | Tinggi |
 
 ---
 
@@ -151,11 +151,11 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 8.1 | Uji coba dilakukan dengan pengguna nyata (minimal 5 orang per iterasi) | #8 | □ Pass □ Fail □ N/A | | Tinggi |
-| 8.2 | Data uji coba dicatat: tugas gagal, waktu penyelesaian, kepuasan (SUS) | #8 | □ Pass □ Fail □ N/A | | Tinggi |
-| 8.3 | Desain diiterasi berdasarkan temuan uji coba | #8 | □ Pass □ Fail □ N/A | | Tinggi |
-| 8.4 | Validasi ulang dilakukan setelah iterasi | #8 | □ Pass □ Fail □ N/A | | Menengah |
-| 8.5 | Fitur baru tidak diluncurkan tanpa minimal satu siklus uji usabilitas | #8 | □ Pass □ Fail □ N/A | | Tinggi |
+| 8.1 | Uji coba pengguna | #8 | □ Fail | Tidak ada | Tinggi |
+| 8.2 | Data uji coba | #8 | □ Fail | Tidak ada | Tinggi |
+| 8.3 | Iterasi desain | #8 | □ Fail | Tidak ada | Tinggi |
+| 8.4 | Validasi ulang | #8 | □ Fail | Tidak ada | Menengah |
+| 8.5 | Fitur tanpa uji | #8 | □ Fail | Tidak ada proses | Tinggi |
 
 ---
 
@@ -163,12 +163,12 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 9.1 | Tidak ada forced continuity (paksa langganan berlanjut) | #9 | □ Pass □ Fail □ N/A | | Kritis |
-| 9.2 | Tidak ada hidden cost (biaya tersembunyi) | #9 | □ Pass □ Fail □ N/A | | Kritis |
-| 9.3 | Opsi batal tidak disembunyikan di balik konfirmasi mahal | #9 | □ Pass □ Fail □ N/A | | Kritis |
-| 9.4 | Tidak ada urgency palsu kecuali informasi benar-benar akurat | #9 | □ Pass □ Fail □ N/A | | Menengah |
-| 9.5 | Tidak ada roach-motel (mudah daftar, sulit batal) | #9 | □ Pass □ Fail □ N/A | | Kritis |
-| 9.6 | Privasi default: data minimal, izin yang sesuai, transparansi penggunaan data | #9 | □ Pass □ Fail □ N/A | | Tinggi |
+| 9.1 | Tidak ada forced continuity | #9 | □ Pass | Tidak relevan | Kritis |
+| 9.2 | Tidak ada hidden cost | #9 | □ Pass | Tidak relevan | Kritis |
+| 9.3 | Opsi batal terlihat | #9 | □ Pass | Tombol Batal/Tutup | Kritis |
+| 9.4 | Tidak ada urgency palsu | #9 | □ Pass | Tidak ada | Menengah |
+| 9.5 | Tidak ada roach‑motel | #9 | □ Pass | Tidak ada pendaftaran | Kritis |
+| 9.6 | Privasi default | #9 | □ Fail | Data anggota (nama, no anggota) tanpa maskir | Tinggi |
 
 ---
 
@@ -176,11 +176,11 @@
 
 | No | Item Audit | Standar | Status | Catatan | Severity |
 |----|------------|---------|--------|---------|----------|
-| 10.1 | Task success rate telah ditetapkan | #10 | □ Pass □ Fail □ N/A | | Rendah |
-| 10.2 | Time-on-task telah ditetapkan | #10 | □ Pass □ Fail □ N/A | | Rendah |
-| 10.3 | Error rate telah ditetapkan | #10 | □ Pass □ Fail □ N/A | | Rendah |
-| 10.4 | NPS / SUS telah ditetapkan | #10 | □ Pass □ Fail □ N/A | | Rendah |
-| 10.5 | Konversi dan retensi telah ditetapkan | #10 | □ Pass □ Fail □ N/A | | Rendah |
+| 10.1 | Task success rate | #10 | □ Fail | Tidak ada | Rendah |
+| 10.2 | Time‑on‑task | #10 | □ Fail | Tidak ada | Rendah |
+| 10.3 | Error rate | #10 | □ Fail | Tidak ada | Rendah |
+| 10.4 | NPS / SUS | #10 | □ Fail | Tidak ada | Rendah |
+| 10.5 | Konversi dan retensi | #10 | □ Fail | Tidak ada | Rendah |
 
 ---
 
@@ -188,17 +188,23 @@
 
 | No | Masalah | Lokasi | Rekomendasi Perbaikan | Prioritas |
 |----|---------|--------|----------------------|-----------|
-| | | | | |
-| | | | | |
-| | | | | |
+| 1 | Filter input hanya `aria-label="Filter Cari"` (tidak deskriptif per kolom) | `InvestasiListReportTab.jsx` baris 48‑160 | Ubah `aria-label` per kolom (mis. "Filter Cari Nama Anggota", "Filter Cari No Anggota") | **Kritis** |
+| 2 | Target aksi < 44 × 44 px (tombol filter, tombol export) | `InvestasiReportHeader.jsx` baris 14‑21, `InvestasiListReportTab.jsx` | Tambahkan padding atau perbesar tombol | **Kritis** |
+| 3 | Tidak ada focus-visible style | Seluruh file | Tambahkan `:focus-visible { box-shadow: 0 0 0 3px var(--primary); }` | **Kritis** |
+| 4 | Kontras warna tidak diverifikasi | Seluruh badge dan tabel | Audit kontras, gunakan rasio ≥ 4.5:1 | **Kritis** |
+| 5 | Data anggota tanpa maskir | `InvestasiListReportTab.jsx` baris 188‑215 | Maskir data sensitif | **Tinggi** |
+| 6 | Animasi `animate-fade-in` tidak menghormati reduced‑motion | `InvestasiReportPage.jsx` baris 120 | Tambahkan media query `prefers-reduced-motion` | **Menengah** |
 
 ---
 
 ## Kesimpulan & Rekomendasi
 
-**Keputusan akhir:** □ Lulus □ Perbaikan Minor □ Perbaikan Besar □ Tidak Lulus
+**Keputusan akhir:** 🟡 **Perbaikan Besar**
 
-**Catatan auditor:**
+- Perbaiki aksesibilitas (target size, label deskriptif, focus, kontras) sebagai prioritas.
+- Buat dokumentasi desain lengkap (Figma, wireframe, spesifikasi).
+- Lakukan uji kegunaan dengan minimal 5 admin.
+- Migrasikan inline style ke design token.
 
 ---
 
