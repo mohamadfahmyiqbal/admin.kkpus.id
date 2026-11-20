@@ -66,9 +66,10 @@ const PendanaanTable = ({
                     <button
                       className="btn btn-sm btn-outline-success rounded-circle p-2 d-flex align-items-center justify-content-center"
                       title="Tabel Setoran"
+                      aria-label="Tabel Setoran"
                       onClick={() => onSetoran(item)}
                     >
-                      <TableIcon size={16} weight="bold" />
+                      <TableIcon size={16} weight="bold" aria-hidden="true" />
                     </button>
                     {isApproval && item.status === "PENDING" && (
                       <button

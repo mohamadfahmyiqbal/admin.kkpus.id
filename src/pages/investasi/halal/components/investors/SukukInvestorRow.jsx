@@ -27,6 +27,7 @@ const SukukInvestorRow = ({
               size="sm"
               className="rounded-circle d-flex align-items-center justify-content-center bg-success bg-opacity-10 border-0 hover-scale"
               onClick={() => onOpenSchedule(item, "pengembalian")}
+              aria-label="Jadwal Pengembalian Pokok"
               style={{
                 width: "36px",
                 height: "36px",
@@ -46,6 +47,7 @@ const SukukInvestorRow = ({
               size="sm"
               className="rounded-circle d-flex align-items-center justify-content-center bg-info bg-opacity-10 border-0 hover-scale"
               onClick={() => onOpenSchedule(item, "imbal_hasil")}
+              aria-label="Jadwal Imbal Hasil"
               style={{
                 width: "36px",
                 height: "36px",
@@ -72,6 +74,7 @@ const SukukInvestorRow = ({
                   transition: "all 0.2s",
                 }}
                 disabled={isUploading}
+                aria-label="Upload Bukti Transfer Pencairan"
               >
                 {isUploading ? (
                   <Spinner size="sm" animation="border" />
@@ -102,6 +105,7 @@ const SukukInvestorRow = ({
                   height: "36px",
                   transition: "all 0.2s",
                 }}
+                aria-label="Lihat Bukti Transfer"
               >
                 <FileText size={16} aria-hidden="true" />
               </Button>

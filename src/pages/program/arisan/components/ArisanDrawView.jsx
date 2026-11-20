@@ -119,6 +119,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
           variant="light"
           onClick={onBack}
           className="p-2 rounded-circle border shadow-sm"
+          aria-label="Kembali"
         >
           <ArrowLeft size={20} aria-hidden="true" />
         </Button>

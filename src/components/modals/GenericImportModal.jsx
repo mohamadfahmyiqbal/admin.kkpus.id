@@ -288,7 +288,7 @@ const GenericImportModal = ({
                       eventKey={tab.tabKey}
                       className="px-3 py-2 rounded-2 fw-medium d-flex align-items-center gap-2"
                     >
-                      <Icon size={16} weight="bold" />
+                      <Icon size={16} weight="bold" aria-hidden="true" />
                       <span>{tab.label}</span>
                       {count ? (
                         <span className="badge bg-success rounded-pill ms-1">
@@ -313,7 +313,7 @@ const GenericImportModal = ({
                   >
                     <div className="w-100">
                       <strong className="d-flex align-items-center gap-2 mb-1">
-                        <Icon size={16} weight="fill" />
+                        <Icon size={16} weight="fill" aria-hidden="true" />
                         {tab.label}
                       </strong>
                       {tab.description && (
@@ -429,7 +429,7 @@ const GenericImportModal = ({
         <Form onSubmit={handleSubmit} className="mt-2">
           <Form.Group>
             <Form.Label className="fw-semibold small mb-2 text-dark d-flex align-items-center gap-2">
-              <ActiveIcon size={15} weight="bold" />
+              <ActiveIcon size={15} weight="bold" aria-hidden="true" />
               Unggah File Excel — {activeConfig.label} (.xlsx / .xls)
             </Form.Label>
             <Form.Control

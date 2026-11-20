@@ -238,7 +238,7 @@ const ArisanBatchPage = () => {
               disabled={loading || batches.length === 0}
               title="Export Batch Arisan ke Excel"
             >
-              <FileXls size={20} className="text-success" /> Export Excel
+              <FileXls size={20} className="text-success" aria-hidden="true" /> Export Excel
             </Button>
             <Button
               variant="success"
