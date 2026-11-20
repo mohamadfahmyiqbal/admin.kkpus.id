@@ -29,7 +29,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
 
   return (
     <div className="table-responsive border rounded-3">
-      <Table className="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap compact-table">
+      <Table className="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap compact-table" caption="Laporan jurnal akuntansi simpanan (Debet/Kredit)">
         <thead>
           <tr>
             <th className="text-start" style={{ width: "120px" }}>Akun</th>
@@ -44,6 +44,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 className="compact-search-input"
                 placeholder="Cari Akun"
                 value={searchAkun}
+                aria-label="Filter by account name"
                 onChange={(e) => setSearchAkun(e.target.value)}
               />
             </th>
@@ -53,6 +54,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 className="compact-search-input"
                 placeholder="Cari Deskripsi"
                 value={searchDeskripsi}
+                aria-label="Filter by description"
                 onChange={(e) => setSearchDeskripsi(e.target.value)}
               />
             </th>
@@ -62,6 +64,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 className="compact-search-input"
                 placeholder="Cari Debet"
                 value={searchDebet}
+                aria-label="Filter by debit amount"
                 onChange={(e) => setSearchDebet(e.target.value)}
               />
             </th>

@@ -35,6 +35,7 @@ const SimpananListReportTable = ({
         <Table
           className="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap compact-table"
           style={{ minWidth: "1200px" }}
+          caption="Laporan list simpanan per anggota per tahun"
         >
           <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
             <tr>
@@ -93,6 +94,8 @@ const SimpananListReportTable = ({
                     className={`compact-search-input ${idx === 0 ? "text-center" : ""}`}
                     placeholder={ph}
                     value={searchFilters[idx] || ""}
+                    aria-label={`Filter year ${currentYear - idx || "search"}`}
+                    aria-describedby={`filter-${idx}`}
                     onChange={(e) => {
                       onFilterChange(idx, e.target.value);
                       setCurrentPage(1);
