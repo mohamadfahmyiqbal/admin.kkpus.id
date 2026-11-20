@@ -37,6 +37,15 @@ jobs:
       - name: Tests (none configured)
         run: echo "admin.kkpus.id has no test runner (no vitest/jest); skipping unit tests"
 
+      - name: Secret scan (gitleaks) — B1
+        env:
+          GITLEAKS_VERSION: '8.18.4'
+        run: |
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz -C /tmp gitleaks
+          chmod +x /tmp/gitleaks
+          /tmp/gitleaks detect --source="." --verbose --no-git --config .gitleaks.toml
+
       - name: Run npm audit (non-blocking - tracked in M5)
         run: |
           echo "⚠️ npm audit results (non-blocking until M5):"

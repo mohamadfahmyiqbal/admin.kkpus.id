@@ -1,0 +1,16 @@
+# Konfigurasi Gitleaks — admin.kkpus.id
+# Dokumen acuan: REKAPITULASI_AUDIT.md §B1 (secret scanning)
+#
+# `useDefault = true` mewarisi seluruh aturan bawaan gitleaks (private-key,
+# generic-api-key, JWT, dll).
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlist admin.kkpus.id — hanya untuk false-positive terverifikasi"
+
+# Template .env.sample tidak memuat nilai asli
+paths = [
+    '''(^|/)\.env\.(sample|development\.sample|production\.sample)$''',
+]
