@@ -1,7 +1,7 @@
 import React from "react";
 import { useMemo, useCallback } from "react";
 import { Table, Spinner, Badge, Button, Pagination, Form } from "react-bootstrap";
-import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear } from "phosphor-react";
+import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear, ArchiveBox, ArrowCounterClockwise } from "phosphor-react";
 
 const MembersTable = ({
   loading = false,
@@ -20,6 +20,8 @@ const MembersTable = ({
   onToggleSelectAll,
   onToggleSelectMember,
   onEditRole,
+  onArchiveMember,
+  isArchiveMode = false,
 }) => {
   const totalItems = members?.length || 0;
   const totalPages = Math.ceil(totalItems / pageSize) || 1;
@@ -77,11 +79,12 @@ const MembersTable = ({
   return (
     <>
       <div className="table-responsive">
-        <Table hover className="align-middle mb-0">
+        <Table hover className="align-middle mb-0" aria-label="Daftar anggota koperasi">
+          <caption className="visually-hidden">Tabel daftar anggota koperasi dengan filter per kolom, pengurutan, dan aksi detail serta ubah role per baris.</caption>
           <thead className="table-light">
             {/* Baris 1: Header Nama Kolom */}
             <tr>
-              <th className="text-center" style={{ width: "4%" }}>
+              <th className="text-center" style={{ width: "4%" }} scope="col">
                 <Form.Check
                   type="checkbox"
                   checked={isCurrentPageAllSelected}
@@ -95,12 +98,14 @@ const MembersTable = ({
                     )
                   }
                   title="Pilih semua di halaman ini"
+                  aria-label="Pilih semua anggota di halaman ini"
                 />
               </th>
-              <th className="text-center text-nowrap" style={{ width: "6%" }}>
+              <th className="text-center text-nowrap" style={{ width: "6%" }} scope="col">
                 Aksi
               </th>
               <th
+                scope="col"
                 role="columnheader"
                 aria-sort={sortConfig?.key === "member_no" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
@@ -112,6 +117,7 @@ const MembersTable = ({
                 No. Anggota / NIK {renderSortIcon("member_no", "No. Anggota")}
               </th>
               <th
+                scope="col"
                 role="columnheader"
                 aria-sort={sortConfig?.key === "full_name" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
@@ -123,6 +129,7 @@ const MembersTable = ({
                 Nama & Kontak {renderSortIcon("full_name", "Nama")}
               </th>
               <th
+                scope="col"
                 role="columnheader"
                 aria-sort={sortConfig?.key === "member_type" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
@@ -133,10 +140,11 @@ const MembersTable = ({
               >
                 Jenis Anggota {renderSortIcon("member_type", "Jenis Anggota")}
               </th>
-              <th role="columnheader" style={{ width: "13%" }} className="text-nowrap">
+              <th scope="col" role="columnheader" style={{ width: "13%" }} className="text-nowrap">
                 Peran / Role
               </th>
               <th
+                scope="col"
                 role="columnheader"
                 aria-sort={sortConfig?.key === "join_date" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
@@ -148,6 +156,7 @@ const MembersTable = ({
                 Bergabung {renderSortIcon("join_date", "Tanggal Bergabung")}
               </th>
               <th
+                scope="col"
                 role="columnheader"
                 aria-sort={sortConfig?.key === "status" ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
                 className="user-select-none text-nowrap"
@@ -162,10 +171,10 @@ const MembersTable = ({
 
             {/* Baris 2: Input Pencarian / Filter di Setiap Kolom */}
             <tr className="bg-light bg-opacity-75">
-              <th className="text-center py-2">
+              <th className="text-center py-2" scope="col">
                 {/* Checkbox row column spacer */}
               </th>
-              <th className="py-2 px-1 text-center">
+              <th className="py-2 px-1 text-center" scope="col">
                 {hasAnyFilter && (
                   <Button
                     variant="outline-danger"
@@ -180,8 +189,10 @@ const MembersTable = ({
                   </Button>
                 )}
               </th>
-              <th className="py-2 px-2">
+              <th className="py-2 px-2" scope="col">
+                <label htmlFor="filter-member-no" className="visually-hidden">Filter nomor anggota atau NIK</label>
                 <Form.Control
+                  id="filter-member-no"
                   size="sm"
                   placeholder="Cari No/NIK..."
                   aria-label="Filter nomor anggota atau NIK"
@@ -190,8 +201,10 @@ const MembersTable = ({
                   className="bg-white border-1"
                 />
               </th>
-              <th className="py-2 px-2">
+              <th className="py-2 px-2" scope="col">
+                <label htmlFor="filter-name-contact" className="visually-hidden">Filter nama, nomor telepon, atau email</label>
                 <Form.Control
+                  id="filter-name-contact"
                   size="sm"
                   placeholder="Cari Nama/HP/Email..."
                   aria-label="Filter nama, nomor telepon, atau email anggota"
@@ -200,8 +213,10 @@ const MembersTable = ({
                   className="bg-white border-1"
                 />
               </th>
-              <th className="py-2 px-2">
+              <th className="py-2 px-2" scope="col">
+                <label htmlFor="filter-type" className="visually-hidden">Filter jenis anggota</label>
                 <Form.Select
+                  id="filter-type"
                   size="sm"
                   value={filters.type || ""}
                   aria-label="Filter jenis anggota"
@@ -213,8 +228,10 @@ const MembersTable = ({
                   <option value="luar biasa">Luar Biasa</option>
                 </Form.Select>
               </th>
-              <th className="py-2 px-2">
+              <th className="py-2 px-2" scope="col">
+                <label htmlFor="filter-role" className="visually-hidden">Filter peran atau role anggota</label>
                 <Form.Control
+                  id="filter-role"
                   size="sm"
                   placeholder="Filter Peran..."
                   aria-label="Filter peran atau role anggota"
@@ -223,8 +240,10 @@ const MembersTable = ({
                   className="bg-white border-1"
                 />
               </th>
-              <th className="py-2 px-2">
+              <th className="py-2 px-2" scope="col">
+                <label htmlFor="filter-join-date" className="visually-hidden">Filter tahun atau bulan bergabung</label>
                 <Form.Control
+                  id="filter-join-date"
                   size="sm"
                   placeholder="Cari Thn/Bln..."
                   aria-label="Filter tahun atau bulan bergabung"
@@ -233,8 +252,10 @@ const MembersTable = ({
                   className="bg-white border-1"
                 />
               </th>
-              <th className="py-2 px-2">
+              <th className="py-2 px-2" scope="col">
+                <label htmlFor="filter-status" className="visually-hidden">Filter status anggota</label>
                 <Form.Select
+                  id="filter-status"
                   size="sm"
                   value={filters.status || ""}
                   aria-label="Filter status anggota"
@@ -260,9 +281,13 @@ const MembersTable = ({
               <tr>
                 <td colSpan="8" className="text-center py-5 text-muted">
                   <div className="py-3">
-                    <p className="mb-1 fw-medium text-dark">Tidak ada data anggota yang cocok.</p>
+                    <p className="mb-1 fw-medium text-dark">
+                      {isArchiveMode ? "Tidak ada anggota terarsip." : "Tidak ada data anggota yang cocok."}
+                    </p>
                     <small className="text-muted d-block mb-2">
-                      Coba ubah kata kunci pada kolom pencarian di atas.
+                      {isArchiveMode
+                        ? "Anggota yang diarsipkan akan muncul di sini."
+                        : "Coba ubah kata kunci pada kolom pencarian di atas."}
                     </small>
                     {hasAnyFilter && (
                       <Button
@@ -308,17 +333,44 @@ const MembersTable = ({
                         >
                           <Eye size={20} weight="bold" aria-hidden="true" />
                         </Button>
-                        <Button
-                          variant="light"
-                          size="sm"
-                          className="rounded-circle text-warning border shadow-none"
-                          onClick={() => onEditRole?.(m)}
-                          title="Ubah Role / Peran Anggota"
-                          aria-label={`Ubah role atau peran ${m.full_name || "anggota"}`}
-                          style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-                        >
-                          <UserGear size={20} weight="bold" aria-hidden="true" />
-                        </Button>
+                        {isArchiveMode ? (
+                          <Button
+                            variant="light"
+                            size="sm"
+                            className="rounded-circle text-info border shadow-none"
+                            onClick={() => onArchiveMember?.(m.member_id)}
+                            title="Kembalikan anggota ke aktif"
+                            aria-label={`Kembalikan ${m.full_name || "anggota"} ke aktif`}
+                            style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                          >
+                            <ArrowCounterClockwise size={20} weight="bold" aria-hidden="true" />
+                          </Button>
+                        ) : (
+                          <>
+                            <Button
+                              variant="light"
+                              size="sm"
+                              className="rounded-circle text-warning border shadow-none"
+                              onClick={() => onArchiveMember?.(m.member_id)}
+                              title="Arsipkan anggota"
+                              aria-label={`Arsipkan ${m.full_name || "anggota"}`}
+                              style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                            >
+                              <ArchiveBox size={20} weight="bold" aria-hidden="true" />
+                            </Button>
+                            <Button
+                              variant="light"
+                              size="sm"
+                              className="rounded-circle text-warning border shadow-none"
+                              onClick={() => onEditRole?.(m)}
+                              title="Ubah Role / Peran Anggota"
+                              aria-label={`Ubah role atau peran ${m.full_name || "anggota"}`}
+                              style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                            >
+                              <UserGear size={20} weight="bold" aria-hidden="true" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </td>
                     <td>
@@ -404,7 +456,7 @@ const MembersTable = ({
           <small className="text-muted">
             Menampilkan <b>{startIndex + 1}</b> -{" "}
             <b>{Math.min(startIndex + pageSize, totalItems)}</b> dari{" "}
-            <b>{totalItems}</b> anggota
+            <b>{totalItems}</b> {isArchiveMode ? "anggota terarsip" : "anggota"}
           </small>
 
           {totalPages > 1 && (

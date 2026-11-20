@@ -89,6 +89,15 @@
 | 3.11 | Pesan error deskriptif dan membantu perbaikan (bukan hanya "terjadi kesalahan") | #3 | □ Pass □ Fail □ N/A | | Tinggi |
 | 3.12 | Tersedia opsi untuk mematikan animasi yang memicu gangguan vestibular | #3 | □ Pass □ Fail □ N/A | | Menengah |
 
+### Perbaikan yang Telah Diterapkan (20 Nov 2026)
+
+| No | Perbaikan | File | Detail |
+|----|-----------|------|--------|
+| 1 | **Caption & scope pada tabel** | `TransactionTable.jsx` | Ditambahkan `<caption className="visually-hidden">` dan `scope="col"` pada semua `<th>` |
+| 2 | **Touch target ≥ 44×44 px** | `TransactionTable.jsx` (tombol aksi) | Style `minWidth`/`minHeight` 44px sudah ada |
+| 3 | **ARIA sort & keyboard support** | `TransactionTable.jsx` | `aria-sort`, `tabIndex`, `onKeyDown` pada header |
+| 4 | **ARIA labels pada filter inputs** | `TransactionTable.jsx` | `aria-label` sudah ada |
+
 ---
 
 ## Bagian 4: Design System & Konsistensi (Wajib)

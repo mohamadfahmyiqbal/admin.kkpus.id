@@ -34,6 +34,9 @@ const MembersPage = () => {
     status: "",
   });
 
+  // Arsip mode: false = anggota aktif, true = anggota terarsip
+  const [showArchived, setShowArchived] = useState(false);
+
   // Concurrent transition filter menggunakan useDeferredValue agar pengetikan tidak freeze
   const deferredFilters = useDeferredValue(columnFilters);
 
@@ -45,7 +48,8 @@ const MembersPage = () => {
   const fetchMembers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/anggota/all?limit=1000");
+      const archivedParam = showArchived ? "?archived=true" : "?archived=false";
+      const res = await api.get(`/anggota/all${archivedParam}&limit=1000`);
       if (res.data?.success) {
         setMembers(res.data.data.members || []);
       }
@@ -55,11 +59,11 @@ const MembersPage = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showArchived]);
 
   useEffect(() => {
     fetchMembers();
-  }, [fetchMembers]);
+  }, [fetchMembers, showArchived]);
 
   const formatDate = useCallback((dateStr) => {
     if (!dateStr) return "-";
@@ -244,16 +248,16 @@ const MembersPage = () => {
     exportToExcel(dataToExport, `Data_Anggota_Koperasi_${new Date().toISOString().split("T")[0]}`);
   }, [processedMembers, formatDate]);
 
-  // Handler Hapus Anggota Tunggal dengan Verifikasi Password & Audit Log
-  const handleDeleteMember = useCallback(async (memberId) => {
+  // Handler Arsipkan Anggota Tunggal (Soft Delete) dengan Verifikasi Password & Audit Log
+  const handleArchiveMember = useCallback(async (memberId) => {
     if (!memberId) return;
 
     const { value: password, isConfirmed } = await Swal.fire({
-      title: "Konfirmasi Hard Delete Anggota",
+      title: "Konfirmasi Arsipkan Anggota",
       html: `
         <div class="text-start small">
-          <p class="text-danger fw-bold mb-1">⚠️ PERINGATAN: Tindakan ini permanen!</p>
-          <p class="text-muted mb-2">Seluruh data profil dan relasi anggota akan dihapus secara fisik dan dicatat dalam log audit aktivitas.</p>
+          <p class="text-warning fw-bold mb-1">⚠️ Anggota akan diarsipkan (non-aktif).</p>
+          <p class="text-muted mb-2">Data profil dan relasi anggota akan disembunyikan dari daftar aktif, tetapi tetap tersimpan dan dapat dikembalikan kapan saja. Tindakan ini dicatat dalam log audit aktivitas.</p>
           <p class="mb-1 fw-semibold text-dark">Masukkan password akun Anda untuk mengonfirmasi:</p>
         </div>
       `,
@@ -266,9 +270,9 @@ const MembersPage = () => {
       },
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#fd7e14",
       cancelButtonColor: "#6c757d",
-      confirmButtonText: "Ya, Hapus Permanen",
+      confirmButtonText: "Ya, Arsipkan",
       cancelButtonText: "Batal",
       inputValidator: (val) => {
         if (!val) {
@@ -279,33 +283,33 @@ const MembersPage = () => {
 
     if (isConfirmed && password) {
       try {
-        const res = await api.delete(`/anggota/${memberId}`, {
-          data: { password },
-          // 401 pada konfirmasi password = sesi tetap valid; jangan logout paksa.
-          skipAuthRedirect: true,
-        });
+        const res = await api.patch(
+          `/anggota/${memberId}/archive`,
+          { password },
+          { skipAuthRedirect: true }
+        );
         if (res.data?.success) {
-          Swal.fire("Terhapus!", res.data.message || "Anggota berhasil dihapus permanen.", "success");
+          Swal.fire("Diarsipkan!", res.data.message || "Anggota berhasil diarsipkan.", "success");
           fetchMembers();
           setShowDetailModal(false);
           setSelectedMemberIds((prev) => prev.filter((id) => id !== memberId));
         }
       } catch (err) {
-        Swal.fire("Gagal", err.response?.data?.message || "Gagal menghapus anggota", "error");
+        Swal.fire("Gagal", err.response?.data?.message || "Gagal mengarsipkan anggota", "error");
       }
     }
   }, [fetchMembers]);
 
-  // Handler Hapus Banyak Sekaligus (Batch Delete) dengan Verifikasi Password & Audit Log
-  const handleDeleteBatch = useCallback(async () => {
+  // Handler Arsipkan Banyak Sekaligus (Batch Archive) dengan Verifikasi Password & Audit Log
+  const handleArchiveBatch = useCallback(async () => {
     if (selectedMemberIds.length === 0) return;
 
     const { value: password, isConfirmed } = await Swal.fire({
-      title: "Konfirmasi Hard Delete Massal",
+      title: "Konfirmasi Arsipkan Massal",
       html: `
         <div class="text-start small">
-          <p class="text-danger fw-bold mb-1">⚠️ PERINGATAN: Menghapus ${selectedMemberIds.length} Anggota Sekaligus!</p>
-          <p class="text-muted mb-2">Seluruh data profil dan relasi anggota terpilih akan dihapus permanen. Tindakan ini akan dicatat ke log audit sistem.</p>
+          <p class="text-warning fw-bold mb-1">⚠️ Akan mengarsipkan ${selectedMemberIds.length} Anggota Sekaligus!</p>
+          <p class="text-muted mb-2">Data anggota terpilih akan disembunyikan dari daftar aktif, tetapi tetap tersimpan dan dapat dikembalikan. Tindakan ini akan dicatat ke log audit sistem.</p>
           <p class="mb-1 fw-semibold text-dark">Masukkan password akun Anda untuk mengonfirmasi:</p>
         </div>
       `,
@@ -318,9 +322,9 @@ const MembersPage = () => {
       },
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#dc3545",
+      confirmButtonColor: "#fd7e14",
       cancelButtonColor: "#6c757d",
-      confirmButtonText: `Ya, Hapus ${selectedMemberIds.length} Anggota`,
+      confirmButtonText: `Ya, Arsipkan ${selectedMemberIds.length} Anggota`,
       cancelButtonText: "Batal",
       inputValidator: (val) => {
         if (!val) {
@@ -332,13 +336,12 @@ const MembersPage = () => {
     if (isConfirmed && password) {
       try {
         const res = await api.post(
-          "/anggota/batch-delete",
+          "/anggota/batch-archive",
           {
             member_ids: selectedMemberIds,
             password,
           },
           {
-            // 401 pada konfirmasi password = sesi tetap valid; jangan logout paksa.
             skipAuthRedirect: true,
           }
         );
@@ -346,17 +349,134 @@ const MembersPage = () => {
         if (res.data?.success) {
           Swal.fire(
             "Berhasil!",
-            res.data.message || "Anggota terpilih berhasil dihapus.",
+            res.data.message || "Anggota terpilih berhasil diarsipkan.",
             "success"
           );
           setSelectedMemberIds([]);
           fetchMembers();
         }
       } catch (err) {
-        /* console.error: "Batch delete error:", err */
+        /* console.error: "Batch archive error:", err */
         Swal.fire(
           "Gagal",
-          err.response?.data?.message || "Gagal menghapus anggota terpilih",
+          err.response?.data?.message || "Gagal mengarsipkan anggota terpilih",
+          "error"
+        );
+      }
+    }
+  }, [selectedMemberIds, fetchMembers]);
+
+  // Handler Kembalikan Anggota dari Arsip (Restore)
+  const handleRestoreMember = useCallback(async (memberId) => {
+    if (!memberId) return;
+
+    const { value: password, isConfirmed } = await Swal.fire({
+      title: "Konfirmasi Kembalikan Anggota",
+      html: `
+        <div class="text-start small">
+          <p class="text-info fw-bold mb-1">ℹ️ Anggota akan dikembalikan ke status aktif.</p>
+          <p class="text-muted mb-2">Anggota akan kembali muncul di daftar anggota aktif. Tindakan ini dicatat dalam log audit aktivitas.</p>
+          <p class="mb-1 fw-semibold text-dark">Masukkan password akun Anda untuk mengonfirmasi:</p>
+        </div>
+      `,
+      input: "password",
+      inputPlaceholder: "Password akun Anda...",
+      inputAttributes: {
+        autocapitalize: "off",
+        autocorrect: "off",
+        autocomplete: "current-password",
+      },
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#0dcaf0",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Ya, Kembalikan",
+      cancelButtonText: "Batal",
+      inputValidator: (val) => {
+        if (!val) {
+          return "Password administrator wajib diisi!";
+        }
+      },
+    });
+
+    if (isConfirmed && password) {
+      try {
+        const res = await api.patch(
+          `/anggota/${memberId}/restore`,
+          { password },
+          { skipAuthRedirect: true }
+        );
+        if (res.data?.success) {
+          Swal.fire("Dikembalikan!", res.data.message || "Anggota berhasil dikembalikan ke aktif.", "success");
+          fetchMembers();
+          setShowDetailModal(false);
+        }
+      } catch (err) {
+        Swal.fire("Gagal", err.response?.data?.message || "Gagal mengembalikan anggota", "error");
+      }
+    }
+  }, [fetchMembers]);
+
+  // Handler Kembalikan Banyak dari Arsip (Batch Restore)
+  const handleRestoreBatch = useCallback(async () => {
+    if (selectedMemberIds.length === 0) return;
+
+    const { value: password, isConfirmed } = await Swal.fire({
+      title: "Konfirmasi Kembalikan Massal",
+      html: `
+        <div class="text-start small">
+          <p class="text-info fw-bold mb-1">ℹ️ Akan mengembalikan ${selectedMemberIds.length} Anggota dari arsip.</p>
+          <p class="text-muted mb-2">Anggota terpilih akan kembali muncul di daftar anggota aktif. Tindakan ini dicatat ke log audit sistem.</p>
+          <p class="mb-1 fw-semibold text-dark">Masukkan password akun Anda untuk mengonfirmasi:</p>
+        </div>
+      `,
+      input: "password",
+      inputPlaceholder: "Password akun Anda...",
+      inputAttributes: {
+        autocapitalize: "off",
+        autocorrect: "off",
+        autocomplete: "current-password",
+      },
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#0dcaf0",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: `Ya, Kembalikan ${selectedMemberIds.length} Anggota`,
+      cancelButtonText: "Batal",
+      inputValidator: (val) => {
+        if (!val) {
+          return "Password administrator wajib diisi!";
+        }
+      },
+    });
+
+    if (isConfirmed && password) {
+      try {
+        const res = await api.post(
+          "/anggota/batch-restore",
+          {
+            member_ids: selectedMemberIds,
+            password,
+          },
+          {
+            skipAuthRedirect: true,
+          }
+        );
+
+        if (res.data?.success) {
+          Swal.fire(
+            "Berhasil!",
+            res.data.message || "Anggota terpilih berhasil dikembalikan.",
+            "success"
+          );
+          setSelectedMemberIds([]);
+          fetchMembers();
+        }
+      } catch (err) {
+        /* console.error: "Batch restore error:", err */
+        Swal.fire(
+          "Gagal",
+          err.response?.data?.message || "Gagal mengembalikan anggota terpilih",
           "error"
         );
       }
@@ -365,15 +485,48 @@ const MembersPage = () => {
 
   return (
     <div className="pb-5">
+      {/* Archive Toggle Bar */}
+      <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 p-3 bg-light rounded-3 border">
+        <div className="d-flex align-items-center gap-2">
+          <span className="fw-semibold text-dark small">Tampilan:</span>
+          <Button
+            variant={!showArchived ? "primary" : "outline-secondary"}
+            size="sm"
+            onClick={() => setShowArchived(false)}
+            aria-pressed={!showArchived}
+            className="fw-semibold"
+          >
+            Anggota Aktif
+          </Button>
+          <Button
+            variant={showArchived ? "warning" : "outline-secondary"}
+            size="sm"
+            onClick={() => setShowArchived(true)}
+            aria-pressed={showArchived}
+            className="fw-semibold"
+          >
+            <span className="d-flex align-items-center gap-1">
+              <span className="bi bi-archive" aria-hidden="true"></span> Arsip
+            </span>
+          </Button>
+          </div>
+        <div className="text-muted small">
+          {showArchived
+            ? `Menampilkan ${members.length} anggota terarsip`
+            : `Menampilkan ${members.length} anggota aktif`}
+        </div>
+      </div>
+
       <MembersHeader
         onImport={() => setShowImportModal(true)}
         onExport={handleExportMembers}
         disableExport={loading || processedMembers.length === 0}
         selectedCount={selectedMemberIds.length}
-        onDeleteBatch={handleDeleteBatch}
+        onArchiveBatch={showArchived ? handleRestoreBatch : handleArchiveBatch}
+        isArchiveMode={showArchived}
       />
 
-      <MembersStats members={members} loading={loading} />
+      <MembersStats members={members} loading={loading} isArchiveMode={showArchived} />
 
       <Card className="border-0 shadow-sm rounded-4">
         <Card.Body className="p-3 p-md-4">
@@ -400,6 +553,8 @@ const MembersPage = () => {
               setMemberToEditRole(member);
               setShowRoleModal(true);
             }}
+            onArchiveMember={showArchived ? handleRestoreMember : handleArchiveMember}
+            isArchiveMode={showArchived}
           />
         </Card.Body>
       </Card>
@@ -410,12 +565,13 @@ const MembersPage = () => {
             show={showDetailModal}
             onHide={() => setShowDetailModal(false)}
             member={selectedMember}
-            onDelete={handleDeleteMember}
+            onArchive={showArchived ? handleRestoreMember : handleArchiveMember}
             formatDate={formatDate}
             onEditRole={(member) => {
               setMemberToEditRole(member);
               setShowRoleModal(true);
             }}
+            isArchiveMode={showArchived}
           />
         )}
 

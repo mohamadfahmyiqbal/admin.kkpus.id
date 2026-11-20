@@ -1,15 +1,23 @@
 import React from "react";
 
 import { Row, Col, Button } from "react-bootstrap";
-import { UploadSimple, DownloadSimple, Trash } from "phosphor-react";
+import { UploadSimple, DownloadSimple, Trash, ArchiveBox, ArrowCounterClockwise } from "phosphor-react";
 
 const MembersHeader = ({
   onImport,
   onExport,
   disableExport,
   selectedCount = 0,
-  onDeleteBatch,
+  onArchiveBatch,
+  isArchiveMode = false,
 }) => {
+  const batchButtonLabel = isArchiveMode ? "Kembalikan" : "Arsipkan";
+  const batchButtonIcon = isArchiveMode ? <ArrowCounterClockwise size={18} weight="bold" aria-hidden="true" /> : <ArchiveBox size={18} weight="bold" aria-hidden="true" />;
+  const batchButtonVariant = isArchiveMode ? "info" : "warning";
+  const batchButtonAriaLabel = isArchiveMode
+    ? `Kembalikan ${selectedCount} anggota dari arsip`
+    : `Arsipkan ${selectedCount} anggota yang dipilih`;
+
   return (
     <Row className="mb-4 align-items-center">
       <Col md={6}>
@@ -21,18 +29,20 @@ const MembersHeader = ({
       <Col md={6} className="text-md-end mt-3 mt-md-0 d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
         {selectedCount > 0 && (
           <Button
-            variant="danger"
-            className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm animate__animated animate__fadeIn"
-            onClick={onDeleteBatch}
+            variant={batchButtonVariant}
+            className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm"
+            onClick={onArchiveBatch}
+            aria-label={batchButtonAriaLabel}
           >
-            <Trash size={18} weight="bold" aria-hidden="true" />
-            Hapus ({selectedCount}) Anggota
+            {batchButtonIcon}
+            {batchButtonLabel} ({selectedCount}) Anggota
           </Button>
         )}
         <Button
           variant="outline-primary"
           className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm"
           onClick={onImport}
+          aria-label="Impor data anggota dari Excel"
         >
           <UploadSimple size={18} weight="bold" aria-hidden="true" />
           Import Excel
@@ -42,6 +52,7 @@ const MembersHeader = ({
           className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm text-white"
           onClick={onExport}
           disabled={disableExport}
+          aria-label="Ekspor data anggota ke Excel"
         >
           <DownloadSimple size={18} weight="bold" aria-hidden="true" />
           Export Excel

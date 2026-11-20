@@ -140,6 +140,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
               size="sm"
               className="mt-3 d-flex align-items-center gap-2 fw-semibold"
               onClick={handleDownloadTemplate}
+              aria-label="Unduh template Excel import anggota"
             >
               <DownloadSimple size={16} weight="bold" aria-hidden="true" />
               Unduh Template Excel
@@ -177,6 +178,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
                     onSuccess?.(importResult);
                     onHide();
                   }}
+                  aria-label="Tutup hasil import"
                 >
                   Tutup
                 </Button>
@@ -218,6 +220,7 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
               onClick={onHide}
               disabled={uploading}
               className="px-4 fw-semibold border"
+              aria-label="Batal import"
             >
               Batal
             </Button>
@@ -226,8 +229,9 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
               type="submit"
               disabled={uploading || !file}
               className="px-4 fw-semibold d-flex align-items-center gap-2"
+              aria-label={uploading ? "Mengunggah file..." : "Unggah dan simpan file Excel"}
             >
-              {uploading && <Spinner animation="border" size="sm" />}
+              {uploading && <Spinner animation="border" size="sm" aria-hidden="true" />}
               {uploading ? "Mengunggah..." : "Unggah & Simpan"}
             </Button>
           </div>

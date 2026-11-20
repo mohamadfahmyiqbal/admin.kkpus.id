@@ -139,10 +139,11 @@ export const TransactionTable = ({
     <>
       <div className="table-responsive">
         <Table align="middle" className="mb-0 custom-table-admin table-hover" hover aria-label="Tabel transaksi simpanan">
+            <caption className="visually-hidden">Tabel transaksi simpanan anggota koperasi</caption>
           <thead className="table-light">
             <tr>
               <th
-                role="columnheader"
+                scope="col" role="columnheader"
                 aria-sort={sortConfig.key === 'date' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
                 aria-label="Urutkan waktu transaksi"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase user-select-none"
@@ -163,7 +164,7 @@ export const TransactionTable = ({
               </th>
 
               <th
-                role="columnheader"
+                scope="col" role="columnheader"
                 aria-sort={sortConfig.key === 'member' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
                 aria-label="Urutkan nama anggota"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase user-select-none"
@@ -183,12 +184,12 @@ export const TransactionTable = ({
                 </div>
               </th>
 
-              <th className="py-3 px-4 text-muted small fw-bold text-uppercase" role="columnheader" style={{ minWidth: "160px" }}>
+              <th className="py-3 px-4 text-muted small fw-bold text-uppercase" scope="col" role="columnheader" style={{ minWidth: "160px" }}>
                 Jenis Simpanan
               </th>
 
               <th
-                role="columnheader"
+                scope="col" role="columnheader"
                 aria-sort={sortConfig.key === 'amount' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
                 aria-label="Urutkan nominal"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase text-end user-select-none"
@@ -209,7 +210,7 @@ export const TransactionTable = ({
               </th>
 
               <th
-                role="columnheader"
+                scope="col" role="columnheader"
                 aria-sort={sortConfig.key === 'status' ? (sortConfig.direction === 'asc' ? 'ascending' : 'descending') : 'none'}
                 aria-label="Urutkan status"
                 className="py-3 px-4 text-muted small fw-bold text-uppercase text-center user-select-none"
@@ -230,7 +231,7 @@ export const TransactionTable = ({
               </th>
 
               <th
-                role="columnheader"
+                scope="col" role="columnheader"
                 className="py-3 px-3 text-muted small fw-bold text-uppercase text-center text-nowrap"
                 style={{ width: "110px", minWidth: "110px" }}
               >

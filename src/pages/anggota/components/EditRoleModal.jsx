@@ -194,7 +194,7 @@ const EditRoleModal = ({ show, onHide, member, onSuccess }) => {
         </Modal.Body>
 
         <Modal.Footer className="border-0 px-4 pb-4">
-          <Button variant="light" onClick={onHide} disabled={submitting}>
+          <Button variant="light" onClick={onHide} disabled={submitting} aria-label="Batal ubah role">
             Batal
           </Button>
           <Button
@@ -202,10 +202,11 @@ const EditRoleModal = ({ show, onHide, member, onSuccess }) => {
             variant="primary"
             className="px-4 fw-semibold"
             disabled={submitting || !isReguler}
+            aria-label={submitting ? "Menyimpan role..." : "Simpan perubahan role"}
           >
             {submitting ? (
               <>
-                <Spinner animation="border" size="sm" className="me-1" />
+                <Spinner animation="border" size="sm" className="me-1" aria-hidden="true" />
                 Menyimpan...
               </>
             ) : (

@@ -4,6 +4,8 @@ import { Modal, Row, Col, Button, Badge, Nav, Tab, Card } from "react-bootstrap"
 import {
   User,
   Trash,
+  ArchiveBox,
+  ArrowCounterClockwise,
   IdentificationCard,
   Phone,
   EnvelopeSimple,
@@ -25,7 +27,7 @@ const InfoCard = ({ icon: Icon, label, value, subValue, colProps = { md: 6 } }) 
     <div className="p-3 border rounded-3 bg-white h-100 shadow-sm d-flex flex-column justify-content-between">
       <div>
         <div className="d-flex align-items-center gap-2 text-muted mb-1">
-          {Icon && <Icon size={16} className="text-primary opacity-75" />}
+          {Icon && <Icon size={16} className="text-primary opacity-75" aria-hidden="true" />}
           <small className="fw-semibold text-uppercase" style={{ fontSize: "11px", letterSpacing: "0.5px" }}>
             {label}
           </small>
@@ -37,7 +39,7 @@ const InfoCard = ({ icon: Icon, label, value, subValue, colProps = { md: 6 } }) 
   </Col>
 );
 
-const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditRole }) => {
+const MemberDetailModal = ({ show, onHide, member, onArchive, formatDate, onEditRole, isArchiveMode = false }) => {
   const [activeTab, setActiveTab] = useState("semua");
 
   if (!member) return null;
@@ -149,9 +151,17 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
                     className="p-0 text-primary text-decoration-none small fw-semibold"
                     onClick={() => onEditRole(member)}
                     title="Ubah Role Anggota"
+                    aria-label={`Ubah role ${member.full_name || "anggota"}`}
                   >
                     (Ubah Role)
                   </Button>
+                )}
+                {isArchiveMode && (
+                  <Badge bg="warning" text="dark" className="rounded-pill px-2.5 py-1 ms-2">
+                    <span className="d-inline-flex align-items-center gap-1">
+                      <span className="bi bi-archive" aria-hidden="true"></span> Terarsip
+                    </span>
+                  </Badge>
                 )}
               </div>
             </div>
@@ -651,14 +661,22 @@ const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditR
       </Modal.Body>
 
       <Modal.Footer className="border-0 px-4 pb-4 d-flex justify-content-between">
-        <Button
-          variant="outline-danger"
-          className="d-flex align-items-center gap-2 fw-semibold shadow-none"
-          onClick={() => onDelete(member?.member_id)}
-        >
-          <Trash size={16} aria-hidden="true" /> Hapus Anggota Ini
-        </Button>
-        <Button variant="secondary" className="px-4" onClick={onHide}>
+        {onArchive && (
+          <Button
+            variant={isArchiveMode ? "outline-info" : "outline-warning"}
+            className="d-flex align-items-center gap-2 fw-semibold shadow-none"
+            onClick={() => onArchive(member?.member_id)}
+            aria-label={isArchiveMode ? `Kembalikan anggota ${member?.full_name || "ini"} ke aktif` : `Arsipkan anggota ${member?.full_name || "ini"}`}
+          >
+            {isArchiveMode ? (
+              <ArrowCounterClockwise size={16} aria-hidden="true" />
+            ) : (
+              <ArchiveBox size={16} aria-hidden="true" />
+            )}
+            {isArchiveMode ? "Kembalikan ke Aktif" : "Arsipkan Anggota Ini"}
+          </Button>
+        )}
+        <Button variant="secondary" className="px-4" onClick={onHide} aria-label="Tutup modal detail anggota">
           Tutup
         </Button>
       </Modal.Footer>
