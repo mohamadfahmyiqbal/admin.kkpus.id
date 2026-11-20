@@ -38,10 +38,10 @@ export const EncryptedPage = React.memo(function EncryptedPage() {
 
   const { component: PageComponent, isProtected } = routeConfig;
 
-  // Cek token auth untuk protected route
+  // Cek otentikasi untuk protected route
   if (isProtected) {
-    const authToken = localStorage.getItem("token");
-    if (!authToken) {
+    const userData = localStorage.getItem("userData");
+    if (!userData) {
       return <Navigate to="/" replace />;
     }
   }

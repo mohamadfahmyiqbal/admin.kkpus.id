@@ -73,7 +73,7 @@ const LoginPage = () => {
           return;
         }
 
-        localStorage.setItem("token", data.data.token);
+
         localStorage.setItem("userData", JSON.stringify(data.data.user));
         window.dispatchEvent(new Event("storage_sync"));
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
