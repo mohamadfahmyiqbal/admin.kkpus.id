@@ -443,3 +443,32 @@ Dari 6 halaman yang sudah diaudit:
 **Disusun oleh:** Senior UI/UX Designer — Skill `/uiux`  
 **Sumber data:** 23 file audit di `docs/ux-audit/` (6 audit lengkap: 01, 02, 03, 04, 05-simpanan-page, 06-jual-beli-page)  
 **Terakhir diupdate:** 20 November 2026
+
+---
+
+## 10. Catatan Perbaikan Tambahan
+
+### 10.1 Kontras Warna WCAG 2.2 AA (20 Nov 2026)
+
+**Status:** ✅ **SELESAI** — 6 kombinasi warna teks yang gagal WCAG 2.2 AA (≥ 4.5:1) sudah diperbaiki.
+
+**Commit:** `693a7b6`  
+**File audit:** `docs/ux-audit/contrast-audit-wcag22aa.md`
+
+**Perbaikan yang diterapkan:**
+| File | Sebelum | Sesudah | Rasio |
+|------|---------|---------|-------|
+| `TransactionDetailModal.jsx` | `#10b981` (2.54:1) | `#047857` (5.48:1) | ✅ |
+| `TransactionDetailModal.jsx` | `#f59e0b` (2.15:1) | `#b45309` (5.02:1) | ✅ |
+| `EmptyState.jsx` | `#adb5bd` (2.07:1) | `#6c757d` (4.69:1) | ✅ |
+| `PwaUpdatePrompt.jsx` | `#a5b4fc` (1.99:1) | `#4f46e5` (6.29:1) | ✅ |
+| `NotificationDropdown.css` | `#94a3b8` (2.56:1) | `#64748b` (4.76:1) | ✅ |
+| `LoginPage.css` | `#94a3b8` (2.56:1) | `#64748b` (4.76:1) | ✅ |
+
+**Override global (`admin-theme.css`):** pagination disabled, scrollbar, text-secondary.
+
+**Tinggal:**
+- Brand color `#00d9a6` (1.83:1) — perlu dark variant `#00896d` (4.51:1) untuk teks kecil di latar putih
+- Warna teks besar (≥18px bold): `#3b82f6` (3.68:1), `#ef4444` (3.76:1), `#8b5cf6` (4.23:1) — OK untuk large text
+- Verifikasi visual setelah build
+- Audit dark mode (`[data-theme=dark]`) — perlu terpisah
