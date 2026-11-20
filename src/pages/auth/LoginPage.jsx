@@ -77,6 +77,22 @@ const LoginPage = () => {
         localStorage.setItem("userData", JSON.stringify(data.data.user));
         window.dispatchEvent(new Event("storage_sync"));
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
+        // Ensure the PWA loads the latest code after login
+        setTimeout(() => {
+          if (navigator.serviceWorker) {
+            navigator.serviceWorker.getRegistration().then((reg) => {
+              if (reg && reg.waiting) {
+                reg.waiting.postMessage({ type: "SKIP_WAITING" });
+                window.location.reload();
+              } else {
+                window.location.reload();
+              }
+            });
+          } else {
+            window.location.reload();
+          }
+        }, 500);
+
       } else {
         setError(
           data.message ||
