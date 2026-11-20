@@ -122,10 +122,10 @@ export const TransactionDetailModal = ({
               bg={isCompleted ? "success" : "warning"}
               className="bg-opacity-10 px-3 py-2 rounded-2 text-uppercase fw-bold border border-1"
               style={{
-                color: isCompleted ? "#10b981" : "#f59e0b",
+                color: isCompleted ? "#047857" : "#b45309",
                 borderColor: isCompleted
-                  ? "rgba(16, 185, 129, 0.3)"
-                  : "rgba(245, 158, 11, 0.3)",
+                  ? "rgba(4, 120, 87, 0.3)"
+                  : "rgba(180, 83, 9, 0.3)",
                 letterSpacing: "1px",
               }}
             >

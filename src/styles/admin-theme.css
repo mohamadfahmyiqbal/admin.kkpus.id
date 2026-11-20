@@ -63,6 +63,21 @@ select {
   color: #64748b !important; /* Ensure ≥ 4.5:1 on white */
 }
 
+/* WCAG 1.4.3: Pagination disabled text contrast (was #94a3b8 @ 2.56:1) */
+.page-item.disabled .page-link {
+  color: #64748b !important; /* 4.76:1 on white */
+}
+
+/* WCAG 1.4.3: Scrollbar contrast (decorative, improved for accessibility) */
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b !important; /* Better than #94a3b8 */
+}
+
+/* WCAG 1.4.3: Bootstrap text-secondary override for better contrast */
+.text-secondary {
+  color: #6c757d !important; /* 4.69:1 on white */
+}
+
 /* Ensure interactive elements have visible focus */
 .dashboard-layout-shell a:focus-visible,
 .dashboard-layout-shell button:focus-visible,

@@ -51,7 +51,7 @@ export const PwaUpdatePrompt = () => {
             <strong className="d-block" style={{ fontSize: "14px" }}>
               Pembaruan Sistem Tersedia
             </strong>
-            <small style={{ color: "#a5b4fc", fontSize: "12px" }}>
+            <small style={{ color: "#4f46e5", fontSize: "12px" }}>
               Versi terbaru aplikasi telah siap. Klik perbarui untuk memuat perubahan.
             </small>
           </div>

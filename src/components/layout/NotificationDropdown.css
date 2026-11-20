@@ -235,7 +235,7 @@
 
 .notif-item-time {
   font-size: 0.675rem;
-  color: #94a3b8;
+  color: #64748b; /* WCAG 2.2 AA: 4.76:1 on white (was #94a3b8 @ 2.56:1) */
   display: inline-flex;
   align-items: center;
   gap: 3px;

@@ -20,7 +20,7 @@ export const EmptyState = ({
         width: "80px",
         height: "80px",
         backgroundColor: "#f8f9fa",
-        color: "#adb5bd",
+        color: "#6c757d", /* WCAG 2.2 AA: 4.69:1 on white (was #adb5bd @ 2.07:1) */
       }}
     >
       <Icon size={40} weight="light" />
