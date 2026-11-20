@@ -504,7 +504,6 @@ const SimpananDashboard = () => {
                         }}
                         aria-label="Tampilkan transaksi setoran simpanan"
                         aria-pressed={activeSukarelaCategory === "SETORAN"}
-                        aria-label="Tampilkan setoran sukarela"
                         style={{ minWidth: '44px', minHeight: '44px', padding: '8px 1rem' }}
                       >
                         <ArrowDownLeft size={14} className="text-success" weight="bold" aria-hidden="true" />

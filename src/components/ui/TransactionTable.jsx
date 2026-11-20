@@ -277,7 +277,8 @@ export const TransactionTable = ({
                   />
                 </th>
                 <th className="py-2 px-3">
-                  <Form.Control aria-label="Filter Cari nominal"
+                  <Form.Control
+                    aria-label="Filter nominal"
                     type="text"
                     placeholder="Cari nominal..."
                     size="sm"
