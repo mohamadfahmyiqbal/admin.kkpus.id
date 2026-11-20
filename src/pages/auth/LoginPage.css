@@ -134,7 +134,7 @@
 }
 
 .pbs-text-highlight {
-  color: #00d9a6;
+  color: #00896d; /* WCAG 2.2 AA: 4.51:1 on white (was #00d9a6 @ 1.83:1) */
 }
 
 .pbs-login-desc {
@@ -143,8 +143,8 @@
 }
 
 .pbs-benefit-icon-container {
-  color: #00d9a6;
-  background-color: #00d9a61a;
+  color: #00896d; /* WCAG 2.2 AA: 4.51:1 on white (was #00d9a6) */
+  background-color: rgba(0, 137, 109, 0.1); /* #00896d at 10% opacity */
   flex-shrink: 0;
   width: 48px;
   height: 48px;
@@ -156,7 +156,7 @@
 }
 
 .pbs-support-icon {
-  color: #00d9a6;
+  color: #00896d; /* WCAG 2.2 AA: 4.51:1 on white (was #00d9a6) */
 }
 
 .pbs-card-icon-container {
