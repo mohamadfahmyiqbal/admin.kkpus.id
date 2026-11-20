@@ -247,7 +247,7 @@ Berdasarkan 6 halaman yang sudah diaudit (Splash, Login, Dashboard, Members, Sim
 
 | Masalah | Prevalensi | Severity | Status |
 |---------|:----------:|:--------:|--------|
-| Kontras teks perlu verifikasi (≥ 4.5:1) | 6/6 | Kritis | Terbuka |
+| Kontras teks perlu verifikasi (≥ 4.5:1) | 6/6 | Kritis | ✅ Parsial: 6 warna inline fixed (`693a7b6`). Brand color & dark mode masih pending. |
 | Touch target < 44×44 px | 6/6 | Kritis | 3/6 diperbaiki (Splash, Members, Simpanan) |
 | Tidak ada indikasi fokus keyboard | 6/6 | Kritis | ✅ Fix global (`:focus-visible`) |
 | Ikon tanpa aria-label / aria-hidden | 6/6 | Tinggi | 2/6 diperbaiki (Members, Simpanan) |
@@ -312,14 +312,15 @@ Berdasarkan 6 halaman yang sudah diaudit (Splash, Login, Dashboard, Members, Sim
 | 6 | Members: label, caption/scope/aria-sort, aria-hidden, aria-label | Members |
 | 7 | Members: soft delete / restore / arsip (single & batch) | Members |
 | 8 | Simpanan: caption/scope/aria-sort, aria-label filter, touch target | Simpanan |
+| 9 | Kontras warna WCAG 2.2 AA: 6 warna inline fixed (`693a7b6`) | Global (TransactionDetailModal, EmptyState, PwaUpdatePrompt, NotificationDropdown, LoginPage) |
 
 ### 🔴 Prioritas 1 — Kritis (Sisa, Harus Diperbaiki Sebelum Rilis)
 
 | # | Perbaikan | Dampak | Halaman Terdampak |
 |---|-----------|--------|-------------------|
-| 1 | Verifikasi & perbaiki kontras warna (≥ 4.5:1 teks, ≥ 3:1 UI) | WCAG 1.4.3 | Semua |
-| 2 | Lengkapi `aria-label` / `aria-hidden` pada ikon & tombol icon-only di halaman belum diaudit | Screen reader access | 17 halaman sisa |
-| 3 | Verifikasi touch target ≥ 44×44 px & atribut ARIA pada halaman belum diaudit | WCAG 2.5.5 | 17 halaman sisa |
+| 1 | Lengkapi `aria-label` / `aria-hidden` pada ikon & tombol icon-only di halaman belum diaudit | Screen reader access | 17 halaman sisa |
+| 2 | Verifikasi touch target ≥ 44×44 px & atribut ARIA pada halaman belum diaudit | WCAG 2.5.5 | 17 halaman sisa |
+| 3 | Selesaikan kontras warna: brand color `#00d9a6` + audit dark mode | WCAG 1.4.3 | Semua (brand header, login, PWA register) |
 
 ### 🟡 Prioritas 2 — Tinggi (Perlu Perbaikan)
 
@@ -350,7 +351,7 @@ Berdasarkan 6 halaman yang sudah diaudit (Splash, Login, Dashboard, Members, Sim
 
 | Kategori | Perbaikan Kritis | Perbaikan Tinggi | Perbaikan Menengah |
 |----------|:----------------:|:----------------:|:-------------------:|
-| Aksesibilitas | 3 | 2 | 0 |
+| Aksesibilitas | 2 | 2 | 0 |
 | Design System | 0 | 1 | 0 |
 | Responsivitas | 0 | 1 | 0 |
 | UX / Heuristik | 0 | 2 | 1 |
@@ -358,7 +359,7 @@ Berdasarkan 6 halaman yang sudah diaudit (Splash, Login, Dashboard, Members, Sim
 | Proses / Dokumentasi | 0 | 0 | 4 |
 
 **Total estimasi (sisa):**
-- **Kritis:** 3 item (harus sebelum rilis)
+- **Kritis:** 2 item (harus sebelum rilis) — kontras warna inline sudah fix, sisa brand color + dark mode audit
 - **Tinggi:** 8 item (sebaiknya segera)
 - **Menengah:** 5 item (prioritas rendah)
 
@@ -417,11 +418,12 @@ Dari 6 halaman yang sudah diaudit:
 
 **Aksi segera:**
 1. **Global CSS fixes sudah diterapkan** (skip link, focus-visible, prefers-reduced-motion, touch target 44×44px) — dampak ke semua halaman
-2. Selesaikan 3 item Kritis sisa (kontras warna, aria-label ikon, verifikasi touch target/ARIA di 17 halaman)
-3. Lanjutkan audit 17 halaman sisanya
-4. Buat design token system sebagai fondasi perbaikan design system
-5. Jadwalkan uji usabilitas sebelum rilis produksi
-6. **Perbarui build assets** — `assets/SplashPage-*.js` (tracked) masih versi lama yang menghapus storage; rebuild atau keluarkan `assets/` dari tracking
+2. **Kontras warna inline sudah diperbaiki** (6 warna, commit `693a7b6`) — tinggal brand color `#00d9a6` + audit dark mode
+3. Selesaikan 2 item Kritis sisa (aria-label ikon di 17 halaman, verifikasi touch target/ARIA)
+4. Lanjutkan audit 17 halaman sisanya
+5. Buat design token system sebagai fondasi perbaikan design system
+6. Jadwalkan uji usabilitas sebelum rilis produksi
+7. **Perbarui build assets** — `assets/SplashPage-*.js` (tracked) masih versi lama yang menghapus storage; rebuild atau keluarkan `assets/` dari tracking
 
 ---
 
