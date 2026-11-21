@@ -83,6 +83,10 @@ jobs:
         run: npm ci
 
       - name: Build project
+        env:
+          VITE_API_BASE_URL: https://api.kkpus.id/api
+          VITE_API_ORIGIN: https://api.kkpus.id
+          VITE_SOCKET_URL: https://api.kkpus.id
         run: npm run build
 
       - name: Setup SSH Key
