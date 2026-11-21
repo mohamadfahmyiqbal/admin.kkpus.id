@@ -225,6 +225,7 @@ export const MemberBillsPagination = ({
           <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
             <button
               className="page-link shadow-none"
+              aria-label="Halaman sebelumnya"
               onClick={() => onPageChange(Math.max(page - 1, 1))}
             >
               Previous
@@ -237,6 +238,8 @@ export const MemberBillsPagination = ({
             >
               <button
                 className="page-link shadow-none"
+                aria-label={`Halaman ${idx + 1}`}
+                aria-current={page === idx + 1 ? "page" : undefined}
                 onClick={() => onPageChange(idx + 1)}
               >
                 {idx + 1}
@@ -250,6 +253,7 @@ export const MemberBillsPagination = ({
           >
             <button
               className="page-link shadow-none"
+              aria-label="Halaman berikutnya"
               onClick={() => onPageChange(Math.min(page + 1, totalPages))}
             >
               Next
