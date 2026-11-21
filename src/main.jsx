@@ -1,17 +1,12 @@
-// B1: Env guard — pastikan VITE_API_BASE_URL tersedia di produksi
+// B1: Env guard — warn if VITE_API_BASE_URL missing in production, but don't block React mount.
+// Blocking (document.body.innerHTML + throw) prevents PwaUpdatePrompt from ever rendering,
+// trapping users on cached old bundles that lack the env var. Non-blocking lets the app
+// show a React-based error state with the PWA update prompt still accessible.
 if (import.meta.env.PROD && !import.meta.env.VITE_API_BASE_URL) {
-  console.error(
-    "[ENV ERROR] VITE_API_BASE_URL is required in production. " +
-    "Set it via .env.production or deployment environment."
+  console.warn(
+    "[ENV WARN] VITE_API_BASE_URL is not set. " +
+    "API calls will fail. Set it via .env.production or CI build env vars."
   );
-  document.body.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:system-ui">
-      <div style="text-align:center;padding:2rem">
-        <h1 style="color:#dc3545">⚠️ Configuration Error</h1>
-        <p>VITE_API_BASE_URL is not set. Contact your system administrator.</p>
-      </div>
-    </div>`;
-  throw new Error("VITE_API_BASE_URL is required in production");
 }
 
 import React from "react";
