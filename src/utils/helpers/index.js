@@ -102,6 +102,25 @@ export const validateImportFile = (file) => {
   return "";
 };
 
+/**
+ * Masking data sensitif (NIK, telepon, email) untuk mencegah
+ * paparan di layar non-produksi atau layar yang terlihat orang lain.
+ * ISO 27001:2022 Annex A.8.10 — Informasi Pribadi
+ *
+ * @param {string|null|undefined} value — nilai asli
+ * @param {object} [opts]
+ * @param {number} [opts.visibleChars=4] — karakter yang tetap terlihat di akhir
+ * @param {string} [opts.maskChar='*'] — karakter pengganti
+ * @returns {string} nilai ter-mask
+ */
+export const maskSensitiveData = (value, { visibleChars = 4, maskChar = '*' } = {}) => {
+  if (!value || value === '-') return '-';
+  const str = String(value).replace(/\s+/g, '');
+  if (str.length <= visibleChars) return str;
+  const visible = str.slice(-visibleChars);
+  return `${maskChar.repeat(str.length - visibleChars)}${visible}`;
+};
+
 export default {
   jwtEncode,
   jwtDecodePage,
@@ -110,4 +129,5 @@ export default {
   SVG_FALLBACK_IMAGE,
   MAX_IMPORT_FILE_BYTES,
   validateImportFile,
+  maskSensitiveData,
 };

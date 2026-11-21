@@ -2,6 +2,7 @@ import React from "react";
 import { useMemo, useCallback } from "react";
 import { Table, Spinner, Badge, Button, Pagination, Form } from "react-bootstrap";
 import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear, ArchiveBox, ArrowCounterClockwise } from "phosphor-react";
+import { maskSensitiveData } from "../../../utils/helpers";
 
 const MembersTable = ({
   loading = false,
@@ -379,7 +380,7 @@ const MembersTable = ({
                       </div>
                       {m.nik_ktp && (
                         <small className="text-muted d-flex align-items-center gap-1">
-                          <IdentificationCard size={14} weight="bold" aria-hidden="true" /> {m.nik_ktp}
+                          <IdentificationCard size={14} weight="bold" aria-hidden="true" /> {maskSensitiveData(m.nik_ktp, { visibleChars: 4 })}
                         </small>
                       )}
                     </td>
@@ -388,7 +389,7 @@ const MembersTable = ({
                       <div className="d-flex flex-wrap align-items-center gap-2 text-muted small">
                         {m.phone_number && (
                           <span className="d-inline-flex align-items-center gap-1">
-                            <Phone size={13} weight="bold" aria-hidden="true" /> {m.phone_number}
+                            <Phone size={13} weight="bold" aria-hidden="true" /> {maskSensitiveData(m.phone_number, { visibleChars: 4 })}
                           </span>
                         )}
                         {m.email && (
@@ -396,7 +397,7 @@ const MembersTable = ({
                             className="d-inline-flex align-items-center gap-1 text-truncate"
                             style={{ maxWidth: "160px" }}
                           >
-                            <EnvelopeSimple size={13} weight="bold" aria-hidden="true" /> {m.email}
+                            <EnvelopeSimple size={13} weight="bold" aria-hidden="true" /> {maskSensitiveData(m.email, { visibleChars: 4 })}
                           </span>
                         )}
                       </div>
