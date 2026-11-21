@@ -11,6 +11,83 @@
 
 ---
 
+## [2026-11-22] — BLK-002: Retensi Dokumen Default ON + Ambang Configurable
+
+**Status:** DONE  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+BLK-002 (DEC-002: "Purge dokumen default ON, retensi per jenis") diimplementasikan: job purge dokumen identitas kini **default aktif** (nonaktifkan eksplisit via `RETENTION_AUTOPURGE=false`), dan ambang retensi dapat dikonfigurasi per jenis via `RETENTION_REJECTED_DAYS` (default 90) & `RETENTION_INACTIVE_DAYS` (default 30) sesuai `docs/RETENSI_DOKUMEN_IDENTITAS.md` §4. Sekaligus memperbaiki bug hook husky pre-commit yang menolak `.env.example` (bertabrakan dengan dokumentasi hooknya sendiri) dan tidak robust di bawah `sh -e`.
+
+### Requirements and decisions
+
+- **Requirement:** BLK-002 (dari DEC-002, disetujui 2026-11-21) — retensi dokumen identitas
+- **Decisions / tradeoffs:** Default ON dengan opt-out eksplisit; ambang via env dengan default = periode kebijakan (90/30 hari); dry-run tetap default saat eksekusi manual CLI
+
+### Implementation impact
+
+- **Added:** None
+- **Modified:** `api.kkpus.id` — `services/cron.js` (gate default ON), `scripts/purgeExpiredIdentityDocs.js` (ambang env-configurable), `.env.example` (dokumentasi 3 var), `docs/RETENSI_DOKUMEN_IDENTITAS.md` (§4 catatan implementasi), `.husky/pre-commit` (fix pola `.env.example` + `|| true` untuk `sh -e`)
+- **Database:** None — purge hanya hapus file & null-kan kolom path sesuai kebijakan retensi (tidak ada perubahan skema)
+- **API:** None — tidak ada endpoint berubah
+- **UI:** None
+
+### Verification
+
+- `npx eslint services/cron.js scripts/purgeExpiredIdentityDocs.js` — 0 error
+- Unit test purge: 8/8 passed (`node --experimental-vm-modules jest __tests__/purgeExpiredIdentityDocs.test.js`)
+- Full backend suite: 12 suites / 108 tests passed
+- Smoke dry-run `node scripts/purgeExpiredIdentityDocs.js` — terhenti di koneksi DB (kredensial lokal `admin@139.193.182.6` ditolak; isu environment, bukan kode) — logika tercakup unit test
+- Hook pre-commit: `sh -e .husky/pre-commit` exit 0 (kasus lolos & tersaring diuji manual)
+- Commit `41f7c6a` di `api.kkpus.id` branch `rollback/2026-11-02` (pushed `a36235b..41f7c6a`)
+
+### Risks and follow-up
+
+- **Known issues:** Kredensial DB lokal (dev) tidak valid → smoke dry-run live belum bisa dijalankan; perlu dijalankan di staging dengan DB valid sebagai bukti operasional
+- **Next recommended task:** TEST P0 di staging (TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035)
+
+---
+
+## [2026-11-22] — BLK-001: Hapus Sisa Sandbox Midtrans di Frontend
+
+**Status:** DONE  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+BLK-001 (DEC-005: hapus Midtrans/DOKU sandbox dari frontend) diverifikasi tuntas: kedua frontend **tidak lagi memuat** referensi Midtrans/DOKU — `kkpusid` (public) 0 hasil grep, `admin.kkpus.id` 0 hasil (script/CSP bersih). Sisa terakhir berupa dead method `createMidtransTransaction` di `UBilling.js` admin (tanpa pemanggil; endpoint-nya `/billing/process-payment` yang sudah `transfer_manual` per BLK-006) — dihapus. Endpoint `/billing/manual-sync-summary` ditinjau: generik (sync laporan finansial), bukan Midtrans.
+
+### Requirements and decisions
+
+- **Requirement:** BLK-001 (dari DEC-005, disetujui 2026-11-21) — keamanan: sandbox pembayaran di produksi
+- **Decisions / tradeoffs:** Hapus dead helper, bukan rename — tidak ada pemanggil (grep 0 referensi)
+
+### Implementation impact
+
+- **Added:** None
+- **Modified:** `admin.kkpus.id` — `src/utils/api/UBilling.js` (hapus `createMidtransTransaction`)
+- **Database:** None
+- **API:** None — tidak ada endpoint/route berubah
+- **UI:** None — perilaku identik
+
+### Verification
+
+- Grep `midtrans|doku(?!men)|jokul|snap` di `admin.kkpus.id` (src + index.html) & `kkpusid` (src + index.html) — 0 hasil relevan (hanya false positive kata "Dokumen")
+- Grep pemanggil `createMidtransTransaction` — 0 (hanya definisi)
+- `npx eslint src/utils/api/UBilling.js` — 0 error
+- `npm run build` (admin) — ✓ built in 1.20s
+- Commit `949fc75` di `admin.kkpus.id` branch `rollback/2026-11-02` (pushed `acc8074..949fc75`)
+
+### Risks and follow-up
+
+- **Known issues:** None
+- **Next recommended task:** TEST P0 di staging (TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035)
+
+---
+
 ## [2026-11-22] — DEF-001: Bersihkan Dead Reference Approval Penarikan (Admin)
 
 **Status:** DONE  

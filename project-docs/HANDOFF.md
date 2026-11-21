@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-004/006/008 + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 (TASK-000..TASK-007)
-- **Active task:** None — seluruh blocker & NEW-001/002 & DEF-001 selesai; menunggu instruksi berikutnya (TEST P0 staging)
-- **Last verification:** DEF-001 (admin `acc8074`): dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` dihapus, `DashboardApprovalModals` pakai `approvalService.processWithdrawalApproval` langsung; eslint 0 error/0 warning, build ✓ (behavior unchanged)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 (TASK-000..TASK-007)
+- **Active task:** None — seluruh blocker (BLK-001..008), NEW-001/002, & DEF-001 selesai; menunggu instruksi berikutnya (TEST P0 staging)
+- **Last verification:** BLK-002 (api `41f7c6a`): purge default ON + ambang env-configurable — eslint 0, 108/108 test, dry-run terhenti di kredensial DB lokal (env); BLK-001 (admin `949fc75`): dead helper dihapus — build ✓; DEF-001 (admin `acc8074`)
 
 ## Decisions and constraints
 
@@ -29,8 +29,8 @@
 
 | ID | Blocker / risk | Impact | Owner | Next action |
 | --- | --- | --- | --- | --- |
-| BLK-001 | Frontend masih memuat Midtrans/DOKU sandbox (DEC-005 approved, belum dieksekusi) | Keamanan: sandbox di produksi | Product/Tech | Hapus sandbox, ganti InvoicePage jadi transfer manual |
-| BLK-002 | `RETENTION_AUTOPURGE` belum default ON (DEC-002 approved, belum dikonfigurasi) | Kepatuhan retensi | Legal/Security | Aktifkan default + set retentionYears per dokumen |
+| BLK-001 | ~~Frontend masih memuat Midtrans/DOKU sandbox (DEC-005 approved, belum dieksekusi)~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: kedua frontend 0 referensi Midtrans/DOKU (grep); dead helper `createMidtransTransaction` dihapus (admin `949fc75`) |
+| BLK-002 | ~~`RETENTION_AUTOPURGE` belum default ON (DEC-002 approved, belum dikonfigurasi)~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: purge default AKTIF (opt-out `RETENTION_AUTOPURGE=false`); ambang configurable `RETENTION_REJECTED_DAYS`/`RETENTION_INACTIVE_DAYS` (api `41f7c6a`); 108 test lulus; smoke dry-run live menunggu DB valid di staging |
 | BLK-003 | ~~API spec (kontrak) perlu diverifikasi terhadap implementasi aktual~~ **RESOLVED 2026-11-22** — rekonsiliasi penuh di `06_API_SPEC.md` §6 | — | — | Selesai: 10 MATCH / 37 CHANGED / 3 MISSING dari 50 endpoint; §4 kini inventaris aktual (~213 route) |
 | BLK-004 | ~~Public masih memuat DOKU JOKUL sandbox~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: DOKU script + CSP entry dihapus, `UStatus.jsx` (dead code Midtrans) dihapus, fallback `midtrans_order_id` dibersihkan |
 | BLK-005 | Backend masih menyimpan kolom `midtrans_order_id` di tabel `transactions` (nama kolom legacy, diisi format `MANUAL-*`) | Kebersihan skema | Dev Team | Pertimbangkan rename kolom → `payment_reference` saat migrasi berikutnya (di luar scope frontend) |
