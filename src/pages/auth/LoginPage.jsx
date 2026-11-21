@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import { jwtEncode } from "../../utils/helpers";
-import api from "../../utils/api/common";
+import api, { markLoginTime } from "../../utils/api/common";
 import "./LoginPage.css";
 
 const LoginPage = () => {
@@ -75,6 +75,7 @@ const LoginPage = () => {
 
 
         localStorage.setItem("userData", JSON.stringify(data.data.user));
+        markLoginTime();
         window.dispatchEvent(new Event("storage_sync"));
         navigate(`/${jwtEncode({ page: "dashboard" })}`);
 

@@ -28,6 +28,7 @@ api.interceptors.request.use(
 const AUTH_LOGIN_PATH = `/${jwtEncode({ page: "authLogin" })}`;
 
 let isRedirecting = false;
+let lastLoginTime = 0;
 
 /**
  * Membersihkan sesi lalu mengarahkan pengguna ke halaman login (sekali saja).
@@ -37,6 +38,13 @@ let isRedirecting = false;
  * Frontend hanya clear userData (UI data).
  */
 const clearSessionAndRedirect = () => {
+  // Grace period: jangan redirect jika user baru login (<10 detik)
+  // Memberi waktu cookie/session untuk settle sebelum menyerah
+  const timeSinceLogin = Date.now() - lastLoginTime;
+  if (timeSinceLogin < 10000) {
+    return;
+  }
+
   // Token di HttpOnly cookie - backend yang clear via logout endpoint
   // Frontend hanya clear userData (UI data)
   localStorage.removeItem("userData");
@@ -95,3 +103,11 @@ api.interceptors.response.use(
 
 export default api;
 export { api as t };
+
+/**
+ * Catat waktu login terakhir (dipanggil LoginPage setelah sukses)
+ * untuk mencegah redirect instan jika API kembali 401 secepatnya.
+ */
+export const markLoginTime = () => {
+  lastLoginTime = Date.now();
+};

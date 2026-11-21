@@ -59,19 +59,30 @@ const App = () => {
   useEffect(() => {
     if (isEnvMissing) return;
 
-    // Token sekarang di HttpOnly cookie (browser otomatis kirim)
-    // Init socket tanpa manual token - socket.js akan handle cookie
-    initSocket();
+    // Socket di-init hanya jika user sudah login (userData ada).
+    // Inisialisasi socket sebelum login dapat membuat polling request
+    // tanpa token ke API server, mengganggu session cookie.
+    const initSocketIfAuthenticated = () => {
+      if (localStorage.getItem("userData")) {
+        initSocket();
+      }
+    };
 
-    const handleStorage = () => {
-      // userData change (UI data only) - socket tetap pakai cookie
-      // Tidak perlu re-init socket untuk token change
+    initSocketIfAuthenticated();
+
+    // Re-init socket setelah login (storage event dari LoginPage)
+    const handleStorage = (e) => {
+      if (e.key === "userData" && e.newValue) {
+        initSocketIfAuthenticated();
+      }
     };
 
     window.addEventListener("storage", handleStorage);
+    window.addEventListener("storage_sync", initSocketIfAuthenticated);
 
     return () => {
       window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("storage_sync", initSocketIfAuthenticated);
       disconnectSocket();
     };
   }, [isEnvMissing]);
