@@ -427,13 +427,13 @@ Pola ini kemungkinan besar ada di 21 halaman yang sudah diaudit.
 
 | # | Masalah | Status |
 |---|---------|--------|
-| 1 | Design token (CSS variables) | ⬜ Pending — needs refactor |
-| 2 | Kurangi cognitive overload (sembunyikan tab kosong) | ⬜ Pending — needs UX review |
-| 3 | Tambah breakpoint tablet | ⬜ Pending |
+| 1 | Design token (CSS variables) | ✅ Done — `design-tokens.css` (colors, spacing, typography, shadows) |
+| 2 | Kurangi cognitive overload (sembunyikan tab kosong) | ✅ Done — PinjamanReport (4/6 tabs), ArisanReport (2/3 tabs) |
+| 3 | Tambah breakpoint tablet | ✅ Done — 768px-1023px + <768px responsive rules |
 | 4 | Ganti `alert()` dengan toast/SweetAlert2 | ✅ Done (4 eliminated) |
 | 5 | Masking data sensitif | ✅ Done (Members table) |
 | 6 | Add templateable pada filter | ⬜ Pending |
-| 7 | Tambah ARIA pada modal, tab | ✅ Done (tabs, pagination) |
+| 7 | Tambah ARIA pada modal, tab | ✅ Done — all report pages role=tablist + role=tab |
 
 ### 🟢 Prioritas 3 — Menengah
 
@@ -488,7 +488,7 @@ Minggu 6 → Audit ulang (regression)
 | 3 | Touch target (semua halaman) | WCAG 2.5.5 | ✅ Global CSS min 44×44px |
 | 4 | Tabel ARIA (caption, scope, aria-sort) | WCAG 1.3.1 | ✅ 30+ captions added |
 | 5 | Brand color (#00d9a6) | Kontras 1.83:1 | ✅ Fixed to #00896d (4.51:1) |
-| 6 | Design token | Warna, spacing | ⬜ Pending refactor |
+| 6 | Design token | Warna, spacing | ✅ Done — `design-tokens.css` |
 | 7 | No pagination (Arisan Report, Report umum) | UX cognition | ✅ All paginations have aria-labels |
 | 8 | Historik untuk usability | Handoff | ⬜ Pending |
 
