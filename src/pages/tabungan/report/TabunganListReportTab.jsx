@@ -40,7 +40,6 @@ const TabunganListReportTab = ({
           bordered
           className="align-middle mb-0 text-nowrap compact-table"
           style={{ minWidth: "1600px" }}
-          caption={tableCaption}
         >
           <caption className="visually-hidden">{tableCaption}</caption>
           <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>

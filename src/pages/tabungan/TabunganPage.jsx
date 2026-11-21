@@ -370,7 +370,7 @@ const TabunganPage = () => {
             ) : (
               <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div className="table-responsive">
-                  <Table hover className="mb-0 align-middle custom-table-admin text-nowrap" caption="Master program tabungan dengan aksi edit dan hapus">
+                  <Table hover className="mb-0 align-middle custom-table-admin text-nowrap">
                     <caption className="visually-hidden">Master program tabungan dengan aksi edit dan hapus</caption>
                     <thead className="bg-light">
                       <tr>

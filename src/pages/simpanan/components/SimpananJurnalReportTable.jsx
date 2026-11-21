@@ -29,7 +29,8 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
 
   return (
     <div className="table-responsive border rounded-3">
-      <Table className="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap compact-table" caption="Laporan jurnal akuntansi simpanan (Debet/Kredit)">
+      <Table className="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap compact-table">
+        <caption className="visually-hidden">Laporan jurnal akuntansi simpanan (Debet/Kredit)</caption>
         <thead>
           <tr>
             <th className="text-start" style={{ width: "120px" }}>Akun</th>

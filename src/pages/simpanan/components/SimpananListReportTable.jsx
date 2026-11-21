@@ -35,8 +35,8 @@ const SimpananListReportTable = ({
         <Table
           className="table table-striped table-hover table-bordered align-middle mb-0 text-nowrap compact-table"
           style={{ minWidth: "1200px" }}
-          caption="Laporan list simpanan per anggota per tahun"
         >
+          <caption className="visually-hidden">Laporan list simpanan per anggota per tahun</caption>
           <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
             <tr>
               <th

@@ -4,7 +4,7 @@ import { Table, Spinner } from "react-bootstrap";
 const TabunganJurnalTab = ({ summaryData = {}, loading, formatRupiah, tableCaption }) => (
   <div className="p-2 p-md-3">
     <div className="table-responsive border rounded-3">
-      <Table striped hover bordered className="align-middle mb-0 text-nowrap compact-table" caption={tableCaption}>
+      <Table striped hover bordered className="align-middle mb-0 text-nowrap compact-table">
         <caption className="visually-hidden">{tableCaption}</caption>
         <thead className="table-light">
           <tr>
