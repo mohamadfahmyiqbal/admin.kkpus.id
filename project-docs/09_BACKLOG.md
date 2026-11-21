@@ -33,6 +33,7 @@
 | TASK-005 | Define API specification | DONE | P1 | Development Team | TASK-004 | API spec covers all endpoints | 2026-11-21 |
 | TASK-006 | Define UI/UX specification | DONE | P1 | Development Team | TASK-005 | UI/UX spec covers all screens & interaction states | 2026-11-22 |
 | TASK-007 | Define Test Plan | DONE | P1 | Development Team | TASK-006 | Test plan covers test strategy, environments, and traceable test cases | 2026-11-22 |
+| DEF-001 | Admin: dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` di DashboardApprovalModals.jsx (method tidak ada di USavings.js; fallback approvalService berfungsi — dead code, non-fungsional) | OPEN | P2 | Development Team | None | Hapus referensi dead code atau tambahkan method yang benar + verifikasi build admin | 2026-11-22 |
 
 ## Task details
 
@@ -161,4 +162,4 @@ Move closed task details here; preserve task ID, outcome, verification reference
 | Candidate ID | Discovery | Suggested priority | Source | Needs triage by |
 | --- | --- | --- | --- | --- |
 | NEW-001 | ~~Rewrite detail §3 `06_API_SPEC.md` menjadi inventaris aktual~~ **DONE 2026-11-22 (TASK-008)** — §3 = kontrak aktual per modul, API-001..050 dipetakan ke route aktual, API-051..054 baru (regions); ideal v1 diarsipkan §3.1 | P2 | BLK-003 / REC-1 | Development Team |
-| NEW-002 | Konsolidasi modul ganda: simpanan (`/api/simpanan` + `/api/savings`) & pembiayaan (`/api/financing` + `/api/financial` + `/api/jualbeli`) — risiko divergensi logika | P2 | BLK-003 / REC-5 | Development Team |
+| NEW-002 | ~~Konsolidasi modul ganda: simpanan (`/api/simpanan` + `/api/savings`) & pembiayaan (`/api/financing` + `/api/financial` + `/api/jualbeli`)~~ **RESOLVED 2026-11-22 (triase)** — bukan duplikat: `/api/financial` = alias tipis (reuse controller `/api/financing`), `/api/savings` = tabungan target, `/api/simpanan` = simpanan pokok. Domain berbeda, konsolidasi tidak sepadan risiko | P2 | BLK-003 / REC-5 | Development Team |

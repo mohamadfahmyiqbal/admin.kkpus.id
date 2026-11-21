@@ -1,7 +1,7 @@
 # Engineering Handoff
 
 **Project:** KKPUS Platform  
-**Last updated:** 2026-11-22 16:30 UTC by Development Team
+**Last updated:** 2026-11-22 17:00 UTC by Development Team
 
 ## Start here
 
@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-004/006/008 + BLK-007 role decision + TASK-008 (TASK-000..TASK-007)
-- **Active task:** None — seluruh blocker & NEW-001 selesai; menunggu instruksi berikutnya (NEW-002 triase atau TEST P0)
-- **Last verification:** §3 API spec = kontrak aktual (54 API ID: 50 v1 + 051..054 regions; 17 modul); §5 traceability +2 modul; REC-1 RESOLVED; test plan tetap valid (1 referensi path); struktur §1..§6 utuh
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-004/006/008 + BLK-007 role decision + TASK-008 + NEW-002 triase (TASK-000..TASK-007)
+- **Active task:** None — seluruh blocker & NEW-001/002 selesai; DEF-001 (P2) terbuka; menunggu instruksi berikutnya (TEST P0 staging atau DEF-001)
+- **Last verification:** NEW-002 triase: `/api/financial` = alias (reuse controller `/api/financing`), `/api/savings`/`/api/simpanan`/`/api/tabungan` = domain berbeda — tidak dikonsolidasi; DEF-001 dicatat (dead reference admin, non-fungsional)
 
 ## Decisions and constraints
 
@@ -40,14 +40,15 @@
 
 ## Next recommended task
 
-**NEW-002 — Triase konsolidasi modul ganda (P2)**
+**Eksekusi TEST P0 di staging (P0)**
 
-- Why now: TASK-008 selesai — seluruh dokumentasi kini selaras implementasi. Modul ganda (`/api/simpanan` + `/api/savings`, `/api/financing` + `/api/financial` + `/api/jualbeli`) = duplikasi logika & risiko divergensi perhitungan (REC-5).
-- Read: `06_API_SPEC.md` §4 (inventaris), `09_BACKLOG.md` (NEW-002), `04_TSD.md` (modul terkait)
-- Acceptance evidence: Keputusan triase — konsolidasi / biarkan / deprecated; bila konsolidasi: rencana migrasi + ADR
-- Do not start if: — (butuh keputusan Product/Tech)
+- Why now: Seluruh dokumentasi & triase selesai (TASK-000..008, BLK-001..008, NEW-001, NEW-002). §3 kini = kontrak aktual — acuan eksekusi test siap.
+- Test cases: TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035 (12 P0 dari `08_TEST_PLAN.md`)
+- Read: `08_TEST_PLAN.md` (TEST-001..036), `06_API_SPEC.md` §3 (kontrak aktual), `09_BACKLOG.md`
+- Acceptance evidence: Setiap TEST P0 dieksekusi di staging dengan environment + test data; hasil PASS/FAIL terdokumentasi di dev log
+- Do not start if: staging + test data belum siap (butuh environment, bukan hanya dokumentasi)
 
-**Alternatif: eksekusi TEST P0 di staging** (TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035) — §3 kini = kontrak aktual, acuan test siap.
+**Alternatif: DEF-001 (P2)** — bersihkan dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` di admin dashboard (`DashboardApprovalModals.jsx`).
 
 ## Update rule
 

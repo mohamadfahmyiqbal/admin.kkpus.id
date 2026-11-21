@@ -11,6 +11,45 @@
 
 ---
 
+## [2026-11-22] — NEW-002: Triase Konsolidasi Modul Ganda
+
+**Status:** DONE  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+Triase NEW-002 (REC-5): diverifikasi bahwa modul "ganda" **bukan duplikat** — `/api/financial` adalah alias tipis yang 100% reuse controller `/api/financing` (createFinancingApplication, dll); `/api/savings` (tabungan target: apply/history/summary) vs `/api/simpanan` (simpanan pokok + penarikan + disburse) = domain berbeda; `/api/tabungan` = pengajuan tabungan. Konsolidasi **tidak dilanjutkan** (risiko migrasi frontend > nilai). Batas domain sudah terdokumentasi di §3 `06_API_SPEC.md` (M-SAVINGS / M-SAVINGS-ALT / M-TABUNGAN).
+
+### Requirements and decisions
+
+- **Requirement:** NEW-002 (P2, dari REC-5) — triase konsolidasi modul ganda
+- **Decisions / tradeoffs:**
+  - **Tidak konsolidasi** (persetujuan Product 2026-11-22): modul melayani domain & konsumen berbeda; `/api/financial` hanya alias 50 baris
+  - Dokumentasi batas domain = §3 sudah memisahkan M-SAVINGS / M-SAVINGS-ALT / M-FINANCIAL / M-TABUNGAN
+  - Alternatif (konsolidasi/deprecate alias) ditolak — nilai rendah, risiko breaking change pada UGlobal/UJualBeli/UTransaksi (public)
+
+### Implementation impact
+
+- **Added:** DEF-001 di `09_BACKLOG.md` (temuan audit)
+- **Modified:** `09_BACKLOG.md` (NEW-002 → RESOLVED)
+- **Database:** None
+- **API:** None (dokumentasi; tidak ada kode yang diubah)
+- **UI:** None
+
+### Verification
+
+- Pemetaan modul: grep `router.(get|post|put|delete)` per route file + penelusuran konsumen frontend (`USavings.jsx`, `UJualBeli`, `UGlobal`, `UTransaksi`, `FormSimpanan`, `SimpananDashboard`, `SimpananReportPage`)
+- `financialRoute.js` → import controller dari `controllers/financing/` (alias, bukan duplikasi)
+- Temuan audit: DEF-001 — `DashboardApprovalModals.jsx` L115-121 memanggil `savingsService.approveWithdrawal`/`disburseWithdrawal` yang tidak ada di `USavings.js` (undefined) → fallback `approvalService.processWithdrawalApproval` (endpoint benar) — **dead code, non-fungsional** (dicatat, diperbaiki terpisah)
+
+### Risks and follow-up
+
+- **DEF-001 (P2, OPEN):** dead reference di admin dashboard — hapus referensi atau tambahkan method benar
+- **Alternatif TEST P0 di staging** — kini jadi next task utama
+
+---
+
 ## [2026-11-22] — TASK-008: Rewrite §3 API Spec (Kontrak Aktual)
 
 **Status:** DONE  
