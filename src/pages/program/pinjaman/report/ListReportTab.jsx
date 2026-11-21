@@ -17,6 +17,7 @@ export const ListReportTab = ({
           bordered
           className="align-middle mb-0 text-nowrap custom-table-admin compact-table"
         >
+          <caption className="visually-hidden">Laporan data pinjaman meliputi nama, keperluan, jumlah pinjaman, termin, pembayaran cicilan, sisa cicilan, cicilan tak tertagih, dan status</caption>
           <thead
             className="table-light text-center sticky-top"
             style={{ zIndex: 2 }}

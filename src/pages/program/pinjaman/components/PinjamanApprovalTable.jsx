@@ -133,6 +133,7 @@ const PinjamanApprovalTable = ({
     <div>
       <div className="table-responsive border rounded-3">
         <Table hover className="table compact-table table-striped table-bordered align-middle mb-0 text-nowrap custom-table-admin">
+          <caption className="visually-hidden">Antrian persetujuan pinjaman meliputi rincian, nominal, waktu, dan aksi proses persetujuan</caption>
           <thead className="table-light sticky-top" style={{ zIndex: 2 }}>
             <tr>
               <th

@@ -261,6 +261,7 @@ const PinjamanTable = ({
           hover
           className="table compact-table table-striped table-bordered align-middle mb-0 text-nowrap custom-table-admin"
         >
+          <caption className="visually-hidden">Daftar data pinjaman meliputi anggota, jenis pinjaman, jumlah pinjaman, tenor, cicilan, piutang, status cicilan, dan status approval</caption>
           <thead className="table-light sticky-top" style={{ zIndex: 2 }}>
             <tr>
               <th

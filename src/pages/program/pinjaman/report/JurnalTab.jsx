@@ -13,6 +13,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
           <div className="card-body p-0">
             <div className="table-responsive">
               <Table bordered striped className="mb-0 text-nowrap compact-table">
+              <caption className="visually-hidden">Ringkasan kas pinjaman lunak yang mencakup saldo awal, hibah SHU CSR, pengembalian, penyaluran, dan kerugian pinjaman lunak</caption>
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>
@@ -107,6 +108,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
           <div className="card-body p-0">
             <div className="table-responsive">
               <Table bordered striped className="mb-0 text-nowrap compact-table">
+              <caption className="visually-hidden">Ringkasan piutang pinjaman anggota yang mencakup saldo awal, penyaluran, pengembalian, dan kerugian pinjaman lunak</caption>
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>
@@ -194,6 +196,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
           <div className="card-body p-0">
             <div className="table-responsive">
               <Table bordered striped className="mb-0 text-nowrap compact-table">
+              <caption className="visually-hidden">Ringkasan hibah dari SHU CSR modal yang mencakup saldo awal dan mutasi hibah SHU CSR</caption>
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>
@@ -263,6 +266,7 @@ export const JurnalTab = ({ jurnal, formatRupiah }) => (
           <div className="card-body p-0">
             <div className="table-responsive">
               <Table bordered striped className="mb-0 text-nowrap compact-table">
+              <caption className="visually-hidden">Ringkasan beban hutang pinjaman tak tertagih yang mencakup saldo awal dan kerugian pinjaman lunak</caption>
               <thead className="table-light text-center align-middle">
                 <tr>
                   <th rowSpan="2">No</th>

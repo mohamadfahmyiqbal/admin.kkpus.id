@@ -126,6 +126,7 @@ export const ProgramMembersModal = ({
         <Modal.Body className="pt-3">
           <div className="table-responsive" style={{ minHeight: "350px" }}>
             <Table hover className="align-middle custom-table-admin">
+              <caption className="visually-hidden">Daftar anggota program tabungan meliputi kategori, nama anggota, durasi, total saldo, kekurangan, target nominal, dan status</caption>
               <thead className="table-light">
                 <tr>
                   <th scope="col" className="text-secondary fw-semibold text-nowrap">

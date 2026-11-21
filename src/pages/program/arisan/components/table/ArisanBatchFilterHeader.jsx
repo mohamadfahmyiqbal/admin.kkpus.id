@@ -130,6 +130,7 @@ const ArisanBatchFilterHeader = ({ filter, onFilterChange }) => {
           <input
             type="text"
             className="form-control form-control-sm"
+            aria-label="Filter total biaya"
             placeholder="Cari..."
             value={filter.total}
             onChange={(e) => onFilterChange("total", e.target.value)}
@@ -139,6 +140,7 @@ const ArisanBatchFilterHeader = ({ filter, onFilterChange }) => {
           <input
             type="text"
             className="form-control form-control-sm"
+            aria-label="Filter status"
             placeholder="Cari..."
             value={filter.status}
             onChange={(e) => onFilterChange("status", e.target.value)}

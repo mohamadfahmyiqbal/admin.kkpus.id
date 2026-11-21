@@ -129,6 +129,7 @@ const ArisanParticipantsTable = ({
               <input
                 type="text"
                 className="form-control form-control-sm"
+                aria-label="Filter status"
                 placeholder="Cari..."
                 value={filter.status}
                 onChange={(e) => onFilterChange("status", e.target.value)}

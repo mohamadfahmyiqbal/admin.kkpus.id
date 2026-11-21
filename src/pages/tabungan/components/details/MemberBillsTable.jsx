@@ -14,6 +14,7 @@ export const MemberBillsTable = ({
   return (
     <div className="table-responsive" style={{ minHeight: "350px" }}>
       <Table hover className="align-middle custom-table-admin">
+        <caption className="visually-hidden">Daftar tagihan dan setoran anggota meliputi periode, tanggal, nama anggota, nama setoran, jumlah, dan status pembayaran</caption>
         <thead className="table-light">
           <tr>
             <th scope="col" className="text-secondary fw-semibold text-nowrap">
