@@ -194,6 +194,7 @@ export const ArisanPesertaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter total pembayaran"
                   placeholder="Cari..."
                   value={filter.total}
                   onChange={(e) => handleFilterChange(e, "total")}

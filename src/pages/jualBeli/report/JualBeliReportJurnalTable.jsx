@@ -143,6 +143,7 @@ const JualBeliReportJurnalTable = ({
   return (
     <div className="table-responsive border rounded-3">
       <Table className="table compact-table table-striped table-hover table-bordered align-middle mb-0 text-nowrap custom-table-admin">
+        <caption className="visually-hidden">Jurnal akuntansi jual beli meliputi akun, deskripsi, debet, dan kredit</caption>
         <thead className="table-light text-center sticky-top" style={{ zIndex: 2 }}>
           <tr>
             <th

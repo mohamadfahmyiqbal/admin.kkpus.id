@@ -105,6 +105,7 @@ const PaymentFeeConfigPage = () => {
           ) : (
             <div className="table-responsive">
               <Table hover className="align-middle mb-0">
+                <caption className="visually-hidden">Konfigurasi biaya admin pembayaran meliputi metode pembayaran, tipe biaya, biaya flat, dan biaya persentase</caption>
                 <thead className="bg-light text-muted">
                   <tr>
                     <th className="py-3 px-4 fw-semibold border-bottom-0">

@@ -89,6 +89,7 @@ const CurriculumTab = ({ onEdit }) => {
   return (
     <div className="bg-white rounded-4 shadow-sm p-4">
       <Table responsive hover className="align-middle border-top-0 mb-0">
+        <caption className="visually-hidden">Daftar kurikulum yang tersedia meliputi nama, tipe, status, dan aksi pengelolaan</caption>
         <thead className="table-light">
           <tr>
             <th className="text-secondary fw-semibold border-0 rounded-start-2">
@@ -220,6 +221,7 @@ const MaterialTab = ({ onEdit }) => {
   return (
     <div className="bg-white rounded-4 shadow-sm p-4">
       <Table responsive hover className="align-middle border-top-0 mb-0">
+        <caption className="visually-hidden">Daftar materi pelatihan meliputi urutan, judul, tipe, dan aksi pengelolaan</caption>
         <thead className="table-light">
           <tr>
             <th className="text-secondary fw-semibold border-0 rounded-start-2">
@@ -333,6 +335,7 @@ const EvaluationTab = ({ onEdit }) => {
   return (
     <div className="bg-white rounded-4 shadow-sm p-4">
       <Table responsive hover className="align-middle border-top-0 mb-0">
+        <caption className="visually-hidden">Daftar soal evaluasi meliputi pertanyaan, kunci jawaban, poin, dan aksi pengelolaan</caption>
         <thead className="table-light">
           <tr>
             <th className="text-secondary fw-semibold border-0 rounded-start-2">
@@ -425,6 +428,7 @@ const RankingTab = () => {
   return (
     <div className="bg-white rounded-4 shadow-sm p-4">
       <Table responsive hover className="align-middle border-top-0 mb-0">
+        <caption className="visually-hidden">Peringkat peserta training berdasarkan total skor dan jumlah materi yang telah diselesaikan</caption>
         <thead className="table-light">
           <tr>
             <th className="text-secondary fw-semibold border-0 rounded-start-2">

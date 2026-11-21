@@ -170,6 +170,7 @@ const JualBeliReportListTable = ({
           className="table compact-table table-striped table-hover table-bordered align-middle mb-0 text-nowrap custom-table-admin"
           style={{ minWidth: "1700px" }}
         >
+          <caption className="visually-hidden">Laporan data pembiayaan jual beli per anggota meliputi total, pokok, DP, margin, dan cicilan untuk tiga tahun terakhir</caption>
           <thead
             className="table-light text-center sticky-top"
             style={{ zIndex: 2 }}
