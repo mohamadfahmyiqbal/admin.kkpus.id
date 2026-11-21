@@ -446,13 +446,13 @@ Pola ini kemungkinan besar ada di 21 halaman yang sudah diaudit.
 
 ### 🟢 Prioritas 3 — Menengah
 
-| # | Proposal |
-|---|----------|
-| 1 | Persona & user journey |
-| 2 | Figma design spec |
-| 3 | Usability test (≥5 user) |
-| 4 | Definisi metrik sukses |
-| 5 | Handoff deliverables |
+| # | Proposal | Status |
+|---|----------|--------|
+| 1 | Persona & user journey | ✅ Done — `docs/ux-audit/99-PERSONA-USER-JOURNEY.md` (3 persona: Pengawas, Ketua, Bendahara; 4 user journey: Login→Dashboard, Persetujuan Anggota, Persetujuan Pinjaman, Transaksi Tabungan; JTBD per persona; peta titik sentuh ke halaman audit; rekomendasi 8 item) |
+| 2 | Figma design spec | ⬜ Pending |
+| 3 | Usability test (≥5 user) | ⬜ Pending |
+| 4 | Definisi metrik sukses | ⬜ Pending |
+| 5 | Handoff deliverables | ⬜ Pending |
 
 ---
 
