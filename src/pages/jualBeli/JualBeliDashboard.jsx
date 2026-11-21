@@ -289,6 +289,7 @@ const JualBeliDashboard = () => {
                       type="text"
                       className="form-control ps-5 py-2 rounded-pill bg-light border-0"
                       placeholder="Cari anggota atau barang..."
+                      aria-label="Filter cari anggota atau barang"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
