@@ -48,7 +48,7 @@
 }
 
 .splashx-orb-right {
-  background: radial-gradient(circle, #00d9a640 0%, #0000 70%);
+  background: radial-gradient(circle, rgba(0, 217, 166, 0.25) 0%, #0000 70%);
   width: 450px;
   height: 450px;
   bottom: -100px;
@@ -82,8 +82,8 @@
 }
 
 .splashx-title-green {
-  color: #00d9a6;
-  background: linear-gradient(135deg, #00d9a6 0%, #2dd4bf 100%);
+  color: var(--color-brand-primary);
+  background: linear-gradient(135deg, var(--color-brand-primary) 0%, #2dd4bf 100%);
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
 }
@@ -189,7 +189,7 @@
 }
 
 .splashx-control-btn:focus-visible {
-  outline: 2px solid #00d9a6;
+  outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
 }
 
@@ -215,7 +215,7 @@
 }
 
 .splashx-skip-btn:focus-visible {
-  outline: 2px solid #00d9a6;
+  outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
 }
 
