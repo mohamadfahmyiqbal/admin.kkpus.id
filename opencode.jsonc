@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "references": {
+    "api": {
+      "path": "./api.kkpus.id",
+      "description": "Backend API repository — branch: rollback/2026-11-02"
+    },
+    "admin": {
+      "path": "./admin.kkpus.id",
+      "description": "Admin portal frontend repository — branch: rollback/2026-11-02"
+    },
+    "public": {
+      "path": "./kkpusid",
+      "description": "Public website repository — branch: rollback/2026-11-02"
+    }
+  },
+  "instructions": [
+    "AGENTS.md"
+  ],
+  "skills": [
+    "./.opencode/skills"
+  ]
+}
