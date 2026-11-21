@@ -11,6 +11,56 @@
 
 ---
 
+## [2026-11-22] — TEST-035 (partial): Security Scan — Audit Gate & Header Statis
+
+**Status:** PARTIAL ( komponen audit & statis PASS; komponen live menunggu staging)  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+TEST-035 (NFR security scan) dieksekusi sejauh yang mungkin tanpa environment hidup:
+
+1. **Dependency audit (`npm audit --audit-level=high`) — PASS:**
+   - `api.kkpus.id`: 18 moderate / **0 high / 0 critical** ✅
+   - `kkpusid`: semula 14 high → `npm audit fix` (transitive dev deps dalam semver range) → **0 high** (2 moderate) ✅ — build ✓
+   - `admin.kkpus.id`: semula 2 high → `follow-redirects` via audit fix; `xlsx@0.18.5` (prototype pollution CVE-2023-30533 + ReDoS CVE-2024-22363, `fixAvailable: false` karena SheetJS meninggalkan npm) → upgrade ke tarball resmi vendor `xlsx@0.20.3` (`cdn.sheetjs.com`, `--save-exact`; pemakaian export-only, API kompatibel) → **0 high** (6 moderate) ✅ — build ✓
+2. **Header keamanan — PASS (statis):** Helmet aktif dengan CSP (`default-src 'self'`, `frame-ancestors` allowlist), HSTS 1th + preload + includeSubDomains, nosniff, Referrer-Policy, COOP, Permissions-Policy; `X-Frame-Options` diaktifkan (`frameguard: same-origin` + fallback middleware). Verifikasi live (curl -I) menunggu server hidup.
+3. **Secret scan — PASS (regresi-grep):** `gitleaks` tidak terpasang di environment ini; grep pola kunci privat/API key/SG. pada file tracked (backend) → 0 temuan. Gitleaks penuh + scan frontend menunggu CI/staging.
+
+### Requirements and decisions
+
+- **Requirement:** TEST-035 (P0, `08_TEST_PLAN.md`) — kriteria: 0 high/critical CVE, 0 secret, header aktif
+- **Decisions / tradeoffs:**
+  - **xlsx via CDN tarball** (bukan `npm audit fix --force` yang breaking): jalur resmi vendor; dirty risk — dependency berasal dari URL (bukan registry), lockfile menyimpan integrity; build reproducibility tetap terjaga via lockfile
+  - **X-Frame-Options SAMEORIGIN** meski CSP `frameAncestors` sudah ada: memenuhi kriteria eksplisit TEST-035 & old-browser defense; API murni JSON (tidak ada UI untuk clickjack)
+  - Moderate vulns (26 total: api 18, admin 6, kkpusid 2) **belum** ditindak — di bawah ambang P0; catat untuk fast-follow
+
+### Implementation impact
+
+- **Added:** None
+- **Modified:** `kkpusid/package-lock.json` (audit fix); `admin.kkpus.id` package.json/package-lock.json (xlsx 0.20.3) + `.gitignore` (ignore `.opencode/` config MCP lokal); `api.kkpus.id/app.js` (frameguard + fallback XFO)
+- **Database:** None
+- **API:** None — tidak ada endpoint/kontrak berubah
+- **UI:** None
+
+### Verification
+
+- `npm audit --audit-level=high` ketiga repo pasca-fix → 0 high / 0 critical (counts moderate: 18/6/2)
+- `npm run build` kkpusid ✓ (3.60s) & admin ✓ (933ms) pasca-perubahan dependensi
+- `npx eslint app.js` → 0 error (1 warning pre-existing `staticOptions` di L211)
+- Commit: kkpusid `c0744c6`, admin `42136a9` + `095e8d6`, api `3295a9f` (semua pushed)
+
+### Risks and follow-up
+
+- **Known issues:**
+  - Komponen live TEST-035 belum dijalankan: curl header pada server hidup + `gitleaks` full-repo (butuh staging/CI)
+  - 26 moderate vulns belum ditangani (fast-follow, P2)
+  - `xlsx` kini dependency URL — pengacakan supply-chain dipantau (integrity di lockfile; update manual saat SheetJS rilis)
+- **Next recommended task:** TEST P0 live di staging (TEST-001..032) + sisa TEST-035 live
+
+---
+
 ## [2026-11-22] — BLK-005: Rename Kolom Legacy Midtrans (Migrasi + Kode)
 
 **Status:** DONE (migrasi siap; belum dijalankan — DB lokal menolak koneksi)  

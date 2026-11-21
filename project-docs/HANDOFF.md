@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; BLK-005 migrasi siap, belum dijalankan) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 (TASK-000..TASK-007)
-- **Active task:** None — seluruh blocker (BLK-001..008), NEW-001/002, & DEF-001 selesai; menunggu instruksi berikutnya (TEST P0 staging — butuh environment)
-- **Last verification:** BLK-005 (api `461ff7b`): rename kolom legacy — eslint 0 error, 108/108 test, migrasi belum tereksekusi (DB lokal ditolak); BLK-002 (api `41f7c6a`): purge default ON — 108/108 test; BLK-001 (admin `949fc75`): build ✓; DEF-001 (admin `acc8074`)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; BLK-005 migrasi siap, belum dijalankan) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + TEST-035 partial (audit gate P0 PASS: 0 high/critical × 3 repo) (TASK-000..TASK-007)
+- **Active task:** TEST P0 live di staging — 11 dari 12 case butuh environment; TEST-035 sisa: live header check + gitleaks
+- **Last verification:** TEST-035 partial: npm audit 3 repo → 0 high/0 critical (xlsx → 0.20.3 CDN, kkpusid audit fix, XFO diaktifkan); build kkpusid & admin ✓; BLK-005 (api `461ff7b`): eslint 0 error, 108/108 test, migrasi belum tereksekusi; BLK-002 (api `41f7c6a`): 108/108 test
 
 ## Decisions and constraints
 
@@ -47,6 +47,8 @@
 - Read: `08_TEST_PLAN.md` (TEST-001..036), `06_API_SPEC.md` §3 (kontrak aktual), `09_BACKLOG.md`
 - Acceptance evidence: Setiap TEST P0 dieksekusi di staging dengan environment + test data; hasil PASS/FAIL terdokumentasi di dev log
 - **Prasyarat deploy:** jalankan `npm run db:migrate` (MIG-004 BLK-005) di staging sebelum eksekusi test agar skema sinkron dengan model
+- **Sisa TEST-035 (P0):** verifikasi header live (`curl -I` ke API staging — CSP/HSTS/XFO/nosniff/Referrer-Policy) + `gitleaks` full-repo di CI
+- **Fast-follow (P2):** 26 moderate vulns (api 18, admin 6, kkpusid 2) — tinjau per kasus
 - Do not start if: staging + test data belum siap (butuh environment, bukan hanya dokumentasi)
 
 ## Update rule
