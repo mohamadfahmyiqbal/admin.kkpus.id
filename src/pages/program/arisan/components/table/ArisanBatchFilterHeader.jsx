@@ -60,6 +60,7 @@ const ArisanBatchFilterHeader = ({ filter, onFilterChange }) => {
           <input
             type="text"
             className="form-control form-control-sm"
+            aria-label="Filter periode"
             placeholder="Cari..."
             value={filter.periode}
             onChange={(e) => onFilterChange("periode", e.target.value)}
@@ -69,6 +70,7 @@ const ArisanBatchFilterHeader = ({ filter, onFilterChange }) => {
           <input
             type="text"
             className="form-control form-control-sm"
+            aria-label="Filter kategori"
             placeholder="Cari..."
             value={filter.kategori}
             onChange={(e) => onFilterChange("kategori", e.target.value)}
@@ -78,6 +80,7 @@ const ArisanBatchFilterHeader = ({ filter, onFilterChange }) => {
           <input
             type="text"
             className="form-control form-control-sm"
+            aria-label="Filter nama arisan"
             placeholder="Cari..."
             value={filter.nama}
             onChange={(e) => onFilterChange("nama", e.target.value)}
@@ -87,6 +90,7 @@ const ArisanBatchFilterHeader = ({ filter, onFilterChange }) => {
           <input
             type="text"
             className="form-control form-control-sm"
+            aria-label="Filter peserta"
             placeholder="Cari..."
             value={filter.peserta}
             onChange={(e) => onFilterChange("peserta", e.target.value)}
@@ -96,6 +100,7 @@ const ArisanBatchFilterHeader = ({ filter, onFilterChange }) => {
           <input
             type="text"
             className="form-control form-control-sm"
+            aria-label="Filter term"
             placeholder="Cari..."
             value={filter.term}
             onChange={(e) => onFilterChange("term", e.target.value)}

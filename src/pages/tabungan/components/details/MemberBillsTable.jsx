@@ -51,6 +51,7 @@ export const MemberBillsTable = ({
                 type="text"
                 className="form-control form-control-sm shadow-none"
                 placeholder="Cari..."
+                aria-label="Filter periode"
                 value={search.periode}
                 onChange={(e) => onFilterChange("periode", e.target.value)}
               />
@@ -60,6 +61,7 @@ export const MemberBillsTable = ({
                 type="text"
                 className="form-control form-control-sm shadow-none"
                 placeholder="Cari..."
+                aria-label="Filter tanggal"
                 value={search.tanggal}
                 onChange={(e) => onFilterChange("tanggal", e.target.value)}
               />
@@ -69,6 +71,7 @@ export const MemberBillsTable = ({
                 type="text"
                 className="form-control form-control-sm shadow-none"
                 placeholder="Cari..."
+                aria-label="Filter nama anggota"
                 value={search.namaAnggota}
                 onChange={(e) => onFilterChange("namaAnggota", e.target.value)}
               />
@@ -78,6 +81,7 @@ export const MemberBillsTable = ({
                 type="text"
                 className="form-control form-control-sm shadow-none"
                 placeholder="Cari..."
+                aria-label="Filter nama setoran"
                 value={search.namaSetoran}
                 onChange={(e) => onFilterChange("namaSetoran", e.target.value)}
               />
@@ -87,6 +91,7 @@ export const MemberBillsTable = ({
                 type="text"
                 className="form-control form-control-sm shadow-none"
                 placeholder="Cari..."
+                aria-label="Filter jumlah"
                 value={search.jumlah}
                 onChange={(e) => onFilterChange("jumlah", e.target.value)}
               />
@@ -96,6 +101,7 @@ export const MemberBillsTable = ({
                 type="text"
                 className="form-control form-control-sm shadow-none"
                 placeholder="Cari..."
+                aria-label="Filter status"
                 value={search.status}
                 onChange={(e) => onFilterChange("status", e.target.value)}
               />

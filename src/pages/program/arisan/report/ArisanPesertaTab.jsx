@@ -147,6 +147,7 @@ export const ArisanPesertaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter nama"
                   placeholder="Cari..."
                   value={filter.nama}
                   onChange={(e) => handleFilterChange(e, "nama")}
@@ -156,6 +157,7 @@ export const ArisanPesertaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter batch"
                   placeholder="Cari..."
                   value={filter.batch}
                   onChange={(e) => handleFilterChange(e, "batch")}
@@ -165,6 +167,7 @@ export const ArisanPesertaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter jenis"
                   placeholder="Cari..."
                   value={filter.jenis}
                   onChange={(e) => handleFilterChange(e, "jenis")}
@@ -174,6 +177,7 @@ export const ArisanPesertaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter term"
                   placeholder="Cari..."
                   value={filter.term}
                   onChange={(e) => handleFilterChange(e, "term")}

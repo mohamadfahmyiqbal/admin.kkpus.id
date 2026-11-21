@@ -68,6 +68,7 @@ const ArisanParticipantsTable = ({
               <input
                 type="text"
                 className="form-control form-control-sm"
+                aria-label="Filter arisan"
                 placeholder="Cari..."
                 value={filter.arisan}
                 onChange={(e) => onFilterChange("arisan", e.target.value)}
@@ -77,6 +78,7 @@ const ArisanParticipantsTable = ({
               <input
                 type="text"
                 className="form-control form-control-sm"
+                aria-label="Filter anggota"
                 placeholder="Cari..."
                 value={filter.anggota}
                 onChange={(e) => onFilterChange("anggota", e.target.value)}
@@ -86,6 +88,7 @@ const ArisanParticipantsTable = ({
               <input
                 type="text"
                 className="form-control form-control-sm"
+                aria-label="Filter nama anggota 2"
                 placeholder="Cari..."
                 value={filter.anggota2}
                 onChange={(e) => onFilterChange("anggota2", e.target.value)}
@@ -95,6 +98,7 @@ const ArisanParticipantsTable = ({
               <input
                 type="text"
                 className="form-control form-control-sm"
+                aria-label="Filter saldo"
                 placeholder="Cari..."
                 value={filter.saldo}
                 onChange={(e) => onFilterChange("saldo", e.target.value)}

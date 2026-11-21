@@ -100,6 +100,7 @@ export const ArisanDanaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter batch"
                   placeholder="Cari Batch..."
                   value={filter.batch}
                   onChange={(e) => handleFilterChange(e, "batch")}
@@ -109,6 +110,7 @@ export const ArisanDanaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter total komitmen"
                   placeholder="Cari..."
                   value={filter.komitmen}
                   onChange={(e) => handleFilterChange(e, "komitmen")}
@@ -118,6 +120,7 @@ export const ArisanDanaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter sisa komitmen"
                   placeholder="Cari..."
                   value={filter.sisa}
                   onChange={(e) => handleFilterChange(e, "sisa")}

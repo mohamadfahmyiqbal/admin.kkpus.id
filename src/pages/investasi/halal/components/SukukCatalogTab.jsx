@@ -266,6 +266,7 @@ const SukukCatalogTab = () => {
                             className="rounded-circle shadow-sm"
                             style={{ width: "32px", height: "32px", padding: 0 }}
                             title="Lihat Detail Sukuk"
+                            aria-label="Lihat Detail Sukuk"
                             onClick={() => {
                               setSelectedSukuk(item);
                               setShowDetail(true);
@@ -279,6 +280,7 @@ const SukukCatalogTab = () => {
                             className="rounded-circle shadow-sm"
                             style={{ width: "32px", height: "32px", padding: 0 }}
                             title="Lihat Anggota"
+                            aria-label="Lihat Anggota"
                             onClick={() => {
                               setSelectedSukuk(item);
                               setShowInvestors(true);

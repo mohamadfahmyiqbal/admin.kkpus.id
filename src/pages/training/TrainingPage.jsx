@@ -134,6 +134,7 @@ const CurriculumTab = ({ onEdit }) => {
                       onClick={() => onEdit(item)}
                       className="text-primary rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
+                      aria-label="Edit kurikulum"
                     >
                       <PencilSimple size={16} aria-hidden="true" />
                     </Button>
@@ -143,6 +144,7 @@ const CurriculumTab = ({ onEdit }) => {
                       onClick={() => handleDelete(item.curriculum_id)}
                       className="text-danger rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
+                      aria-label="Hapus kurikulum"
                     >
                       <Trash size={16} aria-hidden="true" />
                     </Button>
@@ -245,6 +247,7 @@ const MaterialTab = ({ onEdit }) => {
                       onClick={() => onEdit(item)}
                       className="text-primary rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
+                      aria-label="Edit materi"
                     >
                       <PencilSimple size={16} aria-hidden="true" />
                     </Button>
@@ -254,6 +257,7 @@ const MaterialTab = ({ onEdit }) => {
                       onClick={() => handleDelete(item.material_id)}
                       className="text-danger rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
+                      aria-label="Hapus materi"
                     >
                       <Trash size={16} aria-hidden="true" />
                     </Button>
@@ -356,6 +360,7 @@ const EvaluationTab = ({ onEdit }) => {
                       onClick={() => onEdit(item)}
                       className="text-primary rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
+                      aria-label="Edit evaluasi"
                     >
                       <PencilSimple size={16} aria-hidden="true" />
                     </Button>
@@ -365,6 +370,7 @@ const EvaluationTab = ({ onEdit }) => {
                       onClick={() => handleDelete(item.evaluation_id)}
                       className="text-danger rounded-circle"
                       style={{ width: "32px", height: "32px", padding: 0 }}
+                      aria-label="Hapus evaluasi"
                     >
                       <Trash size={16} aria-hidden="true" />
                     </Button>

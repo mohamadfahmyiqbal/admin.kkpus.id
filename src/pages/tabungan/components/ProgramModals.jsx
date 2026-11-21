@@ -160,6 +160,7 @@ export const ProgramMembersModal = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder="Cari..."
+                      aria-label="Filter kategori"
                       value={filter.kategori}
                       onChange={(e) =>
                         handleFilterChange("kategori", e.target.value)
@@ -171,6 +172,7 @@ export const ProgramMembersModal = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder="Cari..."
+                      aria-label="Filter nama anggota"
                       value={filter.nama}
                       onChange={(e) =>
                         handleFilterChange("nama", e.target.value)
@@ -182,6 +184,7 @@ export const ProgramMembersModal = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder="Cari..."
+                      aria-label="Filter durasi"
                       value={filter.term}
                       onChange={(e) =>
                         handleFilterChange("term", e.target.value)
@@ -193,6 +196,7 @@ export const ProgramMembersModal = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder="Cari..."
+                      aria-label="Filter total saldo"
                       value={filter.saldo}
                       onChange={(e) =>
                         handleFilterChange("saldo", e.target.value)
@@ -204,6 +208,7 @@ export const ProgramMembersModal = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder="Cari..."
+                      aria-label="Filter kekurangan"
                       value={filter.kekurangan}
                       onChange={(e) =>
                         handleFilterChange("kekurangan", e.target.value)
@@ -215,6 +220,7 @@ export const ProgramMembersModal = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder="Cari..."
+                      aria-label="Filter target nominal"
                       value={filter.target}
                       onChange={(e) =>
                         handleFilterChange("target", e.target.value)
@@ -226,6 +232,7 @@ export const ProgramMembersModal = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder="Cari..."
+                      aria-label="Filter status"
                       value={filter.status}
                       onChange={(e) =>
                         handleFilterChange("status", e.target.value)

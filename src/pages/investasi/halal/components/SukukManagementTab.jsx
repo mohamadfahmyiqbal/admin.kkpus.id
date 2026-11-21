@@ -205,6 +205,7 @@ const SukukManagementTab = () => {
                           size="sm"
                           className="text-primary rounded-circle shadow-sm border p-2 d-flex align-items-center justify-content-center"
                           style={{ width: "32px", height: "32px" }}
+                          aria-label="Edit data sukuk"
                           onClick={() => handleEdit(item)}
                         >
                           <i className="bi bi-pencil" />
@@ -214,6 +215,7 @@ const SukukManagementTab = () => {
                           size="sm"
                           className="text-danger rounded-circle shadow-sm border p-2 d-flex align-items-center justify-content-center"
                           style={{ width: "32px", height: "32px" }}
+                          aria-label="Hapus data sukuk"
                           onClick={() => handleDelete(item.issue_id)}
                         >
                           <i className="bi bi-trash" />
