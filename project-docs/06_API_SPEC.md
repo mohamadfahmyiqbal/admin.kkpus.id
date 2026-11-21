@@ -41,980 +41,228 @@
 
 ## 3. Endpoints
 
-> **⚠️ Status rekonsiliasi (2026-11-22):** Detail endpoint di bawah ini adalah **kontrak v1 (idealis)** yang disusun sebelum verifikasi implementasi. Verifikasi terhadap `api.kkpus.id/routes/` menemukan divergensi besar (path, method, dan cakupan berbeda). **Rujukan yang akurat adalah §4 (inventaris aktual) dan §6 (matriks rekonsiliasi).** Rewrite detail §3 dijadwalkan sebagai TASK-008.
+> **Kontrak aktual (2026-11-22, TASK-008).** §3 ini ditulis ulang mengikuti implementasi `api.kkpus.id/routes/*.js` (branch `rollback/2026-11-02`). API-001..050 adalah kontrak v1 yang **dipertahankan sebagai ID** — setiap ID dipetakan ke route aktualnya (acuan matriks §6.1); ID yang tidak memiliki padanan aktual ditandai **— (removed)**. ID baru (API-051+) hanya untuk endpoint kritis yang belum tercakup. Inventaris lengkap seluruh ~213 route (termasuk endpoint tanpa ID) ada di §4.
+
+**Notation auth:** `(publik)` = tanpa token · `(auth)` = `MidAnggota` · `(role: X)` = `MidAnggota` + `MidRole([...])` · `(rate)` = rate-limited.
 
 ---
 
-### M-AUTH — Authentication
+### M-AUTH — Authentication (`/api/auth`)
 
-#### [API-001] POST /api/auth/login
-
-**Purpose:** Autentikasi pengguna, terbitkan JWT + cookie.  
-**Authorization:** Public  
-**Idempotency:** N/A
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | identifier | string | yes | Email atau nomor HP terdaftar | Email/HP pengguna |
-| body | password | string | yes | Min 8 char | Password plaintext |
-
-```json
-{ "identifier": "member@example.com", "password": "SecurePass123" }
-```
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Login berhasil | `{ "token": "eyJ...", "user": { "member_id": "...", "role": 5, "name": "..." } }` + cookie `auth_token` |
-| 401 | Kredensial salah | `INVALID_CREDENTIALS` |
-| 423 | Akun terkunci | `ACCOUNT_LOCKED` — `locked_until` timestamp |
-| 429 | Rate limit (5/menit) | `RATE_LIMITED` |
-
-**Side effects:** `login_attempts` record; `account_lockouts` jika gagal 5×; Socket.IO auth init.  
-**Related:** PRD-001, UC-01.01, TEST-001
-
----
-
-#### [API-002] POST /api/auth/logout
-
-**Purpose:** Cabut token, hapus sesi.  
-**Authorization:** Authenticated
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Logout berhasil | `{ "message": "Logged out" }` + cookie cleared |
-
-**Side effects:** Token ditambahkan ke denylist (`tokenRevocationService`).  
-**Related:** PRD-001, UC-01.02, TEST-001
-
----
-
-#### [API-003] POST /api/auth/forgot-password
-
-**Purpose:** Kirim OTP untuk reset password.  
-**Authorization:** Public  
-**Idempotency:** N/A (rate-limited 3/menit per IP)
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | identifier | string | yes | Email atau HP terdaftar | Email/HP pengguna |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | OTP terkirim | `{ "message": "OTP sent to your email/phone" }` |
-| 404 | Pengguna tidak ditemukan | `NOT_FOUND` |
-| 429 | Rate limit | `RATE_LIMITED` |
-
-**Side effects:** `forgotPasswordSession` record; OTP 6-digit dikirim via email/SMS.  
-**Related:** PRD-002, UC-01.03, TEST-002
-
----
-
-#### [API-004] POST /api/auth/verify-otp
-
-**Purpose:** Verifikasi OTP.  
-**Authorization:** Public
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | identifier | string | yes | Email/HP | Email/HP pengguna |
-| body | otp | string | yes | 6 digit, numerik | Kode OTP |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | OTP valid | `{ "reset_token": "uuid", "expires_at": "ISO-8601" }` |
-| 400 | OTP salah | `OTP_INVALID` — sisa percobaan |
-| 410 | OTP kedaluwarsa | `OTP_EXPIRED` |
-
-**Side effects:** `forgotPasswordSession.verified_at` di-set.  
-**Related:** PRD-002, UC-01.03, TEST-002
-
----
-
-#### [API-005] POST /api/auth/reset-password
-
-**Purpose:** Set password baru setelah verifikasi OTP.  
-**Authorization:** Public (dengan valid reset_token)
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | reset_token | string (UUID) | yes | Token valid & belum kedaluwarsa | Reset token dari API-004 |
-| body | new_password | string | yes | Min 8 char, uppercase, lowercase, angka | Password baru |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Password direset | `{ "message": "Password updated successfully" }` |
-| 400 | Password tidak memenuhi kompleksitas | `VALIDATION_ERROR` |
-
-**Side effects:** Password di-hash (bcrypt); `passwordResetToken` record dibuat; session dihapus.  
-**Related:** PRD-002, UC-01.03, TEST-002
-
----
-
-### M-MEMBER — Member Management
-
-#### [API-006] POST /api/anggota/registration
-
-**Purpose:** Registrasi calon anggota baru (8-step form).  
-**Authorization:** Public  
-**Idempotency:** NIK unik, email unik
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | full_name | string | yes | Min 3 char | Nama lengkap |
-| body | email | string | yes | Format email, unik | Email |
-| body | password | string | yes | Min 8 char, upper, lower, number | Password awal |
-| body | nik_ktp | string | yes | 16 digit, unik | NIK |
-| body | ktp_photo | file | yes | JPG/PNG/PDF, ≤5MB, magic byte | Foto KTP |
-| body | selfie | file | yes | JPG/PNG, ≤5MB, magic byte | Foto selfie |
-| body | phone_number | string | yes | Format nomor Indonesia | No. HP |
-| body | gender | string | yes | `male` / `female` | Jenis kelamin |
-| body | date_of_birth | date | yes | Format YYYY-MM-DD, usia ≥17 | Tanggal lahir |
-| body | province_id | string (UUID) | yes | Wilayah valid | Provinsi |
-| body | city_id | string (UUID) | yes | Wilayah valid | Kabupaten/Kota |
-| body | district_id | string (UUID) | yes | Wilayah valid | Kecamatan |
-| body | subdistrict_id | string (UUID) | yes | Wilayah valid | Kelurahan/Desa |
-| body | address | string | yes | Min 10 char | Alamat lengkap |
-| body | rt / rw | string | yes | 3 digit | RT/RW |
-| body | employment | object | yes | — | Data pekerjaan |
-| body | emergency_contact | object | yes | — | Kontak darurat |
-| body | bank_account | object | yes | — | Rekening bank |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Registrasi berhasil (PENDING) | `{ "registration_id": "...", "status": "PENDING" }` |
-| 400 | Validasi gagal | `VALIDATION_ERROR` |
-| 409 | NIK/email sudah terdaftar | `NIK_DUPLICATE` / `EMAIL_DUPLICATE` |
-| 422 | File tidak valid | `FILE_INVALID` |
-
-**Side effects:** `member_registrations` record; approval flow dibuat (3 step); Socket.IO `REGISTRATION_UPDATED`.  
-**Related:** PRD-003, UC-02.01, TEST-003
-
----
-
-#### [API-007] GET /api/anggota
-
-**Purpose:** List anggota dengan pagination & filter.  
-**Authorization:** Pengawas, Ketua, Bendahara
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| query | page | int | no | Default 1 |
-| query | limit | int | no | Default 20, max 100 |
-| query | search | string | no | Cari nama/NIK/email |
-| query | status | string | no | `active` / `archived` / `pending` |
+| API-001 | POST | `/api/auth/accountLogin` | (publik, rate) | Login email/Nomor HP + password → JWT (cookie `auth_token` HttpOnly + `data.token`) + data user. Body: `{ emailHp, password }`. 401 kredensial salah, 429 account lockout |
+| API-002 | POST | `/api/auth/logout` | (auth) | Logout, revoke token (jti / token_version) |
+| API-003 | POST | `/api/auth/forgot-password/send-otp` | (publik, rate) | Kirim OTP reset password |
+| API-004 | POST | `/api/auth/forgot-password/verify-otp` | (publik, rate) | Verifikasi OTP |
+| API-005 | POST | `/api/auth/forgot-password/reset` | (publik, rate) | Reset password dengan OTP tervalidasi |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "total": 150, "page": 1, "total_pages": 8 }` |
-| 403 | Akses ditolak | `FORBIDDEN` |
-
-**Related:** PRD-003, PRD-020
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `POST /api/auth/register` (publik), `POST /api/auth/forgot-password/resend-otp` (publik, rate).
 
 ---
 
-#### [API-008] GET /api/anggota/:id
+### M-MEMBER — Member Management (`/api/anggota`)
 
-**Purpose:** Detail anggota.  
-**Authorization:** Anggota sendiri, atau Pengawas/Ketua/Bendahara
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | Member object (NIK/HP di-mask sesuai peran) |
-| 404 | Anggota tidak ditemukan | `NOT_FOUND` |
-
-**Related:** PRD-022, UC-02.01
-
----
-
-#### [API-009] PUT /api/anggota/:id/role
-
-**Purpose:** Assign peran pengurus ke anggota.  
-**Authorization:** Pengawas, Ketua, Bendahara
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | role_id | string (UUID) | yes | `pengawas` / `ketua` / `bendahara` | Peran yang di-assign |
-| body | start_date | date | yes | Format YYYY-MM-DD | Mulai berlaku |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Role berhasil di-assign | `{ "assignment_id": "...", "role": "pengawas" }` |
-| 400 | Anggota tipe Luar Biasa | `MEMBER_TYPE_INVALID` |
-| 409 | Anggota sudah punya role aktif | `ROLE_ASSIGNED` |
-
-**Side effects:** `member_role_assignments` record; `activity_logs` entry.  
-**Related:** PRD-005, UC-02.02, TEST-005
-
----
-
-#### [API-010] PUT /api/anggota/:id/archive
-
-**Purpose:** Arsip (soft-delete) anggota.  
-**Authorization:** Pengawas, Ketua, Bendahara
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| body | password | string | yes | Password admin untuk konfirmasi (re-auth) |
+| API-006 | POST | `/api/anggota/pendaftaran` | (auth) | Ajukan pendaftaran anggota baru (was: publik di v1) |
+| API-007 | GET | `/api/anggota/all` | (auth) | Daftar seluruh anggota (was: `/api/anggota`) |
+| API-008 | — | — | — | **Removed** — `GET /api/anggota/:id` tidak diimplementasikan (detail via `/all` + `/profil`) |
+| API-009 | PUT | `/api/anggota/:member_id/role` | (role: Pengurus) | Ubah role anggota |
+| API-010 | DELETE | `/api/anggota/:member_id` | (role: Pengurus) | Hapus anggota (**hard delete** — was: archive) |
+| API-011 | — | — | — | **Removed** — restore tidak ada (hard delete permanen) |
+| API-012 | POST | `/api/anggota/berhenti-keanggotaan` | (auth) | Ajukan berhenti keanggotaan |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Anggota diarsipkan | `{ "message": "Member archived" }` |
-| 401 | Password salah | `PASSWORD_INVALID` |
-
-**Side effects:** `deleted_at` di-set; `activity_logs` entry.  
-**Related:** PRD-006, UC-02.03, TEST-006
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET/PUT /profil` (auth), `GET /getRegistrationStatus` (auth), `GET /berhenti-keanggotaan/status` (auth), `POST /berhenti-keanggotaan/konfirmasi` (auth), `GET /roles` (auth), `GET /template-import` + `POST /import` (role), `POST /batch-delete` (role).
 
 ---
 
-#### [API-011] PUT /api/anggota/:id/restore
+### M-APPROVAL — Approval Engine (`/api/approvals`)
 
-**Purpose:** Restore anggota yang diarsipkan.  
-**Authorization:** Pengawas, Ketua, Bendahara
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| body | password | string | yes | Password admin untuk konfirmasi (re-auth) |
+| API-013 | GET | `/api/approvals/pendaftaran/pending` | (auth) | Daftar approval pending — **per-entitas** (pendaftaran; entitas lain punya endpoint serupa di §4) |
+| API-014 | — | — | — | **Removed** — `GET /api/approvals/:id` tidak ada |
+| API-015 | PUT | `/api/approvals/{pendaftaran\|penarikan\|tabungan_penarikan\|financing\|tabungan\|sukuk}/approve/:entityId` | (role per entitas) | Keputusan approval (approve/reject). Body: `{ action, notes }`. Diproses `processApproval(entityRef)` — was: `POST /approvals/:id/decision` |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Anggota di-restore | `{ "message": "Member restored" }` |
-| 401 | Password salah | `PASSWORD_INVALID` |
-
-**Side effects:** `deleted_at` di-clear; `activity_logs` entry.  
-**Related:** PRD-006, UC-02.03, TEST-006
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `POST /process/:entityRef/:entityId` (generik, auth), `POST /penarikan/pembayaran/:entityId` (role: Bendahara), `POST /tabungan_penarikan/pembayaran/:entityId` (role: Bendahara).
 
 ---
 
-#### [API-012] POST /api/anggota/termination
+### M-SAVINGS — Simpanan (`/api/simpanan`)
 
-**Purpose:** Ajukan terminasi/pengunduran diri.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| body | reason | string | yes | Alasan pengunduran diri |
+| API-016 | GET | `/api/simpanan/account-detail` | (auth) | Detail rekening simpanan anggota (was: `/api/simpanan`) |
+| API-017 | GET | `/api/simpanan/riwayat` | (auth) | Riwayat transaksi simpanan (was: `/api/simpanan/:id/transactions`) |
+| API-018 | POST | `/api/simpanan/penarikan/request` | (auth) | Ajukan penarikan simpanan (was: `/api/simpanan/withdrawals`) |
+| API-019 | GET | `/api/simpanan/config` | (role: Ketua/Bendahara/Pengawas) | Konfigurasi nominal & akad simpanan |
+| API-020 | PUT | `/api/simpanan/config` | (role: Ketua/Bendahara/Pengawas) | Update konfigurasi. Body: `{ configs: [{ bill_type_id, default_amount }] }` (DEC-006) |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Pengajuan terminasi dibuat | `{ "termination_id": "...", "status": "PENDING" }` |
-| 400 | Ada tagihan pending / aset dipegang | `PENDING_BILLS_EXIST` / `ASSETS_HELD` |
-
-**Side effects:** `membership_terminations` record; approval flow dibuat.  
-**Related:** PRD-003, UC-02.04, TEST-004
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /products`, `PUT /products/:id/akad`, `GET /features`, `PUT /features/:id/akad`, `GET /penarikan/history`, `GET /transactions/:invoiceNumber`, `GET /penarikan/detail/:withdrawalId`, `POST /penarikan/:withdrawal_id/disburse` (role: Ketua/Bendahara/Pengawas).
 
 ---
 
-### M-APPROVAL — Approval Engine
+### M-SAVINGS-ALT — Simpanan paralel (`/api/savings`) — dipakai frontend
 
-#### [API-013] GET /api/approvals
-
-**Purpose:** List approval queue (pending approvals).  
-**Authorization:** Pengawas, Ketua, Bendahara
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| query | entity_type | string | no | Filter per jenis (registration, withdrawal, jualbeli, dll.) |
-| query | status | string | no | Default `PENDING` |
-| query | page | int | no | Default 1 |
-| query | limit | int | no | Default 20 |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "total": 5, "page": 1 }` |
-
-**Related:** PRD-004, UC-03.01, TEST-007
+| — | POST | `/api/savings/apply` | (auth) | Ajukan target simpanan. Body: `{ saving_target_id, monthly_deposit, term_months }` |
+| — | GET | `/api/savings/history` | (auth) | Riwayat |
+| — | GET | `/api/savings/options` | (auth) | Opsi program |
+| — | GET | `/api/savings/summary` | (auth) | Ringkasan |
+| — | GET | `/api/savings/admin-summary` · `/admin-transactions` · `/admin-report` · `/admin-export` | (role) | Panel admin |
+| — | GET | `/api/savings/template-import` · `POST /api/savings/import` | (auth / role) | Import Excel |
+| — | GET | `/api/savings/:id` | (auth) | Detail |
 
 ---
 
-#### [API-014] GET /api/approvals/:id
+### M-BILLING — Billing & Payments (`/api/billing`)
 
-**Purpose:** Detail approval beserta step-stepnya.  
-**Authorization:** Pengawas, Ketua, Bendahara
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | Approval object + steps array |
-| 404 | Tidak ditemukan | `NOT_FOUND` |
-
-**Related:** PRD-004, UC-03.01, TEST-007
-
----
-
-#### [API-015] POST /api/approvals/:id/decision
-
-**Purpose:** Approve atau reject step approval.  
-**Authorization:** Pengawas (step 1), Ketua (step 2), Bendahara (step 3)
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | decision | string | yes | `APPROVE` / `REJECT` | Keputusan |
-| body | note | string | no (required jika REJECT) | Min 5 char jika reject | Catatan/alasan |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Step berhasil di-approve | `{ "step": 2, "next_step": 3, "status": "PENDING" }` |
-| 200 | Final approval (step 3) | `{ "status": "APPROVED", "final_action": "executed" }` |
-| 200 | Ditolak | `{ "status": "REJECTED", "note": "..." }` |
-| 403 | Bukan step-nya | `INVALID_ROLE` |
-| 403 | Self-approval | `SELF_APPROVAL` |
-| 409 | Sudah approve step lain | `DUPLICATE_APPROVAL` |
-| 409 | Sudah final | `ALREADY_FINALIZED` |
-
-**Side effects:** Step di-update; `EntityStepApproval` record; jika final → `performFinalAction()`; Socket.IO `APPROVAL_UPDATE`; `activity_logs`.  
-**Related:** PRD-004, UC-03.01, TEST-007, TEST-007a, TEST-007b, TEST-007c
-
----
-
-### M-SAVINGS — Simpanan
-
-#### [API-016] GET /api/simpanan
-
-**Purpose:** List simpanan anggota (pokok/wajib/sukarela).  
-**Authorization:** Anggota sendiri, atau Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "total_savings": 5000000, "total_pokok": 100000, "total_wajib": 2400000 }` |
-
-**Related:** PRD-007, UC-04.01, TEST-008
-
----
-
-#### [API-017] GET /api/simpanan/:id/transactions
-
-**Purpose:** Mutasi transaksi simpanan.  
-**Authorization:** Anggota sendiri, atau Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "total": 12 }` |
-
-**Related:** PRD-007, UC-04.01, TEST-008
-
----
-
-#### [API-018] POST /api/simpanan/withdrawals
-
-**Purpose:** Ajukan pencairan simpanan sukarela.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | amount | decimal | yes | > 0, ≤ saldo tersedia | Nominal pencairan |
-| body | reason | string | yes | Min 10 char | Alasan pencairan |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Pengajuan dibuat | `{ "withdrawal_id": "...", "status": "PENDING" }` |
-| 400 | Saldo tidak cukup | `INSUFFICIENT_BALANCE` |
-| 409 | Sudah ada pending withdrawal | `PENDING_WITHDRAWAL_EXISTS` |
-
-**Side effects:** `savings_withdrawals` record; approval flow dibuat.  
-**Related:** PRD-007, UC-04.02, TEST-009
-
----
-
-#### [API-019] GET /api/simpanan/config
-
-**Purpose:** Lihat konfigurasi nominal simpanan & akad.  
-**Authorization:** Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "pokok": { "amount": 100000, "akad": "Wadiah" }, "wajib": { "amount": 200000, "akad": "Wadiah" } }` |
-
-**Related:** PRD-024, PRD-025, UC-04.03, TEST-010
-
----
-
-#### [API-020] PUT /api/simpanan/config
-
-**Purpose:** Update konfigurasi nominal simpanan & akad.  
-**Authorization:** Ketua / Bendahara / Pengawas (DEC-006)
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | product | string | yes | `pokok` / `wajib` / `sukarela` | Jenis simpanan |
-| body | amount | decimal | yes | > 0 | Nominal |
-| body | akad | string | yes | `Wadiah` / `Mudharabah` / `Musyarakah` / `Murabahah` / `Qardh` / `Wakalah` | Akad |
-| body | effective_date | date | yes | Format YYYY-MM-DD, ≥ hari ini | Tanggal efektif |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Konfigurasi di-update | `{ "message": "Config updated" }` |
-| 400 | Nominal ≤ 0 / tanggal lewat | `INVALID_NOMINAL` / `PAST_EFFECTIVE_DATE` |
-
-**Side effects:** `feature_configs` di-update.  
-**Related:** PRD-024, PRD-025, UC-04.03, TEST-010
-
----
-
-### M-BILLING — Billing & Payments
-
-#### [API-021] GET /api/billing
-
-**Purpose:** List tagihan anggota.  
-**Authorization:** Anggota sendiri, atau Pengurus
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| query | status | string | no | `PENDING` / `PENDING_VERIFICATION` / `LUNAS` / `OVERDUE` |
+| API-021 | GET | `/api/billing/list/pending` | (auth) | Daftar tagihan pending (was: `/api/billing`) |
+| API-022 | POST | `/api/billing/manual-payment` | (auth) | Upload bukti transfer manual. `multipart/form-data`: `bill_id`, `bill_item_ids[]`, `amount`, `tx_category`, `financing_id?`, `bank_id`, `sender_name`, `sender_bank`, `sender_account_no`, file bukti (validasi magic byte) |
+| API-023 | POST | `/api/billing/verify-manual-payment` | (role: Pengawas/Ketua/Bendahara) | Verifikasi pembayaran manual (was: `PUT /billing/:id/verify`) |
+| API-024 | POST | `/api/billing/create-voluntary-bill` | (auth) | Buat tagihan sukarela (was: `/billing/voluntary`) |
+| API-048 | GET | `/api/billing/payment-fees` | (publik) | Konfigurasi biaya admin (was: `/billing/fee-config`) |
+| API-049 | PUT | `/api/billing/payment-fees` | (role: Pengawas/Ketua/Bendahara) | Update biaya admin (DEC-006) |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "total": 3, "total_amount": 5000000 }` |
-
-**Related:** PRD-008, UC-05.01, TEST-011
-
----
-
-#### [API-022] POST /api/billing/:id/proof
-
-**Purpose:** Upload bukti transfer pembayaran.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | proof_file | file | yes | JPG/PNG/PDF, ≤5MB, magic byte | Bukti transfer |
-| body | bank_account_id | string (UUID) | yes | Rekening koperasi valid | Rekening tujuan transfer |
-| body | amount | decimal | yes | > 0, = tagihan amount + fee | Nominal ditransfer |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Bukti di-upload | `{ "transaction_id": "...", "status": "PENDING_VERIFICATION" }` |
-| 400 | File tidak valid | `FILE_INVALID` |
-| 400 | Nominal tidak cocok | `AMOUNT_MISMATCH` |
-| 409 | Sudah diverifikasi | `ALREADY_VERIFIED` |
-
-**Side effects:** `transactions` record (PENDING_VERIFICATION); `bills` status di-update; Socket.IO `TRANSACTION_UPDATED`.  
-**Related:** PRD-008, UC-05.01, TEST-011
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /cooperative-banks` (publik), `GET /manual-verifications` (role), `GET /list/history`, `POST /invoice/details`, `POST /create-deposit`, `POST /process-payment` (buat tagihan + transaksi PENDING → transfer manual; BLK-006), `POST /process-savings`, `POST /manual-sync-summary` (role).
 
 ---
 
-#### [API-023] PUT /api/billing/:id/verify
+### M-FINANCING — Pembiayaan (`/api/financing`)
 
-**Purpose:** Verifikasi pembayaran oleh Bendahara.  
-**Authorization:** Bendahara
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | decision | string | yes | `APPROVE` / `REJECT` | Keputusan verifikasi |
-| body | note | string | no (required jika REJECT) | Min 5 char jika reject | Catatan |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Pembayaran disetujui | `{ "status": "LUNAS", "bill_status": "LUNAS" }` |
-| 200 | Pembayaran ditolak | `{ "status": "REJECTED", "bill_status": "PENDING" }` |
-| 409 | Sudah diverifikasi | `ALREADY_VERIFIED` |
-
-**Side effects:** `transactions` status di-update; saldo/ledger ter-update; Socket.IO `TRANSACTION_UPDATED`; `activity_logs`.  
-**Related:** PRD-008, UC-05.01, TEST-011
-
----
-
-#### [API-024] POST /api/billing/voluntary
-
-**Purpose:** Buat tagihan sukarela.  
-**Authorization:** Bendahara
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | member_id | string (UUID) | yes | Anggota valid | ID anggota |
-| body | amount | decimal | yes | > 0 | Nominal tagihan |
-| body | description | string | yes | Min 5 char | Deskripsi tagihan |
-| body | due_date | date | yes | ≥ hari ini | Jatuh tempo |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Tagihan dibuat | `{ "bill_id": "...", "status": "PENDING" }` |
-
-**Related:** PRD-008, UC-05.02, TEST-012
-
----
-
-### M-FINANCING — Pembiayaan
-
-#### [API-025] POST /api/jualbeli/apply
-
-**Purpose:** Ajukan pembiayaan jual beli (murabahah).  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | barang | string | yes | Min 3 char | Nama barang |
-| body | harga_pokok | decimal | yes | > 0 | Harga pokok |
-| body | dp | decimal | yes | ≥ 0, < harga_jual | Down payment |
-| body | tenor_months | int | yes | 1-60 | Tenor angsuran |
-| body | margin_percent | decimal | yes | > 0 | Persentase laba |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Pengajuan dibuat | `{ "jualbeli_id": "...", "angsuran": 250000, "harga_jual": 3000000, "status": "PENDING" }` |
-| 400 | Input tidak valid | `INVALID_AMOUNT` / `INVALID_TENOR` |
-
-**Side effects:** `jual_beli` record; approval flow dibuat.  
-**Related:** PRD-010, UC-06.01, TEST-013
-
----
-
-#### [API-026] POST /api/program/apply
-
-**Purpose:** Ajukan pinjaman lunak.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | amount | decimal | yes | > 0 | Jumlah pinjaman |
-| body | tenor_months | int | yes | 1-60 | Tenor |
-| body | purpose | string | yes | Min 10 char | Tujuan pinjaman |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Pengajuan dibuat | `{ "loan_id": "...", "status": "PENDING" }` |
-| 400 | Input tidak valid | `INVALID_AMOUNT` |
-
-**Side effects:** `member_loans` record; approval flow dibuat.  
-**Related:** PRD-011, UC-07.01, TEST-014
-
----
-
-#### [API-027] POST /api/program/modal
-
-**Purpose:** Input modal koperasi (debet/kredit).  
-**Authorization:** Bendahara
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | type | string | yes | `DEBET` / `KREDIT` | Tipe modal |
-| body | amount | decimal | yes | > 0 | Nominal |
-| body | description | string | yes | Min 5 char | Deskripsi |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Modal dicatat | `{ "id": "...", "type": "DEBET", "amount": 5000000 }` |
-
-**Side effects:** `pinjaman_modal` record; ledger ter-update.  
-**Related:** PRD-011, UC-07.02, TEST-015
-
----
-
-#### [API-028] GET /api/financing/sukuk
-
-**Purpose:** List katalog sukuk.  
-**Authorization:** Anggota, Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...] }` |
-
-**Related:** PRD-014, UC-10.01, TEST-020
-
----
-
-#### [API-029] POST /api/financing/sukuk/orders
-
-**Purpose:** Ajukan investasi sukuk.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | issue_id | string (UUID) | yes | Sukuk issue valid & status OPEN | ID issue |
-| body | amount | decimal | yes | > 0, ≤ sisa kuota | Jumlah investasi |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Order dibuat | `{ "order_id": "...", "status": "PENDING" }` |
-| 400 | Melebihi kuota | `QUOTA_EXCEEDED` |
-
-**Side effects:** `sukuk_orders` record; approval flow dibuat.  
-**Related:** PRD-014, UC-10.01, TEST-020
-
----
-
-#### [API-030] POST /api/financing/apply
-
-**Purpose:** Ajukan pendanaan syariah.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | category_id | string (UUID) | yes | Kategori pembiayaan valid | ID kategori |
-| body | amount | decimal | yes | > 0 | Jumlah pendanaan |
-| body | tenor_months | int | yes | 1-60 | Tenor |
-| body | purpose | string | yes | Min 10 char | Tujuan |
-| body | akad | string | yes | `Mudharabah` / `Musyarakah` / dll | Akad syariah |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Pengajuan dibuat | `{ "application_id": "...", "status": "PENDING" }` |
-
-**Side effects:** `financing_applications` record; approval flow dibuat.  
-**Related:** PRD-015, UC-11.01, TEST-021
-
----
-
-### M-ARISAN — Arisan
-
-#### [API-031] POST /api/program/arisan/batches
-
-**Purpose:** Buat batch arisan.  
-**Authorization:** Bendahara
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | program_id | string (UUID) | yes | Program arisan valid | ID program |
-| body | quota | int | yes | > 0 | Kuota peserta |
-| body | target_amount | decimal | yes | > 0 | Target per angsuran |
-| body | monthly_installment | decimal | yes | > 0 | Angsuran bulanan |
-| body | tenor_months | int | yes | > 0 | Tenor (bulan) |
-| body | start_date | date | yes | ≥ hari ini | Mulai berlaku |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Batch dibuat | `{ "batch_id": "...", "status": "DRAFT" }` |
-
-**Related:** PRD-012, UC-08.01, TEST-016
-
----
-
-#### [API-032] POST /api/program/arisan/batches/:id/activate
-
-**Purpose:** Aktivasi batch arisan.  
-**Authorization:** Bendahara
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Batch diaktifkan | `{ "status": "ACTIVE" }` |
-
-**Related:** PRD-012, UC-08.01, TEST-016
-
----
-
-#### [API-033] POST /api/program/arisan/batches/:id/draw
-
-**Purpose:** Jalankan kocokan/draw bulanan.  
-**Authorization:** Bendahara
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| body | period | string | yes | Periode bulan (contoh: `2026-11`) |
+| API-030 | POST | `/api/financing/apply` | (auth) | Ajukan pembiayaan |
+| API-028 | GET | `/api/financing/sukuk/catalog` | (auth) | Katalog sukuk (was: `/financing/sukuk`) |
+| API-029 | POST | `/api/financing/sukuk/order` | (auth) | Pesan sukuk (was: `/financing/sukuk/orders`) |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Draw berhasil | `{ "draw_id": "...", "winner_participant_id": "...", "period": "2026-11" }` |
-| 400 | Angsuran belum lunas | `INSTALLMENTS_UNPAID` |
-
-**Side effects:** `arisan_draws` record; `arisan_participants.status` → WON. RNG kriptografis (BR-08.04).  
-**Related:** PRD-012, UC-08.02, TEST-017
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /loan-products`, `GET /report/pinjaman`, `GET /report/pendanaan`, `GET /history`, `POST /apply-arisan`, `GET /detail/:id`, `GET /options`, `GET /terms`, `sukuk/issue` CRUD (4), `GET /sukuk/portfolio`, `GET /sukuk/detail/:id`, `GET /sukuk/members/:id`, `GET /sukuk/order/:id`, `GET /sukuk/report`, `POST /sukuk/withdraw/:orderId` (+ `/proof`), `investasi/pendanaan` import (2), `POST /evidence/:financingId`, `GET /evidence/:financingId/download`, `DELETE /evidence/:financingId`, `GET /receipt/:id`.
 
 ---
 
-### M-TABUNGAN — Tabungan Bertarget
+### M-FINANCIAL — Pembiayaan/finansial (`/api/financial`) — dipakai frontend
 
-#### [API-034] GET /api/tabungan/targets
-
-**Purpose:** List master program tabungan.  
-**Authorization:** Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...] }` |
-
-**Related:** PRD-013, UC-09.01, TEST-018
-
----
-
-#### [API-035] POST /api/tabungan/targets
-
-**Purpose:** Buat master program tabungan baru.  
-**Authorization:** Pengurus
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | program_name | string | yes | Min 3 char | Nama program |
-| body | target_amount | decimal | yes | > 0 | Target nominal |
-| body | category | string | yes | Kategori tabungan | Kategori |
-| body | year | int | yes | 4 digit | Tahun |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Program dibuat | `{ "target_id": "...", "status": "ACTIVE" }` |
-
-**Related:** PRD-013, UC-09.01, TEST-018
-
----
-
-#### [API-036] POST /api/tabungan/withdrawals
-
-**Purpose:** Ajukan penarikan tabungan.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | target_id | string (UUID) | yes | Program tabungan valid | ID target |
-| body | amount | decimal | yes | > 0, ≤ saldo | Nominal penarikan |
-| body | reason | string | yes | Min 10 char | Alasan |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Pengajuan dibuat | `{ "withdrawal_id": "...", "status": "PENDING" }` |
-| 400 | Saldo tidak cukup | `INSUFFICIENT_BALANCE` |
-
-**Side effects:** `savings_withdrawals` (tipe TABUNGAN); approval flow dibuat.  
-**Related:** PRD-013, UC-09.02, TEST-019
-
----
-
-### M-TRAINING — Training & Evaluasi
-
-#### [API-037] GET /api/training/curriculums
-
-**Purpose:** List kurikulum pelatihan.  
-**Authorization:** Anggota, Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...] }` |
-
-**Related:** PRD-016, UC-12.01, TEST-022
-
----
-
-#### [API-038] GET /api/training/curriculums/:id/materials
-
-**Purpose:** List materi dalam kurikulum.  
-**Authorization:** Anggota, Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "curriculum": {...} }` |
-
-**Related:** PRD-016, UC-12.01, TEST-022
-
----
-
-#### [API-039] POST /api/training/evaluations/:id/submit
-
-**Purpose:** Submit jawaban kuis/evaluasi.  
-**Authorization:** Anggota sendiri
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | answers | array | yes | Format `{ question_id, answer_index }` | Jawaban kuis |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Nilai tersimpan | `{ "score": 85, "rank": 3, "total_points": 100 }` |
-| 400 | Jawaban tidak lengkap | `VALIDATION_ERROR` |
-
-**Side effects:** `rankings` record; Socket.IO notifikasi.  
-**Related:** PRD-016, UC-12.01, TEST-022
-
----
-
-### M-DASHBOARD — Dashboard & Reports
-
-#### [API-040] GET /api/dashboard/stats
-
-**Purpose:** Statistik dashboard pengurus.  
-**Authorization:** Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "anggota": 150, "simpanan": 50000000, "jual_beli": 12, "program": 8, "tabungan": 5, "investasi": 3 }` |
-
-**Related:** PRD-018, UC-14.01, TEST-024
-
----
-
-#### [API-041] GET /api/dashboard/approval-queue
-
-**Purpose:** Antrean approval per kategori.  
-**Authorization:** Pengurus
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| query | category | string | no | Filter kategori |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "categories": ["keanggotaan", "simpanan", "jualbeli", "program", "tabungan", "investasi"] }` |
-
-**Related:** PRD-018, UC-14.01, TEST-024
+| API-026 | POST | `/api/financial/apply` | (auth) | Ajukan pinjaman (was: `/api/program/apply` — pindah modul) |
+| — | GET | `/api/financial/summary` · `/history` · `/report/pinjaman` · `/report/arisan` · `/detail/:id` | (auth) | Laporan & ringkasan |
+| — | GET | `/api/financial/options` · `/terms` | (publik) | Opsi & termin |
+| — | GET | `/api/financial/pelunasan-items/:id` | (auth) | Item pelunasan |
+| — | POST | `/api/financial/hutang/create` · `/aktiva-tetap/create` | (auth) | Hutang / aktiva tetap |
 
 ---
 
-### M-NOTIFICATION — Notifications
+### M-JUALBELI — Jual Beli (`/api/jualbeli`)
 
-#### [API-042] GET /api/notifikasi
-
-**Purpose:** List notifikasi user.  
-**Authorization:** Authenticated
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| query | unread_only | boolean | no | Jika true, hanya yang belum dibaca |
-| query | page | int | no | Default 1 |
+| API-025 | POST | `/api/jualbeli/create` | (auth) | Buat transaksi jual beli (was: `/jualbeli/apply`) |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "unread_count": 3 }` |
-
-**Related:** PRD-017, UC-13.01, TEST-023
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /report`, `GET /history`, `GET /:id`, `GET /template-import` + `POST /import` (role), `GET /template-import-cicilan` + `POST /import-cicilan` (role), `POST /batch-delete` (role), `DELETE /:id` (role).
 
 ---
 
-#### [API-043] PUT /api/notifikasi/:id/read
+### M-PROGRAM — Pinjaman & Arisan (`/api/program`)
 
-**Purpose:** Tandai notifikasi sebagai dibaca.  
-**Authorization:** Authenticated (notifikasi milik sendiri)
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "message": "Marked as read" }` |
-
-**Related:** PRD-017, UC-13.01, TEST-023
-
----
-
-#### [API-044] POST /api/push/subscribe
-
-**Purpose:** Subscribe web push (VAPID).  
-**Authorization:** Authenticated
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| body | endpoint | string (URL) | yes | Push endpoint |
-| body | p256dh | string | yes | Public key |
-| body | auth | string | yes | Auth secret |
+| API-027 | POST | `/api/program/pinjaman/modal` | (role) | Tambah modal pinjaman (was: `/program/modal`) |
+| API-031 | POST | `/api/program/arisan/batches` | (role) | Buat batch arisan |
+| API-032 | PUT | `/api/program/arisan/batches/:id/status` | (role) | Ubah status batch (aktifkan/selesaikan) — was: `POST .../activate` |
+| API-033 | POST | `/api/program/arisan/batches/:batchId/draws` | (role) | Undian penerima manfaat (was: `.../draw`) |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Subscription tersimpan | `{ "message": "Subscribed" }` |
-
-**Related:** PRD-017, UC-13.01, TEST-023
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /pinjaman`, `GET /pinjaman/produk` (publik), `GET /arisan/available`, `GET /arisan/detail/:id`, `GET /arisan`, `GET /arisan/batches`, `PUT/DELETE /arisan/batches/:id`, `GET /arisan/batches/:batchId/participants`, `PUT /arisan/participants/:id/status` · `/no`, `GET/POST /arisan/batches/:batchId/payments`, `GET /arisan/batches/:batchId/draws`, `PUT /arisan/draws/:id/status`, `GET /options` (publik), `pinjaman/arisan` import (6).
 
 ---
 
-### M-CONTENT — Landing & Content
+### M-TABUNGAN — Tabungan Bertarget (`/api/tabungan`)
 
-#### [API-045] GET /api/landing
-
-**Purpose:** Data landing page publik.  
-**Authorization:** Public
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "stats": {...}, "services": [...], "about": "...", "contact": {...} }` |
-
-**Related:** PRD-023, UC-17.01, TEST-028
-
----
-
-#### [API-046] GET /api/content/articles
-
-**Purpose:** List artikel publik (status PUBLISHED).  
-**Authorization:** Public
-
-| Location | Field | Type | Required | Description |
+| ID | Method | Path | Auth | Description |
 | --- | --- | --- | --- | --- |
-| query | page | int | no | Default 1 |
-| query | limit | int | no | Default 10 |
+| API-034 | GET | `/api/tabungan/admin/programs` | (role) | Daftar program tabungan (was: `/tabungan/targets`) |
+| API-035 | POST | `/api/tabungan/admin/programs` | (role) | Buat program tabungan (was: `/tabungan/targets`) |
+| API-036 | POST | `/api/tabungan/pengajuan/:id/withdraw` | (auth) | Ajukan penarikan tabungan (was: `/tabungan/withdrawals`) |
 
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [...], "total": 5 }` |
-
-**Related:** PRD-023, UC-17.01, TEST-028
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /programs`, `POST /pengajuan`, `GET /pengajuan/detail/:id`, `GET /pengajuan/check`, `GET /pengajuan/:id/tagihan`, `GET /admin`, `GET /admin/export`, `GET /admin/transactions`, `GET /admin/pengajuan/:id/tagihan`, `PUT/DELETE /admin/programs/:id`, `GET /admin/template-import`, `POST /admin/import` + `/admin/import-transaksi` (role).
 
 ---
 
-#### [API-047] POST /api/landing/contact
+### M-TRAINING — Training & Evaluasi (`/api/training`)
 
-**Purpose:** Submit form kontak.  
-**Authorization:** Public
+| ID | Method | Path | Auth | Description |
+| --- | --- | --- | --- | --- |
+| API-037 | GET | `/api/training/curriculums` | (auth) | Daftar kurikulum |
+| API-038 | GET | `/api/training/curriculums/:curriculum_id/materials` | (auth) | Materi kurikulum (param: `curriculum_id`) |
+| API-039 | POST | `/api/training/evaluations` | (auth) | Submit evaluasi (was: `/evaluations/:id/submit`) |
 
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | name | string | yes | Min 3 char | Nama |
-| body | email | string | yes | Format email | Email |
-| body | message | string | yes | Min 10 char | Pesan |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 201 | Pesan tersimpan | `{ "message": "Contact form submitted" }` |
-| 400 | Validasi gagal | `VALIDATION_ERROR` |
-
-**Side effects:** `contact_forms` record.  
-**Related:** PRD-023, UC-17.01, TEST-028
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /materials/:material_id`, `POST /notes`, `GET /rankings`, `GET /my-ranking`, admin CRUD `curriculums` / `materials` / `evaluations` (12, `adminAuth`), `GET /admin/rankings`.
 
 ---
 
-### M-CONFIG — Konfigurasi
+### M-DASHBOARD — Dashboard (`/api/dashboard`)
 
-#### [API-048] GET /api/billing/fee-config
-
-**Purpose:** Lihat konfigurasi biaya admin.  
-**Authorization:** Pengurus
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Berhasil | `{ "data": [{ "method": "TRANSFER", "type": "FLAT", "value": 2500 }] }` |
-
-**Related:** PRD-009, UC-18.01, TEST-029
+| ID | Method | Path | Auth | Description |
+| --- | --- | --- | --- | --- |
+| API-040 | GET | `/api/dashboard/` | (auth) | Statistik dashboard (was: `/dashboard/stats`) |
+| API-041 | GET | `/api/dashboard/admin` | (role) | Data dashboard admin (was: `/dashboard/approval-queue`) |
 
 ---
 
-#### [API-049] PUT /api/billing/fee-config
+### M-NOTIFICATION & M-PUSH — Notifikasi (`/api/notifikasi`, `/api/push`)
 
-**Purpose:** Update konfigurasi biaya admin.  
-**Authorization:** Ketua / Bendahara / Pengawas (DEC-006)
-
-| Location | Field | Type | Required | Validation | Description |
-| --- | --- | --- | --- | --- | --- |
-| body | payment_method | string | yes | `TRANSFER` | Metode pembayaran |
-| body | fee_type | string | yes | `FLAT` / `PERCENTAGE` | Tipe biaya |
-| body | fee_value | decimal | yes | ≥ 0 | Nilai biaya |
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | Konfigurasi di-update | `{ "message": "Fee config updated" }` |
-
-**Related:** PRD-009, UC-18.01, TEST-029
+| ID | Method | Path | Auth | Description |
+| --- | --- | --- | --- | --- |
+| API-042 | GET | `/api/notifikasi/list` | (auth) | Daftar notifikasi (identity hanya dari token — BLK-008) |
+| API-043 | POST | `/api/notifikasi/update-status` | (auth) | Tandai dibaca. Body: `{ id \| all, status }` |
+| API-044 | POST | `/api/push/subscribe` | (auth) | Simpan subscription push (BLK-008: identity dari token) |
+| — | GET | `/api/push/vapid-public-key` | (publik) | Kunci VAPID publik |
+| — | POST | `/api/push/test-push` | (auth) | Test push ke member sendiri (BLK-008) |
 
 ---
 
-### M-FILES — File Download
+### M-CONTENT & M-LANDING — Landing & Content (`/api/landing`, `/api/content`)
 
-#### [API-050] GET /api/files/:filename
+| ID | Method | Path | Auth | Description |
+| --- | --- | --- | --- | --- |
+| API-045 | GET | `/api/landing/services` · `/stats` · `/about` · `/contact` · `/content` | (publik) | Konten landing (dipecah dari `/api/landing` v1) |
+| API-046 | GET | `/api/content/articles` | (publik) | Artikel |
+| API-047 | POST | `/api/landing/contact-form` | (publik) | Form kontak (was: `/landing/contact`) |
 
-**Purpose:** Unduh file dokumen dengan otorisasi.  
-**Authorization:** Authenticated (cek kepemilikan / role)
-
-| Status | When | Body |
-| --- | --- | --- |
-| 200 | File valid | Binary file (content-type sesuai) |
-| 403 | Tidak berhak akses | `FORBIDDEN` |
-| 404 | File tidak ditemukan | `NOT_FOUND` |
-
-**Side effects:** Path traversal guard (BR-16.03).  
-**Related:** PRD-021, UC-16.01, TEST-027
+**Endpoint tambahan modul ini (tanpa ID — lihat §4):** `GET /api/content/landing-text`.
 
 ---
 
-### M-CRON — Cron & Backup
+### M-REGION — Data Wilayah (`/api/regions`) — BARU (API-051..054)
 
-> Modul ini tidak memiliki endpoint HTTP publik. Dijalankan via `services/cron.js` secara internal.
-
-| Schedule | Task | Related |
-| --- | --- | --- |
-| Setiap tanggal 1, 00:00 | Backup DB bulanan | PRD-026, BR-19.01 |
-| Setiap hari, 02:00 | Purge dokumen identitas kedaluwarsa (jika `RETENTION_AUTOPURGE=true`) | PRD-026, BR-19.02, DEC-002 |
-| Periodik | Sinkronisasi laporan (savings, jualbeli, financial summary) | PRD-026, BR-19.03 |
-
-**Related:** PRD-026, UC-19.01, TEST-030
+| ID | Method | Path | Auth | Description |
+| --- | --- | --- | --- | --- |
+| API-051 | GET | `/api/regions/provinces` | (publik) | Daftar provinsi (proxy data wilayah) |
+| API-052 | GET | `/api/regions/regencies/:provinceId` | (publik) | Kabupaten/kota per provinsi |
+| API-053 | GET | `/api/regions/districts/:regencyId` | (publik) | Kecamatan per kabupaten |
+| API-054 | GET | `/api/regions/villages/:districtId` | (publik) | Desa/kelurahan per kecamatan |
 
 ---
+
+### M-FILES — File Download (`/api/files`)
+
+| ID | Method | Path | Auth | Description |
+| --- | --- | --- | --- | --- |
+| API-050 | GET | `/api/files/*filePath` | (auth) | Unduh file privat (storage di luar web root). Path traversal guard (`resolveStoredPath`) — was: `/api/files/:filename` |
+
+---
+
+### 3.1 Catatan arah pengembangan (kontrak idealis v1 — arsip)
+
+Kontrak v1 idealis (50 endpoint, sebelum verifikasi implementasi) diarsipkan di §6.1 (matriks pemetaan) dan git history. Perbedaan utama yang **tidak diadopsi** (implementasi lebih tepat / tidak dijadwalkan):
+- Approval generik `POST /approvals/:id/decision` → aktual per-entitas (domain model lebih benar: tiap entitas punya rantai approval & role berbeda)
+- `PUT /anggota/:id/archive|restore` → aktual hard delete (perilaku data anggota diputuskan Product)
+- Path idealis (`/login`, `/fee-config`, `/targets`, dll) → path aktual dipertahankan (frontend sudah stabil; rename = breaking change tanpa nilai pengguna)
+
+Jika di masa depan ingin merapikan konvensi (mis. migrasi `/api/v1/` per §1), jadwalkan sebagai proyek tersendiri dengan ADR — bukan mengubah kontrak yang sedang berjalan.
 
 ## 4. Endpoint summary (inventaris aktual — 2026-11-22)
 
@@ -1064,10 +312,12 @@
 | M-NOTIFICATION | API-042..044 | F-13 | PRD-017 |
 | M-CONTENT | API-045..047 | F-17 | PRD-023 |
 | M-CONFIG | API-019, API-020, API-048, API-049 | F-18 | PRD-009, PRD-024, PRD-025 |
+| M-SAVINGS-ALT | (tanpa ID — §3 M-SAVINGS-ALT) | F-04 | PRD-007, PRD-024 |
+| M-REGION | API-051..054 | — (baru; dipakai form registrasi) | PRD-003 |
 | M-FILES | API-050 | F-16 | PRD-021 |
 | M-CRON | (internal, no API) | F-19 | PRD-026 |
 
-> **Coverage check:** 15 TSD modules → 50 API endpoints + 1 internal cron. Semua 19 FSD modules tercakup. Semua 26 PRD requirements tercermin di endpoint atau internal process. ✅
+> **Coverage check:** 16 TSD modules (+M-SAVINGS-ALT, +M-REGION) → 50 API v1 (10 MATCH / 37 CHANGED / 3 removed, §6.1) + 4 API baru (API-051..054) + 1 internal cron. Semua 19 FSD modules tercakup. Semua 26 PRD requirements tercermin di endpoint atau internal process. ✅
 
 ## 6. Implementation reconciliation (2026-11-22)
 
@@ -1150,7 +400,7 @@
 
 | ID | Temuan | Dampak | Keputusan / tindak lanjut |
 | --- | --- | --- | --- |
-| REC-1 | Frontend (admin & public) sudah memakai endpoint **aktual** (mis. `UBilling` → `/billing/list/pending`, `/billing/manual-payment`, `/billing/cooperative-banks`) — bukan endpoint spec v1 | Kontrak v1 tidak pernah dipakai frontend; spec dan realita harus disatukan | §4 dijadikan inventaris resmi; rewrite detail §3 → **TASK-008** (discovered work NEW-001) |
+| REC-1 | ~~Frontend (admin & public) sudah memakai endpoint **aktual** (mis. `UBilling` → `/billing/list/pending`, `/billing/manual-payment`, `/billing/cooperative-banks`) — bukan endpoint spec v1~~ **RESOLVED 2026-11-22 (TASK-008)** — §3 ditulis ulang mengikuti implementasi aktual (path/method/auth), API-001..050 dipertahankan sebagai ID yang dipetakan ke route aktual, API-051..054 baru untuk `/api/regions`; ideal v1 diarsipkan di §3.1 + git history | — | Selesai — lihat `10_DEV_LOG.md` TASK-008 |
 | REC-2 | ~~Backend masih memiliki DOKU & Midtrans aktif~~ **RESOLVED 2026-11-22 (BLK-006)** — endpoint `POST /api/billing/sync-status` + controller `syncMidtransStatus` dihapus; `POST /api/billing/process-payment` dipertahankan (masih dipakai kedua frontend) tapi dibersihkan: controller rename `createDokuTransaction.js` → `createPaymentBill.js`, `payment_type: "doku"` → `"transfer_manual"`, metadata DOKU dihapus; model `MidtransDisbursement` + associations + `generateDokuSnapKeys.js` dihapus | — | Selesai — lihat `10_DEV_LOG.md` BLK-006 |
 | REC-3 | ~~Role divergence: spec v1 "Bendahara only" untuk config simpanan & fee-config, aktual "Pengawas/Ketua/Bendahara"; disburse simpanan aktual "Ketua/Bendahara/Pengawas"~~ **RESOLVED 2026-11-22 (BLK-007 / DEC-006)** — spec **dilonggarkan** mengikuti implementasi: konfigurasi keuangan (simpanan & fee) = Ketua/Bendahara/Pengawas; disburse simpanan tetap Ketua/Bendahara/Pengawas. Tanpa perubahan kode; risiko SoD diterima tertulis (mitigasi: audit log) | — | Selesai — lihat `10_DEV_LOG.md` BLK-007 |
 | REC-4 | ~~`GET /api/notifikasi/list` & `POST /api/notifikasi/update-status` tanpa `MidAnggota`~~ **RESOLVED 2026-11-22 (BLK-008)** — route ternyata sudah pakai `MidAnggota` (`router.use`), tapi audit lanjutan menemukan **IDOR**: `getNotificationList` menerima `req.query.member_id` & `pushController` menerima `member_id` dari body → siapa pun login bisa baca/tandai notifikasi member lain & subscribe/test-push ke member lain. Diperbaiki: query/body `member_id` dihapus, identity hanya dari `req.userId`; `pushRoutes` `/subscribe` & `/test-push` ditambah `MidAnggota` | — | Selesai — lihat `10_DEV_LOG.md` BLK-008 |

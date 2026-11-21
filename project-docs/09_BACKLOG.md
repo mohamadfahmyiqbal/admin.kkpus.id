@@ -160,5 +160,5 @@ Move closed task details here; preserve task ID, outcome, verification reference
 
 | Candidate ID | Discovery | Suggested priority | Source | Needs triage by |
 | --- | --- | --- | --- | --- |
-| NEW-001 | Rewrite detail §3 `06_API_SPEC.md` (kontrak v1 idealis, 50 endpoint) menjadi inventaris aktual (~213 route) — lihat rekonsiliasi §6 | P2 | BLK-003 / REC-1 | Development Team |
+| NEW-001 | ~~Rewrite detail §3 `06_API_SPEC.md` menjadi inventaris aktual~~ **DONE 2026-11-22 (TASK-008)** — §3 = kontrak aktual per modul, API-001..050 dipetakan ke route aktual, API-051..054 baru (regions); ideal v1 diarsipkan §3.1 | P2 | BLK-003 / REC-1 | Development Team |
 | NEW-002 | Konsolidasi modul ganda: simpanan (`/api/simpanan` + `/api/savings`) & pembiayaan (`/api/financing` + `/api/financial` + `/api/jualbeli`) — risiko divergensi logika | P2 | BLK-003 / REC-5 | Development Team |

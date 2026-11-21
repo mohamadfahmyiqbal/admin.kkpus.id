@@ -1,7 +1,7 @@
 # Engineering Handoff
 
 **Project:** KKPUS Platform  
-**Last updated:** 2026-11-22 15:45 UTC by Development Team
+**Last updated:** 2026-11-22 16:30 UTC by Development Team
 
 ## Start here
 
@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (+ rekonsiliasi §6) + UI/UX Spec + Test Plan + BLK-004 DOKU frontend + BLK-003 API reconciliation + BLK-006 DOKU/Midtrans backend + BLK-008 auth notifikasi + BLK-007 role decision (TASK-000..TASK-007)
-- **Active task:** None — seluruh blocker selesai; menunggu instruksi berikutnya (NEW-001/TASK-008 atau TEST P0)
-- **Last verification:** Backend: Jest 12 suite / 108 test passed; ESLint 0 error 0 warning; IDOR notifikasi ditutup; BLK-007 DEC-006: role config = Ketua/Bendahara/Pengawas (spec diselaraskan, tanpa perubahan kode)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-004/006/008 + BLK-007 role decision + TASK-008 (TASK-000..TASK-007)
+- **Active task:** None — seluruh blocker & NEW-001 selesai; menunggu instruksi berikutnya (NEW-002 triase atau TEST P0)
+- **Last verification:** §3 API spec = kontrak aktual (54 API ID: 50 v1 + 051..054 regions; 17 modul); §5 traceability +2 modul; REC-1 RESOLVED; test plan tetap valid (1 referensi path); struktur §1..§6 utuh
 
 ## Decisions and constraints
 
@@ -40,14 +40,14 @@
 
 ## Next recommended task
 
-**NEW-001 / TASK-008 — Rewrite detail §3 `06_API_SPEC.md` (P2, dokumentasi)**
+**NEW-002 — Triase konsolidasi modul ganda (P2)**
 
-- Why now: Semua blocker (BLK-001..008) selesai. §3 masih berisi kontrak v1 idealis (50 endpoint) — inventaris aktual (~213 route) sudah ada di §4 & §6. Rewrite §3 agar spec detail = kontrak yang dipakai frontend/backend.
-- Read: `06_API_SPEC.md` §3/§4/§6, `api.kkpus.id/routes/*.js` (inventaris §4), `08_TEST_PLAN.md`
-- Acceptance evidence: Setiap modul di §3 memakai path/method/auth aktual (acuan §4); API ID tetap 1:1 dengan traceability §5; tidak ada endpoint fiktif
-- Do not start if: — (semua blocker selesai; murni dokumentasi)
+- Why now: TASK-008 selesai — seluruh dokumentasi kini selaras implementasi. Modul ganda (`/api/simpanan` + `/api/savings`, `/api/financing` + `/api/financial` + `/api/jualbeli`) = duplikasi logika & risiko divergensi perhitungan (REC-5).
+- Read: `06_API_SPEC.md` §4 (inventaris), `09_BACKLOG.md` (NEW-002), `04_TSD.md` (modul terkait)
+- Acceptance evidence: Keputusan triase — konsolidasi / biarkan / deprecated; bila konsolidasi: rencana migrasi + ADR
+- Do not start if: — (butuh keputusan Product/Tech)
 
-**Alternatif: eksekusi TEST P0 di staging** (TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035) — butuh environment + test data.
+**Alternatif: eksekusi TEST P0 di staging** (TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035) — §3 kini = kontrak aktual, acuan test siap.
 
 ## Update rule
 

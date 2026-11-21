@@ -11,6 +11,48 @@
 
 ---
 
+## [2026-11-22] — TASK-008: Rewrite §3 API Spec (Kontrak Aktual)
+
+**Status:** DONE  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+Detail §3 `06_API_SPEC.md` (kontrak v1 idealis, 50 endpoint, ~975 baris) ditulis ulang menjadi **kontrak aktual** per modul mengikuti implementasi `api.kkpus.id/routes/*.js` (~213 route). API-001..050 dipertahankan sebagai ID — setiap ID dipetakan ke route aktualnya (acuan matriks §6.1); 3 ID tanpa padanan (API-008/011/014) ditandai removed; ID baru API-051..054 untuk modul `/api/regions`. Ideal v1 diarsipkan di §3.1 + git history.
+
+### Requirements and decisions
+
+- **Requirement:** NEW-001 (P2, dari BLK-003/REC-1) — selaraskan spec dengan realita
+- **Decisions / tradeoffs:**
+  - **Ganti, bukan pertahankan ideal** (rekomendasi user): spec = kontrak yang dipakai; ideal yang tak terimplementasi = sumber divergence (BLK-003); mayoritas selisih kosmetik (nama path), sebagian ideal kurang tepat domain (approval generik vs per-entitas)
+  - API ID 1:1 dipertahankan → traceability §5 & 36 test case `08_TEST_PLAN.md` tetap valid
+  - Modul `/api/savings` & `/api/financial` (yang ternyata **dipakai frontend**) didokumentasikan sebagai M-SAVINGS-ALT & M-FINANCIAL tanpa ID (inventaris §4)
+  - Ideal tidak dibuang: §3.1 "arahan pengembangan" — perbedaan tidak diadopsi + saran ADR untuk future convention (mis. `/api/v1/`)
+
+### Implementation impact
+
+- **Added:** §3 baru (kontrak aktual per 17 modul, tabel ID/method/path/auth/description), §3.1 catatan arsip ideal, M-REGION (API-051..054)
+- **Modified:** `06_API_SPEC.md` (§3 975→~215 baris inti; §5 traceability +M-SAVINGS-ALT/+M-REGION & coverage check; §6.3 REC-1 → RESOLVED), `09_BACKLOG.md` (NEW-001 DONE)
+- **Database:** None
+- **API:** None (dokumentasi; tidak ada kode yang diubah)
+- **UI:** None
+
+### Verification
+
+- Struktur dokumen: §1..§6 utuh, batas splice §3→§4 mulus (grep `^## [0-9]`)
+- 54 API ID unik (API-001..054) — 50 v1 + 4 baru
+- Cross-check path/method/auth vs `routes/*.js`: accountLogin (emailHp/password), approvals per-entitas + `processApproval` (action/notes), manual-payment multipart, simpanan config (DEC-006 role), regions (proxy emsifa), files wildcard guard
+- Test plan tidak perlu diubah: hanya 1 referensi path aktual (`/api/files/:filename`) — masih valid
+
+### Risks and follow-up
+
+- **NEW-002 (P2):** konsolidasi modul ganda (`/api/simpanan`+`/api/savings`, `/api/financing`+`/api/financial`+`/api/jualbeli`) — triase pasca-dokumentasi
+- **Konvensi `/api/v1/`** (§1) dicatat sebagai proyek tersendiai + ADR, bukan mengubah kontrak berjalan
+- **Opsi TEST P0 di staging** kini lebih mudah — §3 aktual = acuan eksekusi test
+
+---
+
 ## [2026-11-22] — BLK-007: Keputusan Role Otorisasi Konfigurasi Keuangan
 
 **Status:** DONE  
