@@ -74,6 +74,7 @@ const SimpananJurnalReportTable = ({ loading, summary }) => {
                 className="compact-search-input"
                 placeholder="Cari Kredit"
                 value={searchKredit}
+                aria-label="Filter by credit amount"
                 onChange={(e) => setSearchKredit(e.target.value)}
               />
             </th>
