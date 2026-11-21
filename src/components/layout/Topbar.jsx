@@ -2,17 +2,25 @@ import { memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import SidebarToggleButton from "./SidebarToggleButton";
 import { jwtEncode } from "../../utils/helpers";
-import { UserCircle, SignOut } from "phosphor-react";
+import { Sun, Moon, UserCircle, SignOut } from "phosphor-react";
+import { useTheme } from "../../context/ThemeContext";
 import NotificationDropdown from "./NotificationDropdown";
 
-export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, isSidebarShown, isDesktop }) {
+export const Topbar = memo(function Topbar({
+  user,
+  logout,
+  handleToggleSidebar,
+  isSidebarShown,
+  isDesktop,
+}) {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const handleNav = useCallback(
     (page) => {
       navigate(`/${jwtEncode({ page })}`);
     },
-    [navigate]
+    [navigate],
   );
 
   return (
@@ -53,10 +61,7 @@ export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, 
           </button>
         </div>
 
-        <div
-          className="d-flex justify-content-end align-items-center gap-2 gap-sm-3 ms-auto"
-          style={{ zIndex: 10 }}
-        >
+        <div className="d-flex justify-content-end align-items-center gap-2 gap-sm-3 ms-auto" style={{ zIndex: 10 }}>
           <ul className="d-flex align-items-center flex-row list-unstyled mb-0 gap-2 gap-sm-3">
             <li className="nav-item">
               <NotificationDropdown user={user} />
@@ -67,10 +72,7 @@ export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, 
             </li>
 
             <li className="nav-item d-flex align-items-center gap-2 text-white">
-              <div
-                className="topbar-avatar rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0"
-                style={{ width: "36px", height: "36px" }}
-              >
+              <div className="topbar-avatar rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" style={{ width: "36px", height: "36px" }}>
                 <UserCircle size={22} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} aria-hidden="true" />
               </div>
               <div className="d-none d-md-flex flex-column text-start" style={{ maxWidth: "160px" }}>
@@ -93,6 +95,22 @@ export const Topbar = memo(function Topbar({ user, logout, handleToggleSidebar, 
               >
                 <SignOut size={16} weight="bold" color="#ffffff" style={{ color: "#ffffff", display: "block" }} aria-hidden="true" />
                 <span className="d-none d-sm-inline fw-semibold">Keluar</span>
+              </button>
+            </li>
+
+            {/* WCAG 2.4.3 / 4.1.2: tombol gelapkan/terangkan tema (toggle) */}
+            <li>
+              <button
+                type="button"
+                className="btn btn-outline-light btn-topbar-theme rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                onClick={toggleTheme}
+                title={theme === "dark" ? "Mode terang" : "Mode gelap"}
+                aria-label={theme === "dark" ? "Beralih ke mode terang" : "Beralih ke mode gelap"}
+                aria-pressed={theme === "dark"}
+              >
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {theme === "dark" ? <Sun size={16} weight="bold" color="#ffffff" /> : <Moon size={16} weight="bold" color="#ffffff" />}
+                </span>
               </button>
             </li>
           </ul>

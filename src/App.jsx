@@ -8,10 +8,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/design-tokens.css";
 import "./styles/admin-theme.css";
+import "./styles/theme-dark.css";
 import "./App.css";
 import { initSocket, disconnectSocket } from "./utils/api/socket";
 import PwaUpdatePrompt from "./components/pwa/PwaUpdatePrompt";
 import OfflineIndicator from "./components/pwa/OfflineIndicator";
+import { ThemeProvider } from "./context/ThemeContext";
 
 /**
  * Production env guard — shows a user-friendly error screen when
@@ -88,29 +90,31 @@ const App = () => {
   }, [isEnvMissing]);
 
   return (
-    <ErrorBoundary>
-      <OfflineIndicator />
-      <PwaUpdatePrompt />
-      {isEnvMissing ? (
-        <EnvErrorScreen />
-      ) : (
-        <>
-          <ToastContainer
-            position="top-right"
-            autoClose={APP.TOAST_AUTO_CLOSE_MS}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="colored"
-          />
-          <RouterProvider router={router} />
-        </>
-      )}
-    </ErrorBoundary>
+    <ThemeProvider>
+      <ErrorBoundary>
+        <OfflineIndicator />
+        <PwaUpdatePrompt />
+        {isEnvMissing ? (
+          <EnvErrorScreen />
+        ) : (
+          <>
+            <ToastContainer
+              position="top-right"
+              autoClose={APP.TOAST_AUTO_CLOSE_MS}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored"
+            />
+            <RouterProvider router={router} />
+          </>
+        )}
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 };
 

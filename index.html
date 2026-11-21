@@ -6,6 +6,25 @@
   <meta name="theme-color" content="#02113d" />
   <meta name="description" content="Aplikasi Manajemen Backoffice Koperasi Paguyuban Usaha Sukses Syariah" />
 
+  <!-- Anti-FOUC: terapkan tema sebelum React/CSS dimuat agar tidak ada kedipan terang -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("kkpus-theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        var root = document.documentElement;
+        root.setAttribute("data-theme", t);
+        root.setAttribute("data-bs-theme", t);
+      } catch (e) {
+        /* localStorage tidak tersedia — biarkan default terang */
+      }
+    })();
+  </script>
+
   <!-- Prevent caching of index.html so latest bundle chunks are always loaded -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />

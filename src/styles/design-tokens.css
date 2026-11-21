@@ -119,6 +119,11 @@
   --sidebar-width: 240px;
   --sidebar-collapsed-width: 48px;
 
+  /* ---- Table defaults (light mode) ---- */
+  --table-bg: #ffffff;
+  --table-border-color: #e2e8f0;
+  --table-header-color: #1e293b;
+
   /* ---- Touch Target ---- */
   --touch-target-min: 44px;  /* WCAG 2.5.5 */
 }
@@ -178,16 +183,44 @@
   }
 }
 
-/* ---- Dark mode tokens (future: data-theme="dark") ---- */
-/*
+/* ---- Dark mode tokens (data-theme="dark") ---- */
 [data-theme="dark"] {
   --color-text-primary: #f1f5f9;
   --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #0f172a;
+
   --color-bg-body: #0f172a;
   --color-bg-surface: #1e293b;
   --color-bg-subtle: #334155;
   --color-bg-hover: #334155;
+
   --color-border-default: #334155;
   --color-border-subtle: #1e293b;
+  --color-border-focus: #60a5fa;
+
+  /* Brand tetap, teks di atas brand pakai inverse gelap */
+  --color-brand-primary: #10b981;       /* emerald-500, kontras baik di latar gelap */
+  --color-brand-primary-hover: #34d399;
+
+  /* Semantic warna disesuaikan untuk latar gelap */
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-info: #38bdf8;
+
+  /* Tabel */
+  --table-bg: #1e293b;
+  --table-border-color: #334155;
+  --table-header-color: #cbd5e1;
 }
-*/
+
+/* ---- Dark mode: Bootstrap color mode (5.3) ---- */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #0f172a;
+  --bs-body-color: #f1f5f9;
+  --bs-border-color: #334155;
+  --bs-secondary-color: #94a3b8;
+  --bs-tertiary-bg: #1e293b;
+  --bs-emphasis-color: #f1f5f9;
+}

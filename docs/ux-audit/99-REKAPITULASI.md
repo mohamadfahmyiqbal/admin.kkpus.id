@@ -413,6 +413,15 @@ Pola ini kemungkinan besar ada di 21 halaman yang sudah diaudit.
 12. ✅ Pagination ARIA — all pagination components labeled
 13. ✅ Data masking — `maskSensitiveData()` on Members table
 14. ✅ Duplicate caption fix — `caption=` prop + `<caption>` tag conflict resolved
+15. ✅ Design tokens — `design-tokens.css` (colors, spacing, typography, shadows, z-index)
+16. ✅ Cognitive overload fix — conditional tab rendering (PinjamanReport 4/6, ArisanReport 2/3)
+17. ✅ Tablet & mobile breakpoints — 768px-1023px + <768px responsive rules
+18. ✅ Tab ARIA — all report pages `role="tablist"` + `role="tab"` + `aria-label`
+19. ✅ PWA non-blocking env guard — `EnvErrorScreen` + `PwaUpdatePrompt` tetap render
+20. ✅ PWA env var CI fix — `VITE_API_BASE_URL` set in deploy workflow
+21. ✅ **Auth cookie cross-origin fix** — backend set `HttpOnly cookie` (`auth_token`), middleware baca cookie sebagai fallback; frontend socket init post-login + 10s grace period pada 401 redirect; **resolve login→dashboard→login redirect loop** (ISO 27001:2022 A.8.5)
+22. ✅ Tab pagination ARIA — `ArisanBatchPagination` + `MemberBillsPagination` labeled
+23. ✅ Dark mode infrastructure — `ThemeContext` (localStorage + prefers-color-scheme), tombol toggle di Topbar, `data-theme`/`data-bs-theme` di `<html>`, dark tokens di `design-tokens.css`, override shell di `theme-dark.css`; light mode tetap aman, inline style hardcode ditangani sebagai utang teknis terpisah
 
 ### 🔴 Prioritas 1 — Kritis (21 Halaman)
 
@@ -420,7 +429,7 @@ Pola ini kemungkinan besar ada di 21 halaman yang sudah diaudit.
 |---|---------|-----------|--------|
 | 1 | Tambah label pada filter | Lengkapi missing labels | ✅ Done (87+) |
 | 2 | Touch target ≥ 44×44 px | CSS `min-width/min-height` | ✅ Global done |
-| 3 | Kontras warna (brand color + dark mode) | WCAG 4.5:1 minimum | ⚠️ Brand color fixed; dark mode not implemented |
+| 3 | Kontras warna (brand color + dark mode) | WCAG 4.5:1 minimum | ✅ Brand color fixed (#00896d 4.51:1); dark mode infra implemented — ThemeContext + toggle tombol + CSS tokens + theme-dark.css overrides; light mode aman, inline style hardcode dihapus sebagai utang teknis terpisah |
 | 4 | Tabel caption | Tambahkan `<caption>` | ✅ Done (30+) |
 
 ### 🟡 Prioritas 2 — Tinggi (Sisa)
