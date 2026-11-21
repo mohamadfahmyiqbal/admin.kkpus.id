@@ -70,3 +70,7 @@ test-results/
 !.env.development.sample
 !.env.production.sample
 
+# OpenCode local MCP config (contains secrets)
+.opencode/opencode.json
+.opencode/opencode.jsonc
+
