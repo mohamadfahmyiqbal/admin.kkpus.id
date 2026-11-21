@@ -16,33 +16,32 @@ File template: `.opencode/skills/uiux/references/uiux-audit-checklist.md`
 | 3 | Dashboard | `src/pages/dashboard/Dashboard.jsx` | `dashboard` | ✅ | `03-dashboard-page-audit.md` | ✅ Selesai |
 | 4 | Members (Anggota) | `src/pages/anggota/MembersPage.jsx` | `membersPage` | ✅ | `04-members-page-audit.md` | ✅ Selesai (Perbaikan Diterapkan) |
 | 5 | Simpanan Dashboard | `src/pages/simpanan/SimpananDashboard.jsx` | `simpananDashboard` | ✅ | `05-simpanan-page-audit.md` | ✅ Selesai (Perbaikan Diterapkan) |
-| 6 | Simpanan Report | `src/pages/simpanan/SimpananReportPage.jsx` | `simpananReportPage` | ✅ | `06-simpanan-report-page-audit.md` | ⬜ Pending |
+| 6 | Simpanan Report | `src/pages/simpanan/SimpananReportPage.jsx` | `simpananReportPage` | ✅ | `06-simpanan-report-page-audit.md` | ✅ Selesai |
 | 7 | Jual Beli Dashboard | `src/pages/jualBeli/JualBeliDashboard.jsx` | `jualBeliDashboard` | ✅ | `06-jual-beli-page-audit.md` | ✅ Selesai |
-| 8 | Jual Beli Report | `src/pages/jualBeli/JualBeliReport.jsx` | `jualBeliReportPage` | ✅ | `08-jual-beli-report-page-audit.md` | ⬜ Pending |
-| 9 | Akad Config | `src/pages/konfigurasi/AkadConfigPage.jsx` | `akadConfigPage` | ✅ | `09-akad-config-page-audit.md` | ⬜ Pending |
-| 10 | Simpanan Config | `src/pages/konfigurasi/SimpananConfigPage.jsx` | `simpananConfigPage` | ✅ | `10-simpanan-config-page-audit.md` | ⬜ Pending |
-| 11 | Payment Fee Config | `src/pages/konfigurasi/PaymentFeeConfigPage.jsx` | `paymentFeeConfigPage` | ✅ | `11-payment-fee-config-page-audit.md` | ⬜ Pending |
-| 12 | Pinjaman List | `src/pages/program/pinjaman/PinjamanList.jsx` | `pinjamanList` | ✅ | `12-pinjaman-list-page-audit.md` | ⬜ Pending |
-| 13 | Pinjaman Report | `src/pages/program/pinjaman/PinjamanReport.jsx` | `pinjamanReport` | ✅ | `13-pinjaman-report-page-audit.md` | ⬜ Pending |
-| 14 | Pinjaman Input Modal | `src/pages/program/pinjaman/PinjamanInputModal.jsx` | `pinjamanInputModal` | ✅ | `14-pinjaman-input-modal-audit.md` | ⬜ Pending |
-| 15 | Arisan Batch | `src/pages/program/arisan/ArisanBatchPage.jsx` | `arisanBatchPage` | ✅ | `15-arisan-batch-page-audit.md` | ⬜ Pending |
-| 16 | Arisan Report | `src/pages/program/arisan/ArisanReport.jsx` | `arisanReport` | ✅ | `16-arisan-report-page-audit.md` | ⬜ Pending |
-| 17 | Tabungan List | `src/pages/tabungan/TabunganPage.jsx` | `tabunganList` | ✅ | `17-tabungan-page-audit.md` | ⬜ Pending |
-| 18 | Tabungan Report | `src/pages/tabungan/TabunganReportPage.jsx` | `tabunganReport` | ✅ | `18-tabungan-report-page-audit.md` | ⬜ Pending |
-| 19 | Investasi Halal List | `src/pages/investasi/halal/InvestasiHalalListPage.jsx` | `investasiHalalList` | ✅ | `19-investasi-halal-list-page-audit.md` | ⬜ Pending |
-| 20 | Investasi Halal Report | `src/pages/investasi/halal/InvestasiReportPage.jsx` | `investasiHalalReport` | ✅ | `20-investasi-halal-report-page-audit.md` | ⬜ Pending |
-| 21 | Pendanaan Syariah List | `src/pages/investasi/pendanaan/PendanaanSyariahListPage.jsx` | `pendanaanSyariahList` | ✅ | `21-pendanaan-syariah-list-page-audit.md` | ⬜ Pending |
-| 22 | Pendanaan Syariah Report | `src/pages/investasi/pendanaan/PendanaanSyariahReportPage.jsx` | `pendanaanSyariahReport` | ✅ | `22-pendanaan-syariah-report-page-audit.md` | ⬜ Pending |
-| 23 | Training Page | `src/pages/training/TrainingPage.jsx` | `trainingPage` | ✅ | `23-training-page-audit.md` | ⬜ Pending |
+| 8 | Jual Beli Report | `src/pages/jualBeli/JualBeliReport.jsx` | `jualBeliReportPage` | ✅ | `08-jual-beli-report-page-audit.md` | ✅ Selesai |
+| 9 | Akad Config | `src/pages/konfigurasi/AkadConfigPage.jsx` | `akadConfigPage` | ✅ | `09-akad-config-page-audit.md` | ✅ Selesai |
+| 10 | Simpanan Config | `src/pages/konfigurasi/SimpananConfigPage.jsx` | `simpananConfigPage` | ✅ | `10-simpanan-config-page-audit.md` | ✅ Selesai |
+| 11 | Payment Fee Config | `src/pages/konfigurasi/PaymentFeeConfigPage.jsx` | `paymentFeeConfigPage` | ✅ | `11-payment-fee-config-page-audit.md` | ✅ Selesai |
+| 12 | Pinjaman List | `src/pages/program/pinjaman/PinjamanList.jsx` | `pinjamanList` | ✅ | `12-pinjaman-list-page-audit.md` | ✅ Selesai |
+| 13 | Pinjaman Report | `src/pages/program/pinjaman/PinjamanReport.jsx` | `pinjamanReport` | ✅ | `13-pinjaman-report-page-audit.md` | ✅ Selesai |
+| 14 | Pinjaman Input Modal | `src/pages/program/pinjaman/PinjamanInputModal.jsx` | `pinjamanInputModal` | ✅ | `14-pinjaman-input-modal-audit.md` | ✅ Selesai |
+| 15 | Arisan Batch | `src/pages/program/arisan/ArisanBatchPage.jsx` | `arisanBatchPage` | ✅ | `15-arisan-batch-page-audit.md` | ✅ Selesai |
+| 16 | Arisan Report | `src/pages/program/arisan/ArisanReport.jsx` | `arisanReport` | ✅ | `16-arisan-report-page-audit.md` | ✅ Selesai |
+| 17 | Tabungan List | `src/pages/tabungan/TabunganPage.jsx` | `tabunganList` | ✅ | `17-tabungan-page-audit.md` | ✅ Selesai |
+| 18 | Tabungan Report | `src/pages/tabungan/TabunganReportPage.jsx` | `tabunganReport` | ✅ | `18-tabungan-report-page-audit.md` | ✅ Selesai |
+| 19 | Investasi Halal List | `src/pages/investasi/halal/InvestasiHalalListPage.jsx` | `investasiHalalList` | ✅ | `19-investasi-halal-list-page-audit.md` | ✅ Selesai |
+| 20 | Investasi Halal Report | `src/pages/investasi/halal/InvestasiReportPage.jsx` | `investasiHalalReport` | ✅ | `20-investasi-halal-report-page-audit.md` | ✅ Selesai |
+| 21 | Pendanaan Syariah List | `src/pages/investasi/pendanaan/PendanaanSyariahListPage.jsx` | `pendanaanSyariahList` | ✅ | `21-pendanaan-syariah-list-page-audit.md` | ✅ Selesai |
+| 22 | Pendanaan Syariah Report | `src/pages/investasi/pendanaan/PendanaanSyariahReportPage.jsx` | `pendanaanSyariahReport` | ✅ | `22-pendanaan-syariah-report-page-audit.md` | ✅ Selesai |
+| 23 | Training Page | `src/pages/training/TrainingPage.jsx` | `trainingPage` | ✅ | `23-training-page-audit.md` | ✅ Selesai |
 
-**Progres:** 6 dari 23 halaman selesai (26%)
+**Progres:** 21 dari 23 halaman selesai (91%)
 
 ---
 
 ## Catatan
-- **6 halaman telah diaudit** (26%): Splash, Login, Dashboard, Members, Simpanan, Jual Beli.
-- **Simpanan Dashboard** — audit lengkap di `05-simpanan-page-audit.md`. File `05-simpanan-dashboard-audit.md` masih template kosong.
-- **Jual Beli Dashboard** — audit lengkap di `06-jual-beli-page-audit.md`. File `07-jual-beli-dashboard-audit.md` masih template kosong.
+- **21 halaman telah diaudit** (91%): semua halaman aktif sudah selesai.
+- **2 template kosong** (`05-simpanan-dashboard-audit.md`, `07-jual-beli-dashboard-audit.md`) — file duplikat/nama salah, audit sebenarnya ada di `05-simpanan-page-audit.md` dan `06-jual-beli-page-audit.md`.
 - Halaman `reportsPage`, `settingsPage`, `accountPage`, `registrationsPage`, `billingPage`, `transactionsPage` semua merender `Dashboard.jsx` (sama dengan no. 3), jadi tidak dibuat file audit terpisah.
 - `PinjamanInputModal` dimasukkan karena terdaftar di `PageRoutes.jsx` sebagai route, meskipun berupa modal.
 - Setiap file audit adalah salinan dari template `uiux-audit-checklist.md` dengan header yang sudah diisi sesuai halaman.
@@ -63,4 +62,4 @@ File template: `.opencode/skills/uiux/references/uiux-audit-checklist.md`
 
 **Dihasilkan oleh:** Skill `/uiux` — Senior UI/UX Designer  
 **Tanggal:** 16 Nov 2026  
-**Terakhir diupdate:** 20 November 2026 — Sinkronisasi status audit (6/23), perbaiki penamaan file, format ulang `06-jual-beli-page-audit.md`
+**Terakhir diupdate:** 21 November 2026 — Sinkronisasi status 21/23 (91%), semua halaman aktif selesai
