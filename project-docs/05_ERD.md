@@ -163,7 +163,7 @@ erDiagram
 **Purpose:** Rincian item dalam bill (mis. pokok + wajib×12). Kolom: `bill_item_id` (PK), `bill_id` (FK), `item_description`, `amount` (DECIMAL), `quantity`, `sort_order`.
 
 #### transactions
-**Purpose:** Pembayaran/transfer (pembayaran bill, setoran, pencairan). Kolom: `transaction_id` (PK), `bill_id` (FK nullable), `member_id` (FK), `amount` (DECIMAL), `type` (PEMBAYARAN/SETORAN/PENCAIRAN/DISBURSEMENT), `payment_method` (TRANSFER), `bank_account_id` (FK → cooperative_bank_accounts), `proof_file_path` (VARCHAR), `status` (PENDING_VERIFICATION/VERIFIED/REJECTED), `verified_by` (member_id), `verified_at`, `created_at`.
+**Purpose:** Pembayaran/transfer (pembayaran bill, setoran, pencairan). Kolom: `transaction_id` (PK), `bill_id` (FK nullable), `member_id` (FK), `amount` (DECIMAL), `type` (PEMBAYARAN/SETORAN/PENCAIRAN/DISBURSEMENT), `payment_method` (TRANSFER), `bank_account_id` (FK → cooperative_bank_accounts), `proof_file_path` (VARCHAR), `status` (PENDING_VERIFICATION/VERIFIED/REJECTED), `verified_by` (member_id), `verified_at`, `payment_reference` (VARCHAR(100), NOT NULL UNIQUE — referensi pembayaran internal format `BILL-*`/`MANUAL-*`/`SBP-*`/`WD-*`), `external_transaction_id` (VARCHAR(100), nullable), `created_at`.
 
 #### payment_fee_configs
 **Purpose:** Biaya admin per metode. Kolom: `fee_id` (PK), `payment_method` (VARCHAR), `fee_type` (FLAT/PERCENTAGE), `fee_value` (DECIMAL), `is_active`.
@@ -194,7 +194,7 @@ erDiagram
 **Purpose:** Tabel agregasi laporan (di-sync oleh `savingsReportSyncService`). List report & jurnal (debit/kredit) per periode.
 
 #### midtrans_disbursements
-**Purpose:** Legacy — pencatatan disbursement (digantikan manual TRANSFER). Kolom: `id` (PK), `reference`, `amount`, `status`.
+**Purpose:** Legacy — model Sequelize dihapus (BLK-006, 2026-11-22); tabel lama berpotensi masih ada di DB (kandidat drop pada migrasi berikutnya). Kolom: `id` (PK), `reference`, `amount`, `status`.
 
 ### Domain: Financing & Programs
 
@@ -321,4 +321,6 @@ erDiagram
 | MIG-002 (planned) | TBD | `RETENTION_AUTOPURGE` config + retention columns — DEC-002 | Config + add columns | Revert config | Minimal |
 | MIG-003 (planned) | TBD | `EntityStepApproval` unique index enforcement (BR-03.05) | Migration add unique index | Drop index | None (data integrity) |
 
-> **Catatan:** Migration log ini mendokumentasikan skema aktual (baseline) dan perubahan yang direncanakan (DEC-001 double-entry, DEC-002 retention). Tidak ada perubahan skema yang dilakukan dalam task dokumentasi ini — semua entri "planned" adalah TBD dan akan diisi saat implementasi.
+| MIG-003 (planned) | TBD | `EntityStepApproval` unique index enforcement (BR-03.05) | Migration add unique index | Drop index | None (data integrity) |
+| MIG-004 (ready — belum dijalankan) | 2026-11-22 | BLK-005: rename kolom legacy Midtrans — `transactions.midtrans_order_id` → `payment_reference`, `transactions.midtrans_transaction_id` → `external_transaction_id`, drop `transactions.midtrans_token` (dead); `savings_withdrawals.midtrans_transaction_id` → `external_transaction_id` | `migrations/20261122-rename-midtrans-columns.js` (sequelize-cli) | `down` kembalikan nama lama + re-add `midtrans_token` | Rename: data & index unik </ernie:think><ernie:tool_call>
+<invoke name="edit"><parameter name="newString">> **Catatan:** Migration log ini mendokumentasikan skema aktual (baseline) dan perubahan yang direncanakan (DEC-001 double-entry, DEC-002 retention). MIG-004 disiapkan 2026-11-22 (BLK-005, lihat `10_DEV_LOG.md`) — file migrasi siap dijalankan via `npm run db:migrate` di environment dengan DB valid (kredensial DB lokal dev ditolak, belum tereksekusi); MIG-001..003 masih planned (TBD, diisi saat implementasi).

@@ -11,6 +11,44 @@
 
 ---
 
+## [2026-11-22] — BLK-005: Rename Kolom Legacy Midtrans (Migrasi + Kode)
+
+**Status:** DONE (migrasi siap; belum dijalankan — DB lokal menolak koneksi)  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+BLK-005: kolom bernama Midtrans diganti nama generik — `transactions.midtrans_order_id` → `payment_reference` (NOT NULL UNIQUE; diisi format `BILL-*`/`MANUAL-*`/`SBP-*`/`WD-*`), `transactions.midtrans_transaction_id` → `external_transaction_id`, `transactions.midtrans_token` di-drop (kolom mati, 0 referensi kode), `savings_withdrawals.midtrans_transaction_id` → `external_transaction_id`. Migrasi `20261122-rename-midtrans-columns.js` (sequelize-cli, ESM, `down()` reversibel) + model + 6 titik kode disesuaikan. Kontrak API tidak berubah (key response `order_id` tetap). Frontend 0 referensi (diverifikasi grep).
+
+### Requirements and decisions
+
+- **Requirement:** BLK-005 (P2) — kebersihan skema; saran HANDOFF: rename → `payment_reference`
+- **Decisions / tradeoffs:** `midtrans_token` di-drop (bukan rename) — 0 referensi kode & tidak berguna pasca-DEC-005; `savings_withdrawals` ikut karena kolom mati sekelas (socket attributes disesuaikan; field selalu null di payload)
+
+### Implementation impact
+
+- **Added:** `migrations/20261122-rename-midtrans-columns.js`
+- **Modified:** `models/billing/transactions.js`, `models/savings/savings_withdrawals.js`, `controllers/billing/createPaymentBill.js`, `controllers/billing/getInvoiceDetail.js`, `controllers/billing/manual/submitManualPayment.js`, `controllers/savings/processSavingsPayment.js`, `controllers/core/approvals/handlers/handleSavingsWithdrawalFinalAction.js`, `utils/socket.js` (9 file, +42/−14)
+- **Database:** Migrasi rename kolom + drop `midtrans_token` — **belum dijalankan** (`npm run db:migrate` di environment dengan DB valid; kredensial DB lokal dev ditolak)
+- **API:** None — key response `order_id` pada invoice detail tidak berubah
+- **UI:** None — field socket `midtrans_transaction_id` (selalu null) → `external_transaction_id`; frontend tidak mengonsumsi
+
+### Verification
+
+- `npx eslint` 8 file tersentuh — 0 error, 0 warning (2 warning pre-existing di savings_withdrawals.js hooks, bukan dari perubahan ini)
+- Full backend suite: 12 suites / 108 tests passed (pasca-rename)
+- Grep `midtrans_order_id|midtrans_transaction_id|midtrans_token` di controllers/models/services/utils/scripts — 0 sisa (hanya komentar historis `ledgerHelper.js` & isi migrasi)
+- Migrasi belum tereksekusi — bukti operasional (up/down) menunggu DB valid di staging
+- Commit `461ff7b` di `api.kkpus.id` branch `rollback/2026-11-02` (pushed `41f7c6a..461ff7b`)
+
+### Risks and follow-up
+
+- **Known issues:** Migrasi belum dijalankan — WAJIB `npm run db:migrate` sebelum deploy berikutnya agar model & DB sinkron; tanpa migrasi, query `transactions` akan error (kolom `payment_reference` tidak ada di DB lama)
+- **Next recommended task:** TEST P0 di staging (TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035)
+
+---
+
 ## [2026-11-22] — BLK-002: Retensi Dokumen Default ON + Ambang Configurable
 
 **Status:** DONE  
