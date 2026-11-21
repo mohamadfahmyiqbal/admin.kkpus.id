@@ -113,3 +113,102 @@ textarea:focus-visible {
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
 }
+
+/* ================================================================
+   FilterField — komponen filter reusable/templateable
+   Konsisten di semua halaman (WCAG 2.2 AA: label terprogram,
+   aria-label, touch target 44×44px, fokus-visible).
+   Ditambahkan: 21 November 2026
+   ================================================================ */
+
+/* Label terprogram */
+.filter-field-label {
+  display: block;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Input filter — styling konsisten, touch target ≥ 44×44 px */
+.filter-field-input,
+.filter-field-select {
+  min-height: 44px;
+  font-size: 0.875rem;
+  background-color: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  color: #1e293b;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-field-input:focus,
+.filter-field-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* Invalid state */
+.filter-field-input.is-invalid,
+.filter-field-select.is-invalid {
+  border-color: #dc2626;
+}
+
+.filter-field-input:focus.is-invalid,
+.filter-field-select:focus.is-invalid {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+}
+
+/* Tombol clear filter — touch target ≥ 44×44 px */
+.filter-field-clear {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.filter-field-clear:hover {
+  color: #dc2626;
+  background-color: rgba(220, 38, 38, 0.1);
+  border-radius: 6px;
+}
+
+/* Ukuran kecil untuk baris filter di dalam tabel */
+.filter-field-input.size-sm,
+.filter-field-select.size-sm,
+.filter-field input[size="sm"],
+.filter-field select[size="sm"] {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.6rem;
+}
+
+/* Wrapper filter baris tabel agar rata dan konsisten */
+.filter-field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+/* Saat latar gelap (dark mode) */
+[data-theme="dark"] .filter-field-label {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .filter-field-input,
+[data-theme="dark"] .filter-field-select {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .filter-field-input:focus,
+[data-theme="dark"] .filter-field-select:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+}
+
+[data-theme="dark"] .filter-field-input.is-invalid,
+[data-theme="dark"] .filter-field-select.is-invalid {
+  border-color: #f87171;
+}

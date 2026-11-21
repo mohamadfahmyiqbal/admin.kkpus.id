@@ -441,7 +441,7 @@ Pola ini kemungkinan besar ada di 21 halaman yang sudah diaudit.
 | 3 | Tambah breakpoint tablet | ✅ Done — 768px-1023px + <768px responsive rules |
 | 4 | Ganti `alert()` dengan toast/SweetAlert2 | ✅ Done (4 eliminated) |
 | 5 | Masking data sensitif | ✅ Done (Members table) |
-| 6 | Add templateable pada filter | ⬜ Pending |
+| 6 | Add templateable pada filter | ✅ Done — komponen `FilterField` reusable di `src/components/ui/FilterField.jsx` + styling konsisten di `admin-theme.css` (label terprogram, aria-label, touch 44×44px, dark mode) |
 | 7 | Tambah ARIA pada modal, tab | ✅ Done — all report pages role=tablist + role=tab |
 
 ### 🟢 Prioritas 3 — Menengah
