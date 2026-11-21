@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Row, Col, Card, Button, Tab, Nav, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import {
   Wallet,
   Money,
@@ -289,7 +290,7 @@ const SimpananDashboard = () => {
           : transactions;
 
       if (!dataToProcess || dataToProcess.length === 0) {
-        alert("Tidak ada data transaksi simpanan untuk diexport.");
+        Swal.fire("Info", "Tidak ada data transaksi simpanan untuk diexport.", "info");
         return;
       }
 
@@ -331,7 +332,7 @@ const SimpananDashboard = () => {
       exportToExcel(formattedData, `Transaksi_Simpanan_${typeLabel}_${today}`);
     } catch (err) {
       /* console.error: "Gagal export transaksi simpanan:", err */
-      alert("Terjadi kesalahan saat mengekspor data simpanan.");
+      Swal.fire("Error", "Terjadi kesalahan saat mengekspor data simpanan.", "error");
     } finally {
       setExporting(false);
     }
