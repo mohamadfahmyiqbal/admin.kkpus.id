@@ -148,6 +148,7 @@ const ArisanDrawView = ({ batch, onBack }) => {
             borderless
             className="align-middle mb-0 custom-table-admin"
           >
+            <caption className="visually-hidden">Jadwal pencairan arisan — bulan, pemenang, tanggal kocok, dan total pencairan</caption>
             <thead className="table-light">
               <tr>
                 <th className="px-4 py-3">Bulan Ke</th>

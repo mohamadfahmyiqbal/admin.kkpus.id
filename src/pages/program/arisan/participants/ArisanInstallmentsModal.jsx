@@ -42,6 +42,7 @@ const ArisanInstallmentsModal = ({
                   className="align-middle mb-0 custom-table-admin"
                   style={{ whiteSpace: "nowrap" }}
                 >
+                  <caption className="visually-hidden">Daftar cicilan arisan peserta — periode, jumlah cicilan, dan status pembayaran</caption>
                   <thead className="table-light">
                     <tr>
                       <th

@@ -187,6 +187,7 @@ const PendanaanSyariahReportPage = () => {
                     </Card.Header>
                     <div className="table-responsive">
                       <Table className="align-middle mb-0" hover>
+                        <caption className="visually-hidden">Ringkasan saldo akhir pendanaan syariah per akun — debet, kredit, dan saldo akhir</caption>
                         <thead className="bg-light">
                           <tr>
                             <th className="py-3 px-4 text-muted fw-bold">Akun</th>
@@ -239,6 +240,7 @@ const PendanaanSyariahReportPage = () => {
                 <div className="animate-fade-in p-4">
                   <div className="table-responsive border rounded-4 overflow-hidden shadow-sm">
                     <Table className="align-middle mb-0" hover>
+                      <caption className="visually-hidden">Laporan data pendanaan syariah anggota — pembiayaan, bagi hasil, tenor, cicilan, piutang, dan status</caption>
                       <thead className="bg-light">
                         <tr>
                           <th className="py-3 px-4 text-muted fw-bold">

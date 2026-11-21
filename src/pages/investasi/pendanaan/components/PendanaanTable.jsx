@@ -17,6 +17,7 @@ const PendanaanTable = ({
         borderless
         hover
       >
+        <caption className="visually-hidden">Daftar anggota pendanaan syariah — pembiayaan, bagi hasil, tenor, cicilan per bulan, piutang, dan status</caption>
         <thead>
           <tr className="bg-light">
             <th className="px-4 py-3 text-muted fw-bold text-center">Action</th>

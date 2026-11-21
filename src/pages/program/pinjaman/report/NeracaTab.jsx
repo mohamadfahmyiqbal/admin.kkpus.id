@@ -21,6 +21,7 @@ export const NeracaTab = ({ jurnal, formatRupiah }) => {
             <div className="card-body p-0">
             <div className="table-responsive">
               <Table bordered className="mb-0 compact-table">
+                <caption className="visually-hidden">Laporan neraca pinjaman lunak — aktiva dan kewajiban per tahun berjalan</caption>
                 <thead className="table-light align-middle">
                   <tr>
                     <th>Keterangan</th>

@@ -10,6 +10,7 @@ export const ModalTab = ({ loading, modalData, formatRupiah }) => (
         bordered
         className="align-middle mb-0 text-nowrap custom-table-admin compact-table"
       >
+        <caption className="visually-hidden">Laporan modal pinjaman — data anggota, keperluan, jumlah, termin, pembayaran cicilan, dan status</caption>
         <thead className="table-light text-center sticky-top">
           <tr>
             <th rowSpan="2" className="align-middle">

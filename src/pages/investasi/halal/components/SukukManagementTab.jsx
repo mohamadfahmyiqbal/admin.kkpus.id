@@ -119,6 +119,7 @@ const SukukManagementTab = () => {
               overflow: "hidden",
             }}
           >
+            <caption className="visually-hidden">Manajemen sukuk — data produk, jadwal, dan aksi kelola</caption>
             <thead
               className="bg-light text-secondary text-uppercase"
               style={{ letterSpacing: "0.5px" }}

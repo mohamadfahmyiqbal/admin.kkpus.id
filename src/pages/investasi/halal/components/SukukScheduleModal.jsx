@@ -100,6 +100,7 @@ const SukukScheduleModal = ({ show, onHide, type, member, issueName }) => {
       <Modal.Body className="p-0">
         <div className="table-responsive" style={{ maxHeight: "60vh" }}>
           <Table hover className="align-middle border-0 mb-0">
+            <caption className="visually-hidden">Jadwal pembayaran sukuk — tanggal, keterangan, nominal, dan status</caption>
             <thead
               className="bg-light sticky-top text-secondary text-uppercase"
               style={{ letterSpacing: "0.5px", zIndex: 1 }}

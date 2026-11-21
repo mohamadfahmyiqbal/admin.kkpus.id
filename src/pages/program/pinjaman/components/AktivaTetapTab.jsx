@@ -77,6 +77,7 @@ const AktivaTetapTab = ({ loading, aktivaTetapData, formatRupiah, refreshData })
           bordered
           className="align-middle mb-0 text-nowrap custom-table-admin compact-table"
         >
+          <caption className="visually-hidden">Daftar aktiva tetap pinjaman — bulan, detail, jumlah, dan status penyusutan</caption>
           <thead className="table-light text-center sticky-top">
             <tr>
               <th rowSpan="2" className="align-middle">

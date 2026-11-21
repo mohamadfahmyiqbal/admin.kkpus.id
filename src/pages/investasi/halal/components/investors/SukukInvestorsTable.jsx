@@ -20,6 +20,7 @@ const SukukInvestorsTable = ({
       style={{ backgroundColor: "#fff", overflow: "hidden" }}
     >
       <Table hover responsive className="align-middle border-0 mb-0">
+        <caption className="visually-hidden">Daftar investor sukuk — nama, total investasi, tenor, dan status</caption>
         <thead
           className="bg-light text-secondary text-uppercase"
           style={{ letterSpacing: "0.5px", borderBottom: "2px solid #f1f5f9" }}

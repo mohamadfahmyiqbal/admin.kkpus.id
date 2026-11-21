@@ -117,6 +117,7 @@ const SukukCatalogTab = () => {
                 overflow: "hidden",
               }}
             >
+              <caption className="visually-hidden">Katalog produk sukuk — nama, jenis, tingkat bagi hasil, tenor, dan status</caption>
               <thead
                 className="bg-light text-secondary text-uppercase"
                 style={{ letterSpacing: "0.5px" }}
