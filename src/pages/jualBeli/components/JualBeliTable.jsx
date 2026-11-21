@@ -260,6 +260,7 @@ const JualBeliTable = ({
           borderless
           style={{ whiteSpace: "nowrap", minWidth: "1480px" }}
         >
+          <caption className="visually-hidden">Daftar transaksi jual beli meliputi anggota, type, nama barang, total, DP, tenor, cicilan, piutang, diskon, sisa cicilan, dan status</caption>
           <thead className="table-light">
             {/* Baris 1: Header Nama Kolom & Sort */}
             <tr>

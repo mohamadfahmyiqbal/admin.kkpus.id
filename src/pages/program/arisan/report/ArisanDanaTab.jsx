@@ -38,6 +38,7 @@ export const ArisanDanaTab = ({
           borderless
           className="align-middle mb-0 text-nowrap custom-table-admin compact-table"
         >
+          <caption className="visually-hidden">Laporan penggunaan dana arisan meliputi batch, total komitmen, sisa komitmen, dan penggunaan dana per tahun</caption>
           <thead className="table-light text-center sticky-top" style={{ zIndex: 2 }}>
             <tr>
               <th

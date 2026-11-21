@@ -64,6 +64,7 @@ export const ArisanPesertaTab = ({
           borderless
           className="align-middle mb-0 text-nowrap custom-table-admin compact-table"
         >
+          <caption className="visually-hidden">Laporan peserta arisan meliputi nama, batch, jenis, term, total pembayaran, sisa cicilan, status, dan riwayat pembayaran</caption>
           <thead className="table-light text-center sticky-top" style={{ zIndex: 2 }}>
             <tr>
               <th
@@ -204,6 +205,7 @@ export const ArisanPesertaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter sisa cicilan"
                   placeholder="Cari..."
                   value={filter.sisa}
                   onChange={(e) => handleFilterChange(e, "sisa")}
@@ -213,6 +215,7 @@ export const ArisanPesertaTab = ({
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  aria-label="Filter status"
                   placeholder="Cari..."
                   value={filter.status}
                   onChange={(e) => handleFilterChange(e, "status")}

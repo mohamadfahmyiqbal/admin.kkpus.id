@@ -20,6 +20,7 @@ const ArisanParticipantsTable = ({
         className="align-middle mb-0 custom-table-admin"
         style={{ minWidth: "800px", whiteSpace: "nowrap" }}
       >
+        <caption className="visually-hidden">Daftar peserta arisan meliputi arisan, anggota, saldo, piutang cicilan, target, dan status</caption>
         <thead className="table-light">
           <tr>
             <th
@@ -108,6 +109,7 @@ const ArisanParticipantsTable = ({
               <input
                 type="text"
                 className="form-control form-control-sm"
+                aria-label="Filter piutang cicilan"
                 placeholder="Cari..."
                 value={filter.piutang}
                 onChange={(e) => onFilterChange("piutang", e.target.value)}
@@ -117,6 +119,7 @@ const ArisanParticipantsTable = ({
               <input
                 type="text"
                 className="form-control form-control-sm"
+                aria-label="Filter target"
                 placeholder="Cari..."
                 value={filter.target}
                 onChange={(e) => onFilterChange("target", e.target.value)}

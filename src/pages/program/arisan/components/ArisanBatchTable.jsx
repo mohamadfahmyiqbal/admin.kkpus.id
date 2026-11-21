@@ -83,6 +83,7 @@ const ArisanBatchTable = ({
           className="align-middle mb-0 custom-table-admin"
           style={{ whiteSpace: "nowrap" }}
         >
+          <caption className="visually-hidden">Daftar batch arisan meliputi periode, kategori, nama, peserta, term, setoran, keberangkatan, total, dan status</caption>
           <thead className="table-light">
             <ArisanBatchFilterHeader
               filter={filter}

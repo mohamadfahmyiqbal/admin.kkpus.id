@@ -16,6 +16,7 @@ export const ArisanJurnalTab = ({ loading, jurnal = {}, formatRupiah }) => {
           borderless
           className="align-middle mb-0 custom-table-admin compact-table"
         >
+          <caption className="visually-hidden">Jurnal arisan meliputi akun, deskripsi, debet, dan kredit untuk setoran, penarikan, dan program arisan</caption>
           <thead className="table-light sticky-top" style={{ zIndex: 2 }}>
             <tr>
               <th
