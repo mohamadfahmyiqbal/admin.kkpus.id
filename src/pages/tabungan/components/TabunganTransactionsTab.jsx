@@ -128,7 +128,6 @@ const TabunganTransactionsTab = () => {
         onSuccess={fetchTransactions}
         isTreasurer={isTreasurer}
         approvalApi={tabunganService.approveWithdrawal}
-        disbursementApi={tabunganService.disburseWithdrawal}
       />
 
       <TransactionDetailModal

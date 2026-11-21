@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Modal, Button, Form, Row, Col, Spinner } from "react-bootstrap";
 import { CheckCircle, XCircle, Money } from "phosphor-react";
 import Swal from "sweetalert2";
-import approvalService from "../../utils/api/UApproval";
 import { jwtDecodePage } from "../../utils/helpers";
 import WithdrawalInfoCard from "./withdrawal/WithdrawalInfoCard";
 import WithdrawalApprovalFlow from "./withdrawal/WithdrawalApprovalFlow";
@@ -153,9 +152,7 @@ export const WithdrawalApprovalModal = ({
         payload.transfer_proof = transferProofBase64;
       }
 
-      const res = approvalApi
-        ? await approvalApi(transaction.id, payload)
-        : await approvalService.processWithdrawalApproval(transaction.id, payload);
+      const res = await approvalApi(transaction.id, payload);
 
       if (res.data?.success || res.status === 200) {
         Swal.fire(

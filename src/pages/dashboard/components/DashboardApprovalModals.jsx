@@ -1,8 +1,7 @@
 // PATH: src/pages/dashboard/components/DashboardApprovalModals.jsx
 import { Suspense, lazy } from "react";
 import { Spinner } from "react-bootstrap";
-import savingsService from "../../../utils/api/USavings";
-import tabunganService from "../../../utils/api/UTabungan";
+import approvalService from "../../../utils/api/UApproval";
 
 const RegistrationReviewModal = lazy(() => import("../../anggota/RegistrationReviewModal"));
 const TerminationReviewModal = lazy(() => import("../../anggota/TerminationReviewModal"));
@@ -110,16 +109,7 @@ const DashboardApprovalModals = ({ modalState, fetchData }) => {
         }
         formatRupiah={(v) => v}
         isTreasurer={false}
-        approvalApi={
-          selectedWithdrawal?.item === "Pencairan Tabungan"
-            ? tabunganService.approveWithdrawal
-            : savingsService.approveWithdrawal
-        }
-        disbursementApi={
-          selectedWithdrawal?.item === "Pencairan Tabungan"
-            ? tabunganService.disburseWithdrawal
-            : savingsService.disburseWithdrawal
-        }
+        approvalApi={approvalService.processWithdrawalApproval}
       />
 
       {/* 4. Modal Approval Jual Beli */}
