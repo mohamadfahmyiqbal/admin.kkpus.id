@@ -1,7 +1,7 @@
 # Engineering Backlog
 
 **Project:** KKPUS Platform  
-**Last reviewed:** 2026-11-21
+**Last reviewed:** 2026-11-22
 
 ## Status and priority definitions
 
@@ -33,7 +33,7 @@
 | TASK-005 | Define API specification | DONE | P1 | Development Team | TASK-004 | API spec covers all endpoints | 2026-11-21 |
 | TASK-006 | Define UI/UX specification | DONE | P1 | Development Team | TASK-005 | UI/UX spec covers all screens & interaction states | 2026-11-22 |
 | TASK-007 | Define Test Plan | DONE | P1 | Development Team | TASK-006 | Test plan covers test strategy, environments, and traceable test cases | 2026-11-22 |
-| DEF-001 | Admin: dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` di DashboardApprovalModals.jsx (method tidak ada di USavings.js; fallback approvalService berfungsi — dead code, non-fungsional) | OPEN | P2 | Development Team | None | Hapus referensi dead code atau tambahkan method yang benar + verifikasi build admin | 2026-11-22 |
+| DEF-001 | Admin: dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` di DashboardApprovalModals.jsx (method tidak ada di USavings.js; fallback approvalService berfungsi — dead code, non-fungsional) | DONE | P2 | Development Team | None | Commit `acc8074` (admin, rollback/2026-11-02): 3 file +3/−17; eslint 0 error/0 warning & build ✓ | 2026-11-22 |
 
 ## Task details
 

@@ -11,6 +11,43 @@
 
 ---
 
+## [2026-11-22] — DEF-001: Bersihkan Dead Reference Approval Penarikan (Admin)
+
+**Status:** DONE  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+DEF-001 (dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` di `DashboardApprovalModals.jsx`) diperbaiki: ternary dead reference & prop `disbursementApi` (tidak dideklarasi di modal) dihapus, import `savingsService`/`tabunganService` yang tak terpakai dibuang, dan modal kini memanggil `approvalService.processWithdrawalApproval` langsung (endpoint benar `PUT /approvals/penarikan/approve/:id`). Perilaku aplikasi tidak berubah — fallback sebelumnya sudah menuju fungsi yang sama.
+
+### Requirements and decisions
+
+- **Requirement:** DEF-001 (P2) — dead code non-fungsional (temuan audit NEW-002)
+- **Decisions / tradeoffs:** Hapus referensi, bukan tambah method di `USavings.js` — endpoint yang benar sudah ada di `UApproval.js` dan itu yang dipakai fallback
+
+### Implementation impact
+
+- **Added:** None
+- **Modified:** `admin.kkpus.id` — `src/pages/dashboard/components/DashboardApprovalModals.jsx`, `src/components/modals/WithdrawalApprovalModal.jsx`, `src/pages/tabungan/components/TabunganTransactionsTab.jsx` (3 file, +3/−17)
+- **Database:** None
+- **API:** None — `approvalService.processWithdrawalApproval` → `PUT /approvals/penarikan/approve/:id` (endpoint existing, tanpa perubahan backend)
+- **UI:** None (perilaku identik)
+
+### Verification
+
+- `npx eslint` pada 3 file tersentuh — 0 error, 0 warning
+- `npm run build` (admin) — ✓ built in 1.09s (PWA precache sukses)
+- `git diff` review — hanya penghapusan referensi/prop/import dead; `tabunganService.approveWithdrawal` diverifikasi ada (`PUT /approvals/tabungan_penarikan/approve/:id`), jadi pemakaian di `TabunganTransactionsTab` valid
+- Commit `acc8074` di `admin.kkpus.id` branch `rollback/2026-11-02` (pushed `106282c..acc8074`)
+
+### Risks and follow-up
+
+- **Known issues:** None — tidak ada perubahan perilaku (dead code)
+- **Next recommended task:** TEST P0 di staging (TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035)
+
+---
+
 ## [2026-11-22] — NEW-002: Triase Konsolidasi Modul Ganda
 
 **Status:** DONE  

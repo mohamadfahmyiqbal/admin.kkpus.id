@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-004/006/008 + BLK-007 role decision + TASK-008 + NEW-002 triase (TASK-000..TASK-007)
-- **Active task:** None — seluruh blocker & NEW-001/002 selesai; DEF-001 (P2) terbuka; menunggu instruksi berikutnya (TEST P0 staging atau DEF-001)
-- **Last verification:** NEW-002 triase: `/api/financial` = alias (reuse controller `/api/financing`), `/api/savings`/`/api/simpanan`/`/api/tabungan` = domain berbeda — tidak dikonsolidasi; DEF-001 dicatat (dead reference admin, non-fungsional)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-004/006/008 + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 (TASK-000..TASK-007)
+- **Active task:** None — seluruh blocker & NEW-001/002 & DEF-001 selesai; menunggu instruksi berikutnya (TEST P0 staging)
+- **Last verification:** DEF-001 (admin `acc8074`): dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` dihapus, `DashboardApprovalModals` pakai `approvalService.processWithdrawalApproval` langsung; eslint 0 error/0 warning, build ✓ (behavior unchanged)
 
 ## Decisions and constraints
 
@@ -42,13 +42,11 @@
 
 **Eksekusi TEST P0 di staging (P0)**
 
-- Why now: Seluruh dokumentasi & triase selesai (TASK-000..008, BLK-001..008, NEW-001, NEW-002). §3 kini = kontrak aktual — acuan eksekusi test siap.
+- Why now: Seluruh dokumentasi, triase, & pembersihan dead code selesai (TASK-000..008, BLK-001..008, NEW-001, NEW-002, DEF-001). §3 kini = kontrak aktual — acuan eksekusi test siap.
 - Test cases: TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035 (12 P0 dari `08_TEST_PLAN.md`)
 - Read: `08_TEST_PLAN.md` (TEST-001..036), `06_API_SPEC.md` §3 (kontrak aktual), `09_BACKLOG.md`
 - Acceptance evidence: Setiap TEST P0 dieksekusi di staging dengan environment + test data; hasil PASS/FAIL terdokumentasi di dev log
 - Do not start if: staging + test data belum siap (butuh environment, bukan hanya dokumentasi)
-
-**Alternatif: DEF-001 (P2)** — bersihkan dead reference `savingsService.approveWithdrawal`/`disburseWithdrawal` di admin dashboard (`DashboardApprovalModals.jsx`).
 
 ## Update rule
 
