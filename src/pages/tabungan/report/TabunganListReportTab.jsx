@@ -9,6 +9,7 @@ const TabunganListReportTab = ({
   searchFilters = [],
   handleSearchChange,
   formatRupiah,
+  tableCaption,
 }) => {
   const currentYear = new Date().getFullYear();
   const searchPlaceholders = [
@@ -39,7 +40,9 @@ const TabunganListReportTab = ({
           bordered
           className="align-middle mb-0 text-nowrap compact-table"
           style={{ minWidth: "1600px" }}
+          caption={tableCaption}
         >
+          <caption className="visually-hidden">{tableCaption}</caption>
           <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
             <tr className="table-light text-center">
               <th
@@ -105,6 +108,7 @@ const TabunganListReportTab = ({
                       type="text"
                       className="form-control form-control-sm shadow-none"
                       placeholder={ph}
+                      aria-label={`Filter by column ${idx + 1}: ${ph}`}
                       value={searchFilters[idx] || ""}
                       onChange={(e) => handleSearchChange(idx, e.target.value)}
                     />

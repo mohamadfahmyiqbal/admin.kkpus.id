@@ -370,7 +370,8 @@ const TabunganPage = () => {
             ) : (
               <Card className="border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div className="table-responsive">
-                  <Table hover className="mb-0 align-middle custom-table-admin text-nowrap">
+                  <Table hover className="mb-0 align-middle custom-table-admin text-nowrap" caption="Master program tabungan dengan aksi edit dan hapus">
+                    <caption className="visually-hidden">Master program tabungan dengan aksi edit dan hapus</caption>
                     <thead className="bg-light">
                       <tr>
                         <th className="px-3 px-md-4 py-3 font-medium text-muted small">No</th>
@@ -421,6 +422,7 @@ const TabunganPage = () => {
                                     setShowProgramModal(true);
                                   }}
                                   title="Edit Program"
+                                  aria-label={`Edit program ${p.target_name || ""}`}
                                 >
                                   <PencilSimple size={18} aria-hidden="true" />
                                 </Button>
@@ -431,6 +433,7 @@ const TabunganPage = () => {
                                   style={{ width: "32px", height: "32px" }}
                                   onClick={() => handleDeleteProgram(p.saving_target_id)}
                                   title="Hapus Program"
+                                  aria-label={`Hapus program ${p.target_name || ""}`}
                                 >
                                   <Trash size={18} aria-hidden="true" />
                                 </Button>

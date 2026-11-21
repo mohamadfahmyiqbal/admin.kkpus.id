@@ -220,6 +220,7 @@ const TabunganReportPage = () => {
                     searchFilters={searchFilters}
                     handleSearchChange={handleSearchChange}
                     formatRupiah={formatCurrency}
+                    tableCaption="Laporan daftar tabungan anggota — filter per kolom"
                   />
                 </Tab.Pane>
                 <Tab.Pane eventKey="jurnal">
@@ -227,6 +228,7 @@ const TabunganReportPage = () => {
                     summaryData={summaryData}
                     loading={loading}
                     formatRupiah={formatCurrency}
+                    tableCaption="Jurnal akuntansi tabungan (Debet/Kredit)"
                   />
                 </Tab.Pane>
               </Tab.Content>

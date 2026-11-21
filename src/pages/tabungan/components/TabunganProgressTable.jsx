@@ -62,6 +62,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
 
       <div className="table-responsive" style={{ minHeight: "400px" }}>
         <table className="table table-hover align-middle mb-0 custom-table-admin">
+          <caption className="visually-hidden">Progress program tabungan dengan filter dan pagination</caption>
           <thead className="table-light">
             <tr>
               <th scope="col" className="text-secondary fw-semibold">
@@ -87,6 +88,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                   type="text"
                   className="form-control form-control-sm shadow-none"
                   placeholder="Cari..."
+                  aria-label="Filter by kategori"
                   value={filter.kategori}
                   onChange={(e) => handleFilterChange("kategori", e.target.value)}
                 />
@@ -96,6 +98,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                   type="text"
                   className="form-control form-control-sm shadow-none"
                   placeholder="Cari..."
+                  aria-label="Filter by nama program"
                   value={filter.nama}
                   onChange={(e) => handleFilterChange("nama", e.target.value)}
                 />
@@ -105,6 +108,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                   type="text"
                   className="form-control form-control-sm shadow-none"
                   placeholder="Cari..."
+                  aria-label="Filter by total saldo"
                   value={filter.saldo}
                   onChange={(e) => handleFilterChange("saldo", e.target.value)}
                 />
@@ -114,6 +118,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                   type="text"
                   className="form-control form-control-sm shadow-none"
                   placeholder="Cari..."
+                  aria-label="Filter by status"
                   value={filter.status}
                   onChange={(e) => handleFilterChange("status", e.target.value)}
                 />
@@ -129,6 +134,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                       <button
                         className="btn btn-sm btn-light text-primary border-0 rounded-circle d-flex align-items-center justify-content-center"
                         title="Lihat Daftar Anggota"
+                        aria-label="Lihat daftar anggota program"
                         style={{ width: "32px", height: "32px" }}
                         onClick={() => {
                           setSelectedRow(item);
@@ -140,6 +146,7 @@ const TabunganProgressTable = ({ currentPage, tableData = [] }) => {
                       <button
                         className="btn btn-sm btn-light text-info border-0 rounded-circle d-flex align-items-center justify-content-center"
                         title="Lihat Detail Program"
+                        aria-label="Lihat detail program tabungan"
                         style={{ width: "32px", height: "32px" }}
                         onClick={() => {
                           setSelectedRow(item);
