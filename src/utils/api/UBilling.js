@@ -20,10 +20,6 @@ class BillingService {
     return api.post("/billing/create-voluntary-bill", payload);
   }
 
-  createMidtransTransaction(payload) {
-    return api.post("/billing/process-payment", payload);
-  }
-
   manualSyncSummary() {
     return api.post("/billing/manual-sync-summary");
   }
