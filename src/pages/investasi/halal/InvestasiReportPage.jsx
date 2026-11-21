@@ -125,18 +125,20 @@ const InvestasiReportPage = () => {
               onSelect={(k) => setActiveTab(k)}
             >
               <div className="global-tabs-wrapper px-4 pt-3 mb-0 border-bottom">
-                <Nav variant="pills" className="global-tabs tabs-sm border-0 gap-2">
-                  <Nav.Item>
+                <Nav variant="pills" className="global-tabs tabs-sm border-0 gap-2" role="tablist" aria-label="Kategori laporan investasi halal">
+                  <Nav.Item role="presentation">
                     <Nav.Link
                       eventKey="list"
+                      role="tab"
                       className="rounded-pill px-4 py-2 fw-medium"
                     >
                       List Report
                     </Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
+                  <Nav.Item role="presentation">
                     <Nav.Link
                       eventKey="jurnal"
+                      role="tab"
                       className="rounded-pill px-4 py-2 fw-medium"
                     >
                       Jurnal Report

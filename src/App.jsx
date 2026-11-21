@@ -6,6 +6,7 @@ import { APP } from "./constants/app";
 import router from "./routes/RouterConfig";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
+import "./styles/design-tokens.css";
 import "./styles/admin-theme.css";
 import "./App.css";
 import { initSocket, disconnectSocket } from "./utils/api/socket";

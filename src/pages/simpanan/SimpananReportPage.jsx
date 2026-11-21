@@ -190,17 +190,19 @@ const SimpananReportPage = () => {
                 <Nav
                   variant="pills"
                   className="global-tabs tabs-sm border-0 px-3 px-md-4 mb-0 flex-nowrap"
+                  role="tablist"
+                  aria-label="Kategori laporan simpanan"
                   style={{
                     display: "inline-flex",
                     width: "max-content",
                     minWidth: "max-content",
                   }}
                 >
-                  <Nav.Item>
-                    <Nav.Link eventKey="list">List Report</Nav.Link>
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="list" role="tab">List Report</Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="jurnal">Jurnal Report</Nav.Link>
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="jurnal" role="tab">Jurnal Report</Nav.Link>
                   </Nav.Item>
                 </Nav>
 

@@ -97,6 +97,20 @@ const ArisanReport = () => {
 
   const currentYear = new Date().getFullYear();
 
+  // Cognitive overload fix: hide empty tabs
+  // WCAG 2.2 AA: Reduce cognitive overload (Prioritas 2 — item #2)
+  const hasArisanData = listData.length > 0;
+  const hasDanaData = danaList.length > 0;
+
+  const availableTabs = [];
+  if (hasArisanData) availableTabs.push("arisan");
+  if (hasDanaData) availableTabs.push("penggunaan_dana");
+  availableTabs.push("jurnal"); // Jurnal always computed
+
+  const effectiveActiveTab = availableTabs.includes(activeTab)
+    ? activeTab
+    : availableTabs[0] || "";
+
   const handleExportExcel = () => {
     const dataToExport = listData.map((item, idx) => ({
       No: idx + 1,
@@ -157,26 +171,32 @@ const ArisanReport = () => {
         <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
           <Card.Body className="p-0">
             <Tab.Container
-              activeKey={activeTab}
+              activeKey={effectiveActiveTab}
               onSelect={(k) => setActiveTab(k)}
             >
               <div className="global-tabs-wrapper mb-3 px-4 pt-3">
                 <Nav
                   variant="pills"
                   className="global-tabs border-0 flex-nowrap"
+                  role="tablist"
+                  aria-label="Kategori laporan arisan"
                 >
-                  <Nav.Item>
-                    <Nav.Link eventKey="arisan" className="fw-medium">
-                      Arisan
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="penggunaan_dana" className="fw-medium">
-                      Penggunaan Dana
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="jurnal" className="fw-medium">
+                  {hasArisanData && (
+                    <Nav.Item role="presentation">
+                      <Nav.Link eventKey="arisan" role="tab" className="fw-medium">
+                        Arisan
+                      </Nav.Link>
+                    </Nav.Item>
+                  )}
+                  {hasDanaData && (
+                    <Nav.Item role="presentation">
+                      <Nav.Link eventKey="penggunaan_dana" role="tab" className="fw-medium">
+                        Penggunaan Dana
+                      </Nav.Link>
+                    </Nav.Item>
+                  )}
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="jurnal" role="tab" className="fw-medium">
                       Jurnal
                     </Nav.Link>
                   </Nav.Item>
@@ -184,24 +204,28 @@ const ArisanReport = () => {
               </div>
 
               <Tab.Content>
-                <Tab.Pane eventKey="arisan">
-                  <ArisanPesertaTab
-                    loading={loading}
-                    listData={listData}
-                    listTotals={listTotals}
-                    currentYear={currentYear}
-                    formatRupiah={formatCurrency}
-                  />
-                </Tab.Pane>
-                <Tab.Pane eventKey="penggunaan_dana">
-                  <ArisanDanaTab
-                    loading={loading}
-                    danaList={danaList}
-                    danaTotals={danaTotals}
-                    currentYear={currentYear}
-                    formatRupiah={formatCurrency}
-                  />
-                </Tab.Pane>
+                {hasArisanData && (
+                  <Tab.Pane eventKey="arisan">
+                    <ArisanPesertaTab
+                      loading={loading}
+                      listData={listData}
+                      listTotals={listTotals}
+                      currentYear={currentYear}
+                      formatRupiah={formatCurrency}
+                    />
+                  </Tab.Pane>
+                )}
+                {hasDanaData && (
+                  <Tab.Pane eventKey="penggunaan_dana">
+                    <ArisanDanaTab
+                      loading={loading}
+                      danaList={danaList}
+                      danaTotals={danaTotals}
+                      currentYear={currentYear}
+                      formatRupiah={formatCurrency}
+                    />
+                  </Tab.Pane>
+                )}
                 <Tab.Pane eventKey="jurnal">
                   <ArisanJurnalTab
                     loading={loading}

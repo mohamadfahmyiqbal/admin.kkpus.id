@@ -113,14 +113,16 @@ const PendanaanSyariahReportPage = () => {
               <Nav
                 variant="underline"
                 className="global-tabs border-0 flex-nowrap pb-2 gap-3"
+                role="tablist"
+                aria-label="Kategori laporan pendanaan syariah"
               >
-                <Nav.Item>
-                  <Nav.Link eventKey="jurnal" className="text-dark fw-medium px-2">
+                <Nav.Item role="presentation">
+                  <Nav.Link eventKey="jurnal" role="tab" className="text-dark fw-medium px-2">
                     Jurnal & Neraca
                   </Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="list" className="text-dark fw-medium px-2">
+                <Nav.Item role="presentation">
+                  <Nav.Link eventKey="list" role="tab" className="text-dark fw-medium px-2">
                     List Detail Anggota
                   </Nav.Link>
                 </Nav.Item>

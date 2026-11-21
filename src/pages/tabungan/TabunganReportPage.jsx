@@ -196,14 +196,16 @@ const TabunganReportPage = () => {
                 <Nav
                   variant="pills"
                   className="global-tabs tabs-sm border-0 mb-3"
+                  role="tablist"
+                  aria-label="Kategori laporan tabungan"
                 >
-                  <Nav.Item>
-                    <Nav.Link eventKey="list" className="fw-medium">
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="list" role="tab" className="fw-medium">
                       List Report
                     </Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="jurnal" className="fw-medium">
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="jurnal" role="tab" className="fw-medium">
                       Jurnal Report
                     </Nav.Link>
                   </Nav.Item>

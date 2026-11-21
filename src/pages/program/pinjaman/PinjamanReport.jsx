@@ -59,6 +59,28 @@ const PinjamanReport = () => {
     fetchData();
   }, []);
 
+  const hasModalData = modalData.length > 0;
+  const hasHutangData = hutangData.length > 0;
+  const hasAktivaData = aktivaTetapData.length > 0;
+  const hasListData = listData.length > 0;
+  // Jurnal & Neraca are computed from raw data, always meaningful
+  const hasJurnalData = true;
+  const hasNeracaData = true;
+
+  // Auto-switch to first available tab when active tab becomes empty
+  // WCAG 2.2 AA: Reduce cognitive overload (Prioritas 2 — item #2)
+  const availableTabs = [];
+  if (hasModalData) availableTabs.push("modal");
+  if (hasHutangData) availableTabs.push("hutang");
+  if (hasAktivaData) availableTabs.push("aktiva");
+  if (hasListData) availableTabs.push("list");
+  if (hasJurnalData) availableTabs.push("jurnal");
+  if (hasNeracaData) availableTabs.push("neraca");
+
+  const effectiveActiveTab = availableTabs.includes(activeTab)
+    ? activeTab
+    : availableTabs[0] || "";
+
   const formatCurrency = (val) =>
     new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -134,41 +156,51 @@ const PinjamanReport = () => {
         <Card className="border-0 shadow-sm rounded-4 overflow-hidden">
           <Card.Body className="p-0">
             <Tab.Container
-              activeKey={activeTab}
+              activeKey={effectiveActiveTab}
               onSelect={(k) => setActiveTab(k)}
             >
               <div className="global-tabs-wrapper mb-3 px-4 pt-3">
                 <Nav
                   variant="pills"
                   className="global-tabs border-0 flex-nowrap"
+                  role="tablist"
+                  aria-label="Kategori laporan pinjaman"
                 >
-                  <Nav.Item>
-                    <Nav.Link eventKey="modal" className="fw-medium">
-                      Modal
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="hutang" className="fw-medium">
-                      Hutang Kas
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="aktiva" className="fw-medium">
-                      Aktiva Tetap
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="list" className="fw-medium">
-                      List Report
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="jurnal" className="fw-medium">
+                  {hasModalData && (
+                    <Nav.Item role="presentation">
+                      <Nav.Link eventKey="modal" role="tab" className="fw-medium">
+                        Modal
+                      </Nav.Link>
+                    </Nav.Item>
+                  )}
+                  {hasHutangData && (
+                    <Nav.Item role="presentation">
+                      <Nav.Link eventKey="hutang" role="tab" className="fw-medium">
+                        Hutang Kas
+                      </Nav.Link>
+                    </Nav.Item>
+                  )}
+                  {hasAktivaData && (
+                    <Nav.Item role="presentation">
+                      <Nav.Link eventKey="aktiva" role="tab" className="fw-medium">
+                        Aktiva Tetap
+                      </Nav.Link>
+                    </Nav.Item>
+                  )}
+                  {hasListData && (
+                    <Nav.Item role="presentation">
+                      <Nav.Link eventKey="list" role="tab" className="fw-medium">
+                        List Report
+                      </Nav.Link>
+                    </Nav.Item>
+                  )}
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="jurnal" role="tab" className="fw-medium">
                       Jurnal
                     </Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="neraca" className="fw-medium">
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="neraca" role="tab" className="fw-medium">
                       Neraca
                     </Nav.Link>
                   </Nav.Item>
@@ -176,37 +208,45 @@ const PinjamanReport = () => {
               </div>
 
               <Tab.Content>
-                <Tab.Pane eventKey="modal">
-                  <ModalTab
-                    loading={loading}
-                    modalData={modalData}
-                    formatRupiah={formatCurrency}
-                  />
-                </Tab.Pane>
-                <Tab.Pane eventKey="hutang">
-                  <HutangKasTab
-                    loading={loading}
-                    hutangData={hutangData}
-                    formatRupiah={formatCurrency}
-                    refreshData={fetchData}
-                  />
-                </Tab.Pane>
-                <Tab.Pane eventKey="aktiva">
-                  <AktivaTetapTab
-                    loading={loading}
-                    aktivaTetapData={aktivaTetapData}
-                    formatRupiah={formatCurrency}
-                    refreshData={fetchData}
-                  />
-                </Tab.Pane>
-                <Tab.Pane eventKey="list">
-                  <ListReportTab
-                    loading={loading}
-                    listData={listData}
-                    listTotals={listTotals}
-                    formatRupiah={formatCurrency}
-                  />
-                </Tab.Pane>
+                {hasModalData && (
+                  <Tab.Pane eventKey="modal">
+                    <ModalTab
+                      loading={loading}
+                      modalData={modalData}
+                      formatRupiah={formatCurrency}
+                    />
+                  </Tab.Pane>
+                )}
+                {hasHutangData && (
+                  <Tab.Pane eventKey="hutang">
+                    <HutangKasTab
+                      loading={loading}
+                      hutangData={hutangData}
+                      formatRupiah={formatCurrency}
+                      refreshData={fetchData}
+                    />
+                  </Tab.Pane>
+                )}
+                {hasAktivaData && (
+                  <Tab.Pane eventKey="aktiva">
+                    <AktivaTetapTab
+                      loading={loading}
+                      aktivaTetapData={aktivaTetapData}
+                      formatRupiah={formatCurrency}
+                      refreshData={fetchData}
+                    />
+                  </Tab.Pane>
+                )}
+                {hasListData && (
+                  <Tab.Pane eventKey="list">
+                    <ListReportTab
+                      loading={loading}
+                      listData={listData}
+                      listTotals={listTotals}
+                      formatRupiah={formatCurrency}
+                    />
+                  </Tab.Pane>
+                )}
                 <Tab.Pane eventKey="jurnal">
                   <JurnalTab jurnal={jurnal} formatRupiah={formatCurrency} />
                 </Tab.Pane>

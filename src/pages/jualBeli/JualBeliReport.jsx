@@ -166,12 +166,14 @@ const JualBeliReport = () => {
                 <Nav
                   variant="pills"
                   className="global-tabs tabs-sm border-0 px-4 mb-0"
+                  role="tablist"
+                  aria-label="Kategori laporan jual beli"
                 >
-                  <Nav.Item>
-                    <Nav.Link eventKey="list">List Report</Nav.Link>
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="list" role="tab">List Report</Nav.Link>
                   </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="jurnal">Jurnal Report</Nav.Link>
+                  <Nav.Item role="presentation">
+                    <Nav.Link eventKey="jurnal" role="tab">Jurnal Report</Nav.Link>
                   </Nav.Item>
                 </Nav>
 
