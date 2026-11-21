@@ -11,6 +11,46 @@
 
 ---
 
+## [2026-11-22] — BLK-007: Keputusan Role Otorisasi Konfigurasi Keuangan
+
+**Status:** DONE  
+**Version:** 1.0.0  
+**Owner:** Development Team
+
+### Outcome
+
+Divergensi REC-3 diselesaikan dengan keputusan Product: **spec dilonggarkan** mengikuti implementasi aktual. Role konfigurasi keuangan (simpanan & payment-fee) = **Ketua / Bendahara / Pengawas**; disburse simpanan tetap Ketua/Bendahara/Pengawas. Tanpa perubahan kode.
+
+### Requirements and decisions
+
+- **Requirement:** BLK-007 (REC-3) — putuskan role otorisasi config
+- **Decisions / tradeoffs:**
+  - **DEC-006 (Product, 2026-11-22):** longgarkan spec, bukan perketat implementasi
+  - Rationale: implementasi sudah deployed & dipakai; semua peran adalah pengurus internal tepercaya; perketat = breaking change operasional (butuh approval Ketua + transisi)
+  - Risiko segregation-of-duties (Pengawas bisa menulis config) **diterima tertulis** — mitigasi: audit log aktivitas
+  - Alternatif yang ditolak: perketat implementasi (hapus Pengawas dari guard) & hybrid write/read — ditunda; bisa diangkat lagi jika kebutuhan governance berubah
+
+### Implementation impact
+
+- **Added:** DEC-006 di `02_PRD.md` (decision log)
+- **Modified:** `06_API_SPEC.md` — API-020 & API-049 Authorization → Ketua/Bendahara/Pengawas (DEC-006); §6.1 baris API-020/API-049 & §6.3 REC-3 → RESOLVED
+- **Database:** None
+- **API:** None (dokumentasi; tidak ada kode yang diubah — guard backend sudah sesuai)
+- **UI:** None
+
+### Verification
+
+- Guard aktual vs spec: `PUT /api/simpanan/config` & `PUT /api/billing/payment-fees` = `MidRole(["Ketua","Bendahara","Pengawas"])` — cocok dengan spec baru (grep `routes/simpananRoute.js` & `routes/billingRoute.js`)
+- Tidak ada test yang perlu dijalankan ulang (nol perubahan kode)
+
+### Risks and follow-up
+
+- **Sisa risiko SoD:** Pengawas dapat mengubah konfigurasi keuangan — diterima (DEC-006); mitigasi audit trail
+- **NEW-001 (P2):** rewrite detail §3 API spec tetap terbuka
+- Opsi "perketat implementasi" bisa diaktifkan kembali bila governance requirements berubah
+
+---
+
 ## [2026-11-22] — BLK-008: Keamanan Notifikasi & Push (IDOR Fix)
 
 **Status:** DONE  

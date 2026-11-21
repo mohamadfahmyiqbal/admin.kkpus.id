@@ -430,7 +430,7 @@
 #### [API-020] PUT /api/simpanan/config
 
 **Purpose:** Update konfigurasi nominal simpanan & akad.  
-**Authorization:** Bendahara
+**Authorization:** Ketua / Bendahara / Pengawas (DEC-006)
 
 | Location | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -968,7 +968,7 @@
 #### [API-049] PUT /api/billing/fee-config
 
 **Purpose:** Update konfigurasi biaya admin.  
-**Authorization:** Bendahara
+**Authorization:** Ketua / Bendahara / Pengawas (DEC-006)
 
 | Location | Field | Type | Required | Validation | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -1096,7 +1096,7 @@
 | API-017 | GET /api/simpanan/:id/transactions | GET /api/simpanan/riwayat | CHANGED — path |
 | API-018 | POST /api/simpanan/withdrawals | POST /api/simpanan/penarikan/request | CHANGED — path |
 | API-019 | GET /api/simpanan/config | GET /api/simpanan/config | ✅ MATCH |
-| API-020 | PUT /api/simpanan/config (Bendahara) | PUT /api/simpanan/config (Ketua/Bendahara/Pengawas) | CHANGED — role lebih longgar (BLK-007) |
+| API-020 | PUT /api/simpanan/config (Bendahara) | PUT /api/simpanan/config (Ketua/Bendahara/Pengawas) | CHANGED — role lebih longgar → RESOLVED (DEC-006: spec diselaraskan) |
 | API-021 | GET /api/billing | GET /api/billing/list/pending | CHANGED — path |
 | API-022 | POST /api/billing/:id/proof | POST /api/billing/manual-payment (bill_id di body) | CHANGED — path |
 | API-023 | PUT /api/billing/:id/verify | POST /api/billing/verify-manual-payment | CHANGED — method + path |
@@ -1125,7 +1125,7 @@
 | API-046 | GET /api/content/articles | GET /api/content/articles | ✅ MATCH |
 | API-047 | POST /api/landing/contact | POST /api/landing/contact-form | CHANGED — path |
 | API-048 | GET /api/billing/fee-config | GET /api/billing/payment-fees (publik!) | CHANGED — path + auth |
-| API-049 | PUT /api/billing/fee-config (Bendahara) | PUT /api/billing/payment-fees (Pengawas/Ketua/Bendahara) | CHANGED — path + role (BLK-007) |
+| API-049 | PUT /api/billing/fee-config (Bendahara) | PUT /api/billing/payment-fees (Pengawas/Ketua/Bendahara) | CHANGED — path + role → RESOLVED (DEC-006: role diselaraskan; path tetap di §4) |
 | API-050 | GET /api/files/:filename | GET /api/files/*filePath | ✅ MATCH* (wildcard + auth + traversal guard) |
 
 **Ringkasan:** ✅ MATCH = 10 (API-002, 009, 019, 030, 031, 037, 038, 044, 046, 050) · CHANGED = 37 · MISSING = 3 (API-008, API-011, API-014).
@@ -1152,7 +1152,7 @@
 | --- | --- | --- | --- |
 | REC-1 | Frontend (admin & public) sudah memakai endpoint **aktual** (mis. `UBilling` → `/billing/list/pending`, `/billing/manual-payment`, `/billing/cooperative-banks`) — bukan endpoint spec v1 | Kontrak v1 tidak pernah dipakai frontend; spec dan realita harus disatukan | §4 dijadikan inventaris resmi; rewrite detail §3 → **TASK-008** (discovered work NEW-001) |
 | REC-2 | ~~Backend masih memiliki DOKU & Midtrans aktif~~ **RESOLVED 2026-11-22 (BLK-006)** — endpoint `POST /api/billing/sync-status` + controller `syncMidtransStatus` dihapus; `POST /api/billing/process-payment` dipertahankan (masih dipakai kedua frontend) tapi dibersihkan: controller rename `createDokuTransaction.js` → `createPaymentBill.js`, `payment_type: "doku"` → `"transfer_manual"`, metadata DOKU dihapus; model `MidtransDisbursement` + associations + `generateDokuSnapKeys.js` dihapus | — | Selesai — lihat `10_DEV_LOG.md` BLK-006 |
-| REC-3 | Role divergence: spec v1 "Bendahara only" untuk config simpanan & fee-config, aktual "Pengawas/Ketua/Bendahara"; disburse simpanan aktual "Ketua/Bendahara/Pengawas" | Spec lebih ketat dari implementasi — perlu keputusan owner | **BLK-007** — Product menentukan: perketat implementasi atau longgarkan spec (keduanya butuh perubahan + audit trail) |
+| REC-3 | ~~Role divergence: spec v1 "Bendahara only" untuk config simpanan & fee-config, aktual "Pengawas/Ketua/Bendahara"; disburse simpanan aktual "Ketua/Bendahara/Pengawas"~~ **RESOLVED 2026-11-22 (BLK-007 / DEC-006)** — spec **dilonggarkan** mengikuti implementasi: konfigurasi keuangan (simpanan & fee) = Ketua/Bendahara/Pengawas; disburse simpanan tetap Ketua/Bendahara/Pengawas. Tanpa perubahan kode; risiko SoD diterima tertulis (mitigasi: audit log) | — | Selesai — lihat `10_DEV_LOG.md` BLK-007 |
 | REC-4 | ~~`GET /api/notifikasi/list` & `POST /api/notifikasi/update-status` tanpa `MidAnggota`~~ **RESOLVED 2026-11-22 (BLK-008)** — route ternyata sudah pakai `MidAnggota` (`router.use`), tapi audit lanjutan menemukan **IDOR**: `getNotificationList` menerima `req.query.member_id` & `pushController` menerima `member_id` dari body → siapa pun login bisa baca/tandai notifikasi member lain & subscribe/test-push ke member lain. Diperbaiki: query/body `member_id` dihapus, identity hanya dari `req.userId`; `pushRoutes` `/subscribe` & `/test-push` ditambah `MidAnggota` | — | Selesai — lihat `10_DEV_LOG.md` BLK-008 |
 | REC-5 | Modul ganda: simpanan (`/api/simpanan` + `/api/savings`) dan pembiayaan (`/api/financing` + `/api/financial` + `/api/jualbeli`) | Duplikasi logika & risiko divergensi perhitungan | Catat untuk triase: konsolidasi pasca-TASK-008 (arsitektur, bukan blocker) |
 | REC-6 | `GET /api/billing/payment-fees` publik (tanpa auth) | Nominal biaya admin bukan rahasia, tapi konsistensi auth | Terima (data konfigurasi publik) — catat di TASK-008 |
