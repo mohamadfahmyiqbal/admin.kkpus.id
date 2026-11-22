@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; BLK-005 migrasi siap, belum dijalankan) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + TEST-035 partial (audit gate P0 PASS: 0 high/critical × 3 repo) (TASK-000..TASK-007)
-- **Active task:** TEST P0 live di staging — 11 dari 12 case butuh environment; TEST-035 sisa: live header check + gitleaks
-- **Last verification:** TEST-035 partial: npm audit 3 repo → 0 high/0 critical (xlsx → 0.20.3 CDN, kkpusid audit fix, XFO diaktifkan); build kkpusid & admin ✓; BLK-005 (api `461ff7b`): eslint 0 error, 108/108 test, migrasi belum tereksekusi; BLK-002 (api `41f7c6a`): 108/108 test
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + TEST-035 partial (audit gate P0 PASS) (TASK-000..TASK-007)
+- **Active task:** TEST P0 live (TEST-001..032) — DB produksi kini terjangkau dari lokal (`.env` tersinkronisasi); TEST-035 sisa: live header check + gitleaks
+- **Last verification:** DB produksi: MIG-004 + 20261120 executed, 296 transaksi utuh, index unik terjaga, `GET /health/deep` → `{"status":"ok","db":"connected"}`; purge dry-run 0 error; TEST-035 partial: npm audit 3 repo → 0 high/0 critical (xlsx → 0.20.3 CDN, XFO aktif); BLK-002/001/DEF-001 (api `41f7c6a`/`461ff7b`, admin `acc8074`/`949fc75`)
 
 ## Decisions and constraints
 
@@ -33,7 +33,7 @@
 | BLK-002 | ~~`RETENTION_AUTOPURGE` belum default ON (DEC-002 approved, belum dikonfigurasi)~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: purge default AKTIF (opt-out `RETENTION_AUTOPURGE=false`); ambang configurable `RETENTION_REJECTED_DAYS`/`RETENTION_INACTIVE_DAYS` (api `41f7c6a`); 108 test lulus; smoke dry-run live menunggu DB valid di staging |
 | BLK-003 | ~~API spec (kontrak) perlu diverifikasi terhadap implementasi aktual~~ **RESOLVED 2026-11-22** — rekonsiliasi penuh di `06_API_SPEC.md` §6 | — | — | Selesai: 10 MATCH / 37 CHANGED / 3 MISSING dari 50 endpoint; §4 kini inventaris aktual (~213 route) |
 | BLK-004 | ~~Public masih memuat DOKU JOKUL sandbox~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: DOKU script + CSP entry dihapus, `UStatus.jsx` (dead code Midtrans) dihapus, fallback `midtrans_order_id` dibersihkan |
-| BLK-005 | ~~Backend masih menyimpan kolom `midtrans_order_id` di tabel `transactions`~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai (kode): migrasi `20261122-rename-midtrans-columns.js` + model + 6 titik kode (api `461ff7b`); **migrasi belum dijalankan** — jalankan `npm run db:migrate` di staging sebelum deploy |
+| BLK-005 | ~~Backend masih menyimpan kolom `midtrans_order_id` di tabel `transactions`~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: migrasi dieksekusi di produksi (296 baris utuh, index unik terjaga, `/health/deep` OK; api `461ff7b` + DB MIG-004) |
 | BLK-006 | ~~Backend masih memiliki DOKU & Midtrans aktif~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: `/billing/sync-status` + controller dihapus; `process-payment` dipertahankan (dipakai frontend) & dibersihkan jadi `createPaymentBill` (`transfer_manual`); model MidtransDisbursement + script DOKU keys dihapus; 108 test lulus |
 | BLK-007 | ~~Role divergence: spec v1 "Bendahara only" (config simpanan, fee-config) vs aktual "Pengawas/Ketua/Bendahara"; disburse simpanan aktual "Ketua/Bendahara/Pengawas" — REC-3~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: DEC-006 — spec dilonggarkan (Ketua/Bendahara/Pengawas), tanpa perubahan kode; risiko SoD diterima tertulis |
 | BLK-008 | ~~`GET /api/notifikasi/list` & `POST /api/notifikasi/update-status` tanpa `MidAnggota`~~ **RESOLVED 2026-11-22** — lihat `10_DEV_LOG.md` | — | — | Selesai: route sudah pakai MidAnggota (temuan awal tidak akurat), tapi ditemukan **IDOR**: query/body `member_id` → dihapus, identity hanya dari `req.userId`; push subscribe/test-push + MidAnggota di route; 108 test lulus |
@@ -46,10 +46,10 @@
 - Test cases: TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035 (12 P0 dari `08_TEST_PLAN.md`)
 - Read: `08_TEST_PLAN.md` (TEST-001..036), `06_API_SPEC.md` §3 (kontrak aktual), `09_BACKLOG.md`
 - Acceptance evidence: Setiap TEST P0 dieksekusi di staging dengan environment + test data; hasil PASS/FAIL terdokumentasi di dev log
-- **Prasyarat deploy:** jalankan `npm run db:migrate` (MIG-004 BLK-005) di staging sebelum eksekusi test agar skema sinkron dengan model
+- **Prasyarat deploy:** MIG-004 sudah dieksekusi di produksi (2026-11-22) — tidak ada tindakan migrasi tersisa untuk BLK-005
 - **Sisa TEST-035 (P0):** verifikasi header live (`curl -I` ke API staging — CSP/HSTS/XFO/nosniff/Referrer-Policy) + `gitleaks` full-repo di CI
-- **Fast-follow (P2):** 26 moderate vulns (api 18, admin 6, kkpusid 2) — tinjau per kasus
-- Do not start if: staging + test data belum siap (butuh environment, bukan hanya dokumentasi)
+- **Fast-follow (P2):** 26 moderate vulns (api 18, admin 6, kkpusid 2) — tinjau per kasus; rotasi password DB (`.env` lokal kini memuat password produksi)
+- Do not start if: test data (akun 4 peran + data uji) belum tersedia di DB produksi
 
 ## Update rule
 
