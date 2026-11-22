@@ -15,7 +15,7 @@
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
 - **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** + **TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010): 29/29 PASS + DEF-011/012 fixed** + **TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029): 34/34 PASS + DEF-013/014 fixed** + **TASK-013: TEST P2 (TEST-019/021/022/025/026/028/031/033): 29/29 PASS + DEF-015 fixed** + **DEF-016: frontend bundle size (kkpusid 281 kB, admin 125 kB gzip)** + **TASK-015: TEST-030 PWA offline PASS + DEF-017 (frontend config error fixed)** + **TASK-016: TEST-036 keyboard audit + DEF-018 fixed** + **TASK-017: follow-up keamanan — DEF-019 (Web Push re-subscribe), SEC-001 (react-router CVE-2025-68470), SEC-002 (firebase-admin removal + vuln triage), passwordValidator unit test 100%** (TASK-000..TASK-017)
-- **Active task:** — (TASK-017 selesai; semua follow-up keamanan tuntas kecuali rotasi password DB produksi yang butuh akses SSH VPS) — rekomendasi berikutnya: koordinasi rotasi DB password / walkthrough keyboard-only manual
+- **Active task:** — (TASK-017 selesai; semua follow-up keamanan tuntas; rotasi/pengganti akun DB produksi **selesai 2026-11-22**) — rekomendasi berikutnya: walkthrough keyboard-only manual (TEST-036) / Lighthouse dashboard admin authenticated
 - **Last verification:** DEF-016 frontend bundle 2026-11-22 (kkpusid `c4421f6`, belum push): initial JS kkpusid 281 kB gzip (was 567), admin 125 kB gzip (build `vite build`); eslint 0 error. TASK-013 TEST P2 2026-11-22 (api `aea42be`): 29/29 check PASS; eslint 0 error; npm test 108/108; data uji 0 sisa; `/health/deep` 200. TEST P0 57/57 (api `4e7b8f4`); detail `08_TEST_PLAN.md` §4.1–4.5 & `10_DEV_LOG.md` (DEF-002..016)
 
 ## Decisions and constraints
@@ -44,7 +44,7 @@
 
 - **TEST-036 walkthrough keyboard-only penuh:** di browser nyata — urutan tab, focus trap modal, focus kembali ke trigger setelah modal tutup, indikator fokus terlihat (butuh manual)
 - **Lighthouse dashboard admin authenticated:** butuh inject auth token (localStorage) — opsional
-- **Rotasi password DB produksi:** butuh akses SSH VPS (update `.env` + restart API) + koordinasi — **belum dikerjakan** (user `admin` mungkin shared; maintenance window perlu dijadwalkan)
+- **Rotasi / pengganti akun DB produksi:** **selesai (2026-11-22)** — akun baru `koperasi_app` (`ALL PRIVILEGES ON koperasi.*`, localhost+`%`) dibuat; `.env` produksi (`/var/www/api.kkpus.id/.env`) di-switch dari `admin` → `koperasi_app` + pm2 restart; `/health/deep`=`db:connected`, `/api/landing/stats`=200 (110 anggota). Akun lama `admin` **dibiarkan utuh** (password lama tetap, untuk verifikasi user). Backup `.env` tersimpan di server (`.env.bak-20261122-155121`, `.env.bak-sed`, `.env.bak-vapid-20261122`). **Catatan**: `admin@%` masih aktif dgn password lama — nonaktifkan setelah user konfirmasi akun baru stabil
 
 **Follow-up keamanan (sudah dikerjakan / accepted-risk):**
 - ✅ DEF-019 Web Push re-subscribe pasca VAPID — kkpusid `4080ec6`
@@ -52,7 +52,7 @@
 - ✅ SEC-002 firebase-admin removal + vuln triage — api `9679255` (18→8 moderate)
 - ✅ passwordValidator unit test — api `d7cad01` (coverage 100%)
 - ⏳ Sisa 8 moderate vulns — accepted-risk (uuid tak exploitable; exceljs/sequelize-cli fix butuh breaking downgrade; devDeps tak deployed)
-- ⏳ Rotasi password DB produksi — **butuh koordinasi SSH VPS** (blokir: tak ada akses SSH di sesi ini)
+- ✅ Pengganti akun DB produksi — **selesai (2026-11-22)**: `koperasi_app` baru dibuat + `.env` `/var/www` di-switch + pm2 restart; health `db:connected` + `/api/landing/stats` 200; akun lama `admin` tetap (untuk verifikasi)
 - ⏳ Purge history git kkpusid — **selesai (2026-11-22)**: git filter-repo `--refs rollback/2026-11-02 --invert-paths` hapus `.env` + `*.key`/`*.pem`/`*.crt` + scrub literal `VAPID_PRIVATE_KEY="4ILP2lUNf..."` → `[REDACTED]`. Branch `rollback/2026-11-02` di-rewrite (`c10712c`→`94ec5ca`), force-push ke origin. Verifikasi: `.env`=0, VAPID key literal=0, cert=0 di remote history. Backup lokal `backup-rollback-pre-purge`. **Catatan**: collaborator lain perlu re-clone/rebase. Branch lain (main, feat/cicd-setup, nkkpusid) masih punya history lama (tidak di-purge)
 - ⏳ Frontend re-subscribe Web Push — **sudah selesai** (DEF-019 di atas)
 

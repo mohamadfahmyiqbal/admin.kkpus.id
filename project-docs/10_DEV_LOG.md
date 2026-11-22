@@ -11,6 +11,43 @@
 
 ---
 
+## [2026-11-22] — Rotasi/pengganti akun DB produksi (SEC-004, via SSH VPS)
+
+### Outcome
+
+Mengganti kredensial DB produksi dengan membuat akun baru **`koperasi_app`** (tanpa mengubah akun lama `admin`), lalu switch `.env` API & restart. **Zero data issue** — API tetap `db:connected` & endpoint publik query DB normal.
+
+### Requirements and decisions
+
+- **Requirement:** Follow-up keamanan — rotasi/pengganti akun DB (akun `admin` lemah & mungkin shared). User minta: buat akun baru, akun lama biarkan (password sama) untuk verifikasi.
+- **Decisions / tradeoffs:**
+  - **Tidak mengubah** akun lama `admin` (per instruksi user) — password `admin` dibiarkan utuh agar user bisa verifikasi sendiri. **Risiko**: `admin@%` masih aktif; nonaktifkan setelah user konfirmasi.
+  - Akses MySQL via **socket localhost** di VPS (MySQL lokal = `202.52.147.193` = IP VPS kkpus.id). Konek publik ditolak (grant host `localhost`/`%`).
+  - Ada **dua `.env` berbeda**: `/var/www/api.kkpus.id/.env` (dipakai app, `admin`+`eGXTQ...`) vs `/home/kkpusid/projects/api.kkpus.id/.env` (stale, `qwerty123!!`). App jalan dari `/var/www` (cwd via pm2). Hanya `/var/www/.env` yang di-switch.
+  - Akun baru diberi **dua host** (`localhost` + `%`) dgn password sama, agar match apa pun cara API konek.
+  - pm2 CLI tak di PATH → pakai path langsung `/home/kkpusid/.local/lib/node_modules/pm2/bin/pm2`. App pm2 bernama `app`.
+
+### Implementation impact
+
+- **Files:** `/var/www/api.kkpus.id/.env` (server) — `DB_USER=admin`→`koperasi_app`, `DB_PASSWORD=eGXTQ...`→`K0p3rasi_App_2026!Secure`. Backup `.env.bak-20261122-155121`, `.env.bak-sed`, `.env.bak-vapid-20261122` tersimpan.
+- **Database:** User `koperasi_app` (`localhost`+`%`), `GRANT ALL PRIVILEGES ON koperasi.*`.
+- **API / UI:** PM2 restart `app` (pid 1407595→1410660, uptime reset). Tak ada perubahan kontrak API.
+
+### Verification
+
+- MySQL: `koperasi_app` via TCP `202.52.147.193` → `tables=108`; via socket → `members=10` ✅
+- `/health/deep` → `{"status":"ok","db":"connected"}` ✅
+- `/api/landing/stats` → 200 `{"active_members":110,"financed_businesses":26}` (bukti API baca DB via akun baru) ✅
+- pm2 log: tak ada `ECONNREFUSED`/`Access denied` (hanya CORS error lama tak terkait) ✅
+- Akun lama `admin` tetap ada (`admin@%`, `admin@localhost`) — tidak diubah ✅
+
+### Risks and follow-up
+
+- **Known issues:** Password baru `K0p3rasi_App_2026!Secure` kini di `.env` server (chmod 600). Akun lama `admin@%` masih aktif dgn password lemah — **rekomendasi**: nonaktifkan (`DROP USER` / `ALTER USER ... LOCK`) setelah user konfirmasi akun baru stabil. `.env` stale di `/home/kkpusid/projects/api.kkpus.id/.env` belum di-update (tidak dipakai app; bisa dihapus).
+- **Next recommended task:** (1) User verifikasi & nonaktifkan `admin`, (2) Walkthrough keyboard-only manual (TEST-036 sisa) / Lighthouse dashboard admin authenticated.
+
+---
+
 ## [2026-11-22] — Purge git history kkpusid (VAPID_PRIVATE_KEY + dev cert)
 
 ### Outcome
