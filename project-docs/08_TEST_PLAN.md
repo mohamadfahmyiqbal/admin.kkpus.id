@@ -219,6 +219,36 @@ Diuji via **Chrome headless + CDP** (`Network.emulateNetworkConditions offline=t
 
 **Belum diuji (manual/staging):** TEST-036 (keyboard accessibility), Lighthouse kkpus.id pasca-fix, dashboard admin authenticated Lighthouse.
 
+### 4.7 Hasil eksekusi P2 — TEST-036 keyboard accessibility (frontend, 2026-11-22)
+
+Audit kode keyboard & fokus di kedua frontend (`kkpusid` + `admin`), plus Lighthouse kkpus.id pasca-fix DEF-017.
+
+**Lighthouse kkpus.id pasca-fix (desktop, 2026-11-22):** Perf 97 · A11y 96 · Best Practices 100 · LCP 1.2 s · FCP 0.7 s · TBT 30 ms — semua lulus (LCP < 2.5 s, a11y ≥ 90).
+
+**Audit keyboard — temuan positif (sudah accessible):**
+
+| Komponen | Status |
+| --- | --- |
+| Skip-link ("Lewati ke konten utama" → `#main-content`) | ✅ |
+| Keyboard shortcuts (`useKeyboardShortcuts`: Ctrl+B sidebar, Ctrl+H dashboard, dll) | ✅ |
+| Dropdown (User/Notification) — Escape menutup | ✅ |
+| `GlobalSearch` — focus input on open, ArrowUp/Down, Enter, Escape | ✅ |
+| Modal (Notification/Detail) — react-bootstrap `Modal` (focus trap, aria-modal, Escape, focus restore) | ✅ |
+| `div/span/li onClick` tanpa keyboard handler | 0 (bersih) |
+| Input checkbox/radio — `<label htmlFor>` asosiasi | ✅ |
+| Indikator fokus CSS (`:focus-visible`, `.focus-ring`) | ✅ |
+
+**Defect ditemukan & diperbaiki (DEF-018 — keyboard a11y):**
+
+| Lokasi | Masalah | Fix |
+| --- | --- | --- |
+| kkpusid `FileUploadField.jsx` | Div pemicu upload (`onClick` → file input click) tanpa `tabIndex`/`role`/`onKeyDown` → keyboard user tak bisa buka file picker | Tambah `role=button`, `tabIndex=0`, handler Enter/Space, `aria-label` (commit `a930df8`) |
+| admin `ApprovalPlaceholder.jsx` | Div status approval (`onClick` → detail) tanpa keyboard | Tambah `role=button`, `tabIndex=0`, Enter/Space, `aria-label` (commit `227e0f9`) |
+
+**Deploy:** CI/CD kkpusid (run `44995946235`) & admin (run `44995946130`) ✅ — frontend live & sehat.
+
+**Belum diuji (manual/staging):** Walkthrough keyboard-only penuh di browser nyata (fokus: urutan tab, focus trap modal, focus kembali ke trigger setelah modal tutup,indikator fokus terlihat) — perlu manual. Lighthouse dashboard admin authenticated (butuh inject token).
+
 ## 5. Regression and release checks
 
 - [ ] `npm run lint` dan `npm run build` lulus di `admin.kkpus.id`, `kkpusid`, dan `api.kkpus.id`.

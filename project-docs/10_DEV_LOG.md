@@ -11,6 +11,39 @@
 
 ---
 
+## [2026-11-22] — TEST-036 keyboard accessibility + DEF-018
+
+### Outcome
+
+Audit keyboard & fokus di `kkpusid` + `admin` (TEST-036). Sebagian besar sudah accessible (skip-link, keyboard shortcuts, dropdown Escape, GlobalSearch arrow/enter/escape, modal react-bootstrap focus-trap, `<label htmlFor>`, 0 div onClick tanpa keyboard). **Ditemukan DEF-018:** `FileUploadField` (kkpusid) & `ApprovalPlaceholder` (admin) pakai `<div onClick>` tanpa `tabIndex`/`role`/`onKeyDown` → keyboard user tak bisa picu aksi. **Diperbaiki & deployed.** Lighthouse kkpus.id pasca-fix DEF-017: Perf 97 · A11y 96 · BP 100 · LCP 1.2 s (semua lulus).
+
+### Requirements and decisions
+
+- **Requirements implemented:** TEST-036 (keyboard accessibility — WCAG 2.1.1 Keyboard, 2.4.7 Focus Visible, 4.1.2 Name/Role/Value), TSD §6
+- **Decisions / tradeoffs:** Fix minimal (tambah role/tabIndex/onKeyDown/aria-label) tanpa refactor — menjaga konsistensi dengan pola yang sudah ada.
+
+### Implementation impact
+
+- **Added:** — (audit + fix pada komponen eksisting)
+- **Modified:** `kkpusid/src/pages/program/pinjaman/components/FileUploadField.jsx` (commit `a930df8`), `admin.kkpus.id/src/components/ui/ApprovalPlaceholder.jsx` (commit `227e0f9`)
+- **Database:** None
+- **API:** None
+- **UI:** Zone upload & status approval kini bisa diakses keyboard (fokus + Enter/Space)
+
+### Verification
+
+- Lint (kkpusid & admin) 0 error; build sukses keduanya
+- CI/CD kkpusid (run `44995946235`) ✅ + admin (run `44995946130`) ✅
+- Lighthouse kkpus.id pasca-fix: Perf 97 · A11y 96 · LCP 1.2 s
+- Frontend live: kkpus.id 200, admin 200, api 200
+
+### Risks and follow-up
+
+- **Known issues:** Walkthrough keyboard-only penuh di browser nyata belum dilakukan (butuh manual — urutan tab, focus trap modal, focus kembali ke trigger, indikator fokus); Lighthouse dashboard admin authenticated belum (butuh token)
+- **Next recommended task:** Selesaikan walkthrough keyboard-only manual (TEST-036 sisa) atau lanjut follow-up keamanan (rotasi DB password, unit test passwordValidator)
+
+---
+
 ## [2026-11-22] — TEST-030 PWA offline + DEF-017 config error frontend (kkpus.id)
 
 ### Outcome
