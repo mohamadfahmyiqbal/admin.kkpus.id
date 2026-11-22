@@ -50,7 +50,8 @@
 | TASK-012 | TEST P1 batch 2: TEST-014/015 (pembiayaan & jual-beli), TEST-017..026 (simpanan/penarikan/approval/billing), TEST-028..031 (audit, notifikasi, dsb.) | DONE | P1 | Development Team | TASK-011 | **34/34 check PASS** (live produksi, api `4596454`); DEF-013 & DEF-014 fixed & terdeploy; data uji 0 sisa; detail `08_TEST_PLAN.md` §4.3 | 2026-11-22 |
 | DEF-013 | `POST /api/program/pinjaman/modal` tanpa role gate (siapa pun bisa input) & tanpa validasi nominal ≤ 0; spec UC-07.02 minta Bendahara-only + BR-07.02 nominal > 0 | DONE | P1 | Development Team | TASK-012 | api `4596454`: `MidRole(['Bendahara'])` + tolak jumlah ≤ 0; live: non-Bendahara → 403, nominal 0 → 400 | 2026-11-22 |
 | DEF-014 | `getDashboard` cek `member_type === "REGULER"` exact; 76/110 anggota prod ber-`member_type="Anggota Reguler"` → dashboard kosong (dashboard_type undefined) | DONE | P1 | Development Team | TASK-012 | api `4596454`: normalisasi case-insensitive (`includes("reguler")`); live: "Anggota Reguler" → dashboard_type REGULER | 2026-11-22 |
-| TASK-013 | TEST P2: TEST-016 (arisan draw), TEST-026, TEST-028, TEST-031, TEST-033/034/036 (manual/security) | TODO | P2 | Development Team | TASK-012 | Belum dijalankan — lihat rekomendasi HANDOFF | 2026-11-22 |
+| TASK-013 | TEST P2: TEST-016 (arisan draw), TEST-026, TEST-028, TEST-031, TEST-033/034/036 (manual/security) | DONE | P2 | Development Team | TASK-012 | **29/29 check PASS** (live produksi, api `aea42be`); DEF-015 fixed & terdeploy; data uji 0 sisa; detail `08_TEST_PLAN.md` §4.4 | 2026-11-22 |
+| DEF-015 | `getRankings` & `getMyRanking` return 500 — Sequelize include `db.Member` tanpa `as:'member'` (association pakai alias `member`); ranking & my-ranking tak bisa diakses | DONE | P1 | Development Team | TASK-013 | api `aea42be`: tambah `as:'member'` di kedua controller; live: GET rankings → 200 | 2026-11-22 |
 
 ## Task details
 

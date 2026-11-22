@@ -11,6 +11,41 @@
 
 ---
 
+## [2026-11-22] — TASK-013: TEST P2 (TEST-019/021/022/025/026/028/031/033) + DEF-015
+
+### Outcome
+
+TEST P2 dieksekusi live di produksi (`api.kkpus.id`) dengan data uji mandiri (`uji.*@kkpus-test.id`). **29/29 check PASS** setelah 1 defect P1 diperbaiki. Cakupan: TEST-019 (tabungan penarikan + approval chain), TEST-021 (pendanaan syariah), TEST-022 (training & evaluasi + ranking), TEST-025 (ekspor Excel), TEST-026 (impor Excel + template), TEST-028 (landing & kontak), TEST-031 (Socket.IO connectivity), TEST-033 (performa API smoke). Data uji produksi 0 sisa.
+
+### Requirements and decisions
+
+- **Requirements implemented:** PRD-013/015/016/019/023, API-036..039, API-045..049, BR-08.04 (training scoring), ISO 27001 A.8.15
+- **Decisions / tradeoffs:** TEST-031 full 2-sesi E2E tidak dijalankan via API runner (perlu 2 socket client simultan); TEST-033 full load test tidak dijalankan (perlu staging + k6/JMeter) — hanya smoke test live; TEST-030/034/036 manual/staging (tidak dijalankan)
+
+### Implementation impact
+
+- **Added:** —
+- **Modified:**
+  - `controllers/training/getRankings.js` (DEF-015: tambah `as:'member'` di include `getRankings` & `getMyRanking` — Sequelize association `db.Ranking.belongsTo(db.Member, { as: 'member' })` butuh alias eksplisit)
+- **Database:** None (data uji dibuat & dibersihkan; 0 sisa)
+- **API:** Tanpa breaking change; GET `/api/training/rankings` & `/api/training/my-ranking` kini 200 (sebelumnya 500)
+- **UI:** None
+
+### Verification
+
+- `npx eslint` pada file berubah — 0 error
+- `npm test` (api) — **108/108 PASS** setelah fix
+- TEST P2 live runner — **29/29 PASS** (TEST-019: 5, TEST-021: 3, TEST-022: 5, TEST-025: 3, TEST-026: 3, TEST-028: 6, TEST-031: 2, TEST-033: 2)
+- Data uji produksi bersih: 0 members/evaluations/rankings/savings_withdrawals/member_saving_targets/contact_forms uji
+- `/health/deep` → 200
+
+### Risks and follow-up
+
+- **Known issues:** (1) TEST-019 INSUFFICIENT_BALANCE tidak ada kode error literal (impl 400 + pesan teks); (2) TEST-022/028 VALIDATION_ERROR tidak ada kode (impl 400 + pesan teks); (3) TEST-031 full E2E perlu manual; (4) TEST-033 p95=414ms di 20 concurrent — observasi performa (single instance); (5) TEST-030/034/036 belum dijalankan (manual/staging)
+- **Next recommended task:** — (seluruh P0, P1, P2 API-testable selesai; sisa TEST-030/034/036 manual/staging)
+
+---
+
 ## [2026-11-22] — TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029) + DEF-013/014
 
 ### Outcome

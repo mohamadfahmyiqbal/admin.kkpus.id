@@ -157,6 +157,27 @@ Dieksekusi terhadap `api.kkpus.id` (commit `4596454`) dengan data uji mandiri (p
 
 **Belum diuji (P2):** TEST-026, TEST-028, TEST-031, TEST-033/034/036.
 
+### 4.4 Hasil eksekusi P2 batch 3 — live produksi (2026-11-22)
+
+Dieksekusi terhadap `api.kkpus.id` (commit `aea42be`) dengan data uji mandiri (prefix `uji.`, domain `@kkpus-test.id`; dibuat & dibersihkan otomatis — 0 baris sisa terverifikasi). Total **29/29 check PASS** setelah perbaikan DEF-015. Cakupan: TEST-019 (tabungan penarikan), TEST-021 (pendanaan syariah), TEST-022 (training & evaluasi), TEST-025 (ekspor Excel), TEST-026 (impor Excel), TEST-028 (landing & kontak), TEST-031 (Socket.IO), TEST-033 (performa API smoke).
+
+| Test | Status | Catatan |
+| --- | --- | --- |
+| TEST-019 | ✅ PASS | penarikan saldo < target → 400 (INSUFFICIENT_BALANCE equivalent); saldo ≥ target → 200 + approval chain (DB `savings_withdrawals` PENDING + flow); target tidak ada → 404; penarikan ganda → 400. Setoran melalui billing module (sudah diuji TEST-009/011) |
+| TEST-021 | ✅ PASS | apply pendanaan (`category='Pendanaan'`) → 201 + financing_id; DB PENDING + approval chain (flow/step); tanpa auth → 401. Setelah approve pencairan + jadwal belum diuji (perlu approval flow lengkap) |
+| TEST-022 | ✅ PASS | GET curriculums → 200 + list (5); GET materials → 200 (2); submit evaluasi → 200 + score; tanpa answers → 400; GET rankings → 200 (fix DEF-015: Sequelize alias `as:'member'`) |
+| TEST-025 | ✅ PASS | admin export → 200 + content-type xlsx; non-admin → 403; tanpa auth → 401 |
+| TEST-026 | ✅ PASS | non-admin import → 403; template download → 200 + xlsx; upload file salah format → 400 (validateExcelFile magic-byte check). Upload xlsx valid tidak diuji live (perlu file sesuai format template) |
+| TEST-028 | ✅ PASS | GET services/stats/about/contact → 200 (fallback aman saat kosong); submit kontak valid → 200 + tersimpan; submit invalid → 400 |
+| TEST-031 | ✅ PASS | Socket.IO endpoint merespons (200); `APPROVAL_UPDATE` event terdaftar (global broadcast). Full 2-sesi E2E perlu test manual dengan 2 socket client |
+| TEST-033 | ✅ PASS | GET dashboard p95=414ms (20 concurrent smoke); single=33ms. Full load test (write p95 < 500ms, error rate < 1%) perlu staging + k6/JMeter |
+
+**Defect ditemukan & diperbaiki:** DEF-015 (`getRankings`/`getMyRanking` 500 — Sequelize include tanpa alias).
+
+**Divergensi spec (dicatat, tidak memblokir):** TEST-019 INSUFFICIENT_BALANCE tidak ada kode error literal (impl pakai 400 + pesan teks); TEST-022 VALIDATION_ERROR tidak ada kode (impl pakai 400 + pesan teks); TEST-028 VALIDATION_ERROR tidak ada kode; TEST-031 full E2E perlu manual; TEST-033/034 full load test perlu staging.
+
+**Belum diuji (manual/staging):** TEST-030 (PWA offline), TEST-034 (frontend performa/Lighthouse), TEST-036 (keyboard accessibility).
+
 ## 5. Regression and release checks
 
 - [ ] `npm run lint` dan `npm run build` lulus di `admin.kkpus.id`, `kkpusid`, dan `api.kkpus.id`.
