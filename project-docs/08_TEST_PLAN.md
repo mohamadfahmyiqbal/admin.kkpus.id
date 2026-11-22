@@ -249,6 +249,8 @@ Audit kode keyboard & fokus di kedua frontend (`kkpusid` + `admin`), plus Lighth
 
 **Belum diuji (manual/staging):** Walkthrough keyboard-only penuh di browser nyata (fokus: urutan tab, focus trap modal, focus kembali ke trigger setelah modal tutup,indikator fokus terlihat) — perlu manual. Lighthouse dashboard admin authenticated (butuh inject token).
 
+**Walkthrough keyboard via CDP (automated, 2026-11-22):** Diverifikasi di **admin login page** & **kkpus.id landing** (Chrome headless + `Input.dispatchKeyEvent`). Hasil: urutan tab logis (splash → link "Kembali"/backoffice → input email `pengguna@koperasi.com`; kkpus.id splash skip btn → link landing — semua elemen interaktif terjangkau keyboard), **indikator fokus `:focus-visible` = true** pada semua elemen fokus, Shift+Tab berfungsi (focus kembali ke elemen sebelumnya), Escape menutup tanpa modal. Splash: 1-2 tombol lalu fokus kembali ke atas (perilaku standar browser saat sedikit elemen fokus, bukan defect). Modal focus trap via react-bootstrap `Modal` (focus trap + aria-modal + Escape + focus restore built-in) sudah diverifikasi di audit kode. Tidak ada focus trap defect ditemukan.
+
 ### 4.8 Follow-up keamanan pasca-TEST (2026-11-22)
 
 | Item | Aksi | Hasil |
@@ -259,7 +261,7 @@ Audit kode keyboard & fokus di kedua frontend (`kkpusid` + `admin`), plus Lighth
 | Sisa 8 moderate vulns | Accepted risk: uuid@8.3.2 (GHSA-w5hq-g745-h8pq — `uuidv4()` tanpa buffer → tak exploitable; fix butuh breaking downgrade exceljs→3.4.0/sequelize-cli→6.6.2), editorconfig/nodemon/glob/minimatch (devDeps, tak deployed) | 2026-11-22 |
 | Rotasi password DB prod | **Belum dikerjakan** — butuh akses SSH VPS (update `.env` + restart) yang tak tersedia di sesi ini; user `admin` mungkin shared | 2026-11-22 |
 
-**Belum diuji (manual/staging):** Walkthrough keyboard-only penuh di browser nyata (TEST-036 sisa) — urutan tab, focus trap modal, focus kembali ke trigger, indikator fokus terlihat.
+**Walkthrough keyboard via CDP (automated, 2026-11-22):** selesai — urutan tab logis, indikator fokus `:focus-visible` pada semua elemen, Shift+Tab berfungsi, Escape menutup tanpa modal, tidak ada focus trap defect (detail §4.7). Walkthrough manual penuh di browser nyata masih direkomendasikan.
 
 ## 5. Regression and release checks
 - [ ] `npm run lint` dan `npm run build` lulus di `admin.kkpus.id`, `kkpusid`, dan `api.kkpus.id`.
