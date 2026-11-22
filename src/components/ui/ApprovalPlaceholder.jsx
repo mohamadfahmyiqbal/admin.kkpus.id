@@ -73,7 +73,20 @@ export const ApprovalPlaceholder = ({
   };
 
   return (
-    <div className="text-center" onClick={handleClick} style={{ cursor: "pointer" }}>
+    <div
+      className="text-center"
+      role="button"
+      tabIndex={0}
+      aria-label="Lihat detail persetujuan"
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+      style={{ cursor: "pointer" }}
+    >
       <div
         className="mx-auto rounded-circle d-flex align-items-center justify-content-center position-relative"
         style={{
