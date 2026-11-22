@@ -97,6 +97,29 @@
 | TEST-035 | NFR — security scan (TSD §6) | CI staging | `npm audit --audit-level=high`; `gitleaks` pada repo; cek header (Helmet) | 0 high/critical CVE; 0 secret; CSP/HSTS/X-Frame-Options/nosniff/Referrer-Policy aktif | Security | P0 |
 | TEST-036 | NFR — aksesibilitas keyboard (TSD §6) | Staging | Walkthrough keyboard-only layar kritis (login, registrasi, approval, billing) | Semua elemen interaktif terjangkau keyboard; focus-visible jelas; modal focus trap; Esc menutup | Manual | P1 |
 
+### 4.1 Hasil eksekusi P0 — live produksi (2026-11-22)
+
+Dieksekusi terhadap `api.kkpus.id` (branch `rollback/2026-11-02`, commit `4e7b8f4`) dengan data uji mandiri (prefix `uji.`, domain `@kkpus-test.id`; dibuat & dibersihkan otomatis — 0 baris sisa terverifikasi). Total **57/57 check PASS** setelah perbaikan DEF-002..DEF-010 (lihat `10_DEV_LOG.md`).
+
+| Test | Status | Catatan |
+| --- | --- | --- |
+| TEST-001 | ✅ PASS | 200 + JWT + cookie `auth_token` HttpOnly; logout → akses 401 |
+| TEST-003 | ✅ PASS | 201; registrasi PENDING + chain 3-tahap; duplikat email/NIK → 409 |
+| TEST-004 | ✅ PASS | 401×5 + `login_attempts` & `account_lockouts` tercatat (fix DEF-002); OTP spam → 429 |
+| TEST-007 | ✅ PASS | 403 role salah/self/maker-checker; 3-step → APPROVED; dobel approve → 409 `APPROVAL_ALREADY_COMPLETED` (fix DEF-004/008) |
+| TEST-009 | ✅ PASS | nominal > saldo → 400; pending ganda → 400 `PENDING_WITHDRAWAL_EXISTS` (guard baru); approve 3-step → READY_TO_PAY → saldo 1.000.000→950.000 |
+| TEST-011 | ✅ PASS | upload → PENDING_VERIFICATION → verify → PAID; nominal klien diabaikan, server recompute dari bill_item (aman) + validasi bill_id (fix DEF-005) |
+| TEST-012 | ✅ PASS | >5MB → 413; exe samaran → 400 (spec 422 — divergensi); tanpa auth → 401; path traversal → 400 |
+| TEST-013 | ✅ PASS | 201 + flow financing 3-step; DP negatif → ditolak |
+| TEST-016 | ✅ PASS | batch → aktivasi → draw tanpa angsuran lunas → 400 `INSTALLMENTS_UNPAID`; lunas → 200 + RNG kriptografis (fix DEF-006/BR-08.04) |
+| TEST-027 | ✅ PASS | NIK ter-mask utk anggota biasa, utuh utk pengurus (fix DEF-010); aksi destruktif → `activity_logs`; re-auth password wajib |
+| TEST-032 | ✅ PASS | approval konkuren: satu 200, lain 403; tidak ada double row |
+| TEST-035 | ✅ PASS | CSP/HSTS/XFO/nosniff/Referrer-Policy aktif; `Server: nginx` (versi disembunyikan, fix DEF-007); SCA: 0 high/critical |
+
+**Divergensi spec (dicatat, tidak memblokir):** lockout 429 vs spec 423; OTP rate-limit 5/15mnt vs spec 3/menit; magic-byte invalid 400 vs spec 422; sebagian endpoint sukses 200 (impl) vs 201 (spec).
+
+**Belum diuji (P1/P2):** TEST-002 (OTP E2E), TEST-005/006, TEST-008, TEST-010, TEST-014/015, TEST-017..026, TEST-028..031, TEST-033/034/036; gitleaks full-repo (sisa TEST-035).
+
 ## 5. Regression and release checks
 
 - [ ] `npm run lint` dan `npm run build` lulus di `admin.kkpus.id`, `kkpusid`, dan `api.kkpus.id`.

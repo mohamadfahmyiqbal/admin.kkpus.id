@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + TEST-035 partial (audit gate P0 PASS) (TASK-000..TASK-007)
-- **Active task:** TEST P0 live (TEST-001..032) — DB produksi kini terjangkau dari lokal (`.env` tersinkronisasi); TEST-035 sisa: live header check + gitleaks
-- **Last verification:** DB produksi: MIG-004 + 20261120 executed, 296 transaksi utuh, index unik terjaga, `GET /health/deep` → `{"status":"ok","db":"connected"}`; purge dry-run 0 error; TEST-035 partial: npm audit 3 repo → 0 high/0 critical (xlsx → 0.20.3 CDN, XFO aktif); BLK-002/001/DEF-001 (api `41f7c6a`/`461ff7b`, admin `acc8074`/`949fc75`)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** (TASK-000..TASK-007)
+- **Active task:** — (TEST P0 selesai) — rekomendasi berikutnya: TEST P1
+- **Last verification:** TEST P0 live 2026-11-22 (api `4e7b8f4`): 57/57 check PASS; eslint 0 error; npm test 108/108; data uji produksi 0 sisa; `/health/deep` 200; nginx `server_tokens off` aktif; detail di `08_TEST_PLAN.md` §4.1 & `10_DEV_LOG.md` (DEF-002..010)
 
 ## Decisions and constraints
 
@@ -40,14 +40,13 @@
 
 ## Next recommended task
 
-**Eksekusi TEST P0 di staging (P0)**
+**Eksekusi TEST P1 (P1)**
 
-- Why now: Seluruh dokumentasi, triase, & pembersihan dead code selesai (TASK-000..008, BLK-001..008, NEW-001, NEW-002, DEF-001). §3 kini = kontrak aktual — acuan eksekusi test siap.
-- Test cases: TEST-001, 003, 004, 007, 009, 011, 012, 013, 016, 027, 032, 035 (12 P0 dari `08_TEST_PLAN.md`)
-- Read: `08_TEST_PLAN.md` (TEST-001..036), `06_API_SPEC.md` §3 (kontrak aktual), `09_BACKLOG.md`
-- Acceptance evidence: Setiap TEST P0 dieksekusi di staging dengan environment + test data; hasil PASS/FAIL terdokumentasi di dev log
-- **Prasyarat deploy:** MIG-004 sudah dieksekusi di produksi (2026-11-22) — tidak ada tindakan migrasi tersisa untuk BLK-005
-- **Sisa TEST-035 (P0):** verifikasi header live (`curl -I` ke API staging — CSP/HSTS/XFO/nosniff/Referrer-Policy) + `gitleaks` full-repo di CI
+- Why now: TEST P0 live selesai 57/57 PASS (2026-11-22, api `4e7b8f4`); seluruh defect P0 (DEF-002..010) sudah diperbaiki & terdeploy.
+- Test cases: TEST-002 (OTP E2E), TEST-005 (assign role), TEST-006 (arsip/restore), TEST-008 (laporan simpanan), TEST-010 (termination), TEST-014/015, TEST-017..026, TEST-028..031 (lihat `08_TEST_PLAN.md`)
+- Read: `08_TEST_PLAN.md` §4.1 (hasil P0 + divergensi spec), `06_API_SPEC.md` §3 (kontrak aktual), `09_BACKLOG.md`
+- Acceptance evidence: Setiap TEST P1 dieksekusi dengan environment + test data; hasil PASS/FAIL + DEF baru terdokumentasi di dev log
+- **Sisa TEST-035 (P0):** `gitleaks` full-repo (CI) — header live sudah PASS; rotasi password DB produksi (`.env` lokal memuat password produksi)
 - **Fast-follow (P2):** 26 moderate vulns (api 18, admin 6, kkpusid 2) — tinjau per kasus; rotasi password DB (`.env` lokal kini memuat password produksi)
 - Do not start if: test data (akun 4 peran + data uji) belum tersedia di DB produksi
 

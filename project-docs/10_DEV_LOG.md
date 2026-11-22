@@ -11,6 +11,48 @@
 
 ---
 
+## [2026-11-22] — TEST P0 Live (TEST-001..032, 035) + DEF-002..010 (Fix Temuan)
+
+### Outcome
+
+TEST P0 dieksekusi live di produksi (`api.kkpus.id`) dengan data uji mandiri (prefix `uji.`, domain `@kkpus-test.id`, dibuat & dibersihkan otomatis). **57/57 check PASS** setelah 9 defect (DEF-002..DEF-010) diperbaiki. Semua data uji dihapus (0 baris tersisa: members/arisan/login_attempts). Divergensi spec dicatat (tidak memblokir): lockout 429 vs spec 423; dobel approve kini 409; magic-byte invalid 400 vs spec 422; OTP rate-limit 5/15mnt vs spec 3/menit; response shape 200 vs 201 pada beberapa endpoint.
+
+### Requirements and decisions
+
+- **Requirements implemented:** PRD-001..004, 007, 008, 019..022 (TEST-001..036 P0 subset), BR-08.04, ISO 27001 A.8.15 (audit), A.8.12 (masking PII)
+- **Decisions / tradeoffs:** Data uji dibuat sendiri (bukan data produksi); JWT mint lokal dengan `JWT_SECRET` server (via env, tidak ditulis ke disk) untuk menghindari rate-limit login 5/5mnt; restart pm2 dimanfaatkan mereset limiter in-memory
+
+### Implementation impact
+
+- **Added:** —
+- **Modified:**
+  - `services/authLoggingService.js` + `models/core/account_lockouts.js` (DEF-002: selaraskan ke skema aktual `email_or_phone`/`lockout_end`/`is_active`/`failed_attempts`; INSERT login_attempts yang sebelumnya gagal senyap kini tercatat)
+  - `models/content/forgotPasswordSession.js` + `migrations/20261122-widen-forgot-password-otp-code.js` (DEF-003: `otp_code` VARCHAR(6)→VARCHAR(128), bcrypt hash 60 char; migrasi dieksekusi di produksi)
+  - `controllers/core/approvals/processApproval.js` (DEF-004: normalisasi action case-insensitive — `"APPROVE"` diperlakukan sebagai REJECT; DEF-008: mapping error — STEP_ALREADY_PROCESSED/APPROVAL_ALREADY_COMPLETED→409, DATA_NOT_FOUND→404, business rule→400)
+  - `controllers/billing/manual/submitManualPayment.js` + `verifyManualPayment.js` (DEF-005: validasi nominal bukti vs tagihan → 400 AMOUNT_MISMATCH; cegah underpay)
+  - `controllers/program/arisanDrawController.js` + `routes/programRoute.js` (DEF-006: RNG kriptografis `crypto.randomInt` gantikan `Math.random()`; gate INSTALLMENTS_UNPAID; route draw dibatasi Pengawas/Ketua/Bendahara)
+  - `controllers/savings/requestWithdrawal.js` (guard PENDING_WITHDRAWAL_EXISTS — cegah double-spend)
+  - `controllers/core/anggota/getAllMembers.js` (DEF-010: masking PII NIK/HP/email per peran — non-organisasi ter-mask, Pengawas/Ketua/Bendahara utuh)
+  - nginx `server_tokens off` di VPS (DEF-007: `Server: nginx/1.18.0 (Ubuntu)` → `Server: nginx`)
+- **Database:** migrasi `20261122-widen-forgot-password-otp-code.js` dieksekusi di produksi (SequelizeMeta tercatat, idempoten)
+- **API:** tanpa breaking change; error code kini sesuai spec (409/404/400) untuk approval & billing
+- **UI:** tanpa perubahan
+
+### Verification
+
+- `npx eslint` pada semua file berubah — 0 error
+- `npm test` (api) — **108/108 PASS** (12 suite), dijalankan setiap kali setelah fix
+- TEST P0 live runner — **57/57 PASS** (TEST-001/003/004/007/009/011/012/013/016/027/032/035); sebelum fix: 39/53 → 46/55 → 49/57 → 57/57
+- Data uji produksi bersih: 0 members/arisan_batches/arisan_draws/login_attempts uji
+- `GET /health/deep` → 200 `{"status":"ok","db":"connected"}`
+
+### Risks and follow-up
+
+- **Known issues:** (1) Rate-limit & lockout in-memory — restart pm2 mereset window (limiter perlu dipindah ke Redis untuk multi-instance); (2) divergensi status code: lockout 429 vs spec 423, OTP 5/15mnt vs 3/menit, upload invalid 400 vs 422 (perlu update spec atau kode); (3) `.env` lokal memuat password DB produksi — **rotasi password disarankan**; (4) TEST-032: race dua approver peran sama belum teruji bersih (hasil 200+403 karena role gate step berikutnya)
+- **Next recommended task:** TEST P1 (TEST-002 OTP E2E, TEST-005 assign role, TEST-006 arsip/restore, dst.) + gitleaks full-repo (TEST-035 sisa) + rotasi password DB
+
+---
+
 ## [2026-11-22] — DB: Eksekusi MIG-004 di Produksi + Sinkronisasi Akses & Purge Dry-run
 
 **Status:** DONE  
