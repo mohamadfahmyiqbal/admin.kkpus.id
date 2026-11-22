@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** + **TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010): 29/29 PASS + DEF-011/012 fixed** + **TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029): 34/34 PASS + DEF-013/014 fixed** + **TASK-013: TEST P2 (TEST-019/021/022/025/026/028/031/033): 29/29 PASS + DEF-015 fixed** (TASK-000..TASK-013)
-- **Active task:** — (TASK-013 selesai) — seluruh P0/P1/P2 API-testable tuntas; sisa TEST-030/034/036 (manual/staging)
-- **Last verification:** TASK-013 TEST P2 2026-11-22 (api `aea42be`): 29/29 check PASS; eslint 0 error; npm test 108/108; data uji 0 sisa; `/health/deep` 200. TEST P0 57/57 (api `4e7b8f4`); TASK-010 gitleaks + VAPID rotation; detail `08_TEST_PLAN.md` §4.1–4.4 & `10_DEV_LOG.md` (DEF-002..015)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** + **TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010): 29/29 PASS + DEF-011/012 fixed** + **TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029): 34/34 PASS + DEF-013/014 fixed** + **TASK-013: TEST P2 (TEST-019/021/022/025/026/028/031/033): 29/29 PASS + DEF-015 fixed** + **DEF-016: frontend bundle size (kkpusid 281 kB, admin 125 kB gzip)** (TASK-000..TASK-013)
+- **Active task:** — (TASK-013 selesai; DEF-016 fixed di branch kkpusid, belum deploy) — rekomendasi berikutnya: TASK-014 (deploy frontend fix + Lighthouse LCP/a11y)
+- **Last verification:** DEF-016 frontend bundle 2026-11-22 (kkpusid `c4421f6`, belum push): initial JS kkpusid 281 kB gzip (was 567), admin 125 kB gzip (build `vite build`); eslint 0 error. TASK-013 TEST P2 2026-11-22 (api `aea42be`): 29/29 check PASS; eslint 0 error; npm test 108/108; data uji 0 sisa; `/health/deep` 200. TEST P0 57/57 (api `4e7b8f4`); detail `08_TEST_PLAN.md` §4.1–4.5 & `10_DEV_LOG.md` (DEF-002..016)
 
 ## Decisions and constraints
 
@@ -40,19 +40,19 @@
 
 ## Next recommended task
 
-**Semua P0/P1/P2 API-testable selesai.** Sisa TEST-030/034/036 (manual/staging).
+**TASK-014 — TEST-034 sisa + deploy frontend fix**
 
-- TEST-030 (PWA offline & update): manual test dengan build produksi + SW terdaftar
-- TEST-034 (performa frontend): Lighthouse landing & dashboard + bundle size admin
-- TEST-036 (aksesibilitas keyboard): walkthrough keyboard-only layar kritis
+- **Deploy DEF-016 (kkpusid `c4421f6`):** fix bundle size sudah di-commit di branch `rollback/2026-11-02`, **belum push/deploy**. Perlu konfirmasi mekanisme deploy frontend (admin/kkpusid) — API deploy via `git fetch && merge && pm2 restart`, tapi frontend (statis) belum diketahui.
+- **TEST-034 sisa:** Lighthouse LCP < 2.5s + skor a11y ≥ 90 (butuh Chrome/staging + `lighthouse` CLI atau PageSpeed Insights).
+- **TEST-030 (PWA offline), TEST-036 (keyboard a11y):** manual browser testing.
 
-**Follow-up keamanan (belum dikerjakan):**
+**Follow-up keamanan (belum dikerjakan, perlu instruksi):**
 - Rotasi password DB produksi (`.env` lokal memuat password produksi)
-- Pastikan frontend re-subscribe Web Push setelah rotasi VAPID
+- Frontend re-subscribe Web Push pasca VAPID rotation
 - Purge history git kkpusid (opsional)
-- Tambah unit test `utils/passwordValidator.js` (coverage 9.67%)
+- Unit test `utils/passwordValidator.js` (coverage 9.67%)
 
-**Catatan schema/performa (untuk iterasi berikutnya):**
+**Catatan schema/performa:**
 - `loan_products` tanpa field limit/plafon → INVALID_AMOUNT (TEST-014) tak teruji
 - `createSukukOrder` tak cek quota/status → order bisa melebihi kuota
 - `pinjaman_modal` tanpa audit trail

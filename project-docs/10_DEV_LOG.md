@@ -11,6 +11,38 @@
 
 ---
 
+## [2026-11-22] — DEF-016: kkpusid frontend initial JS terlalu besar (TEST-034)
+
+### Outcome
+
+Build produksi `kkpusid` (public) menghasilkan initial JS **567 kB gzip** — didominasi catch-all `vendor` chunk (475 kB gzip) yang memuat `html2pdf.js` (~400 kB), `moment`, dan `react-webcam`. `html2pdf` hanya dipakai `ReceiptPage` (lazy route) tapi terangkut ke initial load. **Diperbaiki:** initial JS turun ke **281 kB gzip (−50%)**. Admin initial JS **125 kB gzip** (sudah aman). Keduanya lulus threshold < 500 kB (TEST-034).
+
+### Requirements and decisions
+
+- **Requirements implemented:** TEST-034 (NFR performa frontend — initial JS < 500 kB gzip), TSD §6
+- **Decisions / tradeoffs:** `moment` dipisah ke chunk sendiri (`vendor-moment`) walau dipakai 7 file — tetap lazy-loadable per-halaman; `html2pdf`/`html2canvas`/`jspdf`/`dompurify` → `vendor-print` (hanya ReceiptPage)
+
+### Implementation impact
+
+- **Added:** —
+- **Modified:** `kkpusid/vite.config.js` — `manualChunks`: tambah `vendor-print` (html2pdf/html2canvas/jspdf/canvg/dompurify), `vendor-moment`, `vendor-webcam` (react-webcam)
+- **Database:** None
+- **API:** None
+- **UI:** None (build config only)
+
+### Verification
+
+- `npm run build` (kkpusid) — sukses; `vendor-print`/`vendor-moment`/`vendor-webcam` TIDAK di-`modulepreload` (lazy, terverifikasi grep `index.html` = 0)
+- Initial JS kkpusid: 567 → **281 kB gzip** (−50%); admin: **125 kB gzip**
+- `npx eslint` (kkpusid) — 0 error
+
+### Risks and follow-up
+
+- **Known issues:** LCP & a11y (Lighthouse) belum diukur (butuh Chrome/staging); fix belum di-deploy ke produksi (mekanisme deploy frontend belum diketahui — perlu konfirmasi)
+- **Next recommended task:** TASK-014 — deploy frontend fix + Lighthouse LCP/a11y (TEST-034 sisa)
+
+---
+
 ## [2026-11-22] — TASK-013: TEST P2 (TEST-019/021/022/025/026/028/031/033) + DEF-015
 
 ### Outcome
