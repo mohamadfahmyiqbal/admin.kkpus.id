@@ -53,7 +53,7 @@
 - ✅ passwordValidator unit test — api `d7cad01` (coverage 100%)
 - ⏳ Sisa 8 moderate vulns — accepted-risk (uuid tak exploitable; exceljs/sequelize-cli fix butuh breaking downgrade; devDeps tak deployed)
 - ⏳ Rotasi password DB produksi — **butuh koordinasi SSH VPS** (blokir: tak ada akses SSH di sesi ini)
-- ⏳ Purge history git kkpusid — opsional (butuh force-push; butuh konfirmasi user)
+- ⏳ Purge history git kkpusid — **selesai (2026-11-22)**: git filter-repo `--refs rollback/2026-11-02 --invert-paths` hapus `.env` + `*.key`/`*.pem`/`*.crt` + scrub literal `VAPID_PRIVATE_KEY="4ILP2lUNf..."` → `[REDACTED]`. Branch `rollback/2026-11-02` di-rewrite (`c10712c`→`94ec5ca`), force-push ke origin. Verifikasi: `.env`=0, VAPID key literal=0, cert=0 di remote history. Backup lokal `backup-rollback-pre-purge`. **Catatan**: collaborator lain perlu re-clone/rebase. Branch lain (main, feat/cicd-setup, nkkpusid) masih punya history lama (tidak di-purge)
 - ⏳ Frontend re-subscribe Web Push — **sudah selesai** (DEF-019 di atas)
 
 **Catatan schema/performa (untuk iterasi berikutnya):**

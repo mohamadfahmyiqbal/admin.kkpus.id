@@ -11,6 +11,31 @@
 
 ---
 
+## [2026-11-22] — Purge git history kkpusid (VAPID_PRIVATE_KEY + dev cert)
+
+### Outcome
+
+Branch `rollback/2026-11-02` kkpusid di-rewrite untuk menghapus `VAPID_PRIVATE_KEY` (Web Push, commit `babe05b3`) & dev cert (`localhost.key`/`.pem`/`.crt`) dari seluruh history. Memakai `git-filter-repo --refs rollback/2026-11-02 --path .env --path-glob '*.key' --path-glob '*.pem' --path-glob '*.crt' --invert-paths --replace-text`. Hasil: `.env`=0, VAPID key literal `4ILP2lUNf...`=0, cert=0 di `origin/rollback/2026-11-02`. Backup lokal `backup-rollback-pre-purge` = `c10712c`.
+
+### Requirements and decisions
+
+- **Requirement:** Follow-up keamanan (purge history opsional dari TASK-010)
+- **Decisions:** Hanya `rollback/2026-11-02` (per instruksi user); branch lain (main/feat/cicd-setup) sengaja tidak di-purge untuk minimalisir risiko. `--invert-paths` hapus file sensitif dari semua commit di branch, `--replace-text` scrub literal VAPID key (belt-and-suspenders). force-push wajib (history rewrite).
+
+### Verification
+
+- `.env` di history branch: **0** (sebelum: 9)
+- `VAPID_PRIVATE_KEY="4ILP2lUN..."` literal di history: **0**
+- Cert files (`.key`/`.pem`/`.crt`) di HEAD & history: **0**
+- Remote `origin/rollback/2026-11-02` = `94ec5ca` (sudah bersih)
+
+### Risks and follow-up
+
+- **Known issues:** Collaborator yang sudah clone perlu re-clone/rebase (`git reset --hard origin/rollback/2026-11-02` + reflog expire). Branch lain masih punya history lama (tak di-purge per instruksi). Backup lokal `backup-rollback-pre-purge` bisa dihapus kapan saja setelah yakin.
+- **Next recommended task:** (1) Koordinasi rotasi password DB produksi (butuh SSH VPS), (2) Walkthrough keyboard-only penuh manual (TEST-036 sisa).
+
+---
+
 ## [2026-11-22] — Follow-up keamanan (DEF-019 + SEC-001/002 + vuln triage)
 
 ### Outcome
