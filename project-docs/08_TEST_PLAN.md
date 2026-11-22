@@ -136,6 +136,27 @@ Dieksekusi terhadap `api.kkpus.id` (commit `1f10683`) dengan data uji mandiri (p
 
 **Belum diuji (P1/P2):** TEST-014/015, TEST-017..026, TEST-028..031, TEST-033/034/036.
 
+### 4.3 Hasil eksekusi P1 batch 2 — live produksi (2026-11-22)
+
+Dieksekusi terhadap `api.kkpus.id` (commit `4596454`) dengan data uji mandiri (prefix `uji.`, domain `@kkpus-test.id`; dibuat & dibersihkan otomatis — 0 baris sisa terverifikasi). Total **34/34 check PASS** setelah perbaikan DEF-013 & DEF-014. Cakupan: TEST-014/015 (financing apply & modal koperasi), TEST-017 (join arisan), TEST-018 (master program tabungan), TEST-020 (sukuk), TEST-023 (notifikasi & push), TEST-024 (dashboard), TEST-029 (konfigurasi simpanan & biaya).
+
+| Test | Status | Catatan |
+| --- | --- | --- |
+| TEST-014 | ✅ PASS | apply → 201 + financing_id; DB PENDING + approval chain (flow/step); apply ganda (aktif) → 400; tanpa auth 401. Gap dicatat: INVALID_AMOUNT (nominal > batas) tidak diimplementasi — `loan_products` tanpa field limit/plafon |
+| TEST-015 | ✅ PASS | Bendahara input DEBET → 201 (fix DEF-013: role gate `MidRole(['Bendahara'])` + validasi nominal > 0); nominal ≤ 0 → 400; non-Bendahara → 403 |
+| TEST-017 | ✅ PASS | join batch AKTIF kuota ada → 201; join ganda → 409 (fix: 400→409); kuota penuh → 400; batch tidak ada → 404 |
+| TEST-018 | ✅ PASS | Bendahara buat program → 201 + tampil di list; nominal ≤ 0 → 400 (fix: validasi `target_amount > 0`); hapus program → 200; non-pengurus → 403 |
+| TEST-020 | ✅ PASS | katalog → 200 hanya OPEN + current_funding; order nominal ≥ min → 201 PENDING; order nominal < min → 400. Gap dicatat: QUOTA_EXCEEDED & order saat CLOSED tidak diimplementasi (`createSukukOrder` hanya cek `min_investment`) |
+| TEST-023 | ✅ PASS | list → 200 + unread_count; update-status → 200 + DB status=read; push subscribe → 201 + tersimpan di `member_push_subscriptions` |
+| TEST-024 | ✅ PASS | dashboard anggota → 200 + dashboard_type=REGULER (fix DEF-014: normalisasi `member_type` case-insensitive — "Anggota Reguler" 76 anggota prod kini dapat dashboard); admin dashboard → 200 + 6 stats; non-admin → 403 |
+| TEST-029 | ✅ PASS | GET simpanan/config → 200 + configs; PUT simpanan/config → 200 + DB berubah (di-restore); payment-fees publik → 200; PUT payment-fees → 200; non-pengurus → 403. Gap dicatat: PAST_EFFECTIVE_DATE & validasi nominal tidak ada (PUT hanya cek array `configs`) |
+
+**Defect ditemukan & diperbaiki:** DEF-013 (modal endpoint tanpa role gate + tanpa validasi nominal), DEF-014 (dashboard type kosong untuk "Anggota Reguler" — 76/110 anggota prod).
+
+**Divergensi spec (dicatat, tidak memblokir):** TEST-014 INVALID_AMOUNT tidak ada field limit di `loan_products`; TEST-017 duplicate 400→409 (fixed); TEST-020 QUOTA_EXCEEDED/CLOSED tidak dicek; TEST-018 no tahun field; TEST-029 PAST_EFFECTIVE_DATE tidak ada.
+
+**Belum diuji (P2):** TEST-026, TEST-028, TEST-031, TEST-033/034/036.
+
 ## 5. Regression and release checks
 
 - [ ] `npm run lint` dan `npm run build` lulus di `admin.kkpus.id`, `kkpusid`, dan `api.kkpus.id`.

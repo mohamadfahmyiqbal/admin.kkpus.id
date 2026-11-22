@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** + **TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010): 29/29 PASS + DEF-011/012 fixed** (TASK-000..TASK-011)
-- **Active task:** — (TASK-011 selesai) — rekomendasi berikutnya: TASK-012 (TEST P1 batch 2)
-- **Last verification:** TASK-011 TEST P1 batch 1 2026-11-22 (api `1f10683`): 29/29 check PASS; eslint 0 error; npm test 108/108; data uji 0 sisa; `/health/deep` 200. TEST P0 57/57 (api `4e7b8f4`); TASK-010 gitleaks + VAPID rotation; detail `08_TEST_PLAN.md` §4.1–4.2 & `10_DEV_LOG.md` (DEF-002..012)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** + **TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010): 29/29 PASS + DEF-011/012 fixed** + **TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029): 34/34 PASS + DEF-013/014 fixed** (TASK-000..TASK-012)
+- **Active task:** — (TASK-012 selesai) — rekomendasi berikutnya: TASK-013 (TEST P2)
+- **Last verification:** TASK-012 TEST P1 batch 2 2026-11-22 (api `4596454`): 34/34 check PASS; eslint 0 error; npm test 108/108; data uji 0 sisa; `/health/deep` 200. TEST P0 57/57 (api `4e7b8f4`); TASK-010 gitleaks + VAPID rotation; detail `08_TEST_PLAN.md` §4.1–4.3 & `10_DEV_LOG.md` (DEF-002..014)
 
 ## Decisions and constraints
 
@@ -40,13 +40,15 @@
 
 ## Next recommended task
 
-**TASK-012 — TEST P1 batch 2 (P1)**
+**TASK-013 — TEST P2 (P2)**
 
-- Why now: TEST P0 (57/57) & TEST P1 batch 1 (29/29) selesai; seluruh P0 tuntas.
-- Test cases: TEST-014/015 (pembiayaan & jual-beli), TEST-017..026 (simpanan/penarikan/approval/billing), TEST-028..031 (audit, notifikasi, dsb.) — lihat `08_TEST_PLAN.md` §4
-- Read: `08_TEST_PLAN.md` §4 & §4.1–4.2 (hasil + divergensi), `06_API_SPEC.md` §3, `09_BACKLOG.md`
-- Acceptance evidence: Setiap TEST P1 dieksekusi dengan environment + test data; hasil PASS/FAIL + DEF baru terdokumentasi di dev log
+- Why now: TEST P0 (57/57) & TEST P1 batch 1+2 (29/29 + 34/34) selesai; seluruh P0 & P1 tuntas.
+- Test cases: TEST-016 (arisan draw — batch ACTIVE & angsuran lunas), TEST-026, TEST-028, TEST-031, TEST-033/034/036 (manual/security) — lihat `08_TEST_PLAN.md` §4
+- Read: `08_TEST_PLAN.md` §4 & §4.1–4.3 (hasil + divergensi), `06_API_SPEC.md` §3, `09_BACKLOG.md`
+- Acceptance evidence: Setiap TEST P2 dieksekusi dengan environment + test data; hasil PASS/FAIL + DEF baru terdokumentasi di dev log
 - **Follow-up keamanan:** rotasi password DB produksi (`.env` lokal memuat password produksi); pastikan frontend re-subscribe Web Push setelah rotasi VAPID; purge history git kkpusid (opsional); tambah unit test `utils/passwordValidator.js` (coverage 9.67%)
+
+**Catatan schema (untuk iterasi berikutnya):** `loan_products` tanpa field limit/plafon → INVALID_AMOUNT (TEST-014) tak teruji; `createSukukOrder` tak cek quota/status → order bisa melebihi kuota; `pinjaman_modal` tanpa audit trail. Bila disyaratkan spec, perlu schema/behavior change — belum dikerjakan tanpa instruksi.
 - **Fast-follow (P2):** 26 moderate vulns (api 18, admin 6, kkpusid 2) — tinjau per kasus; rotasi password DB (`.env` lokal kini memuat password produksi)
 - Do not start if: test data (akun 4 peran + data uji) belum tersedia di DB produksi
 

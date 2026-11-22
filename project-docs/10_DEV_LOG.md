@@ -11,6 +11,45 @@
 
 ---
 
+## [2026-11-22] — TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029) + DEF-013/014
+
+### Outcome
+
+TEST P1 batch 2 dieksekusi live di produksi (`api.kkpus.id`) dengan data uji mandiri (`uji.*@kkpus-test.id`). **34/34 check PASS** setelah 2 defect P1 diperbaiki. Cakupan: TEST-014 (financing apply + approval chain), TEST-015 (modal koperasi), TEST-017 (join arisan), TEST-018 (master program tabungan), TEST-020 (sukuk catalog + order), TEST-023 (notifikasi & push), TEST-024 (dashboard), TEST-029 (konfigurasi simpanan & biaya). Data uji produksi 0 sisa.
+
+### Requirements and decisions
+
+- **Requirements implemented:** PRD-011/012/013, API-026..030, API-032..035, API-019/020, API-040..049, BR-07.02, UC-07.02, ISO 27001 A.8.15
+- **Decisions / tradeoffs:** INVALID_AMOUNT (TEST-014), QUOTA_EXCEEDED (TEST-020), PAST_EFFECTIVE_DATE (TEST-029) tidak diimplementasi di branch ini — dicatat sebagai divergensi (impl tak punya field limit/plafon di `loan_products`, tak ada cek quota/status di `createSukukOrder`, PUT config hanya cek array); tidak "di-fix" tanpa instruksi karena bukan pelanggaran spec yang disetujui
+
+### Implementation impact
+
+- **Added:** —
+- **Modified:**
+  - `routes/programRoute.js` (DEF-013: `POST /pinjaman/modal` kini `MidRole(['Bendahara'])`)
+  - `controllers/program/pinjamanModalController.js` (DEF-013: validasi `jumlah > 0` → 400; sebelumnya nominal 0 diterima)
+  - `controllers/financing/applyArisan.js` (duplicate join 400→409, selaras TEST-017)
+  - `controllers/savings/manageAdminTabungan.js` (validasi `target_amount > 0` → 400)
+  - `controllers/core/dashboard/getDashboard.js` (DEF-014: normalisasi `member_type` case-insensitive — "Anggota Reguler" kini dapat dashboard REGULER)
+- **Database:** None (data uji dibuat & dibersihkan; 0 sisa)
+- **API:** Tanpa breaking change; modal endpoint kini Bendahara-only (403 utk non-Bendahara), duplicate arisan 409, tabungan target nominal ≤0 ditolak
+- **UI:** None
+
+### Verification
+
+- `npx eslint` pada file berubah — 0 error
+- `npm test` (api) — **108/108 PASS** setiap kali setelah fix
+- TEST P1 batch 2 live runner — **34/34 PASS** (TEST-014: 3, TEST-015: 3, TEST-017: 4, TEST-018: 5, TEST-020: 4, TEST-023: 5, TEST-024: 3, TEST-029: 7)
+- Data uji produksi bersih: 0 members/loan/financing/arisan/sukuk/saving_target/notifications/push_subs/pinjaman_modal uji
+- `/health/deep` → 200
+
+### Risks and follow-up
+
+- **Known issues:** (1) DEF-014 berdampak luas — 76/110 anggota prod sebelumnya dashboard kosong; (2) `loan_products` tanpa field limit/plafon — INVALID_AMOUNT tak bisa diuji (perlu schema change bila disyaratkan); (3) `createSukukOrder` tak cek quota/status — order bisa melebihi kuota (perlu fix bila disyaratkan); (4) modal controller masih tanpa audit trail; (5) `.env` lokal memuat `JWT_SECRET` berbeda dari produksi — runner mengambil secret produksi via SSH
+- **Next recommended task:** TASK-013 — TEST P2 (TEST-016 arisan draw, TEST-026/028/031, TEST-033/034/036)
+
+---
+
 ## [2026-11-22] — TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010) + DEF-011/012
 
 ### Outcome
