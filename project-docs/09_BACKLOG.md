@@ -44,7 +44,10 @@
 | DEF-008 | processApproval: business error → 500; dobel approve bukan 409 | DONE | P2 | Development Team | TASK-009 | api `136eefc`: mapping 409/404/400; live: dobel approve → 409 | 2026-11-22 |
 | DEF-010 | `GET /api/anggota/all` mengembalikan NIK/HP/email utuh ke semua peran (masking server-side belum ada) | DONE | P1 | Development Team | TASK-009 | api `4e7b8f4`: masking per peran; live: anggota ter-mask, pengurus utuh | 2026-11-22 |
 | TASK-010 | TEST-035 sisa: gitleaks full-repo (3 repo) + triase & remediasi temuan secret | DONE | P0 | Development Team | TASK-009 | api 438 commit 0 leak; admin 214 commit 3 temuan (dev artifacts, P4); kkpusid 147 commit 56 temuan → triase: 1× P2 VAPID_PRIVATE_KEY di history (babe05b3) → keypair dirotasi & live terverifikasi; sisanya P3/P4 (dev cert CN=localhost, JWT sampel dev, build artifact) | 2026-11-22 |
-| TASK-011 | TEST P1 batch 1: TEST-002 (OTP E2E), TEST-005 (assign role), TEST-006 (arsip/restore), TEST-008 (laporan simpanan), TEST-010 (termination) | TODO | P1 | Development Team | TASK-010 | Belum dijalankan — lihat rekomendasi HANDOFF | 2026-11-22 |
+| TASK-011 | TEST P1 batch 1: TEST-002 (OTP E2E), TEST-005 (assign role), TEST-006 (arsip/restore → hard delete), TEST-008 (laporan simpanan), TEST-010 (termination) | DONE | P1 | Development Team | TASK-010 | **29/29 check PASS** (live produksi, api `1f10683`); DEF-011 & DEF-012 fixed & terdeploy; data uji 0 sisa; detail `08_TEST_PLAN.md` §4.2 | 2026-11-22 |
+| DEF-011 | `utils/passwordValidator.js` regex special-char rusak (`[.../[]]` — `[` tak-escape → butuh `<special>]`); `validatePassword` selalu invalid → reset password mustahil (400) | DONE | P1 | Development Team | TASK-011 | api `0a49c21`: escape `[`/`]`; live: TEST-002 reset → 200 | 2026-11-22 |
+| DEF-012 | `updateRole` me-replace role yang sudah aktif secara senyap (200); spec minta 409 ROLE_ASSIGNED | DONE | P1 | Development Team | TASK-011 | api `9b80c63`: guard 409 ROLE_ASSIGNED; live: assign role duplikat → 409 | 2026-11-22 |
+| TASK-012 | TEST P1 batch 2: TEST-014/015 (pembiayaan & jual-beli), TEST-017..026 (simpanan/penarikan/approval/billing), TEST-028..031 (audit, notifikasi, dsb.) | TODO | P1 | Development Team | TASK-011 | Belum dijalankan — lihat rekomendasi HANDOFF | 2026-11-22 |
 
 ## Task details
 

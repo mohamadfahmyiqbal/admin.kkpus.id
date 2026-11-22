@@ -11,6 +11,43 @@
 
 ---
 
+## [2026-11-22] — TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010) + DEF-011/012
+
+### Outcome
+
+TEST P1 batch 1 dieksekusi live di produksi (`api.kkpus.id`) dengan data uji mandiri (`uji.*@kkpus-test.id`). **29/29 check PASS** setelah 2 defect P1 diperbaiki. Cakupan: TEST-002 (OTP E2E: send→verify→reset→login), TEST-005 (assign role + audit + guard duplikat), TEST-006 (hapus anggota — API-010 hard delete + re-auth), TEST-008 (data & laporan simpanan admin), TEST-010 (termination + approval chain). Data uji produksi 0 sisa (members/sesi/termination/role assignment).
+
+### Requirements and decisions
+
+- **Requirements implemented:** PRD-007/008/019/021, API-003..005, API-009..012, API-016..018, BR-ANGGOTA (ROLE_ASSIGNED), ISO 27001 A.8.15
+- **Decisions / tradeoffs:** OTP tidak dapat dibaca dari log (EMAIL_PROVIDER=smtp) → sesi di-seed dengan bcrypt hash cost 4 agar jalur verify→reset→login deterministik; JWT mint memakai `JWT_SECRET` produksi (via SSH) karena `.env` lokal memuat secret berbeda
+
+### Implementation impact
+
+- **Added:** —
+- **Modified:**
+  - `utils/passwordValidator.js` (DEF-011: regex special-char `[!@#$%^&*(),.?":{}|<>_\-~+=/[\]]` — `[`/`]` di-escape; sebelumnya `[` tak-escape → `validatePassword` selalu invalid → reset password mustahil)
+  - `controllers/core/anggota/updateRole.js` (DEF-012: guard 409 `ROLE_ASSIGNED` bila seluruh role tujuan sudah aktif)
+  - `controllers/core/auth/forgotPasswordController.js` (OTP kedaluwarsa 400→410 GONE, selaras FSD `OTP_EXPIRED`)
+- **Database:** None (data uji dibuat & dibersihkan; 0 sisa)
+- **API:** Tanpa breaking change; kini 409 ROLE_ASSIGNED (role duplikat), 410 GONE (OTP kedaluwarsa) sesuai spec
+- **UI:** None
+
+### Verification
+
+- `npx eslint` pada file berubah — 0 error
+- `npm test` (api) — **108/108 PASS** setiap kali setelah fix
+- TEST P1 live runner — **29/29 PASS** (TEST-002: 8/8, TEST-005: 5/5, TEST-006: 5/5, TEST-008: 5/5, TEST-010: 6/6)
+- Data uji produksi bersih: 0 members/sesi/termination/role uji
+- `/health/deep` → 200; `GET /api/push/vapid-public-key` OK
+
+### Risks and follow-up
+
+- **Known issues:** (1) `utils/passwordValidator.js` tidak tercakup unit test (coverage 9.67%) — perlu test agar regresi regex tidak terulang; (2) OTP attempts 5 vs spec 3 (divergensi, dicatat); (3) verifyOTPHash memakai bcrypt cost 4 (OK untuk OTP sekali-pakai); (4) insiden node_modules VPS sempat korup transitif (helmet/dotenv) → app crash-loop sementara, pulih setelah settle tanpa reinstall (perlu dipantau)
+- **Next recommended task:** TASK-012 — TEST P1 batch 2 (TEST-014/015, 017..026, 028..031)
+
+---
+
 ## [2026-11-22] — TASK-010: TEST-035 sisa — Gitleaks Full-Repo + Remediasi Secret (VAPID)
 
 ### Outcome

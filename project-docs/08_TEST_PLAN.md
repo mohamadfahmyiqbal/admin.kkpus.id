@@ -120,6 +120,22 @@ Dieksekusi terhadap `api.kkpus.id` (branch `rollback/2026-11-02`, commit `4e7b8f
 
 **Belum diuji (P1/P2):** TEST-002 (OTP E2E), TEST-005/006, TEST-008, TEST-010, TEST-014/015, TEST-017..026, TEST-028..031, TEST-033/034/036; gitleaks full-repo (sisa TEST-035).
 
+### 4.2 Hasil eksekusi P1 batch 1 — live produksi (2026-11-22)
+
+Dieksekusi terhadap `api.kkpus.id` (commit `1f10683`) dengan data uji mandiri (prefix `uji.`, domain `@kkpus-test.id`; dibuat & dibersihkan otomatis — 0 baris sisa terverifikasi). Total **29/29 check PASS** setelah perbaikan DEF-011 & DEF-012.
+
+| Test | Status | Catatan |
+| --- | --- | --- |
+| TEST-002 | ✅ PASS | send-otp 200+sessionId; OTP salah 3x 400 (impl limit 5 vs spec 3 — divergensi); OTP benar (bcrypt) → 200+resetToken; reset → 200; login password baru 200, lama 401; OTP kedaluwarsa → 410 (fix DEF-011 + align spec) |
+| TEST-005 | ✅ PASS | assign role 200 + DB role + audit `UPDATE_ROLE`; role duplikat → 409 `ROLE_ASSIGNED` (fix DEF-012); anggota Luar Biasa → 400; non-pengurus → 403 |
+| TEST-006 | ✅ PASS | hapus tanpa password 400; password salah 403 `REAUTH_PASSWORD_MISMATCH`; benar 200; DB hard delete (0 baris); audit `HARD_DELETE_MEMBER`; hilang dari list. API-011 restore REMOVED — tidak diuji |
+| TEST-008 | ✅ PASS | admin-summary 200 + total = pokok+wajib+sukarela (konsisten); admin-transactions 200 + transactions[]+pagination; filter type=POKOK 200; admin-report 200; non-admin 403 |
+| TEST-010 | ✅ PASS | submit berhenti 201 PENDING + approval chain (flow/step); duplikat 400; reason kosong 400; status PENDING; riwayat & saldo tetap 200 |
+
+**Divergensi spec (dicatat, tidak memblokir):** OTP attempts 5 vs spec 3; sebagian endpoint sukses 200 (impl) vs 201 (spec).
+
+**Belum diuji (P1/P2):** TEST-014/015, TEST-017..026, TEST-028..031, TEST-033/034/036.
+
 ## 5. Regression and release checks
 
 - [ ] `npm run lint` dan `npm run build` lulus di `admin.kkpus.id`, `kkpusid`, dan `api.kkpus.id`.
