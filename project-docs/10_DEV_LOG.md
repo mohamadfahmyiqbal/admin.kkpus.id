@@ -11,6 +11,38 @@
 
 ---
 
+## [2026-11-22] — TEST-030 PWA offline + DEF-017 config error frontend (kkpus.id)
+
+### Outcome
+
+Saat memverifikasi TEST-030 (PWA offline) via Chrome headless + CDP, ditemukan **DEF-017**: `kkpus.id` menampilkan "⚠️ Konfigurasi Error — VITE_API_ORIGIN belum diset" dan app tak pernah mount (`hasRoot: false`). Root cause: `.env.production` di-untrack (commit `02031dd`) tapi env guard `src/index.jsx` (commit `65595fb`) mewajibkan `VITE_API_ORIGIN`, sedangkan `deploy.yml` menjalankan `npm run build` **tanpa set `VITE_*`**. **Diperbaiki:** `deploy.yml` set `VITE_API_BASE_URL`/`VITE_API_ORIGIN`/`VITE_SOCKET_URL` saat build (pola admin). Setelah deploy, app render normal & banner offline + guard transaksi offline terverifikasi.
+
+### Requirements and decisions
+
+- **Requirements implemented:** TEST-030 (PWA offline — SCR-024), TSD §6
+- **Decisions / tradeoffs:** Guard transaksi offline dipusatkan di interceptor axios (`src/utils/api.js`) — reject mutasi saat `navigator.onLine===false` dengan toast; banner `OfflineIndicator.jsx` sebagai indikator visual. Fix DEF-017 di `deploy.yml` (bukan commit `.env.production`) agar konsisten dengan pola admin & tak menaruh konfigurasi di repo.
+
+### Implementation impact
+
+- **Added:** `kkpusid/src/components/pwa/OfflineIndicator.jsx` (banner offline, commit `9b8ede3`)
+- **Modified:** `kkpusid/src/App.jsx` (render OfflineIndicator), `kkpusid/src/utils/api.js` (guard mutasi offline), `kkpusid/.github/workflows/deploy.yml` (VITE_* env saat build, commit `b2f53ad`)
+- **Database:** None
+- **API:** None
+- **UI:** Banner offline merah + toast saat aksi transaksi offline
+
+### Verification
+
+- CDP headless (`Network.emulateNetworkConditions offline=true`): online `hasRoot: true`; offline banner "Koneksi Internet Terputus…" muncul (`role="alert"`); `navigator.onLine=false`; POST offline `blocked: true`
+- CI/CD kkpusid sukses (run `44994767890`): CI lint/test/audit/security ✅ + Deploy to VPS ✅
+- Admin tak terdampak (sudah set VITE_* di deploy.yml)
+
+### Risks and follow-up
+
+- **Known issues:** Lighthouse kkpus.id (§4.5) diukur sebelum fix DEF-017 — perlu ukur ulang; dashboard admin authenticated Lighthouse belum diuji; puppeteer tak bisa di-install (network blokir) → TEST-030 verifikasi via CDP manual
+- **Next recommended task:** TEST-036 (keyboard accessibility) — walkthrough keyboard-only layar kritis (butuh browser manual)
+
+---
+
 ## [2026-11-22] — DEF-016: kkpusid frontend initial JS terlalu besar (TEST-034)
 
 ### Outcome

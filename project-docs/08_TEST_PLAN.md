@@ -198,7 +198,26 @@ Build produksi (`vite build`) kedua frontend & ukur initial JS (chunk yang di-`m
 
 Kedua target **LCP < 2.5 s** & **a11y ≥ 90** terpenuhi. Dashboard admin authenticated belum diuji Lighthouse (butuh inject auth token — catatan untuk iterasi selanjutnya).
 
-**Belum diuji (manual/staging):** TEST-030 (PWA offline), TEST-036 (keyboard accessibility).
+> **Koreksi (2026-11-22):** Pengukuran Lighthouse kkpus.id di atas diambil **sebelum** config error ditemukan (lihat §4.6) — saat itu app menampilkan halaman "Konfigurasi Error" (VITE_API_ORIGIN belum diset). Skor tersebut menilai halaman error, bukan app asli. Setelah fix §4.6, app render normal (CDP: `hasRoot: true`). Lighthouse kkpus.id perlu diukur ulang pasca-fix (belum dilakukan).
+
+### 4.6 Hasil eksekusi P2 — TEST-030 PWA offline (frontend, 2026-11-22)
+
+Diuji via **Chrome headless + CDP** (`Network.emulateNetworkConditions offline=true`) terhadap `https://kkpus.id/`.
+
+**Defect ditemukan & diperbaiki (DEF-017 — config error):** `kkpus.id` frontend menampilkan "⚠️ Konfigurasi Error — VITE_API_ORIGIN belum diset" dan app tak pernah mount (`hasRoot: false`). Root cause: `.env.production` di-untrack (commit `02031dd`) tapi env guard `src/index.jsx` (commit `65595fb`) mewajibkan `VITE_API_ORIGIN`, sedangkan `deploy.yml` menjalankan `npm run build` **tanpa set `VITE_*`** → undefined saat runtime. Fix: `deploy.yml` set `VITE_API_BASE_URL`/`VITE_API_ORIGIN`/`VITE_SOCKET_URL` saat build (konsisten admin `deploy.yml` baris 86-89). Deploy via CI/CD (run `44994767890`) ✅.
+
+**Hasil verifikasi (pasca-fix):**
+
+| Skenario | Hasil | Status |
+| --- | --- | --- |
+| Online — app render | `hasRoot: true`, rootChildren 2 (SplashPage → landing) | ✅ |
+| Offline — `navigator.onLine` | `false` (CDP) | ✅ |
+| Offline — banner "Koneksi Internet Terputus…" | muncul, `role="alert"` | ✅ |
+| Offline — aksi transaksi (POST) | diblok (`blocked: true`) | ✅ |
+
+**Implementasi (SCR-024):** `OfflineIndicator.jsx` (banner) + guard axios di `src/utils/api.js` (blokir POST/PUT/PATCH/DELETE saat `navigator.onLine===false` + toast "Tidak ada koneksi internet. Transaksi tidak dapat diproses saat offline."). Commit kkpusid `9b8ede3` (fitur) + `b2f53ad` (fix config). App shell offline via `sw.js` (sudah ada); update prompt kkpusid via `appVersion` cache-clear.
+
+**Belum diuji (manual/staging):** TEST-036 (keyboard accessibility), Lighthouse kkpus.id pasca-fix, dashboard admin authenticated Lighthouse.
 
 ## 5. Regression and release checks
 

@@ -14,8 +14,8 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** + **TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010): 29/29 PASS + DEF-011/012 fixed** + **TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029): 34/34 PASS + DEF-013/014 fixed** + **TASK-013: TEST P2 (TEST-019/021/022/025/026/028/031/033): 29/29 PASS + DEF-015 fixed** + **DEF-016: frontend bundle size (kkpusid 281 kB, admin 125 kB gzip)** (TASK-000..TASK-013)
-- **Active task:** — (TASK-013 selesai; DEF-016 fixed di branch kkpusid, belum deploy) — rekomendasi berikutnya: TASK-014 (deploy frontend fix + Lighthouse LCP/a11y)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** + **TASK-011: TEST P1 batch 1 (TEST-002/005/006/008/010): 29/29 PASS + DEF-011/012 fixed** + **TASK-012: TEST P1 batch 2 (TEST-014/015/017/018/020/023/024/029): 34/34 PASS + DEF-013/014 fixed** + **TASK-013: TEST P2 (TEST-019/021/022/025/026/028/031/033): 29/29 PASS + DEF-015 fixed** + **DEF-016: frontend bundle size (kkpusid 281 kB, admin 125 kB gzip)** + **TASK-015: TEST-030 PWA offline PASS + DEF-017 (frontend config error fixed)** (TASK-000..TASK-015)
+- **Active task:** — (TASK-015 selesai; semua P0/P1/P2 API-testable + TEST-030/034 tuntas) — rekomendasi berikutnya: TEST-036 (keyboard accessibility)
 - **Last verification:** DEF-016 frontend bundle 2026-11-22 (kkpusid `c4421f6`, belum push): initial JS kkpusid 281 kB gzip (was 567), admin 125 kB gzip (build `vite build`); eslint 0 error. TASK-013 TEST P2 2026-11-22 (api `aea42be`): 29/29 check PASS; eslint 0 error; npm test 108/108; data uji 0 sisa; `/health/deep` 200. TEST P0 57/57 (api `4e7b8f4`); detail `08_TEST_PLAN.md` §4.1–4.5 & `10_DEV_LOG.md` (DEF-002..016)
 
 ## Decisions and constraints
@@ -40,10 +40,9 @@
 
 ## Next recommended task
 
-**Semua P0/P1/P2 API-testable + TEST-034 selesai.** Sisa manual/staging:
+**Semua P0/P1/P2 API-testable + TEST-030/034 selesai.** Sisa manual/staging:
 
-- **TEST-030 (PWA offline & update):** manual test build produksi + SW terdaftar
-- **TEST-036 (aksesibilitas keyboard):** walkthrough keyboard-only layar kritis
+- **TEST-036 (aksesibilitas keyboard):** walkthrough keyboard-only layar kritis (butuh browser manual)
 
 **Dashboard admin authenticated Lighthouse (opcional):** butuh inject auth token (localStorage) — catatan untuk iterasi selanjutnya.
 
