@@ -114,7 +114,7 @@ Dieksekusi terhadap `api.kkpus.id` (branch `rollback/2026-11-02`, commit `4e7b8f
 | TEST-016 | ✅ PASS | batch → aktivasi → draw tanpa angsuran lunas → 400 `INSTALLMENTS_UNPAID`; lunas → 200 + RNG kriptografis (fix DEF-006/BR-08.04) |
 | TEST-027 | ✅ PASS | NIK ter-mask utk anggota biasa, utuh utk pengurus (fix DEF-010); aksi destruktif → `activity_logs`; re-auth password wajib |
 | TEST-032 | ✅ PASS | approval konkuren: satu 200, lain 403; tidak ada double row |
-| TEST-035 | ✅ PASS | CSP/HSTS/XFO/nosniff/Referrer-Policy aktif; `Server: nginx` (versi disembunyikan, fix DEF-007); SCA: 0 high/critical |
+| TEST-035 | ✅ PASS | CSP/HSTS/XFO/nosniff/Referrer-Policy aktif; `Server: nginx` (versi disembunyikan, fix DEF-007); SCA: 0 high/critical; gitleaks 3 repo: api 0 leak, admin 3× P4 dev artifact, kkpusid 56 → triase 1× P2 (VAPID_PRIVATE_KEY history) **dirotasi & live terverifikasi**, sisanya P3/P4 dev artifacts (detail `10_DEV_LOG.md` TASK-010) |
 
 **Divergensi spec (dicatat, tidak memblokir):** lockout 429 vs spec 423; OTP rate-limit 5/15mnt vs spec 3/menit; magic-byte invalid 400 vs spec 422; sebagian endpoint sukses 200 (impl) vs 201 (spec).
 

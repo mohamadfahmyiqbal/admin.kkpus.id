@@ -11,6 +11,38 @@
 
 ---
 
+## [2026-11-22] — TASK-010: TEST-035 sisa — Gitleaks Full-Repo + Remediasi Secret (VAPID)
+
+### Outcome
+
+`gitleaks` v8.24.3 (binari resmi, bukan via package manager) dijalankan pada **seluruh history** 3 repo. api **0 leak** (438 commit); admin **3 temuan** (2× JWT `alg:none` di build artifact `assets/index-*.js` — file sudah di-gitignore; 1× `src/cert/localhost.key` dev cert di history, sudah untracked) — semua **Sev4/P4**; kkpusid **56 temuan** → triase: **1× Sev3/P2** `VAPID_PRIVATE_KEY` (Web Push) di history (commit `babe05b3`, 2026-01-03) → **keypair VAPID dirotasi** (baru, live terverifikasi `GET /api/push/vapid-public-key` → `BKuu…`); sisanya P3/P4: 9× private key dev (CN=localhost, expired 2026-08, bukan TLS produksi — nginx VPS bahkan tanpa `ssl_certificate` di config), 36× JWT sampel dev (`testApi.http` 29×, build artifacts 9× — diverifikasi **invalid signature** vs secret produksi). Backlog dirapikan: TASK-009 + DEF-002..010 di-backfill DONE, TASK-010 DONE, TASK-011 (TEST P1 batch 1) dibuat.
+
+### Requirements and decisions
+
+- **Requirements implemented:** TEST-035 (NFR security scan — gitleaks, 0 secret), ISO 27001 A.8.24 (penggunaan kriptografi), A.5.33 (proteksi aset)
+- **Decisions / tradeoffs:** VAPID dirotasi tanpa purge history (key lama mati setelah rotasi → tidak dapat dipakai; purge history = operasi besar, ditunda); dev cert & JWT sampel dibiarkan (non-secret, sudah untracked/ignored); `testApi.http` & build artifact tidak ada di working tree
+
+### Implementation impact
+
+- **Added:** —
+- **Modified:** `.env` produksi VPS (`VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY` baru; backup `.env.bak-vapid-20261122`), `.env` lokal api (sinkronisasi)
+- **Database:** None
+- **API:** None (kontrak tidak berubah)
+- **UI:** None — frontend push perlu re-subscribe (subscription lama tidak berlaku)
+
+### Verification
+
+- `gitleaks detect` 3 repo — api: `438 commits scanned / no leaks`; admin: `214 commits / leaks found: 3`; kkpusid: `147 commits / leaks found: 56`
+- Triage otomatis: JWT sampel diverifikasi `jwt.verify` vs `JWT_SECRET` produksi → `invalid signature` (bukan kredensial live); `.env` finding diidentifikasi sebagai `VAPID_PRIVATE_KEY` (len 43, prefix `4IL`) — bukan DB password (sha256 lokal DB_PASSWORD ≠)
+- Rotasi: `GET https://api.kkpus.id/api/push/vapid-public-key` (Bearer) → `{"success":true,"vapid_public_key":"BKuu…"}` (key baru); `/health/deep` 200 setelah restart
+
+### Risks and follow-up
+
+- **Known issues:** Subscription Web Push lama tidak berlaku setelah rotasi (re-subscribe otomatis oleh frontend saat kunjungan berikutnya — perlu dipastikan); sisa secret history kkpusid (VAPID lama, dev cert) masih di git history — purge opsional (`git filter-repo`) bila diinginkan; rotasi password DB produksi masih disarankan (temuan lama, di luar scope TASK-010)
+- **Next recommended task:** TASK-011 — TEST P1 batch 1 (TEST-002, 005, 006, 008, 010)
+
+---
+
 ## [2026-11-22] — TEST P0 Live (TEST-001..032, 035) + DEF-002..010 (Fix Temuan)
 
 ### Outcome

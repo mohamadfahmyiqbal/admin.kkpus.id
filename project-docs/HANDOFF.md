@@ -14,9 +14,9 @@
 
 - **Repository / branch:** D:\kkpus (branch: temp)
 - **Version / environment:** 1.0.0 / local development
-- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** (TASK-000..TASK-007)
-- **Active task:** — (TEST P0 selesai) — rekomendasi berikutnya: TEST P1
-- **Last verification:** TEST P0 live 2026-11-22 (api `4e7b8f4`): 57/57 check PASS; eslint 0 error; npm test 108/108; data uji produksi 0 sisa; `/health/deep` 200; nginx `server_tokens off` aktif; detail di `08_TEST_PLAN.md` §4.1 & `10_DEV_LOG.md` (DEF-002..010)
+- **Completed milestone:** Documentation baseline + PRD + FSD + TSD + ERD + API Spec (rekonsiliasi §6 + §3 rewrite aktual) + UI/UX Spec + Test Plan + BLK-001..008 (semua resolved; MIG-004 executed di produksi 2026-11-22) + BLK-007 role decision + TASK-008 + NEW-002 triase + DEF-001 + **TEST P0 live (TEST-001..032, 035): 57/57 PASS + DEF-002..010 fixed** + **TASK-010: gitleaks 3 repo + VAPID rotation** (TASK-000..TASK-010)
+- **Active task:** — (TASK-010 selesai) — rekomendasi berikutnya: TASK-011 (TEST P1 batch 1)
+- **Last verification:** TASK-010 gitleaks 2026-11-22: api 0 leak (438 commit), admin 3× P4, kkpusid 56 → 1× P2 VAPID dirotasi (live: `GET /api/push/vapid-public-key` → key baru `BKuu…`; `/health/deep` 200); TEST P0 57/57 (api `4e7b8f4`); npm test 108/108; detail `08_TEST_PLAN.md` §4.1 & `10_DEV_LOG.md` (DEF-002..010, TASK-010)
 
 ## Decisions and constraints
 
@@ -40,13 +40,13 @@
 
 ## Next recommended task
 
-**Eksekusi TEST P1 (P1)**
+**TASK-011 — TEST P1 batch 1: TEST-002, 005, 006, 008, 010 (P1)**
 
-- Why now: TEST P0 live selesai 57/57 PASS (2026-11-22, api `4e7b8f4`); seluruh defect P0 (DEF-002..010) sudah diperbaiki & terdeploy.
-- Test cases: TEST-002 (OTP E2E), TEST-005 (assign role), TEST-006 (arsip/restore), TEST-008 (laporan simpanan), TEST-010 (termination), TEST-014/015, TEST-017..026, TEST-028..031 (lihat `08_TEST_PLAN.md`)
-- Read: `08_TEST_PLAN.md` §4.1 (hasil P0 + divergensi spec), `06_API_SPEC.md` §3 (kontrak aktual), `09_BACKLOG.md`
+- Why now: TEST P0 57/57 PASS & TEST-035 gitleaks selesai (TASK-010, 2026-11-22); seluruh P0 tuntas.
+- Test cases: TEST-002 (OTP E2E: send→verify→reset→login), TEST-005 (assign role + audit + 409 ALB), TEST-006 (arsip/restore re-auth), TEST-008 (dashboard & laporan simpanan), TEST-010 (termination + redirect)
+- Read: `08_TEST_PLAN.md` §4 (TEST-002..036) & §4.1 (hasil P0 + divergensi), `06_API_SPEC.md` §3, `09_BACKLOG.md`
 - Acceptance evidence: Setiap TEST P1 dieksekusi dengan environment + test data; hasil PASS/FAIL + DEF baru terdokumentasi di dev log
-- **Sisa TEST-035 (P0):** `gitleaks` full-repo (CI) — header live sudah PASS; rotasi password DB produksi (`.env` lokal memuat password produksi)
+- **Follow-up keamanan:** rotasi password DB produksi (`.env` lokal memuat password produksi); pastikan frontend re-subscribe Web Push setelah rotasi VAPID; purge history git kkpusid (opsional)
 - **Fast-follow (P2):** 26 moderate vulns (api 18, admin 6, kkpusid 2) — tinjau per kasus; rotasi password DB (`.env` lokal kini memuat password produksi)
 - Do not start if: test data (akun 4 peran + data uji) belum tersedia di DB produksi
 
