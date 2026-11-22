@@ -40,26 +40,26 @@
 
 ## Next recommended task
 
-**TASK-014 — TEST-034 sisa + deploy frontend fix**
+**Semua P0/P1/P2 API-testable + TEST-034 selesai.** Sisa manual/staging:
 
-- **Deploy DEF-016 (kkpusid `c4421f6`):** fix bundle size sudah di-commit di branch `rollback/2026-11-02`, **belum push/deploy**. Perlu konfirmasi mekanisme deploy frontend (admin/kkpusid) — API deploy via `git fetch && merge && pm2 restart`, tapi frontend (statis) belum diketahui.
-- **TEST-034 sisa:** Lighthouse LCP < 2.5s + skor a11y ≥ 90 (butuh Chrome/staging + `lighthouse` CLI atau PageSpeed Insights).
-- **TEST-030 (PWA offline), TEST-036 (keyboard a11y):** manual browser testing.
+- **TEST-030 (PWA offline & update):** manual test build produksi + SW terdaftar
+- **TEST-036 (aksesibilitas keyboard):** walkthrough keyboard-only layar kritis
+
+**Dashboard admin authenticated Lighthouse (opcional):** butuh inject auth token (localStorage) — catatan untuk iterasi selanjutnya.
 
 **Follow-up keamanan (belum dikerjakan, perlu instruksi):**
 - Rotasi password DB produksi (`.env` lokal memuat password produksi)
-- Frontend re-subscribe Web Push pasca VAPID rotation
+- Frontend re-subscribe Web Push pasca rotasi VAPID
 - Purge history git kkpusid (opsional)
-- Unit test `utils/passwordValidator.js` (coverage 9.67%)
+- Tambah unit test `utils/passwordValidator.js` (coverage 9.67%)
+- Tinjau 26 moderate vulns tersisa (api 18, admin 6, kkpusid 2) per kasus
 
-**Catatan schema/performa:**
+**Catatan schema/performa (untuk iterasi berikutnya):**
 - `loan_products` tanpa field limit/plafon → INVALID_AMOUNT (TEST-014) tak teruji
 - `createSukukOrder` tak cek quota/status → order bisa melebihi kuota
 - `pinjaman_modal` tanpa audit trail
 - Dashboard p95=414ms di 20 concurrent — observasi performa (single instance)
 - TEST-019 INSUFFICIENT_BALANCE, TEST-022/028 VALIDATION_ERROR tidak ada kode error literal (impl pakai 400 + pesan teks)
-- **Fast-follow (P2):** 26 moderate vulns (api 18, admin 6, kkpusid 2) — tinjau per kasus; rotasi password DB (`.env` lokal kini memuat password produksi)
-- Do not start if: test data (akun 4 peran + data uji) belum tersedia di DB produksi
 
 ## Update rule
 

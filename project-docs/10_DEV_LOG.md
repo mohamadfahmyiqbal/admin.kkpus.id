@@ -35,11 +35,13 @@ Build produksi `kkpusid` (public) menghasilkan initial JS **567 kB gzip** — di
 - `npm run build` (kkpusid) — sukses; `vendor-print`/`vendor-moment`/`vendor-webcam` TIDAK di-`modulepreload` (lazy, terverifikasi grep `index.html` = 0)
 - Initial JS kkpusid: 567 → **281 kB gzip** (−50%); admin: **125 kB gzip**
 - `npx eslint` (kkpusid) — 0 error
+- **Deploy:** CI/CD sukses (run `44989746570`): CI lint/test/audit/security ✅ + Deploy to VPS ✅; kkpus.id serving build baru (chunk `index--oCCF9ph.js` + vendor split terverifikasi)
+- **Lighthouse (desktop):** kkpus.id landing — LCP 0.7s, Perf 99, A11y 94, BP 90; admin login — LCP 0.9s, Perf 99, A11y 93, BP 100 → LCP < 2.5s & a11y ≥ 90 (TEST-034) ✅
 
 ### Risks and follow-up
 
-- **Known issues:** LCP & a11y (Lighthouse) belum diukur (butuh Chrome/staging); fix belum di-deploy ke produksi (mekanisme deploy frontend belum diketahui — perlu konfirmasi)
-- **Next recommended task:** TASK-014 — deploy frontend fix + Lighthouse LCP/a11y (TEST-034 sisa)
+- **Known issues:** Dashboard admin authenticated belum diuji Lighthouse (butuh inject auth token); `vendor-print` (276 kB gzip) lazy-loaded hanya saat ReceiptPage — pastikan ReceiptPage tetap lazy di build berikutnya
+- **Next recommended task:** TEST-030 (PWA offline) / TEST-036 (keyboard a11y) — manual browser testing
 
 ---
 

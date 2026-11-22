@@ -187,9 +187,18 @@ Build produksi (`vite build`) kedua frontend & ukur initial JS (chunk yang di-`m
 | admin.kkpus.id | **~125 kB** (index 80 + react-dom 41 + jsx-runtime 3 + ThemeProvider 0.6) | < 500 kB | ✅ PASS |
 | kkpusid (public) | **~281 kB** (index 17 + vendor 183 + vendor-react 72 + framer 11 + lain ~2) | < 500 kB | ✅ PASS |
 
-**Defect ditemukan & diperbaiki (DEF-016):** `kkpusid/vite.config.js` `manualChunks` catch-all `return 'vendor'` memaksa `html2pdf.js` (~400 kB — membundel html2canvas+jspdf+canvg) + `moment` + `react-webcam` masuk **initial preloaded vendor**. `html2pdf` hanya dipakai `ReceiptPage` (lazy route) tapi dimuat di setiap halaman → initial JS **567 kB gzip** (risiko LCP). Fix: split `vendor-print`/`vendor-moment`/`vendor-webcam` jadi chunk terpisah (lazy) → initial **281 kB gzip (−50%)**.
+**Defect ditemukan & diperbaiki (DEF-016):** `kkpusid/vite.config.js` `manualChunks` catch-all `return 'vendor'` memaksa `html2pdf.js` (~400 kB — membundel html2canvas+jspdf+canvg) + `moment` + `react-webcam` masuk **initial preloaded vendor**. `html2pdf` hanya dipakai `ReceiptPage` (lazy route) tapi dimuat di setiap halaman → initial JS **567 kB gzip** (risiko LCP). Fix: split `vendor-print`/`vendor-moment`/`vendor-webcam` jadi chunk terpisah (lazy) → initial **281 kB gzip (−50%)**. Deploy via CI/CD (run `44989746570`): CI lint/test/audit/security ✅, Deploy to VPS ✅ — kkpus.id serving build baru.
 
-**Belum diuji (butuh Lighthouse/Chrome):** LCP < 2.5s & skor a11y ≥ 90 (TEST-034); TEST-030 (PWA offline), TEST-036 (keyboard accessibility). **Deploy fix frontend:** belum (mekanisme deploy admin/kkpusid belum diketahui — commit kkpusid `c4421f6` di branch, belum push/deploy).
+**Lighthouse audit (desktop, 2026-11-22):**
+
+| Target | LCP | Perf | A11y | Best Practices | Status |
+| --- | --- | --- | --- | --- | --- |
+| kkpus.id (landing) | **0.7 s** | 99 | 94 | 90 | ✅ PASS |
+| admin.kkpus.id (login) | **0.9 s** | 99 | 93 | 100 | ✅ PASS |
+
+Kedua target **LCP < 2.5 s** & **a11y ≥ 90** terpenuhi. Dashboard admin authenticated belum diuji Lighthouse (butuh inject auth token — catatan untuk iterasi selanjutnya).
+
+**Belum diuji (manual/staging):** TEST-030 (PWA offline), TEST-036 (keyboard accessibility).
 
 ## 5. Regression and release checks
 
