@@ -249,8 +249,19 @@ Audit kode keyboard & fokus di kedua frontend (`kkpusid` + `admin`), plus Lighth
 
 **Belum diuji (manual/staging):** Walkthrough keyboard-only penuh di browser nyata (fokus: urutan tab, focus trap modal, focus kembali ke trigger setelah modal tutup,indikator fokus terlihat) — perlu manual. Lighthouse dashboard admin authenticated (butuh inject token).
 
-## 5. Regression and release checks
+### 4.8 Follow-up keamanan pasca-TEST (2026-11-22)
 
+| Item | Aksi | Hasil |
+| --- | --- | --- |
+| Web Push re-subscribe (DEF-019) | kkpusid `4080ec6`: pushHelper fetch VAPID fresh + compare `push_vapid_used` (localStorage), re-subscribe bila berubah/legacy; layout NotificationPrompt rekonsiliasi saat permission `granted` tiap kunjungan | CI/CD run `44997108453` ✅; re-subscribe otomatis pasca rotasi VAPID |
+| react-router CVE-2025-68470 (SEC-001) | Upgrade 6.30.6 → 7.18.6 di kkpusid (`c10712c`) & admin (`69ea165`); verifikasi build/lint/test + runtime via CDP (kkpus.id landing render, admin login render) | CI/CD kkpusid `44998517897` + admin `44998533636` ✅ |
+| firebase-admin removal (SEC-002) | Hapus unused `firebase-admin@13.10.0` (0 reference) + `npm audit fix` non-force (rimraf/js-beautify/sequelize-cli aman) | 18 → 8 moderate vuln; 126 tests pass; CI api `44999571982` ✅ |
+| Sisa 8 moderate vulns | Accepted risk: uuid@8.3.2 (GHSA-w5hq-g745-h8pq — `uuidv4()` tanpa buffer → tak exploitable; fix butuh breaking downgrade exceljs→3.4.0/sequelize-cli→6.6.2), editorconfig/nodemon/glob/minimatch (devDeps, tak deployed) | 2026-11-22 |
+| Rotasi password DB prod | **Belum dikerjakan** — butuh akses SSH VPS (update `.env` + restart) yang tak tersedia di sesi ini; user `admin` mungkin shared | 2026-11-22 |
+
+**Belum diuji (manual/staging):** Walkthrough keyboard-only penuh di browser nyata (TEST-036 sisa) — urutan tab, focus trap modal, focus kembali ke trigger, indikator fokus terlihat.
+
+## 5. Regression and release checks
 - [ ] `npm run lint` dan `npm run build` lulus di `admin.kkpus.id`, `kkpusid`, dan `api.kkpus.id`.
 - [ ] Automated tests lulus: Jest/Vitest (unit + integration) dan Supertest (kontrak API) — coverage kode baru ≥ 70%.
 - [ ] Critical user journeys lulus di **staging**: login, registrasi 8-step, approval 3-step (TEST-007), manual payment (TEST-011), penarikan simpanan (TEST-009), arisan draw (TEST-016).

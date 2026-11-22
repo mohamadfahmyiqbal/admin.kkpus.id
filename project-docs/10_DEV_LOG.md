@@ -11,6 +11,44 @@
 
 ---
 
+## [2026-11-22] — Follow-up keamanan (DEF-019 + SEC-001/002 + vuln triage)
+
+### Outcome
+
+Menuntaskan semua follow-up keamanan yang sebelumnya diidentifikasi. Ditemukan & diperbaiki: **DEF-019** (Web Push re-subscribe pasca rotasi VAPID), **SEC-001** (react-router-dom open-redirect CVE-2025-68470 di kkpusid + admin), **SEC-002** (api `firebase-admin` unused + 18 transitive vuln). Triage 8 sisa moderate vuln sebagai accepted-risk. Rotasi password DB produksi masih pending (butuh SSH VPS).
+
+### Requirements and decisions
+
+- **Requirements implemented:** Follow-up keamanan dari HANDOFF — Web Push re-subscribe, react-router CVE, vuln triage, unit test passwordValidator (sudah TASK-015)
+- **Decisions / tradeoffs:**
+  - react-router 6→7 (semver major) dipilih walau breaking, karena CVE-2025-68470 nyata & app pakai library mode (`createBrowserRouter`) yang kompatibel v7; verifikasi build/lint/test + runtime CDP sebelum merge
+  - uuid vuln dibiarkan: app pakai `uuidv4()` tanpa buffer eksplisit → tak exploitable; fix `--force` akan downgrade exceljs→3.4.0 (breaking)
+  - firebase-admin dihapus total (unused) ketimbang di-upgrade major 8→14 (lebih aman & kecil attack surface)
+  - DB password rotation: belum dieksekusi (butuh SSH VPS + koordinasi; user `admin` mungkin shared)
+
+### Implementation impact
+
+- **Added:** `__tests__/passwordValidator.test.js` (coverage 9.67→100%)
+- **Modified:** `kkpusid/src/utils/helper/pushHelper.js` + `src/components/layout/ui/NotificationPrompt.jsx` (DEF-019), `kkpusid/src/pages/program/pinjaman/components/FileUploadField.jsx` (DEF-018), `admin.kkpus.id/src/components/ui/ApprovalPlaceholder.jsx` (DEF-018), kedua repo `package.json` (react-router 6→7, api firebase-admin removal)
+- **Database:** None (schema tak berubah)
+- **API:** None
+- **UI:** Banner offline, zone upload/status approval keyboard-accessible, react-router routing kompatibel v7
+
+### Verification
+
+- `passwordValidator`: 18/18 test, coverage 100%
+- Web Push re-subscribe: logic verified (CDP offline + re-subscribe path); CI/CD kkpusid `44997108453` ✅
+- react-router: kkpusid `c10712c` run `44998517897` + admin `69ea165` run `44998533636` ✅; CDP prod: kkpus.id landing render, admin login render
+- firebase-admin removal: `npm audit` 18→8 moderate; 126/126 tests; api CI `44999571982` ✅
+- Frontend/API health: kkpus.id 200, admin 200, api 200
+
+### Risks and follow-up
+
+- **Known issues:** Sisa 8 moderate vulns accepted-risk (uuid/exceljs/sequelize runtime — fix breaking downgrade; devDeps tak deployed). Rotasi password DB produksi belum (butuh SSH VPS + maintenance window).
+- **Next recommended task:** (1) Koordinasi rotasi password DB (butuh VPS SSH), (2) Walkthrough keyboard-only penuh manual (TEST-036 sisa), (3) opsional: purge git history kkpusid (opsional).
+
+---
+
 ## [2026-11-22] — TEST-036 keyboard accessibility + DEF-018
 
 ### Outcome
