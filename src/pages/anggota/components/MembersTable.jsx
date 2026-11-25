@@ -1,7 +1,7 @@
 import React from "react";
 import { useMemo, useCallback } from "react";
 import { Table, Spinner, Badge, Button, Pagination, Form } from "react-bootstrap";
-import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear, ArchiveBox, ArrowCounterClockwise } from "phosphor-react";
+import { Eye, CaretUp, CaretDown, ArrowsDownUp, Phone, EnvelopeSimple, IdentificationCard, X, UserGear } from "phosphor-react";
 import { maskSensitiveData } from "../../../utils/helpers";
 
 const MembersTable = ({
@@ -21,8 +21,6 @@ const MembersTable = ({
   onToggleSelectAll,
   onToggleSelectMember,
   onEditRole,
-  onArchiveMember,
-  isArchiveMode = false,
 }) => {
   const totalItems = members?.length || 0;
   const totalPages = Math.ceil(totalItems / pageSize) || 1;
@@ -282,13 +280,9 @@ const MembersTable = ({
               <tr>
                 <td colSpan="8" className="text-center py-5 text-muted">
                   <div className="py-3">
-                    <p className="mb-1 fw-medium text-dark">
-                      {isArchiveMode ? "Tidak ada anggota terarsip." : "Tidak ada data anggota yang cocok."}
-                    </p>
+                    <p className="mb-1 fw-medium text-dark">Tidak ada data anggota yang cocok.</p>
                     <small className="text-muted d-block mb-2">
-                      {isArchiveMode
-                        ? "Anggota yang diarsipkan akan muncul di sini."
-                        : "Coba ubah kata kunci pada kolom pencarian di atas."}
+                      Coba ubah kata kunci pada kolom pencarian di atas.
                     </small>
                     {hasAnyFilter && (
                       <Button
@@ -334,44 +328,17 @@ const MembersTable = ({
                         >
                           <Eye size={20} weight="bold" aria-hidden="true" />
                         </Button>
-                        {isArchiveMode ? (
-                          <Button
-                            variant="light"
-                            size="sm"
-                            className="rounded-circle text-info border shadow-none"
-                            onClick={() => onArchiveMember?.(m.member_id)}
-                            title="Kembalikan anggota ke aktif"
-                            aria-label={`Kembalikan ${m.full_name || "anggota"} ke aktif`}
-                            style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-                          >
-                            <ArrowCounterClockwise size={20} weight="bold" aria-hidden="true" />
-                          </Button>
-                        ) : (
-                          <>
-                            <Button
-                              variant="light"
-                              size="sm"
-                              className="rounded-circle text-warning border shadow-none"
-                              onClick={() => onArchiveMember?.(m.member_id)}
-                              title="Arsipkan anggota"
-                              aria-label={`Arsipkan ${m.full_name || "anggota"}`}
-                              style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-                            >
-                              <ArchiveBox size={20} weight="bold" aria-hidden="true" />
-                            </Button>
-                            <Button
-                              variant="light"
-                              size="sm"
-                              className="rounded-circle text-warning border shadow-none"
-                              onClick={() => onEditRole?.(m)}
-                              title="Ubah Role / Peran Anggota"
-                              aria-label={`Ubah role atau peran ${m.full_name || "anggota"}`}
-                              style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-                            >
-                              <UserGear size={20} weight="bold" aria-hidden="true" />
-                            </Button>
-                          </>
-                        )}
+                        <Button
+                          variant="light"
+                          size="sm"
+                          className="rounded-circle text-warning border shadow-none"
+                          onClick={() => onEditRole?.(m)}
+                          title="Ubah Role / Peran Anggota"
+                          aria-label={`Ubah role atau peran ${m.full_name || "anggota"}`}
+                          style={{ minWidth: "44px", minHeight: "44px", width: "44px", height: "44px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                        >
+                          <UserGear size={20} weight="bold" aria-hidden="true" />
+                        </Button>
                       </div>
                     </td>
                     <td>
@@ -457,7 +424,7 @@ const MembersTable = ({
           <small className="text-muted">
             Menampilkan <b>{startIndex + 1}</b> -{" "}
             <b>{Math.min(startIndex + pageSize, totalItems)}</b> dari{" "}
-            <b>{totalItems}</b> {isArchiveMode ? "anggota terarsip" : "anggota"}
+            <b>{totalItems}</b> anggota
           </small>
 
           {totalPages > 1 && (

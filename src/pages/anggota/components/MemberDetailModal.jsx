@@ -4,8 +4,6 @@ import { Modal, Row, Col, Button, Badge, Nav, Tab, Card } from "react-bootstrap"
 import {
   User,
   Trash,
-  ArchiveBox,
-  ArrowCounterClockwise,
   IdentificationCard,
   Phone,
   EnvelopeSimple,
@@ -39,7 +37,7 @@ const InfoCard = ({ icon: Icon, label, value, subValue, colProps = { md: 6 } }) 
   </Col>
 );
 
-const MemberDetailModal = ({ show, onHide, member, onArchive, formatDate, onEditRole, isArchiveMode = false }) => {
+const MemberDetailModal = ({ show, onHide, member, onDelete, formatDate, onEditRole }) => {
   const [activeTab, setActiveTab] = useState("semua");
 
   if (!member) return null;
@@ -155,13 +153,6 @@ const MemberDetailModal = ({ show, onHide, member, onArchive, formatDate, onEdit
                   >
                     (Ubah Role)
                   </Button>
-                )}
-                {isArchiveMode && (
-                  <Badge bg="warning" text="dark" className="rounded-pill px-2.5 py-1 ms-2">
-                    <span className="d-inline-flex align-items-center gap-1">
-                      <span className="bi bi-archive" aria-hidden="true"></span> Terarsip
-                    </span>
-                  </Badge>
                 )}
               </div>
             </div>
@@ -661,21 +652,14 @@ const MemberDetailModal = ({ show, onHide, member, onArchive, formatDate, onEdit
       </Modal.Body>
 
       <Modal.Footer className="border-0 px-4 pb-4 d-flex justify-content-between">
-        {onArchive && (
-          <Button
-            variant={isArchiveMode ? "outline-info" : "outline-warning"}
-            className="d-flex align-items-center gap-2 fw-semibold shadow-none"
-            onClick={() => onArchive(member?.member_id)}
-            aria-label={isArchiveMode ? `Kembalikan anggota ${member?.full_name || "ini"} ke aktif` : `Arsipkan anggota ${member?.full_name || "ini"}`}
-          >
-            {isArchiveMode ? (
-              <ArrowCounterClockwise size={16} aria-hidden="true" />
-            ) : (
-              <ArchiveBox size={16} aria-hidden="true" />
-            )}
-            {isArchiveMode ? "Kembalikan ke Aktif" : "Arsipkan Anggota Ini"}
-          </Button>
-        )}
+        <Button
+          variant="outline-danger"
+          className="d-flex align-items-center gap-2 fw-semibold shadow-none"
+          onClick={() => onDelete(member?.member_id)}
+          aria-label={`Hapus permanen anggota ${member?.full_name || "ini"}`}
+        >
+          <Trash size={16} aria-hidden="true" /> Hapus Anggota Ini
+        </Button>
         <Button variant="secondary" className="px-4" onClick={onHide} aria-label="Tutup modal detail anggota">
           Tutup
         </Button>

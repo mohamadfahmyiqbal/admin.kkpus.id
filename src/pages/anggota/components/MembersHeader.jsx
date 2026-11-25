@@ -1,22 +1,16 @@
 import React from "react";
 
 import { Row, Col, Button } from "react-bootstrap";
-import { UploadSimple, DownloadSimple, Trash, ArchiveBox, ArrowCounterClockwise } from "phosphor-react";
+import { UploadSimple, DownloadSimple, Trash } from "phosphor-react";
 
 const MembersHeader = ({
   onImport,
   onExport,
   disableExport,
   selectedCount = 0,
-  onArchiveBatch,
-  isArchiveMode = false,
+  onDeleteBatch,
 }) => {
-  const batchButtonLabel = isArchiveMode ? "Kembalikan" : "Arsipkan";
-  const batchButtonIcon = isArchiveMode ? <ArrowCounterClockwise size={18} weight="bold" aria-hidden="true" /> : <ArchiveBox size={18} weight="bold" aria-hidden="true" />;
-  const batchButtonVariant = isArchiveMode ? "info" : "warning";
-  const batchButtonAriaLabel = isArchiveMode
-    ? `Kembalikan ${selectedCount} anggota dari arsip`
-    : `Arsipkan ${selectedCount} anggota yang dipilih`;
+  const batchButtonAriaLabel = `Hapus permanen ${selectedCount} anggota yang dipilih`;
 
   return (
     <Row className="mb-4 align-items-center">
@@ -29,13 +23,13 @@ const MembersHeader = ({
       <Col md={6} className="text-md-end mt-3 mt-md-0 d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
         {selectedCount > 0 && (
           <Button
-            variant={batchButtonVariant}
+            variant="danger"
             className="d-flex align-items-center gap-2 fw-semibold px-3 shadow-sm"
-            onClick={onArchiveBatch}
+            onClick={onDeleteBatch}
             aria-label={batchButtonAriaLabel}
           >
-            {batchButtonIcon}
-            {batchButtonLabel} ({selectedCount}) Anggota
+            <Trash size={18} weight="bold" aria-hidden="true" />
+            Hapus ({selectedCount}) Anggota
           </Button>
         )}
         <Button

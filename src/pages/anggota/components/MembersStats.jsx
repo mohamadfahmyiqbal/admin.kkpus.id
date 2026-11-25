@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Row, Col, Card } from "react-bootstrap";
-import { Users, CheckCircle, ShieldCheck, UserPlus, ArchiveBox } from "phosphor-react";
+import { Users, CheckCircle, ShieldCheck, UserPlus } from "phosphor-react";
 
-const MembersStats = ({ members = [], loading = false, isArchiveMode = false }) => {
+const MembersStats = ({ members = [], loading = false }) => {
   const total = members.length;
   const regulerCount = members.filter((m) =>
     String(m.member_type || "").toLowerCase().includes("reguler")
@@ -15,37 +15,7 @@ const MembersStats = ({ members = [], loading = false, isArchiveMode = false }) 
     (m) => String(m.status?.status_name || "").toUpperCase() === "AKTIF"
   ).length;
 
-  // Statistik berbeda untuk mode arsip
-  const stats = isArchiveMode ? [
-    {
-      title: "Total Terarsip",
-      value: loading ? "..." : total,
-      icon: <ArchiveBox size={24} weight="duotone" aria-hidden="true" />,
-      color: "warning",
-      bgLight: "bg-warning bg-opacity-10 text-warning",
-    },
-    {
-      title: "Reguler (Arsip)",
-      value: loading ? "..." : regulerCount,
-      icon: <ShieldCheck size={24} weight="duotone" aria-hidden="true" />,
-      color: "info",
-      bgLight: "bg-info bg-opacity-10 text-info",
-    },
-    {
-      title: "Luar Biasa (Arsip)",
-      value: loading ? "..." : luarBiasaCount,
-      icon: <UserPlus size={24} weight="duotone" aria-hidden="true" />,
-      color: "secondary",
-      bgLight: "bg-secondary bg-opacity-10 text-secondary",
-    },
-    {
-      title: "Bisa Dikembalikan",
-      value: loading ? "..." : total,
-      icon: <CheckCircle size={24} weight="duotone" aria-hidden="true" />,
-      color: "success",
-      bgLight: "bg-success bg-opacity-10 text-success",
-    },
-  ] : [
+  const stats = [
     {
       title: "Total Anggota",
       value: loading ? "..." : total,
@@ -77,7 +47,7 @@ const MembersStats = ({ members = [], loading = false, isArchiveMode = false }) 
   ];
 
   return (
-    <Row className="g-3 mb-4" role="region" aria-label={isArchiveMode ? "Statistik anggota terarsip" : "Statistik anggota koperasi"}>
+    <Row className="g-3 mb-4" role="region" aria-label="Statistik anggota koperasi">
       {stats.map((item, idx) => (
         <Col key={idx} xs={6} lg={3}>
           <Card className="border-0 shadow-sm rounded-4 h-100">
