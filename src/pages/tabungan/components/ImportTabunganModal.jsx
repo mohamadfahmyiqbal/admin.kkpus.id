@@ -3,20 +3,18 @@ import { Modal, Button, Form, Alert, Spinner, Nav, Tab } from "react-bootstrap";
 import { UploadSimple, DownloadSimple, Coins, Receipt } from "phosphor-react";
 import Swal from "sweetalert2";
 import tabunganService from "../../../utils/api/UTabungan";
-import ImportFailureTable from "../../../components/ui/ImportFailureTable";
+import { showImportFailureSwal } from "../../../utils/helpers/importSwal";
 
 const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
   const [activeTab, setActiveTab] = useState("master"); // "master" | "transaksi"
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [importResult, setImportResult] = useState(null);
 
   const handleTabChange = (k) => {
     setActiveTab(k);
     setFile(null);
     setErrorMsg("");
-    setImportResult(null);
   };
 
   const handleSubmit = async (e) => {
@@ -28,7 +26,6 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
 
     setLoading(true);
     setErrorMsg("");
-    setImportResult(null);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -47,17 +44,19 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
         const errors = res.data.data?.errors || [];
 
         if (errors.length > 0 || totalFailed > 0) {
-          setImportResult({
+          setFile(null);
+          await showImportFailureSwal({
+            errors,
+            totalFailed,
+            totalImported,
             label:
               activeTab === "transaksi"
                 ? "Transaksi Tabungan"
                 : "Master Tabungan",
-            totalImported,
-            totalFailed,
-            errors,
+            filename: `Data_Gagal_Import_Tabungan_${activeTab}`,
           });
-          setFile(null);
           if (onSuccess) onSuccess({ totalImported, totalFailed });
+          onHide();
           return;
         }
 
@@ -223,48 +222,6 @@ const ImportTabunganModal = ({ show, onHide, onSuccess }) => {
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>
-
-        {importResult && (
-          <div className="mt-3">
-            <Alert
-              variant={importResult.totalImported > 0 ? "success" : "danger"}
-              className="border-0"
-            >
-              <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                <div>
-                  <strong className="d-block">
-                    Import {importResult.label}:{" "}
-                    {importResult.totalImported > 0
-                      ? "Selesai Sebagian"
-                      : "Gagal"}
-                  </strong>
-                  <small>
-                    Berhasil diimpor:{" "}
-                    <b className="text-success">{importResult.totalImported}</b>{" "}
-                    data · Gagal:{" "}
-                    <b className="text-danger">{importResult.totalFailed}</b> data
-                  </small>
-                </div>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => {
-                    setImportResult(null);
-                    onSuccess?.();
-                    onHide();
-                  }}
-                >
-                  Tutup
-                </Button>
-              </div>
-            </Alert>
-            <ImportFailureTable
-              errors={importResult.errors}
-              failedCount={importResult.totalFailed}
-              filename={`Data_Gagal_Import_Tabungan_${activeTab}`}
-            />
-          </div>
-        )}
 
         <Form onSubmit={handleSubmit} className="mt-2">
           <Form.Group>

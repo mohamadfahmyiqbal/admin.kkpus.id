@@ -3,20 +3,18 @@ import { Modal, Button, Form, Alert, Spinner, Nav } from "react-bootstrap";
 import { UploadSimple, DownloadSimple, Receipt, ShoppingCart } from "phosphor-react";
 import Swal from "sweetalert2";
 import jualBeliService from "../../../utils/api/UJualBeli";
-import ImportFailureTable from "../../../components/ui/ImportFailureTable";
+import { showImportFailureSwal } from "../../../utils/helpers/importSwal";
 
 const ImportExcelModal = ({ show, onHide, onSuccess }) => {
   const [activeTab, setActiveTab] = useState("kontrak"); // "kontrak" atau "cicilan"
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [importResult, setImportResult] = useState(null);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setFile(null);
     setErrorMsg("");
-    setImportResult(null);
   };
 
   const handleSubmit = async (e) => {
@@ -27,7 +25,6 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
     }
     setUploading(true);
     setErrorMsg("");
-    setImportResult(null);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -45,17 +42,19 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
         const errors = res.data.data?.errors || [];
 
         if (errors.length > 0 || totalFailed > 0) {
-          setImportResult({
+          setFile(null);
+          await showImportFailureSwal({
+            errors,
+            totalFailed,
+            totalImported,
             label:
               activeTab === "kontrak"
                 ? "Kontrak Jual Beli"
                 : "Riwayat Cicilan Jual Beli",
-            totalImported,
-            totalFailed,
-            errors,
+            filename: `Data_Gagal_Import_JualBeli_${activeTab}`,
           });
-          setFile(null);
           if (onSuccess) onSuccess({ totalImported, totalFailed });
+          onHide();
           return;
         }
 
@@ -193,48 +192,6 @@ const ImportExcelModal = ({ show, onHide, onSuccess }) => {
             </Button>
           </div>
         </Alert>
-
-        {importResult && (
-          <div className="mt-3">
-            <Alert
-              variant={importResult.totalImported > 0 ? "success" : "danger"}
-              className="border-0"
-            >
-              <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                <div>
-                  <strong className="d-block">
-                    Import {importResult.label}:{" "}
-                    {importResult.totalImported > 0
-                      ? "Selesai Sebagian"
-                      : "Gagal"}
-                  </strong>
-                  <small>
-                    Berhasil import:{" "}
-                    <b className="text-success">{importResult.totalImported}</b>{" "}
-                    data · Gagal import:{" "}
-                    <b className="text-danger">{importResult.totalFailed}</b> data
-                  </small>
-                </div>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => {
-                    setImportResult(null);
-                    onSuccess?.();
-                    onHide();
-                  }}
-                >
-                  Tutup
-                </Button>
-              </div>
-            </Alert>
-            <ImportFailureTable
-              errors={importResult.errors}
-              failedCount={importResult.totalFailed}
-              filename={`Data_Gagal_Import_JualBeli_${activeTab}`}
-            />
-          </div>
-        )}
 
         <Form onSubmit={handleSubmit} className="mt-4">
           <Form.Group>

@@ -3,13 +3,12 @@ import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
 import investasiService from "../../../../utils/api/UInvestasi";
-import ImportFailureTable from "../../../../components/ui/ImportFailureTable";
+import { showImportFailureSwal } from "../../../../utils/helpers/importSwal";
 
 const ImportPendanaanModal = ({ show, onHide, onSuccess }) => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [importResult, setImportResult] = useState(null);
 
   const handleFileChange = (e) => {
     setErrorMsg("");
@@ -42,7 +41,6 @@ const ImportPendanaanModal = ({ show, onHide, onSuccess }) => {
 
     setLoading(true);
     setErrorMsg("");
-    setImportResult(null);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -54,9 +52,16 @@ const ImportPendanaanModal = ({ show, onHide, onSuccess }) => {
         const errors = res.data.data?.errors || [];
 
         if (errors.length > 0 || totalFailed > 0) {
-          setImportResult({ totalImported, totalFailed, errors });
           setFile(null);
+          await showImportFailureSwal({
+            errors,
+            totalFailed,
+            totalImported,
+            label: "Pendanaan Syariah",
+            filename: "Data_Gagal_Import_Pendanaan_Syariah",
+          });
           if (onSuccess) onSuccess({ totalImported, totalFailed });
+          onHide();
           return;
         }
 
@@ -127,48 +132,6 @@ const ImportPendanaanModal = ({ show, onHide, onSuccess }) => {
             </Button>
           </div>
         </Alert>
-
-        {importResult && (
-          <div className="mt-3">
-            <Alert
-              variant={importResult.totalImported > 0 ? "success" : "danger"}
-              className="border-0"
-            >
-              <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                <div>
-                  <strong className="d-block">
-                    Import Pendanaan Syariah:{" "}
-                    {importResult.totalImported > 0
-                      ? "Selesai Sebagian"
-                      : "Gagal"}
-                  </strong>
-                  <small>
-                    Berhasil import:{" "}
-                    <b className="text-success">{importResult.totalImported}</b>{" "}
-                    data · Gagal import:{" "}
-                    <b className="text-danger">{importResult.totalFailed}</b> data
-                  </small>
-                </div>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => {
-                    setImportResult(null);
-                    onSuccess?.();
-                    onHide();
-                  }}
-                >
-                  Tutup
-                </Button>
-              </div>
-            </Alert>
-            <ImportFailureTable
-              errors={importResult.errors}
-              failedCount={importResult.totalFailed}
-              filename="Data_Gagal_Import_Pendanaan_Syariah"
-            />
-          </div>
-        )}
 
         <Form onSubmit={handleSubmit} className="mt-4">
           <Form.Group>

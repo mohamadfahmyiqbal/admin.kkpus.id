@@ -3,13 +3,12 @@ import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { UploadSimple, DownloadSimple } from "phosphor-react";
 import Swal from "sweetalert2";
 import api from "../../../utils/api/common";
-import ImportFailureTable from "../../../components/ui/ImportFailureTable";
+import { showImportFailureSwal } from "../../../utils/helpers/importSwal";
 
 const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [importResult, setImportResult] = useState(null);
 
   const handleDownloadTemplate = async () => {
     try {
@@ -42,7 +41,6 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
     }
     setUploading(true);
     setErrorMsg("");
-    setImportResult(null);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -54,16 +52,18 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
         const { totalImported = 0, totalFailed = 0, errors = [] } =
           res.data.data || {};
 
-        // Ada baris gagal -> tampilkan tabel rincian di dalam modal
-        // agar admin bisa melihat akun mana yang gagal + penyebabnya.
+        // Ada baris gagal -> tampilkan daftar data yang gagal di popup Swal.
         if (errors.length > 0 || totalFailed > 0) {
-          setImportResult({
-            totalImported,
-            totalFailed,
-            errors,
-          });
           setFile(null);
+          await showImportFailureSwal({
+            errors,
+            totalFailed,
+            totalImported,
+            label: "Anggota",
+            filename: "Data_Gagal_Import_Anggota",
+          });
           onSuccess?.({ totalImported, totalFailed });
+          onHide();
           return;
         }
 
@@ -147,50 +147,6 @@ const ImportAnggotaModal = ({ show, onHide, onSuccess }) => {
             </Button>
           </div>
         </Alert>
-
-        {importResult && (
-          <div className="mt-3">
-            <Alert
-              variant={importResult.totalImported > 0 ? "success" : "danger"}
-              className="border-0"
-            >
-              <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                <div>
-                  <strong className="d-block">
-                    Import Anggota:{" "}
-                    {importResult.totalImported > 0
-                      ? "Selesai Sebagian"
-                      : "Gagal"}
-                  </strong>
-                  <small>
-                    Berhasil diimpor:{" "}
-                    <b className="text-success">{importResult.totalImported}</b>{" "}
-                    anggota · Gagal:{" "}
-                    <b className="text-danger">{importResult.totalFailed}</b>{" "}
-                    anggota
-                  </small>
-                </div>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => {
-                    setImportResult(null);
-                    onSuccess?.(importResult);
-                    onHide();
-                  }}
-                  aria-label="Tutup hasil import"
-                >
-                  Tutup
-                </Button>
-              </div>
-            </Alert>
-            <ImportFailureTable
-              errors={importResult.errors}
-              failedCount={importResult.totalFailed}
-              filename="Data_Gagal_Import_Anggota"
-            />
-          </div>
-        )}
 
         <Form onSubmit={handleSubmit} className="mt-4">
           <Form.Group>

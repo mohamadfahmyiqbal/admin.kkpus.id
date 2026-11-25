@@ -3,7 +3,7 @@ import { Modal, Button, Form, Alert, Spinner, Nav, Tab } from "react-bootstrap";
 import { UploadSimple, DownloadSimple, Money, Receipt, Coins, TrendUp } from "phosphor-react";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
-import ImportFailureTable from "../ui/ImportFailureTable";
+import { showImportFailureSwal } from "../../utils/helpers/importSwal";
 
 /**
  * Definisi tab import simpanan.
@@ -86,7 +86,6 @@ const GenericImportModal = ({
   const [downloading, setDownloading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [tabCounts, setTabCounts] = useState({});
-  const [importResult, setImportResult] = useState(null);
   const fileInputRef = useRef(null);
 
   const activeConfig = tabs.find((t) => t.tabKey === activeTab) || tabs[0];
@@ -98,7 +97,6 @@ const GenericImportModal = ({
       setFile(null);
       setErrorMsg("");
       setTabCounts({});
-      setImportResult(null);
     }
   }, [show, tabs]);
 
@@ -107,7 +105,6 @@ const GenericImportModal = ({
     setActiveTab(key);
     setFile(null);
     setErrorMsg("");
-    setImportResult(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -177,7 +174,6 @@ const GenericImportModal = ({
 
     setUploading(true);
     setErrorMsg("");
-    setImportResult(null);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -193,7 +189,6 @@ const GenericImportModal = ({
         const {
           totalImported = 0,
           totalFailed = 0,
-          totalSkipped = 0,
           errors = [],
         } = res.data.data || {};
 
@@ -202,20 +197,19 @@ const GenericImportModal = ({
           [activeConfig.tabKey]: { imported: totalImported, failed: totalFailed },
         }));
 
-        // Ada baris gagal -> tampilkan tabel rincian di dalam modal
-        // (tidak langsung ditutup) agar admin bisa memeriksa penyebabnya.
+        // Ada baris gagal -> tampilkan daftar data yang gagal di popup Swal.
         if (errors.length > 0 || totalFailed > 0) {
-          setImportResult({
-            type: activeConfig.type,
-            label: activeConfig.label,
-            totalImported,
-            totalFailed,
-            totalSkipped,
-            errors,
-          });
           setFile(null);
           if (fileInputRef.current) fileInputRef.current.value = "";
+          await showImportFailureSwal({
+            errors,
+            totalFailed,
+            totalImported,
+            label: activeConfig.label,
+            filename: `Data_Gagal_Import_${activeConfig.type}`,
+          });
           onSuccess?.({ type: activeConfig.type, totalImported, totalFailed });
+          onHide();
           return;
         }
 
@@ -359,72 +353,6 @@ const GenericImportModal = ({
             })}
           </Tab.Content>
         </Tab.Container>
-
-        {importResult && (
-          <div className="mt-3">
-            <Alert
-              variant={importResult.totalImported > 0 ? "success" : "danger"}
-              className="border-0 mb-0"
-            >
-              <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                <div>
-                  <strong className="d-block">
-                    Import {importResult.label}:{" "}
-                    {importResult.totalImported > 0 ? "Selesai Sebagian" : "Gagal"}
-                  </strong>
-                  <small>
-                    Berhasil diimpor:{" "}
-                    <b className="text-success">
-                      {importResult.totalImported}
-                    </b>{" "}
-                    baris
-                    {importResult.totalFailed > 0 && (
-                      <>
-                        {" "}
-                        · Gagal:{" "}
-                        <b className="text-danger">
-                          {importResult.totalFailed}
-                        </b>{" "}
-                        baris
-                      </>
-                    )}
-                    {importResult.totalSkipped > 0 && (
-                      <>
-                        {" "}
-                        · Dilewati:{" "}
-                        <b className="text-secondary">
-                          {importResult.totalSkipped}
-                        </b>{" "}
-                        baris
-                      </>
-                    )}
-                  </small>
-                </div>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => {
-                    setImportResult(null);
-                    onSuccess?.({
-                      type: importResult.type,
-                      totalImported: importResult.totalImported,
-                      totalFailed: importResult.totalFailed,
-                    });
-                    onHide();
-                  }}
-                >
-                  Tutup
-                </Button>
-              </div>
-            </Alert>
-
-            <ImportFailureTable
-              errors={importResult.errors}
-              failedCount={importResult.totalFailed}
-              filename={`Data_Gagal_Import_${importResult.type}`}
-            />
-          </div>
-        )}
 
         <Form onSubmit={handleSubmit} className="mt-2">
           <Form.Group>
