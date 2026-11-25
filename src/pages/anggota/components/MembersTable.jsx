@@ -21,6 +21,7 @@ const MembersTable = ({
   onToggleSelectAll,
   onToggleSelectMember,
   onEditRole,
+  tableHeadingRef,
 }) => {
   const totalItems = members?.length || 0;
   const totalPages = Math.ceil(totalItems / pageSize) || 1;
@@ -77,6 +78,9 @@ const MembersTable = ({
 
   return (
     <>
+      <h3 ref={tableHeadingRef} tabIndex={-1} className="visually-hidden" style={{ outline: "none" }}>
+        Daftar Anggota Koperasi
+      </h3>
       <div className="table-responsive">
         <Table hover className="align-middle mb-0" aria-label="Daftar anggota koperasi">
           <caption className="visually-hidden">Tabel daftar anggota koperasi dengan filter per kolom, pengurutan, dan aksi detail serta ubah role per baris.</caption>
@@ -193,6 +197,11 @@ const MembersTable = ({
                 <Form.Control
                   id="filter-member-no"
                   size="sm"
+                  type="text"
+                  name="anggota-search"
+                  autoComplete="off"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                   placeholder="Cari No/NIK..."
                   aria-label="Filter nomor anggota atau NIK"
                   value={filters.memberNo || ""}
@@ -205,6 +214,11 @@ const MembersTable = ({
                 <Form.Control
                   id="filter-name-contact"
                   size="sm"
+                  type="text"
+                  name="anggota-search"
+                  autoComplete="off"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                   placeholder="Cari Nama/HP/Email..."
                   aria-label="Filter nama, nomor telepon, atau email anggota"
                   value={filters.nameOrContact || ""}
@@ -217,6 +231,10 @@ const MembersTable = ({
                 <Form.Select
                   id="filter-type"
                   size="sm"
+                  name="anggota-search"
+                  autoComplete="off"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                   value={filters.type || ""}
                   aria-label="Filter jenis anggota"
                   onChange={(e) => onFilterChange?.("type", e.target.value)}
@@ -232,6 +250,11 @@ const MembersTable = ({
                 <Form.Control
                   id="filter-role"
                   size="sm"
+                  type="text"
+                  name="anggota-search"
+                  autoComplete="off"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                   placeholder="Filter Peran..."
                   aria-label="Filter peran atau role anggota"
                   value={filters.role || ""}
@@ -244,6 +267,11 @@ const MembersTable = ({
                 <Form.Control
                   id="filter-join-date"
                   size="sm"
+                  type="text"
+                  name="anggota-search"
+                  autoComplete="off"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                   placeholder="Cari Thn/Bln..."
                   aria-label="Filter tahun atau bulan bergabung"
                   value={filters.joinDate || ""}
@@ -256,6 +284,10 @@ const MembersTable = ({
                 <Form.Select
                   id="filter-status"
                   size="sm"
+                  name="anggota-search"
+                  autoComplete="off"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                   value={filters.status || ""}
                   aria-label="Filter status anggota"
                   onChange={(e) => onFilterChange?.("status", e.target.value)}

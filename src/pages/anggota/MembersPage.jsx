@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useDeferredValue, Suspense, lazy } from "react";
+import { useState, useEffect, useMemo, useCallback, useDeferredValue, Suspense, lazy, useRef } from "react";
 import { Card } from "react-bootstrap";
 import Swal from "sweetalert2";
 import api from "../../utils/api/common";
@@ -23,6 +23,14 @@ const MembersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedMemberIds, setSelectedMemberIds] = useState([]);
   const pageSize = 10;
+
+  // Fokus kembali ke area tabel setelah Swal/reload agar tidak jatuh ke filter.
+  const tableHeadingRef = useRef(null);
+  const restoreTableFocus = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      tableHeadingRef.current?.focus({ preventScroll: true });
+    });
+  }, []);
 
   // State filter per-kolom di thead
   const [columnFilters, setColumnFilters] = useState({
@@ -262,7 +270,9 @@ const MembersPage = () => {
       inputAttributes: {
         autocapitalize: "off",
         autocorrect: "off",
-        autocomplete: "current-password",
+        autocomplete: "new-password",
+        "data-lpignore": "true",
+        "data-1p-ignore": "true",
       },
       icon: "warning",
       showCancelButton: true,
@@ -289,12 +299,13 @@ const MembersPage = () => {
           fetchMembers();
           setShowDetailModal(false);
           setSelectedMemberIds((prev) => prev.filter((id) => id !== memberId));
+          restoreTableFocus();
         }
       } catch (err) {
         Swal.fire("Gagal", err.response?.data?.message || "Gagal menghapus anggota", "error");
       }
     }
-  }, [fetchMembers]);
+  }, [fetchMembers, restoreTableFocus]);
 
   // Handler Hapus Banyak Sekaligus (Batch Delete) dengan Verifikasi Password & Audit Log
   const handleDeleteBatch = useCallback(async () => {
@@ -314,7 +325,9 @@ const MembersPage = () => {
       inputAttributes: {
         autocapitalize: "off",
         autocorrect: "off",
-        autocomplete: "current-password",
+        autocomplete: "new-password",
+        "data-lpignore": "true",
+        "data-1p-ignore": "true",
       },
       icon: "warning",
       showCancelButton: true,
@@ -351,6 +364,7 @@ const MembersPage = () => {
           );
           setSelectedMemberIds([]);
           fetchMembers();
+          restoreTableFocus();
         }
       } catch (err) {
         /* console.error: "Batch delete error:", err */
@@ -361,7 +375,7 @@ const MembersPage = () => {
         );
       }
     }
-  }, [selectedMemberIds, fetchMembers]);
+  }, [selectedMemberIds, fetchMembers, restoreTableFocus]);
 
   return (
     <div className="pb-5">
@@ -400,6 +414,7 @@ const MembersPage = () => {
               setMemberToEditRole(member);
               setShowRoleModal(true);
             }}
+            tableHeadingRef={tableHeadingRef}
           />
         </Card.Body>
       </Card>
